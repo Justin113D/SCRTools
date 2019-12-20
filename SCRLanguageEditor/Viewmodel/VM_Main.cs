@@ -1,24 +1,29 @@
-﻿using DryIoc;
-using SCRLanguageEditor.Data;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SCRLanguageEditor.Data;
+using SCRCommon.Viewmodels;
+using Microsoft.Win32;
 
 namespace SCRLanguageEditor.Viewmodel
 {
-    public class VM_Main
+    public class VM_Main : BaseViewModel
     {
-        private IContainer container;
+        public HeaderNode HeaderNode { get; private set; }
 
-        public ObservableCollection<Node> Nodes { get; private set; }
+        public RelayCommand LoadFile { get; private set; }
 
-        public VM_Main(IContainer container)
+        public VM_Main()
         {
-            this.container = container;
-            Nodes = new ObservableCollection<Node>();
+            LoadFile = new RelayCommand(() => OpenFile());
+        }
+
+        private void OpenFile()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "XML Files (*.xml)|*.xml";
+            if (ofd.ShowDialog() == true)
+            {
+                HeaderNode = FileLoader.LoadXMLFile(ofd.FileName);
+            }
+
         }
     }
 }

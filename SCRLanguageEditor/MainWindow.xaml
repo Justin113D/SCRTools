@@ -15,7 +15,8 @@
 
         <Menu Grid.Row="0" Background="White" Padding="2">
             <MenuItem Header="File">
-                <MenuItem Header="Open"/>
+                <MenuItem Header="New file"/>
+                <MenuItem Header="Open" Command="{Binding LoadFile}"/>
                 <MenuItem Header="Import Old"/>
                 <Separator/>
                 <MenuItem Header="Save"/>
@@ -23,7 +24,7 @@
             </MenuItem>
         </Menu>
 
-        <TreeView Grid.Row="1" ItemsSource="{Binding Nodes}">
+        <TreeView Grid.Row="1" ItemsSource="{Binding HeaderNode.ChildNodes}">
             
         </TreeView>
         

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace SA2RTools.Viewmodel
+namespace SCRCommon.Viewmodels
 {
     /// <summary>
     /// A basic command that runs an Action with a specific parameter

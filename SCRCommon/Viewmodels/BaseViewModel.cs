@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace SCRCommon.Viewmodels
 {
-    class BaseViewModel : INotifyPropertyChanged
+    public class BaseViewModel : INotifyPropertyChanged
     {
         private static readonly DependencyObject _dummyDependencyObject = new DependencyObject();
 
