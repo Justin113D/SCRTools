@@ -4,9 +4,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SCRLanguageEditor.Viewmodel"
+        xmlns:base="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:VM_Main}"
-        Title="SCR Language Editor" Height="450" Width="800">
+        Title="SCR Language Editor" Height="450" Width="800"
+        Style="{DynamicResource WindowStyle}">
+    
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <base:BaseWindowStyle/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
