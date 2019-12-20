@@ -7,7 +7,7 @@
         xmlns:base="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:VM_Main}"
-        Title="SCR Language Editor" Height="450" Width="800"
+        Title="Window Test" Height="450" Width="800"
         Style="{DynamicResource WindowStyle}">
     
     <Window.Resources>
