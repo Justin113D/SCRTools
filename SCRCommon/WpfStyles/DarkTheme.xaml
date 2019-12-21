@@ -18,10 +18,6 @@
         <Setter Property="Foreground" Value="#EEE"/>
     </Style>
 
-    <Style TargetType="{x:Type Popup}">
-        <Setter Property=""
-    </Style>    
-    
     <Style TargetType="{x:Type TreeView}" x:Key="TreeViewBase">
         <Setter Property="Background" Value="#444"/>
     </Style>
