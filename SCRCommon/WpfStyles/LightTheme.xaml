@@ -1,0 +1,16 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <Style TargetType="{x:Type Button}" x:Key="ToolbarButton">
+        <Setter Property="Foreground" Value="#EEE"/>
+    </Style>
+    <Style TargetType="{x:Type Border}" x:Key="WindowBase">
+        <Setter Property="BorderBrush" Value="#AAA"/>
+        <Setter Property="Background" Value="#AAA"/>
+    </Style>
+
+    <Style TargetType="{x:Type Menu}" x:Key="MenuBase">
+        <Setter Property="Background" Value="#BBB"/>
+    </Style>
+
+</ResourceDictionary>

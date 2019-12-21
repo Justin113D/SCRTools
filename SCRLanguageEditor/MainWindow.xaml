@@ -7,9 +7,9 @@
         xmlns:base="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:VM_Main}"
-        Title="Window Test" Height="450" Width="800"
+        Title="SCR Language Editor" Height="450" Width="800"
         Style="{DynamicResource WindowStyle}">
-    
+
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -18,15 +18,16 @@
         </ResourceDictionary>
     </Window.Resources>
     
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Menu Grid.Row="0" Background="White" Padding="2">
+        <Menu Grid.Row="0">
             <MenuItem Header="File">
-                <MenuItem Header="New file"/>
+                <MenuItem Header="New file" Command="{Binding CreateNewFile}"/>
                 <MenuItem Header="Open" Command="{Binding LoadFile}"/>
                 <MenuItem Header="Import Old"/>
                 <Separator/>
