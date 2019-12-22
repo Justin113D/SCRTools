@@ -11,7 +11,7 @@
         private string nodeValue;
 
         /// <summary>
-        /// Sets the value of the node accordingly
+        /// Gets and sets nodes value accordingly
         /// </summary>
         public string NodeValue
         {
@@ -38,7 +38,7 @@
         /// </summary>
         /// <param name="name">The name of the node</param>
         /// <param name="nodeValue">The string value held in the node</param>
-        public StringNode(string name, string nodeValue) : base(name) => NodeValue = nodeValue;
+        public StringNode(string name, string nodeValue) : base(name, NodeType.StringNode) => NodeValue = nodeValue;
 
         /// <summary>
         /// Create a string node with a description
@@ -46,6 +46,6 @@
         /// <param name="name">The name of the node</param>
         /// <param name="description">The description of the node</param>
         /// <param name="nodeValue">The string value held in the node</param>
-        public StringNode(string name, string nodeValue, string description) : base(name, description) => NodeValue = nodeValue;
+        public StringNode(string name, string nodeValue, string description) : base(name, description, NodeType.StringNode) => NodeValue = nodeValue;
     }
 }

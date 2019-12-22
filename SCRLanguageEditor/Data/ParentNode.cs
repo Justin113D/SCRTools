@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 
 namespace SCRLanguageEditor.Data
 {
@@ -10,15 +10,15 @@ namespace SCRLanguageEditor.Data
         /// <summary>
         /// The children of this node
         /// </summary>
-        public ObservableCollection<Node> ChildNodes { get; private set; }
+        public List<Node> ChildNodes { get; private set; }
          
         /// <summary>
         /// Creates a parent node
         /// </summary>
         /// <param name="name">The name of the parent node</param>
-        public ParentNode(string name) : base(name)
+        public ParentNode(string name) : base(name, NodeType.ParentNode)
         {
-            ChildNodes = new ObservableCollection<Node>();
+            ChildNodes = new List<Node>();
         }
 
         /// <summary>
@@ -26,9 +26,9 @@ namespace SCRLanguageEditor.Data
         /// </summary>
         /// <param name="name">The name of the node</param>
         /// <param name="description">The description of the node</param>
-        public ParentNode(string name, string description) : base(name, description)
+        public ParentNode(string name, string description) : base(name, description, NodeType.ParentNode)
         {
-            ChildNodes = new ObservableCollection<Node>();
+            ChildNodes = new List<Node>();
         }
 
     }

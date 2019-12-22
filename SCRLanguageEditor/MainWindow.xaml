@@ -4,16 +4,142 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SCRLanguageEditor.Viewmodel"
+        xmlns:vmBase="clr-namespace:SCRCommon.Viewmodels;assembly=SCRCommon"
         xmlns:base="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
+        xmlns:data="clr-namespace:SCRLanguageEditor.Data"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:VM_Main}"
         Title="SCR Language Editor" Height="450" Width="800"
+        MinHeight="200" MinWidth="350"
         Style="{DynamicResource WindowStyle}">
 
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <base:BaseWindowStyle/>
+
+                <ResourceDictionary>
+                    <Style TargetType="{x:Type TextBlock}" x:Key="TVI_Text">
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="FontSize" Value="24"/>
+                        <Setter Property="Foreground" Value="{DynamicResource FontColor}"/>
+                    </Style>
+                    <Style x:Key="ExpandCollapseToggleStyle" TargetType="ToggleButton">
+                        <Setter Property="Focusable" Value="False"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Grid Width="15" Height="13" Background="Transparent">
+                                        <Path x:Name="ExpandPath"
+                                            HorizontalAlignment="Left" 
+                                            VerticalAlignment="Center" 
+                                            Margin="1,1,1,1"
+                                            Fill="{DynamicResource FontColor}"
+                                            Data="M 4 0 L 8 4 L 4 8 Z"/>
+                                    </Grid>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsChecked" Value="True">
+                                            <Setter Property="Data" TargetName="ExpandPath" Value="M 0 4 L 8 4 L 4 8 Z"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                    <ControlTemplate TargetType="{x:Type TreeViewItem}" x:Key="TVI_Base">
+                        <ControlTemplate.Resources>
+                            <vmBase:LeftMarginMultiplierConverter Length="10" x:Key="LengthConverter"/>
+                        </ControlTemplate.Resources>
+                        <StackPanel>
+                            <Border x:Name="Bd"
+                                Background="{DynamicResource BackgroundColor}"
+                                BorderThickness="0"
+                                Margin="0 0 5 0">
+
+                                <Grid Margin="{Binding Converter={StaticResource LengthConverter},
+                                    RelativeSource={RelativeSource TemplatedParent}}"
+                                      VerticalAlignment="Center">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <ToggleButton x:Name="Expander"
+                                        Style="{DynamicResource ExpandCollapseToggleStyle}"
+                                        IsChecked="{Binding Path=IsExpanded,
+                                        RelativeSource={RelativeSource TemplatedParent}}"
+                                        ClickMode="Press"/>
+                                    
+                                    <ContentPresenter x:Name="contentPresenter" Grid.Column="1" Margin="2 0 0 0"
+                                                      HorizontalAlignment="Stretch" ContentSource="Header"/>
+                                </Grid>
+                            </Border>
+                            <ItemsPresenter x:Name="ItemsHost" />
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsExpanded" Value="false">
+                                <Setter TargetName="ItemsHost" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                            <Trigger Property="HasItems" Value="false">
+                                <Setter TargetName="Expander" Property="Visibility" Value="Hidden"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="HasHeader" Value="false"/>
+                                    <Condition Property="Height" Value="Auto"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="contentPresenter" Property="MinHeight" Value="19"/>
+                            </MultiTrigger>
+                            <Trigger Property="IsSelected" Value="true">
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SelectedBackgroundColor}"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="true"/>
+                                    <Condition Property="IsSelectionActive" Value="false"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SelectedBackgroundColor}"/>
+                            </MultiTrigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource DisabledBackgroundColor}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                    <Style TargetType="{x:Type TreeViewItem}" x:Key="Node">
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Padding" Value="1,0,0,0"/>
+                        <Setter Property="Template" Value="{DynamicResource TVI_Base}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static data:Node+NodeType.ParentNode}">
+                                <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+
+                    <HierarchicalDataTemplate x:Key="ParentNode" ItemsSource="{Binding Children}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Name}" Style="{DynamicResource TVI_Text}" TextWrapping="NoWrap"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Description}" Style="{DynamicResource TVI_Text}" FontSize="15"/>
+                        </Grid>
+                    </HierarchicalDataTemplate>
+
+                    <HierarchicalDataTemplate x:Key="StringNode" ItemsSource="{x:Null}">
+                        <Grid>
+        
+                        </Grid>
+                    </HierarchicalDataTemplate>
+
+                    <local:NodeTemplateSelector x:Key="TemplateSelector"
+                                                ParentTemplate="{StaticResource ParentNode}"
+                                                StringTemplate="{StaticResource StringNode}"/>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -36,9 +162,9 @@
             </MenuItem>
         </Menu>
 
-        <TreeView Grid.Row="1" ItemsSource="{Binding HeaderNode.ChildNodes}">
-            
-        </TreeView>
-        
+        <TreeView Grid.Row="1" ItemsSource="{Binding Nodes}" 
+                  ItemContainerStyle="{DynamicResource Node}" 
+                  ItemTemplateSelector="{StaticResource TemplateSelector}" />
+
     </Grid>
 </Window>

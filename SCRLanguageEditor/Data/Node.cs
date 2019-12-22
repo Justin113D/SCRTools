@@ -6,9 +6,48 @@
     public abstract class Node
     {
         /// <summary>
+        /// The type of node
+        /// </summary>
+        public enum NodeType : int
+        {
+            None = -1,
+            HeaderNode = 0,
+            ParentNode = 1,
+            StringNode = 2
+        }
+
+        /// <summary>
+        /// The type of the node
+        /// </summary>
+        public readonly NodeType Type;
+
+        /// <summary>
         /// The name of the node
         /// </summary>
-        public string Name { get; set; }
+        private string name;
+
+        /// <summary>
+        /// Gets and sets the nodes name accordingly
+        /// </summary>
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    name = "";
+                }
+                else
+                {
+                    // remove all spaces before and after
+                    name = value.Trim(' ');
+                }
+            }
+        }
 
         /// <summary>
         /// The description of the node
@@ -16,7 +55,7 @@
         private string description;
 
         /// <summary>
-        /// Sets and gets the description of the node accordingly
+        /// Gets and sets the nodes description accordingly
         /// </summary>
         public string Description
         {
@@ -31,19 +70,8 @@
                 }
                 else
                 {
-                    description = value;
+                    description = value.Trim(' ');
                 }
-            }
-        }
-
-        /// <summary>
-        /// Whether the description is valid and should be displayed
-        /// </summary>
-        public bool HasDescription
-        {
-            get
-            {
-                return description == null;
             }
         }
 
@@ -51,10 +79,11 @@
         /// Creates a node with only a name
         /// </summary>
         /// <param name="name">The name of the node</param>
-        public Node(string name)
+        protected Node(string name, NodeType type)
         {
-            Name = name;
+            this.name = name;
             Description = null;
+            Type = type;
         }
 
         /// <summary>
@@ -62,10 +91,11 @@
         /// </summary>
         /// <param name="name">The name of the node</param>
         /// <param name="description">The description of the node</param>
-        public Node(string name, string description)
+        protected Node(string name, string description, NodeType type)
         {
-            Name = name;
+            this.name = name;
             Description = description;
+            Type = type;
         }
 
     }

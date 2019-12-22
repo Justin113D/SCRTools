@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml;
 
@@ -62,7 +63,7 @@ namespace SCRLanguageEditor.Data
         /// </summary>
         /// <param name="children">The children of the XML node, which need to be converted into our nodes</param>
         /// <param name="resultNodes">The output list (should be taken from a parentnode or languagenode)</param>
-        private static void LoadNodes(XmlNodeList children, ObservableCollection<Node> resultNodes)
+        private static void LoadNodes(XmlNodeList children, List<Node> resultNodes)
         {
             foreach (XmlNode n in children)
             {
@@ -74,7 +75,7 @@ namespace SCRLanguageEditor.Data
                     case "str":
                         XmlAttributeCollection attribs = n.Attributes;
                         string name = attribs.GetNamedItem("name").Value;
-                        string content = n.Value;
+                        string content = n.InnerText;
                         StringNode strNode;
                         if (attribs.Count == 1)
                         {
