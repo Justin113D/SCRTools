@@ -39,8 +39,6 @@ namespace SCRLanguageEditor.Viewmodel
             }
         }
 
-        public bool IsSelected { get; set; }
-
         public VM_ParentNode(ParentNode node) : base(node)
         {
             ClearChildren();

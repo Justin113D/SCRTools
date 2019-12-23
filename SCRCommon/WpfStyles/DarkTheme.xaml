@@ -2,12 +2,17 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <SolidColorBrush x:Key="FontColor" Color="#EEE"/>
+    <SolidColorBrush x:Key="HintFontColor" Color="#AAA"/>
+    
     <SolidColorBrush x:Key="BackgroundColor" Color="#444"/>
+    <SolidColorBrush x:Key="SecBackgroundColor" Color="#383838"/>
+    <SolidColorBrush x:Key="SecBackgroundColorAlt" Color="#333"/>
+
     <SolidColorBrush x:Key="SelectedBackgroundColor" Color="#555"/>
-    <SolidColorBrush x:Key="DisabledBackgroundColor" Color="#383838"/>
+    <SolidColorBrush x:Key="DisabledBackgroundColor" Color="#282828"/>
 
     <Style TargetType="{x:Type Button}" x:Key="ToolbarButton">
-        <Setter Property="Foreground" Value="#EEE"/>
+        <Setter Property="Foreground" Value="{DynamicResource FontColor}"/>
     </Style>
     <Style TargetType="{x:Type Border}" x:Key="WindowBase">
         <Setter Property="BorderBrush" Value="#333"/>
@@ -20,7 +25,7 @@
 
     <Style TargetType="{x:Type MenuItem}" x:Key="MenuItemBase">
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="#EEE"/>
+        <Setter Property="Foreground" Value="{DynamicResource FontColor}"/>
     </Style>
 
     <Style TargetType="{x:Type TreeView}" x:Key="TreeViewBase">

@@ -37,23 +37,15 @@ namespace SCRLanguageEditor.Data
             XmlDocument file = new XmlDocument();
             file.Load(filepath);
 
-            XmlAttributeCollection attribs = file.DocumentElement.Attributes;
-
             //getting the language node
-            HeaderNode lang;
-            string name = attribs.GetNamedItem("name").Value;
-            string version = attribs.GetNamedItem("version").Value;
-            if (attribs.Count == 2)
-            {
-                lang = new HeaderNode(name, version);
-            }
-            else
-            {
-                lang = new HeaderNode(name, version, attribs.GetNamedItem("author").Value);
-            }
+
+            List<Node> nodes = new List<Node>();
+            List<StringNode> stringNodes = new List<StringNode>(); 
 
             // getting the child nodes
-            LoadNodes(file.DocumentElement.ChildNodes, lang.ChildNodes);
+            LoadNodes(file.DocumentElement.ChildNodes, nodes, stringNodes);
+
+            HeaderNode lang = new HeaderNode(file.DocumentElement.Attributes.GetNamedItem("Version").Value, nodes, stringNodes);
 
             return lang;
         }
@@ -63,29 +55,29 @@ namespace SCRLanguageEditor.Data
         /// </summary>
         /// <param name="children">The children of the XML node, which need to be converted into our nodes</param>
         /// <param name="resultNodes">The output list (should be taken from a parentnode or languagenode)</param>
-        private static void LoadNodes(XmlNodeList children, List<Node> resultNodes)
+        private static void LoadNodes(XmlNodeList children, List<Node> resultNodes, List<StringNode> stringNodes)
         {
             foreach (XmlNode n in children)
             {
                 switch (n.Name)
                 {
-                    case "cat":
-                        resultNodes.Add(LoadParentNode(n));
+                    case "Cat":
+                        resultNodes.Add(LoadParentNode(n, stringNodes));
                         break;
-                    case "str":
+                    case "Str":
                         XmlAttributeCollection attribs = n.Attributes;
-                        string name = attribs.GetNamedItem("name").Value;
-                        string content = n.InnerText;
+                        string name = attribs.GetNamedItem("Name").Value;
                         StringNode strNode;
                         if (attribs.Count == 1)
                         {
-                            strNode = new StringNode(name, content);
+                            strNode = new StringNode(name);
                         }
                         else
                         {
-                            strNode = new StringNode(name, content, attribs.GetNamedItem("desc").Value);
+                            strNode = new StringNode(name, attribs.GetNamedItem("Desc").Value);
                         }
                         resultNodes.Add(strNode);
+                        stringNodes.Add(strNode);
                         break;
                     default:
                         // not a valid node type
@@ -99,13 +91,13 @@ namespace SCRLanguageEditor.Data
         /// </summary>
         /// <param name="parent">The XML source node</param>
         /// <returns>The parent node with its children</returns>
-        private static ParentNode LoadParentNode(XmlNode parent)
+        private static ParentNode LoadParentNode(XmlNode parent, List<StringNode> stringNodes)
         {
             // get the parent node values
             XmlAttributeCollection attribs = parent.Attributes;
 
             ParentNode node;
-            string name = parent.Attributes.GetNamedItem("name").Value;
+            string name = parent.Attributes.GetNamedItem("Name").Value;
 
             if(attribs.Count == 1)
             {
@@ -113,10 +105,10 @@ namespace SCRLanguageEditor.Data
             }
             else
             {
-                node = new ParentNode(name, attribs.GetNamedItem("desc").Value);
+                node = new ParentNode(name, attribs.GetNamedItem("Desc").Value);
             }
 
-            LoadNodes(parent.ChildNodes, node.ChildNodes);
+            LoadNodes(parent.ChildNodes, node.ChildNodes, stringNodes);
 
             return node;
         }

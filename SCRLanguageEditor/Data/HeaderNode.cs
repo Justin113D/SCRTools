@@ -49,7 +49,7 @@ namespace SCRLanguageEditor.Data
             {
                 return version;
             }
-            set
+            private set
             {
                 if (value == null)
                 {
@@ -63,6 +63,8 @@ namespace SCRLanguageEditor.Data
             }
         }
 
+        private List<StringNode> stringNodes;
+
         /// <summary>
         /// The children of this node
         /// </summary>
@@ -73,24 +75,14 @@ namespace SCRLanguageEditor.Data
         /// </summary>
         /// <param name="name">The language of the file</param>
         /// <param name="version">The game version that the file is for</param>
-        public HeaderNode(string name, string version) : base(name, NodeType.HeaderNode)
+        public HeaderNode(string version, List<Node> children, List<StringNode> stringNodes) : base(null, NodeType.HeaderNode)
         {
             this.version = version;
             author = "";
-            ChildNodes = new List<Node>();
+            ChildNodes = children;
+            this.stringNodes = stringNodes;
         }
 
-        /// <summary>
-        /// Creates a Header node from language, version and author
-        /// </summary>
-        /// <param name="name">The language of the file</param>
-        /// <param name="version">The game version that the file is for</param>
-        /// <param name="author">The author of the document</param>
-        public HeaderNode(string name, string version, string author) : base(name, NodeType.HeaderNode)
-        {
-            this.version = version;
-            this.author = author;
-            ChildNodes = new List<Node>();
-        }
+        
     }
 }

@@ -25,4 +25,20 @@ namespace SCRCommon.Viewmodels
             throw new NotImplementedException();
         }
     }
+
+    [ValueConversion(typeof(int), typeof(GridLength))]
+    public class WindowWidthConverter : IValueConverter
+    {
+        public float Percentage { get; set; }
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return new GridLength(Math.Round((double)value * Percentage), GridUnitType.Pixel);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

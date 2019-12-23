@@ -1,0 +1,509 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Language Version="0.27">
+	<Cat Name="Titlescreen" Desc="Texts used in the title screen">
+		<Cat Name="Main" Desc="The Main-menu texts">
+			<Str Name="pressStart" Desc="&quot;Press start to begin&quot; (the gamepad button)" />
+			<Str Name="pressEnter" Desc="&quot;Press enter to begin&quot; (the keyboard key)" />
+			<Str Name="clickAnywhere" Desc="&quot;Click anywhere to begin&quot; (with the mouse)" />
+			<Str Name="newGame" Desc="The text on a savefile button when the savefile is empty" />
+			<Str Name="timeFormat" Desc="The time format of the region &#10;Has to be either &quot;AmPm&quot; or &quot;24H&quot;" />
+			<Str Name="chapterLabel" Desc="The &apos;Chapter&apos;"/>
+			<Str Name="startLabel" Desc="The &apos;Start game&apos; label for the start-game-button"/>
+			<Str Name="deleteConfirmation" Desc="When deleting a savefile, this text pops up and asks for confirmation"/>
+			<Str Name="storyHeader" Desc="The header label of the story box; &apos;The story so far&apos;"/>
+		</Cat>
+		<Cat Name="Area names" Desc="The names of the areas visited throughout the game">
+			<Str Name="areaName1" Desc="&apos;Green Hill Zone&apos;"/>
+			<Str Name="areaName2" Desc="&apos;Central City&apos;"/>
+			<Str Name="areaName3" Desc="&apos;Mystic Ruins&apos;"/>
+			<Str Name="areaName4" Desc="&apos;Blue Ridge Zone&apos;"/>
+			<Str Name="areaName5" Desc="&apos;Metropolis&apos;"/>
+			<Str Name="areaName6" Desc="&apos;Angel Island&apos;"/>
+			<Str Name="areaName7" Desc="&apos;Metropolis Ground Zero&apos;"/>
+			<Str Name="areaName8" Desc="&apos;Kron Colony&apos;"/>
+			<Str Name="areaName9" Desc="&apos;N&apos;rrgal Colony&apos;"/>
+			<Str Name="areaName10" Desc="&apos;Zoah Colony&apos;"/>
+			<Str Name="areaName11" Desc="&apos;Voxai Colony Beta&apos;"/>
+			<Str Name="areaName12" Desc="&apos;Voxai Colony Alpha&apos;"/>
+			<Str Name="areaName13" Desc="&apos;Nocturne&apos;"/>
+		</Cat>
+		<Cat Name="Options" Desc="Texts used for the options menu">
+			<Str Name="saveOptions" Desc="The button label for saving the options"/>
+			<Str Name="resetOptions" Desc="The button label for resetting options"/>
+			<Str Name="volumeMusic" Desc="The label for the music volume option"/>
+			<Str Name="volumeSFX" Desc="The label for the sounds volume option"/>
+			<Str Name="volumeVoice" Desc="The label for the voices volume option"/>
+			<Str Name="Graphics1" Desc="First set of labels for the graphics options: &#10; Motion Blur, Texture Quality, Grass Density"/>
+			<Str Name="Graphics2" Desc="Second set of labels for the graphics options: &#10; Depth of field"/>
+		</Cat>
+		<Cat Name="Title Screen Story Summaries" Desc="Every time the game progresses storywise, the Story summaries on the title screen update, which are all stored here">
+			<Cat Name="Chapter 1" Desc="Story Summaries of Chapter 1">
+				<Str Name="storySum1_1" Desc="&quot;While he was away exploring and solving problems elsewhere, Sonic received a message from Tails:&#10; Knuckles is missing! &#10;&#10;Tails asked for Sonic&apos;s help to track down the Marauders, the mysterious villains who took Knuckles. Sonic returned from afar to help find Knuckles and bring these Marauders to justice! &quot;"/>
+				<Str Name="storySum1_2" Desc=""/>
+				<Str Name="storySum1_3" Desc=""/>
+			</Cat>
+		</Cat>
+	</Cat>
+	<Cat Name="Ingame Menu" Desc="Texts used in the ingame menu">
+		<Cat Name="Character names" Desc="Names of the available characters (probably be left unchanged for most languages)">
+			<Str Name="sonicName" Desc="Sonics name"/>
+			<Str Name="amyName" Desc="Amys name"/>
+			<Str Name="tailsName" Desc="Tails&apos; name"/>
+			<Str Name="rougeName" Desc="Rouges name"/>
+			<Str Name="bigName" Desc="Bigs name"/>
+			<Str Name="knucklesName" Desc="Knuckles&apos; name"/>
+			<Str Name="creamName" Desc="Creams name"/>
+			<Str Name="eggmanName" Desc="Shadows name"/>
+			<Str Name="shadowName" Desc="Eggmans name"/>
+			<Str Name="omegaName" Desc="Omegas name"/>
+			<Str Name="shadeName" Desc="Shades name"/>
+		</Cat>
+		<Cat Name="Stat labels" Desc="Short labels for the stats in all kinds of menus">
+			<Str Name="levelShort" Desc="Level short; &apos;Lv&apos;"/>
+			<Str Name="healthShort" Desc="Health points short; &apos;HP&apos;"/>
+			<Str Name="powerShort" Desc="Power points short; &apos;PP&apos;"/>
+			<Str Name="speedShort" Desc="Speed short; &apos;Spd&apos;"/>
+			<Str Name="damageShort" Desc="Damage short; &apos;Dmg&apos;"/>
+			<Str Name="armorShort" Desc="Armor short; &apos;Arm&apos;"/>
+			<Str Name="accuracyShort" Desc="Accuracy short; &apos;Acc&apos;"/>
+			<Str Name="evadeShort" Desc="Evade short; &apos;Evd&apos;"/>
+			<Str Name="luckShort" Desc="Luck short; &apos;Lck&apos;"/>
+			<Str Name="experienceShort" Desc="Experience short; &apos;Exp&apos;"/>
+		</Cat>
+		<Cat Name="General labels" Desc="Labels used in all menus">
+			<Str Name="menuHeader1" Desc="&apos;Save Game&apos; menu header"/>
+			<Str Name="menuHeader2" Desc="&apos;Journal&apos; menu header"/>
+			<Str Name="menuHeader3" Desc="&apos;World map&apos; menu header"/>
+			<Str Name="menuHeader4" Desc="&apos;Profile&apos; menu header"/>
+			<Str Name="menuHeader5" Desc="&apos;Collectable&apos; menu header"/>
+			<Str Name="menuHeader6" Desc="&apos;Inventory&apos; menu header"/>
+			<Str Name="menuHeader7" Desc="&apos;Chao garden&apos; menu header"/>
+			<Str Name="ok" Desc="Simply &apos;Ok&apos; (context similar: &apos;Understood&apos;, &apos;Alright&apos;)"/>
+		</Cat>
+		<Cat Name="Save menu" Desc="Texts for the save menu">
+			<Str Name="empty" Desc="When a game file is empty"/>
+			<Str Name="saveMessage" Desc="When the user wants to save on a slot which already holds save data; Reminding the user that the existing data will be overwritten"/>
+			<Str Name="saveConfirmation" Desc="&apos;Confirm&apos; to save on the selected slot"/>
+			<Str Name="saveCancel" Desc="&apos;Cancel&apos;; dont save to the selected file"/>
+			<Str Name="saveReturnMessage" Desc="Asking if the user wants to return to the title screen"/>
+			<Str Name="saveReturnConfirmation" Desc="Confirming to return to the title screen"/>
+			<Str Name="saveReturnCancel" Desc="Deciding to continue to play the game"/>
+		</Cat>
+		<Cat Name="Profiler menu" Desc="Texts for the profiler menu">
+			<Str Name="classLabel" Desc="The &apos;Class&apos; label in the profile menu (the character fighter class)"/>
+			<Str Name="class1" Desc="&apos;Power&apos; class (used for dealing damage in a fast paste)"/>
+			<Str Name="class2" Desc="&apos;Shifter&apos; class (A mix between Power and Support?)"/>
+			<Str Name="class3" Desc="&apos;Support&apos; class (Focused around helping out the team)"/>
+			<Str Name="class4" Desc="&apos;Support&apos; class (can take and deal much damage, but is restricted in speed and amount of moves)"/>
+			<Str Name="equipmentHeader1" Desc="&apos;Equipment&apos; label"/>
+			<Str Name="equipmentHeader2" Desc="&apos;Movement abilities&apos; label"/>
+			<Str Name="equipmentHeader3" Desc="&apos;Pow moves&apos; label"/>
+			<Str Name="nextLvl" Desc="&apos;Next lvl&apos; label, displays how many exp remain till the character reaches the next level"/>
+			<Str Name="levelLabel" Desc="&apos;Level&apos; label, displays the current level of the character"/>
+			<Str Name="movecount" Desc="&apos;MoveCount&apos; label, displays the amount of moves of the character ingame"/>
+			<Str Name="slotEmpty" Desc="Displays whether a characters equipment slot does not hold any gear"/>
+			<Str Name="noEquipSelected" Desc="Used in the equipment info box; Tells the user that no equipment is selected (and thus there is nothing to show in the info box)"/>
+		</Cat>
+		<Cat Name="Inventory menu" Desc="Texts for the inventory menu">
+			<Str Name="invMenu1" Desc="When the &apos;Equipment&apos; inventory is active"/>
+			<Str Name="invMenu2" Desc="When the &apos;Consumables&apos; inventory is active"/>
+			<Str Name="invMenu3" Desc="When the &apos;Chao&apos; inventory is active"/>
+			<Str Name="invMenu4" Desc="When the &apos;Quest items&apos; inventory is active"/>
+			<Str Name="invSort1" Desc="Sorting after type"/>
+			<Str Name="invSort2" Desc="Sorting after name"/>
+			<Str Name="invSort3" Desc="Sorting after amount"/>
+			<Str Name="equipItem" Desc="The selected item "/>
+			<Str Name="unequipItem" Desc="The selected item is equipped and can be unequipped"/>
+			<Str Name="useItem" Desc="The selected item can be use/consumed"/>
+			<Str Name="equipChao" Desc="The selecte chao can be equipped"/>
+			<Str Name="unequipChao" Desc="The selected chao is equipped and can be unequipped"/>
+			<Str Name="alreadyEquipped" Desc="The character already has an item/chao of this type equipped"/>
+			<Str Name="notEquippable" Desc="The character cant equip this type of item"/>
+			<Str Name="noItemThere" Desc="The selected inventory does not hold any items/chao"/>
+			<Str Name="nothingSelected" Desc="No item/chao is selected"/>
+		</Cat>
+		<Cat Name="Journal menu" Desc="Texts used in the journal menu">
+			<Str Name="JHeader1" Desc="&apos;Codex&apos; directory header (lore, character info)"/>
+			<Str Name="JHeader2" Desc="&apos;Missions&apos; directory header"/>
+			<Str Name="JHeader3" Desc="&apos;Guides&apos; directory header"/>
+			<Str Name="JHeader4" Desc="&apos;Videos&apos; directory header"/>
+			<Str Name="JHeader5" Desc="&apos;Credits&apos; directory header"/>
+			<Str Name="JDefault" Desc="When no entry is selected; After opening the journal"/>
+			<Str Name="JBack" Desc="Button label to close directory"/>
+		</Cat>
+		<Cat Name="Overworld map menu" Desc="Texts used in the overworld map menu">
+			<Cat Name="Zone descriptions" Desc="Descriptions for each zone ingame">
+				<Str Name="areaDesc1" Desc="Green Hill Zone description: &#10; A tropical paradise that&apos;s home to some of the most exotic local wildlife, and with its abstract topography and luscious green grass, it&apos;s a popular destination for many travellers."/>
+				<Str Name="areaDesc2" Desc="Central City description: &#10; An influential hub of commerce and industry, this diverse city is home to everything from a simple curio store to the militaristic G.U.N. Headquarters."/>
+				<Str Name="areaDesc3" Desc="Mystic Ruins description: &#10; This dense jungle was once home to an ancient civilization, which mysteriously disappeared thousands of years ago. Today, all that remains are their ruins, which surround the place with mystery."/>
+				<Str Name="areaDesc4" Desc="Blue Ridge Zone description: &#10; A chilly alpine region abundant with snowfall and azure greenery, the survivors of Perfect Chaos eke out a modest lifestyle after Station Square’s destruction."/>
+				<Str Name="areaDesc5" Desc="Metropolis description: &#10; A dystopian wasteland Built by Dr. Ivo &apos;Eggman&apos; Robotnik, which has fallen to ruin after his defeat several years ago. Now its filled with ghost factories and taskless robots walking around the site."/>
+				<Str Name="areaDesc6" Desc="Angel Island description: &#10; As the seat of the Master Emerald, this floating island is one of the last relics of an ancient civilization.The Island itself has crashed into the ocean several times in recent years."/>
+				<Str Name="areaDesc7" Desc="Metropolis Ground Zero description: &#10; TBD"/>
+				<Str Name="areaDesc8" Desc="Kron Colony description: &#10; TBD"/>
+				<Str Name="areaDesc9" Desc="N&apos;rrgal colony description: &#10; TBD"/>
+				<Str Name="areaDesc10" Desc="Zoah Colony description: &#10; TBD"/>
+				<Str Name="areaDesc11" Desc="Voxai Colony Beta description: &#10; TBD"/>
+				<Str Name="areaDesc12" Desc="Voxai Colony Alpha description: &#10; TBD"/>
+				<Str Name="areaDesc13" Desc="Nocturne description: &#10; TBD"/>
+			</Cat>
+		</Cat>
+	</Cat>
+	<Cat Name="Items" Desc="Item/Chao names and descriptions">
+		<Cat Name="Item names" Desc="Names of all items that occur in the game">
+			<Str Name="item1" Desc="&apos;Alloy Boots&apos;"/>
+			<Str Name="item2" Desc="&apos;Alloy Slippers&apos;"/>
+			<Str Name="item3" Desc="&apos;Angel Amulet&apos;"/>
+			<Str Name="item4" Desc="&apos;Blunt Claws&apos;"/>
+			<Str Name="item5" Desc="&apos;Boxing Gloves&apos;"/>
+			<Str Name="item6" Desc="&apos;Chao Print Dress&apos;"/>
+			<Str Name="item7" Desc="&apos;Cloth Gloves&apos;"/>
+			<Str Name="item8" Desc="&apos;Cursed Claws&apos;"/>
+			<Str Name="item9" Desc="&apos;Cursed Gloves&apos;"/>
+			<Str Name="item10" Desc="&apos;Dura-Hydraulics&apos;&#10;(Robust robotic parts)"/>
+			<Str Name="item11" Desc="&apos;Earth Ring&apos;"/>
+			<Str Name="item12" Desc="&apos;Economizer&apos;&#10;(A device to reduce cost of power points, &apos;Economic&apos;, paying less"/>
+			<Str Name="item13" Desc="&apos;Fire Ring&apos;"/>
+			<Str Name="item14" Desc="&apos;Golden Gloves&apos;"/>
+			<Str Name="item15" Desc="&apos;Grapple Claws&apos;"/>
+			<Str Name="item16" Desc="&apos;Gritty Gloves&apos;"/>
+			<Str Name="item17" Desc="&apos;Ice Ring&apos;"/>
+			<Str Name="item18" Desc="&apos;Immunity Talisman&apos;"/>
+			<Str Name="item19" Desc="&apos;Iron Claws&apos;"/>
+			<Str Name="item20" Desc="&apos;Iron Hydraulics&apos;&#10;(Robotic parts made of iron)"/>
+			<Str Name="item21" Desc="&apos;Kron Hammer&apos;&#10;(A hammer made by the Kron)"/>
+			<Str Name="item22" Desc="&apos;Light Boots&apos;&#10;(Light as in lightweight)"/>
+			<Str Name="item23" Desc="&apos;Light Slippers&apos;&#10;(Light as in lightweight)"/>
+			<Str Name="item24" Desc="&apos;Light Sneakers&apos;&#10;(Light as in lightweight)"/>
+			<Str Name="item25" Desc="&apos;Lightning Ring&apos;"/>
+			<Str Name="item26" Desc="&apos;Lucky Gloves&apos;"/>
+			<Str Name="item27" Desc="&apos;Master Hydraulics&apos;&#10;(Advanced robotic parts)"/>
+			<Str Name="item28" Desc="&apos;Mirror Gloves&apos;"/>
+			<Str Name="item29" Desc="&apos;Nimble Slippers&apos;"/>
+			<Str Name="item30" Desc="&apos;Nocturne Blade&apos;&#10;(Fighting blade made by the nocturne)"/>
+			<Str Name="item31" Desc="&apos;N&apos;rrgal Module&apos;&#10;(A piece of N&apos;rrgal technology)"/>
+			<Str Name="item32" Desc="&apos;Oily Hydraulics&apos;&#10;(Oiled robotic parts)"/>
+			<Str Name="item33" Desc="&apos;Polymer Gloves&apos;"/>
+			<Str Name="item34" Desc="&apos;Power Gloves&apos;"/>
+			<Str Name="item35" Desc="&apos;Pretty Dress&apos;"/>
+			<Str Name="item36" Desc="&apos;Refresher&apos;"/>
+			<Str Name="item37" Desc="&apos;Replenisher&apos;&#10;(A device that refreshes the character)"/>
+			<Str Name="item38" Desc="&apos;Rubber Gloves&apos;"/>
+			<Str Name="item39" Desc="&apos;Rusty Hydraulics&apos;&#10;(Rusty robotic parts)"/>
+			<Str Name="item40" Desc="&apos;Serrated Claws&apos;"/>
+			<Str Name="item41" Desc="&apos;Shielded Sneakers&apos;"/>
+			<Str Name="item42" Desc="&apos;Sparkly Gloves&apos;"/>
+			<Str Name="item43" Desc="&apos;Speedy Sneakers&apos;"/>
+			<Str Name="item44" Desc="&apos;Spiked Gloves&apos;"/>
+			<Str Name="item45" Desc="&apos;Spiked Slippers&apos;"/>
+			<Str Name="item46" Desc="&apos;Spiked Sneakers&apos;"/>
+			<Str Name="item47" Desc="&apos;Spiny Claws&apos;"/>
+			<Str Name="item48" Desc="&apos;Spooky Charm&apos;"/>
+			<Str Name="item49" Desc="&apos;Steel Toe Boots&apos;&#10;(Boots with steel caps)"/>
+			<Str Name="item50" Desc="&apos;Stiff Sneakers&apos;"/>
+			<Str Name="item51" Desc="&apos;Swift Boots&apos;"/>
+			<Str Name="item52" Desc="&apos;Titanium Claws&apos;"/>
+			<Str Name="item53" Desc="&apos;Tough Slippers&apos;"/>
+			<Str Name="item54" Desc="&apos;Voxai Teleporter&apos;&#10;(Teleporter gear made by the Voxai)"/>
+			<Str Name="item55" Desc="&apos;Water Ring&apos;"/>
+			<Str Name="item56" Desc="&apos;Wind Ring&apos;"/>
+			<Str Name="item57" Desc="&apos;Work Boots&apos;"/>
+			<Str Name="item58" Desc="&apos;Work Gloves&apos;"/>
+			<Str Name="item59" Desc="&apos;Zoah Shield&apos;&#10;(Shield made by the Zoah)"/>
+			<Str Name="item60" Desc="&apos;Antidote&apos;"/>
+			<Str Name="item61" Desc="&apos;Bug Spray&apos;"/>
+			<Str Name="item62" Desc="&apos;Clover Juice&apos;"/>
+			<Str Name="item63" Desc="&apos;Crazy Beans&apos;"/>
+			<Str Name="item64" Desc="&apos;Cure All Spray&apos;"/>
+			<Str Name="item65" Desc="&apos;Health Leaf&apos;&#10;(Fills up HP)"/>
+			<Str Name="item66" Desc="&apos;Health Root&apos;&#10;(Fills up HP)"/>
+			<Str Name="item67" Desc="&apos;Health Seed&apos;&#10;(Fills up HP)"/>
+			<Str Name="item68" Desc="&apos;Immunity Booster&apos;&#10;(Debuff against negative buffs)"/>
+			<Str Name="item69" Desc="&apos;Iron Tonic&apos;"/>
+			<Str Name="item70" Desc="&apos;Med Emitter&apos;"/>
+			<Str Name="item71" Desc="&apos;POW Candy&apos;&#10;(Fills up PP)"/>
+			<Str Name="item72" Desc="&apos;POW Drink&apos;&#10;(Fills up PP)"/>
+			<Str Name="item73" Desc="&apos;POW Gum&apos;&#10;(Fills up PP)"/>
+			<Str Name="item74" Desc="&apos;Prune Juice&apos;"/>
+			<Str Name="item75" Desc="&apos;Psychic Water&apos;"/>
+			<Str Name="item76" Desc="&apos;Refresher Wave&apos;"/>
+			<Str Name="item77" Desc="&apos;Revival Ring&apos;"/>
+			<Str Name="item78" Desc="&apos;Ring of Life&apos;"/>
+			<Str Name="item79" Desc="&apos;Rock Salt&apos;"/>
+			<Str Name="item80" Desc="&apos;Speed Bar&apos;&#10;(A snack bar)"/>
+			<Str Name="item81" Desc="&apos;Beam Cannon&apos;&#10;(A little cannon, made by Eggman)"/>
+			<Str Name="item82" Desc="&apos;Red Chaos Emerald&apos;"/>
+			<Str Name="item83" Desc="&apos;Sky Blue Chaos Emerald&apos;"/>
+			<Str Name="item84" Desc="&apos;Green Chaos Emerald&apos;"/>
+			<Str Name="item85" Desc="&apos; &apos;White&apos; (Pink) Chaos Emerald&apos;&#10;(It&apos;s actually the white emerald, but has been turned pink by the voxai)"/>
+			<Str Name="item86" Desc="&apos;Yellow Chaos Emerald&apos;"/>
+			<Str Name="item87" Desc="&apos;Purple Chaos Emerald&apos;"/>
+			<Str Name="item88" Desc="&apos;Blue Chaos Emerald&apos;"/>
+			<Str Name="item89" Desc="&apos;Communicator&apos;"/>
+			<Str Name="item90" Desc="&apos;Eggman Detector&apos;&#10;(A device meant to find Eggman)"/>
+			<Str Name="item91" Desc="&apos;Eggman Device&apos;&#10;(A device made by Eggman)"/>
+			<Str Name="item92" Desc="&apos;GUN Official&apos;&#10;(Top hierarchy GUN person)"/>
+			<Str Name="item93" Desc="&apos;Little Boy&apos;"/>
+			<Str Name="item94" Desc="&apos;Nocturne Tech&apos;&#10;(Tech made by the Nocturne)"/>
+			<Str Name="item95" Desc="&apos;Pattern Generator&apos;&#10;(A device that generates patterns for... stuff. Probably to crack codes of sorts)"/>
+			<Str Name="item96" Desc="&apos;Precursor Tablett&apos;&#10;(A stone plate with ancient inscriptions, made by a long gone civilization of the twilight cage)"/>
+			<Str Name="item97" Desc="&apos;Prized Stapler&apos;"/>
+			<Str Name="item98" Desc="&apos;Timothy&apos;&#10;(A person called Timothy)"/>
+			<Str Name="item99" Desc="&apos;Weapon Part&apos;"/>
+			<Str Name="item100" Desc="&apos;N&apos;rrgal Shipment&apos;&#10;(Some expensive ware by the N&apos;rrgal)"/>
+			<Str Name="item101" Desc="&apos;Kron Payment&apos;&#10;(Payment by the Kron for the shipment)"/>
+		</Cat>
+		<Cat Name="Item descriptions" Desc="Descriptions for each item">
+			<Str Name="itemD1" Desc="Alloy Boots:&#10;&quot;Modern footwear made from very durable material. Moderately increases armor.&quot;"/>
+			<Str Name="itemD2" Desc="Alloy Slippers:&#10;&quot;Modern footwear made from very durable material. Moderately increases armor.&quot;"/>
+			<Str Name="itemD3" Desc="Angel Amulet:&#10;&quot;A mystical amulet with the inexhaustible poweer to put the fallen back on their feet.&quot;"/>
+			<Str Name="itemD4" Desc="Blunt Claws:&#10;&quot;Standard grade work claws. Slightly increases damage.&quot;"/>
+			<Str Name="itemD5" Desc="Boxing Gloves:&#10;&quot;Super tough gloves provide the maximum fighting edge. Slightly increases damage.&quot;"/>
+			<Str Name="itemD6" Desc="Chao Print Dress:&#10;&quot;A stylish dress sure to make one look extra striking. Moderately increases damage.&quot;"/>
+			<Str Name="itemD7" Desc="Cloth Gloves:&#10;&quot;Casual, stylish and comfortable.&quot;"/>
+			<Str Name="itemD8" Desc="Cursed Claws:&#10;&quot;Prototype combat claws. Dif? cult to control, but very powerful. Immensely increases damage.&quot;"/>
+			<Str Name="itemD9" Desc="Cursed Gloves:&#10;&quot;A prototype combat glove. Tough to control, but very powerful. Immensely increases damage.&quot;"/>
+			<Str Name="itemD10" Desc="Dura-Hydraulics:&#10;&quot;Double reinforced parts for maximum durability. Greatly increases armor.&quot;"/>
+			<Str Name="itemD11" Desc="Earth Ring:&#10;&quot;A ring infused with earthquake force. Gives Earth damage to basic attacks.&quot;"/>
+			<Str Name="itemD12" Desc="Economizer:&#10;&quot;A wrist device able to boost its wearer&apos;s energy levels. Lowers PP cost of all POW Moves by 1.&quot;"/>
+			<Str Name="itemD13" Desc="Fire Ring:&#10;&quot;A ring infused with the power of inferno. Gives Fire damage to basic attacks.&quot;"/>
+			<Str Name="itemD14" Desc="Golden Gloves:&#10;&quot;A master crafted combat glove without peer, a rare artifact. Slightly increases damage.&quot;"/>
+			<Str Name="itemD15" Desc="Grapple Claws:&#10;&quot;Standard grade, durable and reliable combat claws. Moderately increases damage.&quot;"/>
+			<Str Name="itemD16" Desc="Gritty Gloves:&#10;&quot;All-around tough gloves for tough customers. Moderately increases armor, moderately increases damage.&quot;"/>
+			<Str Name="itemD17" Desc="Ice Ring:&#10;&quot;A ring infused with the power of subzero cold. Gives Ice damage to basic attacks.&quot;"/>
+			<Str Name="itemD18" Desc="Immunity Talisman:&#10;&quot;A mystical charm with the inexhaustible ability to make one immune to afflictions.&quot;"/>
+			<Str Name="itemD19" Desc="Iron Claws:&#10;&quot;Extra durable work claws combine protection with power. Moderately increase damage, slightyl increase armor.&quot;"/>
+			<Str Name="itemD20" Desc="Iron Hydraulics:&#10;&quot;Hardened metal for durability and greater hitting power. Moderately increases armor.&quot;"/>
+			<Str Name="itemD21" Desc="Kron Hammer:&#10;&quot;A rock hammer infused with ultimate combat power. Very greatly increases damage.&quot;"/>
+			<Str Name="itemD22" Desc="Light Boots:&#10;&quot;Fashionable and comfortable boots. Slightly increases armor.&quot;"/>
+			<Str Name="itemD23" Desc="Light Slippers:&#10;&quot;Casual, stylish and comfortable. Slightly increases armor.&quot;"/>
+			<Str Name="itemD24" Desc="Light Sneakers:&#10;&quot;Simple, reliable sneakers. Slightly increases armor.&quot;"/>
+			<Str Name="itemD25" Desc="Lightning Ring:&#10;&quot;A ring infused with the power of raw lightning. Gives Lightning damage to basic attacks.&quot;"/>
+			<Str Name="itemD26" Desc="Lucky Gloves:&#10;&quot;Durable yet agile gloves soaked in clover juice.&quot;"/>
+			<Str Name="itemD27" Desc="Master Hydraulics:&#10;&quot;Premium grade materials providing the best defense and armor. Greatly increases armor.&quot;"/>
+			<Str Name="itemD28" Desc="Mirror Gloves:&#10;&quot;Made with ?exible metal, these shiny gloves boost combat powers. Moderately increases damage.&quot;"/>
+			<Str Name="itemD29" Desc="Nimble Slippers:&#10;&quot;Light, agile slippers for quick feet. Slightly increases armor.&quot;"/>
+			<Str Name="itemD30" Desc="Nocturne Blade:&#10;&quot;A blade infused with ultimate martial skill.&quot;"/>
+			<Str Name="itemD31" Desc="N&apos;rrgal Module:&#10;&quot;This device has the uncanny ability to help one when trying to escape or catch someone.&quot;"/>
+			<Str Name="itemD32" Desc="Oily Hydraulics:&#10;&quot;Well lubricated and lightweight parts for more agility. Slightly increases armor.&quot;"/>
+			<Str Name="itemD33" Desc="Polymer Gloves:&#10;&quot;Gloves made with durable polymers. Slightly increases damage and armor.&quot;"/>
+			<Str Name="itemD34" Desc="Power Gloves:&#10;&quot;Infused with power, these gloves hit hard but can be tricky to handle. Greatly increases damage but reduces attack.&quot;"/>
+			<Str Name="itemD35" Desc="Pretty Dress:&#10;&quot;A lovely dress sure to make one ? ght with extra grace and style.&quot;"/>
+			<Str Name="itemD36" Desc="Refresher:&#10;&quot;A medical kit that recovers 1 POW Point at the end of each round of combat.&quot;"/>
+			<Str Name="itemD37" Desc="Replenisher:&#10;&quot;A wrist device able to regenerate the wearer&apos;s health over time. Regenerates 5% of maximum HP per round.&quot;"/>
+			<Str Name="itemD38" Desc="Rubber Gloves:&#10;&quot;Light and smooth gloves for faster reaction. Moderately increases damage.&quot;"/>
+			<Str Name="itemD39" Desc="Rusty Hydraulics:&#10;&quot;Leftover parts from disassembled E-100 series robots. Moderately increases armor but decreases defense.&quot;"/>
+			<Str Name="itemD40" Desc="Serrated Claws:&#10;&quot;Aggressive, razor sharp combat claws that require caution to use. Greatly increases damage.&quot;"/>
+			<Str Name="itemD41" Desc="Shielded Sneakers:&#10;&quot;Prototype footwear offering the best armor available. Greatly increases armor.&quot;"/>
+			<Str Name="itemD42" Desc="Sparkly Gloves:&#10;&quot;Light and dazzling, these gloves tingle with energy. Greatly increases damage.&quot;"/>
+			<Str Name="itemD43" Desc="Speedy Sneakers:&#10;&quot;Light and well cushioned for more agility. Slightly increases armor.&quot;"/>
+			<Str Name="itemD44" Desc="Spiked Gloves:&#10;&quot;Cleated gloves that pack a nasty punch. Moderately increases damage.&quot;"/>
+			<Str Name="itemD45" Desc="Spiked Slippers:&#10;&quot;Aggressively styled footwear. Slightly increases armor.&quot;"/>
+			<Str Name="itemD46" Desc="Spiked Sneakers:&#10;&quot;Sneakers with cleats provide an edge in combat. Slightly increases armor.&quot;"/>
+			<Str Name="itemD47" Desc="Spiny Claws:&#10;&quot;Needle-like claws that tear through steel. Greatly increases damage.&quot;"/>
+			<Str Name="itemD48" Desc="Spooky Charm:&#10;&quot;A mystical charm likely to cause fear in one&apos;s enemies. Foes ? ee more often.&quot;"/>
+			<Str Name="itemD49" Desc="Steel Toe Boots:&#10;&quot;Steel reinforced to provide more kick in combat. Greatly increases armor. Moderately increases damage.&quot;"/>
+			<Str Name="itemD50" Desc="Stiff Sneakers:&#10;&quot;Sneakers made wtih tough polymers. Moderately increases armor.&quot;"/>
+			<Str Name="itemD51" Desc="Swift Boots:&#10;&quot;Agile and speedy boots for the quick footed.&quot;"/>
+			<Str Name="itemD52" Desc="Titanium Claws:&#10;&quot;Master grade combat claws providing superior overall combat power. Greatly increases damage.&quot;"/>
+			<Str Name="itemD53" Desc="Tough Slippers:&#10;&quot;Heavy duty slippers for outdoor use. Greatly increases armor but reduces defense.&quot;"/>
+			<Str Name="itemD54" Desc="Voxai Teleporter:&#10;&quot;A teleporter infused with ultimate agility.&quot;"/>
+			<Str Name="itemD55" Desc="Water Ring:&#10;&quot;A ring infused with the power of tidal fury. Gives Water damage to basic attacks.&quot;"/>
+			<Str Name="itemD56" Desc="Wind Ring:&#10;&quot;A ring infused with the power of a hurricane. Gives Wind damage to basic attacks.&quot;"/>
+			<Str Name="itemD57" Desc="Work Boots:&#10;&quot;Durable and rugged for tough customers. Moderately increases armor.&quot;"/>
+			<Str Name="itemD58" Desc="Work Gloves:&#10;&quot;More durable gloves to pack extra punch. Slightly increases damage.&quot;"/>
+			<Str Name="itemD59" Desc="Zoah Shield:&#10;&quot;An energy shield infused with Invulnerability. Greatly increases armor.&quot;"/>
+			<Str Name="itemD60" Desc="Antidote:&#10;&quot;A curative elixir that removes all bad status effects from one team member.&quot;"/>
+			<Str Name="itemD61" Desc="Bug Spray:&#10;&quot;A potent pesticide for pesky critters of the insect variety. Weakens insects.&quot;"/>
+			<Str Name="itemD62" Desc="Clover Juice:&#10;&quot;Made with an extract capable of boosting ones luck for short periods.&quot;"/>
+			<Str Name="itemD63" Desc="Crazy Beans:&#10;&quot;Boosts you in unpredictable ways. Try them and see what happens!&quot;"/>
+			<Str Name="itemD64" Desc="Cure All Spray:&#10;&quot;A large dose antidote able to remove status ailments from all team members at once.&quot;"/>
+			<Str Name="itemD65" Desc="Health Leaf:&#10;&quot;The leaf of a plant known for its healing effects.&quot;"/>
+			<Str Name="itemD66" Desc="Health Root:&#10;&quot;The root of a plant known for its healing effects.&quot;"/>
+			<Str Name="itemD67" Desc="Health Seed:&#10;&quot;The seed of a plant known for its healing effects.&quot;"/>
+			<Str Name="itemD68" Desc="Immunity Booster:&#10;&quot;A vaccine effective in preventing debilitating systems for short periods.&quot;"/>
+			<Str Name="itemD69" Desc="Iron Tonic:&#10;&quot;Made with medicine capable of toughening the skin for short periods. Moderately increases armor.&quot;"/>
+			<Str Name="itemD70" Desc="Med Emitter:&#10;&quot;An alien device that produces an energy pulse that heals all party members. Restores HP&quot;"/>
+			<Str Name="itemD71" Desc="POW Candy:&#10;&quot;A refreshing formula that invigorates mind and body.&quot;"/>
+			<Str Name="itemD72" Desc="POW Drink:&#10;&quot;A refreshing formula that invigorates mind and body.&quot;"/>
+			<Str Name="itemD73" Desc="POW Gum:&#10;&quot;A refreshing formula that invigorates mind and body.&quot;"/>
+			<Str Name="itemD74" Desc="Prune Juice:&#10;&quot;Made with an extract guaranteed to improve combat abilities for short periods.&quot;"/>
+			<Str Name="itemD75" Desc="Psychic Water:&#10;&quot;A rare concoction capable of providing heightened premonition for short periods.&quot;"/>
+			<Str Name="itemD76" Desc="Refresher Wave:&#10;&quot;An alien device that produces an energy pulse that invigorates all party members.&quot;"/>
+			<Str Name="itemD77" Desc="Revival Ring:&#10;&quot;A ring with the power to put the fallen back on their feet. Revives one KO&apos;ed team member.&quot;"/>
+			<Str Name="itemD78" Desc="Ring of Life:&#10;&quot;A ring with the power to put the fallen back into fighting shape. Revives one KO&apos;ed team member.&quot;"/>
+			<Str Name="itemD79" Desc="Rock Salt:&#10;&quot;A rare earth extract capable of raising one&apos;s raw strength for short periods. Moderately increases damage.&quot;"/>
+			<Str Name="itemD80" Desc="Speed Bar:&#10;&quot;Made with medicine capable of boosting one&apos;s re?exes for short periods of time.&quot;"/>
+			<Str Name="itemD81" Desc="Beam Cannon:&#10;&quot;A non-lethal weapon created to banish the Marauders without harming them.&quot;"/>
+			<Str Name="itemD82" Desc="Red Chaos Emerald:&#10;&quot;One of the legendary Chaos Emeralds, found at the Kron Colony.&quot;"/>
+			<Str Name="itemD83" Desc="Sky Blue Chaos Emerald:&#10;&quot;One of the legendary Chaos Emeralds, found at the Zoah Colony.&quot;"/>
+			<Str Name="itemD84" Desc="Green Chaos Emerald:&#10;&quot;One of the legendary Chaos Emeralds, found at the N&apos;rrgal Colony.&quot;"/>
+			<Str Name="itemD85" Desc="&apos;White&apos; (Pink) Chaos Emerald:&#10;&quot;One of the legendary Chaos Emeralds, found at the Voxai Colony Alpha. It&apos;s been turned pink by the Voxai.&quot;"/>
+			<Str Name="itemD86" Desc="Yellow Chaos Emerald:&#10;&quot;One of the legendary Chaos Emeralds, found at the Voxai Colony Beta.&quot;"/>
+			<Str Name="itemD87" Desc="Purple Chaos Emerald:&#10;&quot;One of the legendary Chaos Emeralds, found at the Nocturne.&quot;"/>
+			<Str Name="itemD88" Desc="Blue Chaos Emerald:&#10;&quot;One of the legendary Chaos Emeralds, found at the Nocturne.&quot;"/>
+			<Str Name="itemD89" Desc="Communicator:&#10;&quot;A device used by the Marauders to keep in touch with their base.&quot;"/>
+			<Str Name="itemD90" Desc="Eggman Detector:&#10;&quot;A device that detects Eggman&apos;s electronic signature.&quot;"/>
+			<Str Name="itemD91" Desc="Eggman Device:&#10;&quot;A device built by Eggman. It doesn&apos;t seem to do anything.&quot;"/>
+			<Str Name="itemD92" Desc="GUN Official:&#10;&quot; &quot;Please, no time to talk. I must return to Station Square. I&apos;m very important, you know!&quot; &quot;"/>
+			<Str Name="itemD93" Desc="Little Boy:&#10;&quot; &quot;Thanks so much for saving me, Sonic! Please take me home to Central City!&quot; &quot;"/>
+			<Str Name="itemD94" Desc="Nocturnes Tech:&#10;&quot;A piece of Nocturnus Clan technology so advanced that even Tails can&apos;t figure out its function.&quot;"/>
+			<Str Name="itemD95" Desc="Pattern Generator:&#10;&quot;A device that generates code patterns that interfere with energy fields.&quot;"/>
+			<Str Name="itemD96" Desc="Precursor Tablett:&#10;&quot;A stone tablet covered in strange writing.&quot;"/>
+			<Str Name="itemD97" Desc="Prized Stapler:&#10;&quot;A stunningly beautiful device, when you really look at it.&quot;"/>
+			<Str Name="itemD98" Desc="Timothy:&#10;&quot; &quot;My dad isn&apos;t really crazy, just old. He&apos;ll be glad to see me, I know.&quot; &quot;"/>
+			<Str Name="itemD99" Desc="Weapon Part:&#10;&quot;A part needed for Eggman and Tails to create their ultimate weapon.&quot;"/>
+			<Str Name="itemD100" Desc="N&apos;rrgal Shipment:&#10;&quot;A crate filled with N&apos;rrgal Sweat. Ew!&quot;"/>
+			<Str Name="itemD101" Desc="Kron Payment:&#10;&quot;The payment for the N&apos;rrgal Sweat delivery, addressed to the N&apos;rrgal Trader.&quot;"/>
+		</Cat>
+		<Cat Name="Chao names" Desc="Names of all Chao">
+			<Str Name="chao1" Desc="&apos;Barbo&apos;"/>
+			<Str Name="chao2" Desc="&apos;Belgog&apos;"/>
+			<Str Name="chao3" Desc="&apos;Bepke&apos;"/>
+			<Str Name="chao4" Desc="&apos;Blayze&apos;"/>
+			<Str Name="chao5" Desc="&apos;Bobo&apos;"/>
+			<Str Name="chao6" Desc="&apos;Cheese&apos;"/>
+			<Str Name="chao7" Desc="&apos;Cheezlet&apos;"/>
+			<Str Name="chao8" Desc="&apos;Choo&apos;"/>
+			<Str Name="chao9" Desc="&apos;Choopaloo&apos;"/>
+			<Str Name="chao10" Desc="&apos;Churdle&apos;"/>
+			<Str Name="chao11" Desc="&apos;Dusty&apos;"/>
+			<Str Name="chao12" Desc="&apos;Ferox&apos;"/>
+			<Str Name="chao13" Desc="&apos;Fess&apos;"/>
+			<Str Name="chao14" Desc="&apos;Ghise&apos;"/>
+			<Str Name="chao15" Desc="&apos;Gibber&apos;"/>
+			<Str Name="chao16" Desc="&apos;Griff&apos;"/>
+			<Str Name="chao17" Desc="&apos;Hayda&apos;"/>
+			<Str Name="chao18" Desc="&apos;Jirna&apos;"/>
+			<Str Name="chao19" Desc="&apos;Joy&apos;"/>
+			<Str Name="chao20" Desc="&apos;Kayla&apos;"/>
+			<Str Name="chao21" Desc="&apos;Keroyo&apos;"/>
+			<Str Name="chao22" Desc="&apos;Knickt&apos;"/>
+			<Str Name="chao23" Desc="&apos;Koolet&apos;"/>
+			<Str Name="chao24" Desc="&apos;Korus&apos;"/>
+			<Str Name="chao25" Desc="&apos;Luunan&apos;"/>
+			<Str Name="chao26" Desc="&apos;Oldarg&apos;"/>
+			<Str Name="chao27" Desc="&apos;Oolean&apos;"/>
+			<Str Name="chao28" Desc="&apos;Ovus&apos;"/>
+			<Str Name="chao29" Desc="&apos;Perty&apos;"/>
+			<Str Name="chao30" Desc="&apos;Pyraz&apos;"/>
+			<Str Name="chao31" Desc="&apos;Radu&apos;"/>
+			<Str Name="chao32" Desc="&apos;Rugle&apos;"/>
+			<Str Name="chao33" Desc="&apos;Seeri&apos;"/>
+			<Str Name="chao34" Desc="&apos;Seggo&apos;"/>
+			<Str Name="chao35" Desc="&apos;Spartoi&apos;"/>
+			<Str Name="chao36" Desc="&apos;Stebsly&apos;"/>
+			<Str Name="chao37" Desc="&apos;Stiglin&apos;"/>
+			<Str Name="chao38" Desc="&apos;Velk&apos;"/>
+			<Str Name="chao39" Desc="&apos;Zimbar&apos;"/>
+			<Str Name="chao40" Desc="&apos;Zousar&apos;"/>
+			<Str Name="chao41" Desc="&apos;Kuna&apos;"/>
+		</Cat>
+		<Cat Name="Chao descriptions" Desc="Descriptions for the ability of each Chao">
+			<Str Name="chaoD1" Desc="Barbo:&#10;&quot;Increases Maximum HP of bonded character.&quot;"/>
+			<Str Name="chaoD2" Desc="Belgog:&#10;&quot;Bonded character is much harder to hit.&quot;"/>
+			<Str Name="chaoD3" Desc="Bepke:&#10;&quot;At least one enemy will automatically attack the bonded character instead of other team members.&quot;"/>
+			<Str Name="chaoD4" Desc="Blayze:&#10;&quot;Bonded character does much more damage in battle.&quot;"/>
+			<Str Name="chaoD5" Desc="Bobo:&#10;&quot;Bonded character will always find an extra reward item after combat.&quot;"/>
+			<Str Name="chaoD6" Desc="Cheese:&#10;&quot;Greatly increases luck of all team members.&quot;"/>
+			<Str Name="chaoD7" Desc="Cheezlet:&#10;&quot;Bonded character does more damage in battle.&quot;"/>
+			<Str Name="chaoD8" Desc="Choo:&#10;&quot;Bonded character regenerates PP at the start of each combat round.&quot;"/>
+			<Str Name="chaoD9" Desc="Choopaloo:&#10;&quot;Increases XP gained from each battle.&quot;"/>
+			<Str Name="chaoD10" Desc="Churdle:&#10;&quot;Bonded character has a better chance of hitting targets in battle.&quot;"/>
+			<Str Name="chaoD11" Desc="Dusty:&#10;&quot;Increases the chance that the team will catch a fleeing opponent.&quot;"/>
+			<Str Name="chaoD12" Desc="Ferox:&#10;&quot;Bonded character automatically succeeds using their POW moves.&quot;"/>
+			<Str Name="chaoD13" Desc="Fess:&#10;&quot;Increases the odds that Chao eggs will hatch rare or unique Chao.&quot;"/>
+			<Str Name="chaoD14" Desc="Ghise:&#10;&quot;Bonded character&apos;s attacks do Water damage.&quot;"/>
+			<Str Name="chaoD15" Desc="Gibber:&#10;&quot;Bonded character has greatly increased resistance to damage.&quot;"/>
+			<Str Name="chaoD16" Desc="Griff:&#10;&quot;Bonded character&apos;s attacks do Ice damage.&quot;"/>
+			<Str Name="chaoD17" Desc="Hayda:&#10;&quot;Regenerates PP at the start of each combat round for all team members.&quot;"/>
+			<Str Name="chaoD18" Desc="Jirna:&#10;&quot;Chao creates an earth shield to protect against damage.&quot;"/>
+			<Str Name="chaoD19" Desc="Joy:&#10;&quot;Regenerates HP at the start of each combat round for all team members.&quot;"/>
+			<Str Name="chaoD20" Desc="Kayla:&#10;&quot;Reduces the team&apos;s chance of being ambushed.&quot;"/>
+			<Str Name="chaoD21" Desc="Keroyo:&#10;&quot;Increases odds of enemies fleeing from battle.&quot;"/>
+			<Str Name="chaoD22" Desc="Knickt:&#10;&quot;Chao creates a shield of lightning to protect against damage.&quot;"/>
+			<Str Name="chaoD23" Desc="Koolet:&#10;&quot;Bonded character is harder to hit.&quot;"/>
+			<Str Name="chaoD24" Desc="Korus:&#10;&quot;Chao creates a shield of fire to protect against damage.&quot;"/>
+			<Str Name="chaoD25" Desc="Luunan:&#10;&quot;Greatly increases the maximum PP of bonded character.&quot;"/>
+			<Str Name="chaoD26" Desc="Oldarg:&#10;&quot;Bonded character has a greatly increased chance to hit targets in battle.&quot;"/>
+			<Str Name="chaoD27" Desc="Oolean:&#10;&quot;Increases maximum PP of bonded character.&quot;"/>
+			<Str Name="chaoD28" Desc="Ovus:&#10;&quot;Bonded character is automatically revived once during a battle.&quot;"/>
+			<Str Name="chaoD29" Desc="Perty:&#10;&quot;Chao creates a shield of water to protect against damage.&quot;"/>
+			<Str Name="chaoD30" Desc="Pyraz:&#10;&quot;Bonded character&apos;s attacks do fire damage.&quot;"/>
+			<Str Name="chaoD31" Desc="Radu:&#10;&quot;Greatly increases the maximum HP of bonded character.&quot;"/>
+			<Str Name="chaoD32" Desc="Rugle:&#10;&quot;Bonded character has increased luck.&quot;"/>
+			<Str Name="chaoD33" Desc="Seeri:&#10;&quot;Chao creates a shield of wind to protect against damage.&quot;"/>
+			<Str Name="chaoD34" Desc="Seggo:&#10;&quot;Bonded character&apos;s attacks do Wind damage.&quot;"/>
+			<Str Name="chaoD35" Desc="Spartoi:&#10;&quot;Bonded character&apos;s attacks may cause instant KO against enemies.&quot;"/>
+			<Str Name="chaoD36" Desc="Stebsly:&#10;&quot;Bonded character regenerates HP at the start of every combat round.&quot;"/>
+			<Str Name="chaoD37" Desc="Stiglin:&#10;&quot;Bonded character&apos;s attacks do Earth damage.&quot;"/>
+			<Str Name="chaoD38" Desc="Velk:&#10;&quot;Bonded character has increased resistance to damage.&quot;"/>
+			<Str Name="chaoD39" Desc="Zimbar:&#10;&quot;Bonded character&apos;s attacks do Lightning damage.&quot;"/>
+			<Str Name="chaoD40" Desc="Zousar:&#10;&quot;Increases the team&apos;s chances of Ambushing opposing teams.&quot;"/>
+			<Str Name="chaoD41" Desc="Kuna:&#10;&quot;Increases the amount of rings gathered at the end of a battle.&quot;"/>
+		</Cat>
+	</Cat>
+	<Cat Name="Journal Entries" Desc="Texts for the individual journal entries">
+		<Cat Name="Codex" Desc="">
+			<Str Name="JE_Sonic"/>
+		</Cat>
+		<Cat Name="Missions" Desc="">
+
+		</Cat>
+		<Cat Name="Guides" Desc="">
+
+		</Cat>
+		<Cat Name="Videos" Desc="">
+
+		</Cat>
+		<Cat Name="Credits" Desc="">
+			<Str Name="JE_Credits"/>
+			<Str Name="JE_FanCredits"/>
+		</Cat>
+	</Cat>
+	<Cat Name="Dialogs" Desc="Dialog texts">
+		<Cat Name="Story Dialogs" Desc="Dialogs that are played or change with the progression of the game">
+			<Cat Name="StoryDialogue_1" Desc="The conversation between Tails and Sonic after Sonic arrives in Green Hill">
+				<Str Name="C1SD1_1" Desc="Tails:&#10;&quot;Sonic, you made it! I&apos;m so glad to hear from you!&quot;"/>
+				<Str Name="C1SD1_2" Desc="Sonic:&#10;&quot;I&apos;m here, Tails. What&apos;s going on?&quot;"/>
+				<Str Name="C1SD1_3" Desc="Tails:&#10;&quot;We&apos;re in big trouble, Sonic. Knuckles has gone missing. And so have the Chaos Emeralds!&quot;"/>
+				<Str Name="C1SD1_4" Desc="Tails:&#10;&quot;A group of criminals called the Marauders kidnapped him! We need your help!&quot;"/>
+				<Str Name="C1SD1_5" Desc="Sonic:&#10;&quot;Of course I&apos;ll help!&quot;"/>
+				<Str Name="C1SD1_6" Desc="Tails:&#10;&quot;I knew you would! I just knew it!&quot;"/>
+				<Str Name="C1SD1_7" Desc="Tails:&#10;&quot;I can see you on my Monitors, so even if I&apos;m not with you, I&apos;ll guide you if you have any trouble.&quot;"/>
+				<Str Name="C1SD1_8" Desc="Sonic:&#10;&quot;What else do you know about the situation?&quot;"/>
+				<Str Name="C1SD1_9" Desc="Tails:&#10;&quot;Knuckles was fighting against the Marauders when he disappeared. We&apos;re not really sure who they are, but they&apos;re bad news!&quot;"/>
+				<Str Name="C1SD1_10" Desc="Tails:&#10;&quot;Please Sonic. I&apos;ll explain more when you get here! We&apos;re losing time!&quot;"/>
+				<Str Name="C1SD1_11" Desc="Sonic:&#10;&quot;Wait, they took the Chaos Emeralds too?&quot;"/>
+				<Str Name="C1SD1_12" Desc="Tails:&#10;&quot;They did! And that means trouble!&quot;"/>
+				<Str Name="C1SD1_13" Desc="Tails:&#10;&quot;The Chaos Emeralds are powerful gems, Sonic. Someone who knows how to use them could do just about anything with their power!&quot;"/>
+				<Str Name="C1SD1_14" Desc="Tails:&#10;&quot;You know how you&apos;ve used all the 7 Chaos Emeralds? By using their power to become Super Sonic, you were pretty much unbeatable!&quot;"/>
+				<Str Name="C1SD1_15" Desc="Sonic:&#10;&quot;Well Yeah! How could i ever forget?&quot;"/>
+				<Str Name="C1SD1_16" Desc="Tails:&#10;&quot;Without knowing who the Marauders are, there&apos;s no telling what they&apos;ll do with the Chaos Emeralds. We have to stop them!&quot;"/>
+				<Str Name="C1SD1_17" Desc="Sonic:&#10;&quot;Right. Let&apos;s go!&quot;"/>
+				<Str Name="C1SD1_18" Desc="Tails:&#10;&quot;Amy is on her way to meet you. Once you find her, meet me at my workshop near Central City.&quot;"/>
+				<Str Name="C1SD1_19" Desc="Sonic:&#10;&quot;Sounds like a plan. I&apos;ll be there in a flash!&quot;"/>
+				<Str Name="C1SD1_20" Desc="Tails:&#10;&quot;Great! Thanks, Sonic. With you on our side, I know we&apos;ll save Knuckles!&quot;"/>
+				<Str Name="C1SD1_21" Desc="Sonic:&#10;&quot;O-Oh! ... A-Amy&apos;s tagging along? H-How quaint...&quot;"/>
+				<Str Name="C1SD1_22" Desc="Tails:&#10;&quot;Well, you know how she is. She wanted to meet you halfway and make sure you got here safely.&quot;"/>
+				<Str Name="C1SD1_23" Desc="Tails:&#10;&quot;I&apos;ll wait for you in the workshop. With you on the team, I know we&apos;ll save Knuckles!&quot;"/>
+				<Str Name="C1SD1_24" Desc="Tails:&#10;&quot;Let&apos;s go!&quot;"/>
+			</Cat>
+		</Cat>
+	</Cat>
+	<Cat Name="Subtitles" Desc="Video Subtitles">
+
+	</Cat>
+</Language>
+
+<!--
+<Str Name="" Desc=""/>
+
+&quot;
+&apos;
+&#10;
+
+<Cat Name="" Desc="">
+
+</Cat>
+-->
