@@ -41,6 +41,8 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationFramework.Aero" />
+    <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="PropertyChanged, Version=3.2.1.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
       <HintPath>..\packages\PropertyChanged.Fody.3.2.1\lib\net40\PropertyChanged.dll</HintPath>
     </Reference>
@@ -66,10 +68,15 @@
     </ApplicationDefinition>
     <Compile Include="Data\FileLoader.cs" />
     <Compile Include="Data\HeaderNode.cs" />
+    <Compile Include="Data\Settings.cs" />
+    <Compile Include="SettingsWindow.xaml.cs">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Viewmodel\NodeTemplateSelector.cs" />
     <Compile Include="Viewmodel\VM_Main.cs" />
     <Compile Include="Viewmodel\VM_Node.cs" />
     <Compile Include="Viewmodel\VM_ParentNode.cs" />
+    <Compile Include="Viewmodel\VM_Settings.cs" />
     <Compile Include="Viewmodel\VM_StringNode.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -86,6 +93,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -113,7 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <Content Include="LanguageFiles\Format.xml">
+    <Content Include="LanguageFiles\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

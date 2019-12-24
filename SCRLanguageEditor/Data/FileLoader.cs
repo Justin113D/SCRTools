@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml;
 
 namespace SCRLanguageEditor.Data
@@ -44,6 +45,8 @@ namespace SCRLanguageEditor.Data
 
             // getting the child nodes
             LoadNodes(file.DocumentElement.ChildNodes, nodes, stringNodes);
+
+            stringNodes = stringNodes.OrderBy(x => x.Name).ToList();
 
             HeaderNode lang = new HeaderNode(file.DocumentElement.Attributes.GetNamedItem("Version").Value, nodes, stringNodes);
 

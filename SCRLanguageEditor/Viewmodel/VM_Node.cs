@@ -1,13 +1,9 @@
-﻿using SCRLanguageEditor.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SCRCommon.Viewmodels;
+using SCRLanguageEditor.Data;
 
 namespace SCRLanguageEditor.Viewmodel
 {
-    public abstract class VM_Node
+    public abstract class VM_Node : BaseViewModel
     {
         protected Node node;
 

@@ -4,6 +4,7 @@ using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.Xml;
 using System.Collections.Generic;
+using SCRCommon.WpfStyles;
 
 namespace SCRLanguageEditor.Viewmodel
 {
@@ -13,19 +14,27 @@ namespace SCRLanguageEditor.Viewmodel
 
         public ObservableCollection<VM_Node> Nodes { get; private set; }
 
-        public RelayCommand LoadFile { get; private set; }
-        public RelayCommand CreateNewFile { get; private set; }
+        public RelayCommand Cmd_LoadFormat { get; private set; }
+        public RelayCommand Cmd_NewFile { get; private set; }
+        public RelayCommand Cmd_Open { get; private set; }
+        public RelayCommand Cmd_Save { get; private set; }
+        public RelayCommand Cmd_SaveAs { get; private set; }
+        public RelayCommand Cmd_Settings { get; private set; }
 
-        public VM_Main()
+        private readonly VM_Settings settings;
+
+        public VM_Main(VM_Settings settings)
         {
-            LoadFile = new RelayCommand(() => OpenFile());
-            CreateNewFile = new RelayCommand(() => NewFile());
-            LoadTemplate();
+            this.settings = settings;
+            Cmd_Open = new RelayCommand(() => OpenFile());
+            Cmd_NewFile = new RelayCommand(() => NewFile());
+            Cmd_Settings = new RelayCommand(() => OpenSettings());
+            LoadTemplate(settings.DefaultFormatPath);
         }
 
-        private void LoadTemplate()
+        private void LoadTemplate(string path)
         {
-            format = FileLoader.LoadXMLFile("LanguageFiles/Format.xml");
+            format = FileLoader.LoadXMLFile(path);
             Nodes = new ObservableCollection<VM_Node>();
             foreach (Node n in format?.ChildNodes)
             {
@@ -47,7 +56,7 @@ namespace SCRLanguageEditor.Viewmodel
         private void OpenFile()
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "XML Files (*.xml)|*.xml";
+            ofd.Filter = "Lang Files (*.lang)|*.lang";
             if (ofd.ShowDialog() == true)
             {
 
@@ -56,7 +65,12 @@ namespace SCRLanguageEditor.Viewmodel
 
         private void NewFile()
         {
+            BaseWindowStyle.WindowTheme = BaseWindowStyle.WindowTheme == Theme.Dark ? Theme.Light : Theme.Dark;
+        }
 
+        private void OpenSettings()
+        {
+            new SettingsWindow(settings).ShowDialog();
         }
     }
 }

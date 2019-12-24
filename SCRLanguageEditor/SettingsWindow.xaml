@@ -1,0 +1,77 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SCRLanguageEditor.Viewmodel"
+        xmlns:vmBase="clr-namespace:SCRCommon.Viewmodels;assembly=SCRCommon"
+        xmlns:wpfBase="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
+        xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+        xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" x:Class="SCRLanguageEditor.SettingsWindow"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance {x:Type local:VM_Settings}}"
+        Title="Settings" Height="200" Width="500"
+        ResizeMode="NoResize"
+        Style="{DynamicResource WindowStyle}">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <wpfBase:BaseWindowStyle/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Border Background="{DynamicResource BG1}">
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Default path setting -->
+                <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Text="Default Format File" Margin="0,0,10,0"/>
+                <Grid Grid.Column="1" Grid.Row="0" x:Name="PathGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="0" Padding="2" Text="{Binding DefaultFormatPath, Mode=TwoWay}" TextWrapping="NoWrap" HorizontalAlignment="Stretch"/>
+                    <Button Grid.Column="1" Width="{Binding ActualHeight, ElementName=PathGrid}" Margin="5,0,0,0">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="Background" Value="Transparent"/>
+                            </Style>
+                        </Button.Style>
+                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/OpenFolder.png" Height="16" Width="16"/>
+                    </Button>
+                </Grid>
+
+                <!--Theme setting-->
+                <TextBlock Grid.Column="0" Grid.Row="2" Text="Theme" VerticalAlignment="Center"/>
+                <ComboBox Grid.Column="1" Grid.Row="2" Width="100" HorizontalAlignment="Left" Foreground="Black"
+                            ItemsSource="{Binding Themes}"
+                            SelectedValue="{Binding WindowTheme, Mode=TwoWay}"/>
+            </Grid>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Click="Button_Click" Content="Ok" Width="100" Margin="0,0,10,0" Command="{Binding Cmd_Save}"/>
+                <Button Click="Button_Click" Content="Cancel" Width="100" Command="{Binding Cmd_Cancel}"/>
+            </StackPanel>
+        </Grid>
+
+    </Border>
+</Window>

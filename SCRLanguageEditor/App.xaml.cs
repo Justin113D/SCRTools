@@ -1,6 +1,7 @@
 ﻿using DryIoc;
 using System.Windows;
 using SCRLanguageEditor.Viewmodel;
+using SCRLanguageEditor.Data;
 
 namespace SCRLanguageEditor
 {
@@ -12,6 +13,8 @@ namespace SCRLanguageEditor
         private static IContainer CreateCompositionRoot()
         {
             var container = new Container();
+            container.Register<Settings>(Reuse.Singleton);
+            container.Register<VM_Settings>(Reuse.Singleton);
             container.Register<VM_Main>(Reuse.Singleton);
             container.Register<MainWindow>();
             return container;

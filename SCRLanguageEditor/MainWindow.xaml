@@ -10,10 +10,10 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:VM_Main}"
-        Title="SCR Language Editor" Height="500" Width="900"
+        Title="Language Editor" Height="500" Width="900"
         MinHeight="200" MinWidth="350"
         Style="{DynamicResource WindowStyle}"
-        x:Name="window">
+        Icon="pack://application:,,,/SCRCommon;component/Icons/Dictionary_32x.png">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -21,20 +21,6 @@
                 <base:BaseWindowStyle/>
 
                 <ResourceDictionary>
-                    <Style TargetType="{x:Type TextBlock}" x:Key="TVI_TextBlock">
-                        <Setter Property="TextAlignment" Value="Left"/>
-                        <Setter Property="Foreground" Value="{DynamicResource FontColor}"/>
-                        <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="TextWrapping" Value="Wrap"/>
-                    </Style>
-                    <Style TargetType="{x:Type TextBox}" x:Key="TVI_TextField">
-                        <Setter Property="VerticalAlignment" Value="Top"/>
-                        <Setter Property="TextAlignment" Value="Left"/>
-                        <Setter Property="Foreground" Value="{DynamicResource FontColor}"/>
-                        <Setter Property="BorderThickness" Value="0"/>
-                        <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="TextWrapping" Value="Wrap"/>
-                    </Style>
                     <Style x:Key="ExpandCollapseToggleStyle" TargetType="ToggleButton">
                         <Setter Property="Focusable" Value="False"/>
                         <Setter Property="Template">
@@ -45,7 +31,7 @@
                                             HorizontalAlignment="Center" 
                                             VerticalAlignment="Center" 
                                             Margin="1,1,1,1"
-                                            Fill="{DynamicResource FontColor}"
+                                            Fill="{DynamicResource FontBrush}"
                                             Data="M 4 0 L 8 4 L 4 8 Z"/>
                                     </Grid>
                                     <ControlTemplate.Triggers>
@@ -81,13 +67,13 @@
                                         IsChecked="{Binding Path=IsExpanded,
                                         RelativeSource={RelativeSource TemplatedParent}}"
                                         ClickMode="Press"/>
-                                    
+
                                     <ContentPresenter x:Name="contentPresenter" Grid.Column="1" Margin="2 0 0 0"
                                                       HorizontalAlignment="Stretch" ContentSource="Header"/>
                                 </Grid>
                             </Border>
                             <Border x:Name="ItemsHost" Padding="0,3,0,3"
-                                    BorderThickness="0, 0, 0, 3" BorderBrush="{DynamicResource DisabledBackgroundColor}">
+                                    BorderThickness="0, 0, 0, 3" BorderBrush="{DynamicResource BG3}">
                                 <ItemsPresenter/>
                             </Border>
                         </StackPanel>
@@ -110,14 +96,13 @@
                                     <Condition Property="IsSelected" Value="true"/>
                                     <Condition Property="IsSelectionActive" Value="false"/>
                                 </MultiTrigger.Conditions>
-                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SelectedBackgroundColor}"/>
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SelectedBG}"/>
                             </MultiTrigger>
                             <Trigger Property="IsEnabled" Value="false">
-                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource DisabledBackgroundColor}"/>
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource DisabledBG}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
-                    
                     <Style TargetType="{x:Type TreeViewItem}" x:Key="Node">
                         <Setter Property="BorderThickness" Value="0"/>
                         <Setter Property="Background" Value="Transparent"/>
@@ -127,12 +112,12 @@
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Type}" Value="{x:Static data:Node+NodeType.ParentNode}">
                                 <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
-                                <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
-                                
+                                <Setter Property="Background" Value="{DynamicResource BG1}"/>
+
                             </DataTrigger>
                             <DataTrigger Binding="{Binding Type}" Value="{x:Static data:Node+NodeType.StringNode}">
-                                <Setter Property="Background" Value="{DynamicResource SecBackgroundColor}"/>
-                                
+                                <Setter Property="Background" Value="{DynamicResource BG2}"/>
+
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -152,16 +137,14 @@
                                     Converter={StaticResource WindowWidthConverter}}"/>
 
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center"
-                                     Style="{DynamicResource TVI_TextBlock}" FontSize="22"/>
-                            <TextBlock Grid.Column="1" Text="{Binding Description}" VerticalAlignment="Center"
-                                     Style="{DynamicResource TVI_TextBlock}" FontSize="15" Margin="5"
-                                     Foreground="{DynamicResource HintFontColor}" />
+                            <TextBlock Grid.Column="0" Text="{Binding Name}" Style="{DynamicResource {x:Type TextBlock}}" VerticalAlignment="Center" FontSize="22"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Description}" Style="{DynamicResource {x:Type TextBlock}}" VerticalAlignment="Center" Margin="5"
+                                     Foreground="{DynamicResource HintFontBrush}" />
                         </Grid>
                     </HierarchicalDataTemplate>
                     <HierarchicalDataTemplate x:Key="StringNode" ItemsSource="{x:Null}">
-                        <Border BorderThickness="0 1 0 1" BorderBrush="{DynamicResource BackgroundColor}">
-                            <Grid>
+                        <Border BorderThickness="0 1 0 1" BorderBrush="{DynamicResource BG1}">
+                            <Grid Margin="0,5,0,5">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="2*"/>
@@ -170,26 +153,23 @@
                                         Converter={StaticResource WindowWidthConverter}}"/>
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" Margin="0,5,0,5"
-                                        Style="{DynamicResource TVI_TextBlock}" FontSize="22"/>
-                                <Rectangle Grid.Column="1" Fill="{DynamicResource SecBackgroundColorAlt}"/>
-                                <TextBox Grid.Column="1" Text="{Binding Value, Mode=TwoWay}" AcceptsReturn="True" Padding="5"
-                                        Style="{DynamicResource TVI_TextField}" FontSize="15" VerticalAlignment="Stretch"
-                                         />
-                                <TextBlock Grid.Column="2" Text="{Binding Description}" Margin="5" VerticalAlignment="Center"
-                                        Style="{DynamicResource TVI_TextBlock}" FontSize="15"
-                                        Foreground="{DynamicResource HintFontColor}"/>
+                                <TextBlock Grid.Column="0" Text="{Binding Name}" Style="{DynamicResource {x:Type TextBlock}}" VerticalAlignment="Center" FontSize="22"/>
+                                <Rectangle Grid.Column="1" Fill="{DynamicResource BG3}"/>
+                                <TextBox Grid.Column="1" Text="{Binding Value, Mode=TwoWay}" Style="{DynamicResource {x:Type TextBox}}" AcceptsReturn="True" Padding="5" VerticalAlignment="Stretch"/>
+                                <TextBlock Grid.Column="2" Text="{Binding Description}" Style="{DynamicResource {x:Type TextBlock}}" Margin="5" VerticalAlignment="Center" Foreground="{DynamicResource HintFontBrush}"/>
                             </Grid>
                         </Border>
                     </HierarchicalDataTemplate>
                     <local:NodeTemplateSelector x:Key="TemplateSelector"
                                                 ParentTemplate="{StaticResource ParentNode}"
                                                 StringTemplate="{StaticResource StringNode}"/>
+
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
+            
         </ResourceDictionary>
     </Window.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -198,13 +178,35 @@
 
         <Menu Grid.Row="0">
             <MenuItem Header="File">
-                <MenuItem Header="New file" Command="{Binding CreateNewFile}"/>
-                <MenuItem Header="Open" Command="{Binding LoadFile}"/>
-                <MenuItem Header="Import Old"/>
+                <MenuItem Header="Load format" Command="{Binding Cmd_LoadFormat}" InputGestureText="Ctrl+Shift+O">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/OpenFolder.png" Height="16" Width="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <Separator/>
-                <MenuItem Header="Save"/>
-                <MenuItem Header="Save as..."/>
+                <MenuItem Header="New file" Command="{Binding Cmd_NewFile}" InputGestureText="Ctrl+N">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/NewFile.png" Height="16" Width="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Open" Command="{Binding Cmd_Open}" InputGestureText="Ctrl+O">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/OpenFolder.png" Height="16" Width="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="Save" Command="{Binding Cmd_Save}" InputGestureText="Ctrl+S">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/Save.png" Height="16" Width="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Save as..." Command="{Binding Cmd_SaveAs}" InputGestureText="Ctrl+Shift+S">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/SaveAs.png" Height="16" Width="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
+            <MenuItem Header="Settings" Command="{Binding Cmd_Settings}"/>
         </Menu>
 
         <TreeView Grid.Row="1" ItemsSource="{Binding Nodes}"

@@ -8,18 +8,20 @@ using System.Windows.Markup;
 namespace SCRCommon.WpfStyles
 {
     /// <summary>
+    /// The different window themes to choose from
+    /// </summary>
+    public enum Theme
+    {
+        Dark,
+        Light
+    }
+
+    /// <summary>
     /// Base class for a darkmode window frame that sets all necessary events for the window frame to function
     /// </summary>
     public partial class BaseWindowStyle : ResourceDictionary
     {
-        /// <summary>
-        /// The different window themes to choose from
-        /// </summary>
-        public enum Theme
-        {
-            Dark,
-            Light
-        }
+
 
         /// <summary>
         /// The current active window theme. Default is dark
@@ -42,6 +44,11 @@ namespace SCRCommon.WpfStyles
 
 
                 ResourceDictionary theme = GetTheme(value);
+
+                if(activeWindows == null)
+                {
+                    return;
+                }
 
                 foreach(Window w in activeWindows)
                 {
@@ -80,6 +87,11 @@ namespace SCRCommon.WpfStyles
         /// The window used to access the state
         /// </summary>
         private Window window;
+
+        /// <summary>
+        /// The icon in the top left corner
+        /// </summary>
+        private Image windowIcon;
 
         /// <summary>
         /// Default constructor
@@ -176,6 +188,11 @@ namespace SCRCommon.WpfStyles
             activeWindows.Remove((Window)sender);
         }
 
+        private void WindowIcon_Initialized(object sender, EventArgs e)
+        {
+            windowIcon = (Image)sender;
+        }
+
         /// <summary>
         /// Gets called once the maximize button is initialized: <br/>
         /// Sets itself into the maximizeButton field and sets the window and "statechanged" event on the window
@@ -196,6 +213,7 @@ namespace SCRCommon.WpfStyles
                     activeWindows = new List<Window>();
                 }
                 activeWindows.Add(window);
+                windowIcon.Source = window.Icon;
             }));
         }
     }

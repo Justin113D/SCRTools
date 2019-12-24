@@ -1,39 +1,15 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <SolidColorBrush x:Key="FontColor" Color="#EEE"/>
-    <SolidColorBrush x:Key="HintFontColor" Color="#AAA"/>
+    <Color x:Key="FontColor">#EEE</Color>
+    <Color x:Key="HintFontColor">#AAA</Color>
+
+    <Color x:Key="BGCol1">#444</Color>
+    <Color x:Key="BGCol2">#383838</Color>
+    <Color x:Key="BGCol3">#333</Color>
+
+    <Color x:Key="SelectedCol">#777</Color>
+    <Color x:Key="PressedCol">#999</Color>
+    <Color x:Key="DisabledCol">#282828</Color>
     
-    <SolidColorBrush x:Key="BackgroundColor" Color="#444"/>
-    <SolidColorBrush x:Key="SecBackgroundColor" Color="#383838"/>
-    <SolidColorBrush x:Key="SecBackgroundColorAlt" Color="#333"/>
-
-    <SolidColorBrush x:Key="SelectedBackgroundColor" Color="#555"/>
-    <SolidColorBrush x:Key="DisabledBackgroundColor" Color="#282828"/>
-
-    <Style TargetType="{x:Type Button}" x:Key="ToolbarButton">
-        <Setter Property="Foreground" Value="{DynamicResource FontColor}"/>
-    </Style>
-    <Style TargetType="{x:Type Border}" x:Key="WindowBase">
-        <Setter Property="BorderBrush" Value="#333"/>
-        <Setter Property="Background" Value="#333"/>
-    </Style>
-
-    <Style TargetType="{x:Type Menu}" x:Key="MenuBase">
-        <Setter Property="Background" Value="#3B3B3B"/>
-    </Style>
-
-    <Style TargetType="{x:Type MenuItem}" x:Key="MenuItemBase">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="{DynamicResource FontColor}"/>
-    </Style>
-
-    <Style TargetType="{x:Type TreeView}" x:Key="TreeViewBase">
-        <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
-    </Style>
-
-    <Style TargetType="{x:Type ContextMenu}">
-        <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
-    </Style>
-
 </ResourceDictionary>

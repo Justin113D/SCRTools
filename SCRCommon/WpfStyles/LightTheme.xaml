@@ -1,16 +1,18 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    
-    <Style TargetType="{x:Type Button}" x:Key="ToolbarButton">
-        <Setter Property="Foreground" Value="#EEE"/>
-    </Style>
-    <Style TargetType="{x:Type Border}" x:Key="WindowBase">
-        <Setter Property="BorderBrush" Value="#AAA"/>
-        <Setter Property="Background" Value="#AAA"/>
-    </Style>
 
-    <Style TargetType="{x:Type Menu}" x:Key="MenuBase">
-        <Setter Property="Background" Value="#BBB"/>
-    </Style>
+    <Color x:Key="FontColor">#FF0E0E0E</Color>
+    <Color x:Key="HintFontColor">#FF151515</Color>
+
+    <Color x:Key="BGCol1">#FFF0F0F0</Color>
+    <Color x:Key="BGCol2">#FFD8D8D8</Color>
+    <Color x:Key="BGCol3">#FFC9C9C9</Color>
+
+    <Color x:Key="SelectedBGCol">#FFACC4D4</Color>
+    <Color x:Key="DisabledBGCol">#FF5F5F5F</Color>
+
+    <Color x:Key="SelectedCol">#b4cce0</Color>
+    <Color x:Key="PressedCol">#a7c4d4</Color>
+    <Color x:Key="DisabledCol">#FF5F5F5F</Color>
 
 </ResourceDictionary>
