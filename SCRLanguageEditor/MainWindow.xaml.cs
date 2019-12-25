@@ -15,6 +15,7 @@ namespace SCRLanguageEditor
         private MainWindow()
         {
             InitializeComponent();
+            
         }
 
         public MainWindow(VM_Main mainViewModel) : this()

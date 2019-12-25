@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,8 +22,6 @@ namespace SCRCommon.WpfStyles
     /// </summary>
     public partial class BaseWindowStyle : ResourceDictionary
     {
-
-
         /// <summary>
         /// The current active window theme. Default is dark
         /// </summary>
@@ -52,22 +51,14 @@ namespace SCRCommon.WpfStyles
 
                 foreach(Window w in activeWindows)
                 {
-                    BaseWindowStyle bws = null;
                     // get the corresponding resource dictionary
                     foreach(ResourceDictionary rd in w.Resources.MergedDictionaries)
                     {
                         if(rd is BaseWindowStyle)
                         {
-                            bws = (BaseWindowStyle)rd;
+                            ((BaseWindowStyle)rd).MergedDictionaries[0] = theme;
                             break;
                         }
-                    }
-
-                    //if its not null, replace it
-                    if(bws != null)
-                    {
-                        int index = w.Resources.MergedDictionaries.IndexOf(bws);
-                        w.Resources.MergedDictionaries[index] = new BaseWindowStyle(theme);
                     }
                 }
             }
@@ -77,6 +68,18 @@ namespace SCRCommon.WpfStyles
         /// The windows which use this resource dictionary
         /// </summary>
         private static List<Window> activeWindows;
+
+        /// <summary>
+        /// Returns all active windows with 
+        /// </summary>
+        public static Window[] ActiveWindows
+        {
+            get
+            {
+                if (activeWindows == null) return null;
+                return activeWindows.ToArray();
+            }
+        }
 
         /// <summary>
         /// Used to access the maximize button and change the icon when the window changes state
@@ -89,23 +92,11 @@ namespace SCRCommon.WpfStyles
         private Window window;
 
         /// <summary>
-        /// The icon in the top left corner
-        /// </summary>
-        private Image windowIcon;
-
-        /// <summary>
         /// Default constructor
         /// </summary>
         public BaseWindowStyle()
         {
             MergedDictionaries.Add(GetTheme(WindowTheme));
-
-            InitializeComponent();
-        }
-
-        private BaseWindowStyle(ResourceDictionary themeRD)
-        {
-            MergedDictionaries.Add(themeRD);
             InitializeComponent();
         }
 
@@ -116,7 +107,7 @@ namespace SCRCommon.WpfStyles
         /// <returns></returns>
         private static ResourceDictionary GetTheme(Theme theme)
         {
-            var asm = System.Reflection.Assembly.Load("SCRCommon");
+            var asm = Assembly.Load("SCRCommon");
             string path;
             switch (WindowTheme)
             {
@@ -188,33 +179,35 @@ namespace SCRCommon.WpfStyles
             activeWindows.Remove((Window)sender);
         }
 
-        private void WindowIcon_Initialized(object sender, EventArgs e)
-        {
-            windowIcon = (Image)sender;
-        }
-
         /// <summary>
         /// Gets called once the maximize button is initialized: <br/>
-        /// Sets itself into the maximizeButton field and sets the window and "statechanged" event on the window
+        /// Sets itself into the maximizeButton field
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void MaximizeButton_Initialized(object sender, EventArgs e)
         {
             maximizeButton = (Button)sender;
-            maximizeButton.Dispatcher.BeginInvoke(new ThreadStart(() =>
+        }
+
+        private void Window_Initialized(object sender, EventArgs e)
+        {
+            ((Grid)sender).Dispatcher.BeginInvoke(new ThreadStart(() =>
             {
-                window = maximizeButton.Tag as Window;
+                window = ((Grid)sender).Tag as Window;
                 window.StateChanged += WindowStateChanged;
                 window.Closed += RemoveWindow;
+                
+                Style windowStyle = (bool)typeof(Window).GetField("_showingAsDialog", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(window) ? (Style)this["DialogWindowStyle"] : (Style)this["DefaultWindowStyle"];
+                window.Style = windowStyle;
 
                 if (activeWindows == null)
                 {
                     activeWindows = new List<Window>();
                 }
                 activeWindows.Add(window);
-                windowIcon.Source = window.Icon;
             }));
+
         }
     }
 }

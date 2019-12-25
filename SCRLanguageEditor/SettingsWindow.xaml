@@ -66,6 +66,8 @@
                 <ComboBox Grid.Column="1" Grid.Row="2" Width="100" HorizontalAlignment="Left" Foreground="Black"
                             ItemsSource="{Binding Themes}"
                             SelectedValue="{Binding WindowTheme, Mode=TwoWay}"/>
+
+
             </Grid>
             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Click="Button_Click" Content="Ok" Width="100" Margin="0,0,10,0" Command="{Binding Cmd_Save}"/>

@@ -12,8 +12,8 @@
         d:DataContext="{d:DesignInstance local:VM_Main}"
         Title="Language Editor" Height="500" Width="900"
         MinHeight="200" MinWidth="350"
-        Style="{DynamicResource WindowStyle}"
-        Icon="pack://application:,,,/SCRCommon;component/Icons/Dictionary_32x.png">
+        Icon="pack://application:,,,/SCRCommon;component/Icons/Dictionary_32x.png"
+        Style="{DynamicResource WindowStyle}">
 
     <Window.Resources>
         <ResourceDictionary>

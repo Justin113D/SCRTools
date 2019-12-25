@@ -72,5 +72,6 @@ namespace SCRLanguageEditor.Viewmodel
         {
             new SettingsWindow(settings).ShowDialog();
         }
+
     }
 }

@@ -10,6 +10,5 @@ namespace SCRCommon.Viewmodels
         protected static bool IsDesignMode => !DesignerProperties.GetIsInDesignMode(_dummyDependencyObject);
 
         public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
-
     }
 }
