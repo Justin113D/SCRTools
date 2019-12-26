@@ -176,7 +176,7 @@ namespace SCRLanguageEditor.Data
 
             for(int i = 0; i < baseLines.Length; i++)
             {
-                languageDictionary.Add(baseLines[i], lines[i + 1]);
+                languageDictionary.Add(baseLines[i], lines[i + 3]);
             }
 
             foreach(StringNode n in stringNodes)
