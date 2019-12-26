@@ -11,6 +11,11 @@
         private string nodeValue;
 
         /// <summary>
+        /// The default value for this node
+        /// </summary>
+        public string DefaultValue { get; private set; }
+
+        /// <summary>
         /// Gets and sets nodes value accordingly
         /// </summary>
         public string NodeValue
@@ -33,13 +38,18 @@
             }
         }
 
+        public readonly int versionID;
+
+        public bool RequiresUpdate { get; private set; }
+
         /// <summary>
         /// Create a string node
         /// </summary>
         /// <param name="name">The name of the node</param>
-        public StringNode(string name) : base(name, NodeType.StringNode)
+        public StringNode(string name, string value, int versionID) : base(name, NodeType.StringNode)
         {
-
+            nodeValue = DefaultValue = value;
+            this.versionID = versionID;
         }
 
         /// <summary>
@@ -47,9 +57,19 @@
         /// </summary>
         /// <param name="name">The name of the node</param>
         /// <param name="description">The description of the node</param>
-        public StringNode(string name, string description) : base(name, description, NodeType.StringNode)
+        public StringNode(string name, string value, int versionID, string description) : base(name, description, NodeType.StringNode)
         {
+            nodeValue = DefaultValue = value;
+            this.versionID = versionID;
+            RequiresUpdate = false;
+        }
 
+        /// <summary>
+        /// Sets the node value to the default value
+        /// </summary>
+        public void ResetValue()
+        {
+            NodeValue = DefaultValue;
         }
     }
 }

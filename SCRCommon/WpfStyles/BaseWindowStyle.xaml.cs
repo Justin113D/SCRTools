@@ -70,18 +70,6 @@ namespace SCRCommon.WpfStyles
         private static List<Window> activeWindows;
 
         /// <summary>
-        /// Returns all active windows with 
-        /// </summary>
-        public static Window[] ActiveWindows
-        {
-            get
-            {
-                if (activeWindows == null) return null;
-                return activeWindows.ToArray();
-            }
-        }
-
-        /// <summary>
         /// Used to access the maximize button and change the icon when the window changes state
         /// </summary>
         private Button maximizeButton;
@@ -109,7 +97,7 @@ namespace SCRCommon.WpfStyles
         {
             var asm = Assembly.Load("SCRCommon");
             string path;
-            switch (WindowTheme)
+            switch (theme)
             {
                 case Theme.Dark:
                     path = "SCRCommon.WpfStyles.DarkTheme.xaml";
@@ -190,11 +178,16 @@ namespace SCRCommon.WpfStyles
             maximizeButton = (Button)sender;
         }
 
+        /// <summary>
+        /// Initializes the window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Initialized(object sender, EventArgs e)
         {
-            ((Grid)sender).Dispatcher.BeginInvoke(new ThreadStart(() =>
+            ((Border)sender).Dispatcher.BeginInvoke(new ThreadStart(() =>
             {
-                window = ((Grid)sender).Tag as Window;
+                window = ((Border)sender).Tag as Window;
                 window.StateChanged += WindowStateChanged;
                 window.Closed += RemoveWindow;
                 

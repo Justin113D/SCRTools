@@ -144,7 +144,7 @@
                     </HierarchicalDataTemplate>
                     <HierarchicalDataTemplate x:Key="StringNode" ItemsSource="{x:Null}">
                         <Border BorderThickness="0 1 0 1" BorderBrush="{DynamicResource BG1}">
-                            <Grid Margin="0,5,0,5">
+                            <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="2*"/>
@@ -155,7 +155,7 @@
 
                                 <TextBlock Grid.Column="0" Text="{Binding Name}" Style="{DynamicResource {x:Type TextBlock}}" VerticalAlignment="Center" FontSize="22"/>
                                 <Rectangle Grid.Column="1" Fill="{DynamicResource BG3}"/>
-                                <TextBox Grid.Column="1" Text="{Binding Value, Mode=TwoWay}" Style="{DynamicResource {x:Type TextBox}}" AcceptsReturn="True" Padding="5" VerticalAlignment="Stretch"/>
+                                <TextBox Grid.Column="1" Text="{Binding Value, Mode=TwoWay}" Style="{DynamicResource {x:Type TextBox}}" AcceptsReturn="True" Padding="5,10,5,10" VerticalAlignment="Stretch"/>
                                 <TextBlock Grid.Column="2" Text="{Binding Description}" Style="{DynamicResource {x:Type TextBlock}}" Margin="5" VerticalAlignment="Center" Foreground="{DynamicResource HintFontBrush}"/>
                             </Grid>
                         </Border>
@@ -176,38 +176,59 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Menu Grid.Row="0">
-            <MenuItem Header="File">
-                <MenuItem Header="Load format" Command="{Binding Cmd_LoadFormat}" InputGestureText="Ctrl+Shift+O">
-                    <MenuItem.Icon>
-                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/OpenFolder.png" Height="16" Width="16"/>
-                    </MenuItem.Icon>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <Menu Grid.Column="0">
+                <MenuItem Header="File">
+                    <MenuItem Header="Load format" Command="{Binding Cmd_LoadFormat}" InputGestureText="Ctrl+Shift+O">
+                        <MenuItem.Icon>
+                            <Image SnapsToDevicePixels="True" Source="pack://application:,,,/SCRCommon;component/Icons/OpenFolder.png" Height="16" Width="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator/>
+                    <MenuItem Header="New file" Command="{Binding Cmd_NewFile}" InputGestureText="Ctrl+N">
+                        <MenuItem.Icon>
+                            <Image SnapsToDevicePixels="True" Source="pack://application:,,,/SCRCommon;component/Icons/NewFile.png" Height="16" Width="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Open" Command="{Binding Cmd_Open}" InputGestureText="Ctrl+O">
+                        <MenuItem.Icon>
+                            <Image SnapsToDevicePixels="True" Source="pack://application:,,,/SCRCommon;component/Icons/OpenFolder.png" Height="16" Width="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator/>
+                    <MenuItem Header="Save" Command="{Binding Cmd_Save}" InputGestureText="Ctrl+S">
+                        <MenuItem.Icon>
+                            <Image SnapsToDevicePixels="True" Source="pack://application:,,,/SCRCommon;component/Icons/Save.png" Height="16" Width="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Save as..." Command="{Binding Cmd_SaveAs}" InputGestureText="Ctrl+Shift+S">
+                        <MenuItem.Icon>
+                            <Image SnapsToDevicePixels="True" Source="pack://application:,,,/SCRCommon;component/Icons/SaveAs.png" Height="16" Width="16"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
-                <Separator/>
-                <MenuItem Header="New file" Command="{Binding Cmd_NewFile}" InputGestureText="Ctrl+N">
-                    <MenuItem.Icon>
-                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/NewFile.png" Height="16" Width="16"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Header="Open" Command="{Binding Cmd_Open}" InputGestureText="Ctrl+O">
-                    <MenuItem.Icon>
-                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/OpenFolder.png" Height="16" Width="16"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <Separator/>
-                <MenuItem Header="Save" Command="{Binding Cmd_Save}" InputGestureText="Ctrl+S">
-                    <MenuItem.Icon>
-                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/Save.png" Height="16" Width="16"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Header="Save as..." Command="{Binding Cmd_SaveAs}" InputGestureText="Ctrl+Shift+S">
-                    <MenuItem.Icon>
-                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/SaveAs.png" Height="16" Width="16"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-            </MenuItem>
             <MenuItem Header="Settings" Command="{Binding Cmd_Settings}"/>
         </Menu>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <Rectangle Width="2" SnapsToDevicePixels="True" Fill="{DynamicResource SelectedBG}"/>
+                <TextBlock Text="Author:" Margin="10, 0, 5, 0"/>
+                <TextBox Text="{Binding Author, Mode=TwoWay}" TextAlignment="Center" MinWidth="20" Margin="0, 0, 10, 0"/>
+                <Rectangle Width="2" SnapsToDevicePixels="True" Fill="{DynamicResource SelectedBG}"/>
+                <TextBlock Text="Language:" Margin="10, 0, 5, 0"/>
+                <TextBox Text="{Binding Language, Mode=TwoWay}" TextAlignment="Center" MinWidth="20" Margin="0, 0, 10, 0"/>
+                <Rectangle Width="2" SnapsToDevicePixels="True" Fill="{DynamicResource SelectedBG}"/>
+                <TextBlock Text="{Binding FileVersion}" Margin="10, 0, 10, 0"/>
+                <Rectangle Width="2" SnapsToDevicePixels="True" Fill="{DynamicResource SelectedBG}"/>
+                <TextBlock Text="{Binding FormatVersion}" Margin="10, 0, 5, 0"/>
+            </StackPanel>
+            
+        </Grid>
+        
 
         <TreeView Grid.Row="1" ItemsSource="{Binding Nodes}"
                   ItemContainerStyle="{DynamicResource Node}" 

@@ -20,11 +20,11 @@ namespace SCRLanguageEditor.Data
          * 
          * Example:
          * 
-         *  <language lang="MyLanguage" author="Justin113D" version="1.0">
-         *      <cat name="My Category" desc="My Category Description!">
-         *          <str name="MyString" desc="My String Description!">My String Content</str>
-         *      </cat>
-         *  </language>
+         *  <Language Lang="MyLanguage" Version="1.0">
+         *      <Cat Name="My Category" Desc="My Category Description!">
+         *          <Str name="MyString" Desc="My String Description!">Default content</Str>
+         *      </Cat>
+         *  </Language>
          */
 
         /// <summary>
@@ -41,14 +41,12 @@ namespace SCRLanguageEditor.Data
             //getting the language node
 
             List<Node> nodes = new List<Node>();
-            List<StringNode> stringNodes = new List<StringNode>(); 
+            List<StringNode> stringNodes = new List<StringNode>();
 
             // getting the child nodes
-            LoadNodes(file.DocumentElement.ChildNodes, nodes, stringNodes);
+            LoadNodes(file.DocumentElement.ChildNodes, nodes, stringNodes, out Dictionary<int, Version> versions);
 
-            stringNodes = stringNodes.OrderBy(x => x.Name).ToList();
-
-            HeaderNode lang = new HeaderNode(file.DocumentElement.Attributes.GetNamedItem("Version").Value, nodes, stringNodes);
+            HeaderNode lang = new HeaderNode(versions, nodes, stringNodes);
 
             return lang;
         }
@@ -58,8 +56,9 @@ namespace SCRLanguageEditor.Data
         /// </summary>
         /// <param name="children">The children of the XML node, which need to be converted into our nodes</param>
         /// <param name="resultNodes">The output list (should be taken from a parentnode or languagenode)</param>
-        private static void LoadNodes(XmlNodeList children, List<Node> resultNodes, List<StringNode> stringNodes)
+        private static void LoadNodes(XmlNodeList children, List<Node> resultNodes, List<StringNode> stringNodes, out Dictionary<int, Version> versions)
         {
+            versions = null;
             foreach (XmlNode n in children)
             {
                 switch (n.Name)
@@ -70,17 +69,28 @@ namespace SCRLanguageEditor.Data
                     case "Str":
                         XmlAttributeCollection attribs = n.Attributes;
                         string name = attribs.GetNamedItem("Name").Value;
+                        string value = n.InnerText;
+                        int versionID = int.Parse(attribs.GetNamedItem("vID").Value);
+                        if (value == null) value = "";
                         StringNode strNode;
-                        if (attribs.Count == 1)
+                        
+                        if (attribs.Count == 2)
                         {
-                            strNode = new StringNode(name);
+                            strNode = new StringNode(name, value, versionID);
                         }
                         else
                         {
-                            strNode = new StringNode(name, attribs.GetNamedItem("Desc").Value);
+                            strNode = new StringNode(name, value, versionID, attribs.GetNamedItem("Desc").Value);
                         }
                         resultNodes.Add(strNode);
                         stringNodes.Add(strNode);
+                        break;
+                    case "Versions":
+                        versions = new Dictionary<int, Version>();
+                        foreach(XmlNode node in n.ChildNodes)
+                        {
+                            versions.Add(int.Parse(node.Attributes.GetNamedItem("Index").Value), Version.Parse(node.InnerText));
+                        }
                         break;
                     default:
                         // not a valid node type
@@ -111,7 +121,7 @@ namespace SCRLanguageEditor.Data
                 node = new ParentNode(name, attribs.GetNamedItem("Desc").Value);
             }
 
-            LoadNodes(parent.ChildNodes, node.ChildNodes, stringNodes);
+            LoadNodes(parent.ChildNodes, node.ChildNodes, stringNodes, out _);
 
             return node;
         }
