@@ -15,6 +15,14 @@
         Icon="pack://application:,,,/SCRCommon;component/Icons/Dictionary_32x.png"
         Style="{DynamicResource WindowStyle}">
 
+    <Window.InputBindings>
+        <KeyBinding Modifiers="Ctrl+Shift"  Key="O" Command="{Binding Cmd_LoadFormat}"/>
+        <KeyBinding Modifiers="Ctrl"        Key="N" Command="{Binding Cmd_NewFile}"/>
+        <KeyBinding Modifiers="Ctrl"        Key="O" Command="{Binding Cmd_Open}"/>
+        <KeyBinding Modifiers="Ctrl"        Key="S" Command="{Binding Cmd_Save}"/>
+        <KeyBinding Modifiers="Ctrl+Shift"  Key="S" Command="{Binding Cmd_SaveAs}"/>
+    </Window.InputBindings>
+
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
