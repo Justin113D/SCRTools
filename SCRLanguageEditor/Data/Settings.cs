@@ -10,8 +10,14 @@ namespace SCRLanguageEditor.Data
 {
     public class Settings
     {
+        /// <summary>
+        /// Path to the default format file
+        /// </summary>
         private string defaultFormatPath = "LanguageFiles/Format.xml";
 
+        /// <summary>
+        /// Public property for the default format path
+        /// </summary>
         public string DefaultFormatPath
         {
             get
@@ -28,6 +34,9 @@ namespace SCRLanguageEditor.Data
             }
         }
 
+        /// <summary>
+        /// Redirects to the window theme
+        /// </summary>
         public Theme WindowTheme
         {
             get
@@ -40,11 +49,17 @@ namespace SCRLanguageEditor.Data
             }
         }
 
+        /// <summary>
+        /// Initializes 
+        /// </summary>
         public Settings()
         {
             Load();
         }
 
+        /// <summary>
+        /// Loads the settings from the Settings.settings file
+        /// </summary>
         public void Load()
         {
             if(File.Exists("Settings.settings"))
@@ -74,6 +89,9 @@ namespace SCRLanguageEditor.Data
             }
         }
 
+        /// <summary>
+        /// Saves the settings to the Settings.settings file
+        /// </summary>
         public void Save()
         {
             string[] lines =

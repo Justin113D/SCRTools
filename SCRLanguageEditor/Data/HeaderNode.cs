@@ -11,6 +11,8 @@ namespace SCRLanguageEditor.Data
     /// </summary>
     public class HeaderNode : Node
     {
+        public readonly string targetName;
+
         /// <summary>
         /// Author of the document
         /// </summary>
@@ -41,7 +43,7 @@ namespace SCRLanguageEditor.Data
         /// <summary>
         /// The version map inside the format file, which is used to assign a "last updated" version for each string
         /// </summary>
-        public Dictionary<int, Version> Versions { get; private set; }
+        private readonly Version[] Versions;
 
         /// <summary>
         /// Version of the game that the file is for
@@ -50,7 +52,7 @@ namespace SCRLanguageEditor.Data
         {
             get
             {
-                return Versions.Last().Value;
+                return Versions[Versions.Length - 1];
             }
         }
 
@@ -101,9 +103,10 @@ namespace SCRLanguageEditor.Data
         /// </summary>
         /// <param name="name">The language of the file</param>
         /// <param name="version">The game version that the file is for</param>
-        public HeaderNode(Dictionary<int, Version> versions, List<Node> children, List<StringNode> stringNodes) : base(null, NodeType.HeaderNode)
+        public HeaderNode(string targetName, List<Version> versions, List<Node> children, List<StringNode> stringNodes) : base(null, NodeType.HeaderNode)
         {
-            Versions = versions.OrderBy(x => x.Key).ToDictionary(x => x.Key,x => x.Value);
+            this.targetName = targetName;
+            Versions = versions.OrderBy(x => x).ToArray();
             Author = null;
             Language = "English";
             ChildNodes = children;
@@ -122,6 +125,33 @@ namespace SCRLanguageEditor.Data
         }
 
         /// <summary>
+        /// Updates the update variable of all nodes in a list (recursively)
+        /// </summary>
+        /// <param name="nodes">The children of a parent or header node</param>
+        /// <param name="minVerIndex">If the vID of a stringnode is bigger than this value, then it requires an update</param>
+        /// <returns>Whether any of the updated nodes require an update</returns>
+        private bool CheckVersionDifference(List<Node> nodes, int minVerIndex)
+        {
+            bool anyUpdated = false;
+            foreach(Node n in nodes)
+            {
+                if(n is StringNode)
+                {
+                    StringNode sn = n as StringNode;
+                    sn.RequiresUpdate = sn.versionID > minVerIndex;
+                    if (sn.RequiresUpdate) anyUpdated = true;
+                }
+                else if(n is ParentNode)
+                {
+                    ParentNode pn = n as ParentNode;
+                    pn.RequiresUpdate = CheckVersionDifference(pn.ChildNodes, minVerIndex);
+                    if (pn.RequiresUpdate) anyUpdated = true;
+                }
+            }
+            return anyUpdated;
+        }
+
+        /// <summary>
         /// Save the current set strings to two files
         /// </summary>
         /// <param name="path">The file path</param>
@@ -129,6 +159,7 @@ namespace SCRLanguageEditor.Data
         {
             List<string> lines = new List<string>()
             {
+                targetName,
                 Version.ToString(),
                 Language,
                 Author ?? "",
@@ -151,6 +182,7 @@ namespace SCRLanguageEditor.Data
         /// <param name="path"></param>
         public void LoadContentsFromFile(string path)
         {
+            //checking the files first
             if(Path.GetExtension(path) == ".base")
             {
                 path = path.Substring(0, path.Length - 5);
@@ -165,18 +197,28 @@ namespace SCRLanguageEditor.Data
                 throw new FileNotFoundException(".base file not found!");
             }
 
+            //getting the lines
             string[] lines = File.ReadAllLines(path);
             string[] baseLines = File.ReadAllLines(path + ".base");
 
-            LoadedVersion = Version.Parse(lines[0]);
-            Language = lines[1];
-            Author = lines[2];
+            //checking if the targetname is correct
 
+            if(lines[0] != targetName)
+            {
+                throw new InvalidDataException("Language file target does not match format target!");
+            }
+
+            //Loading the different file specifications
+            LoadedVersion = Version.Parse(lines[1]);
+            Language = lines[2];
+            Author = lines[3];
+
+            //loading the strings into a dictionary and assigning the strings to the values
             Dictionary<string, string> languageDictionary = new Dictionary<string, string>();
 
             for(int i = 0; i < baseLines.Length; i++)
             {
-                languageDictionary.Add(baseLines[i], lines[i + 3]);
+                languageDictionary.Add(baseLines[i], lines[i + 4]);
             }
 
             foreach(StringNode n in stringNodes)
@@ -190,6 +232,17 @@ namespace SCRLanguageEditor.Data
                     n.NodeValue = "";
                 }
             }
+
+            //updating the version check based on the file version
+            for(int i = 0; i < Versions.Length; i++)
+            {
+                if(Versions[i] > LoadedVersion)
+                {
+                    CheckVersionDifference(ChildNodes, i - 1);
+                    return;
+                }
+            }
+            CheckVersionDifference(ChildNodes, Versions.Length - 1);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Language>
+<Language TargetName="SCR">
 	<Versions>
-		<Version Index="0">0.0.27.2</Version>
+		<Version>0.0.27.2</Version>
 	</Versions>
 	<Cat Name="Titlescreen" Desc="Texts used in the title screen">
 		<Cat Name="Main" Desc="The Main-menu texts">

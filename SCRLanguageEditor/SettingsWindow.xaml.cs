@@ -14,11 +14,7 @@ namespace SCRLanguageEditor
         {
             InitializeComponent();
             DataContext = settings;
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
+            Closed += (sender, e) => settings.Close();
         }
     }
 }

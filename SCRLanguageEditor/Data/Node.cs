@@ -76,6 +76,11 @@
         }
 
         /// <summary>
+        /// Whether this node (or any of its child nodes, if it has any) requires an update
+        /// </summary>
+        public bool RequiresUpdate;
+
+        /// <summary>
         /// Creates a node with only a name
         /// </summary>
         /// <param name="name">The name of the node</param>

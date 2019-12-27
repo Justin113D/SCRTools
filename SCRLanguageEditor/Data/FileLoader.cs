@@ -13,16 +13,14 @@ namespace SCRLanguageEditor.Data
     {
         /*
          * XML language file encoding:
-         * The head of the file is a "Language" node, with the variable "name", which tells which language the file is for, and a variable "author" 
-         * Then follow the categories "Cat", which can have a name and a description. The categories are just for ordering 
-         * the different texts so that editing is easier, they dont serve a purpose ingame.
-         * The last node type is the string "str", which can also have a name and a description, but the inner text will only hold the string used ingame
-         * 
          * Example:
          * 
-         *  <Language Lang="MyLanguage" Version="1.0">
+         *  <Language>
+         *      <Versions>
+         *          <Version>1.0</Version>
+         *      </Versions>
          *      <Cat Name="My Category" Desc="My Category Description!">
-         *          <Str name="MyString" Desc="My String Description!">Default content</Str>
+         *          <Str vID="0" Name="MyString" Desc="My String Description!">Default content</Str>
          *      </Cat>
          *  </Language>
          */
@@ -44,9 +42,11 @@ namespace SCRLanguageEditor.Data
             List<StringNode> stringNodes = new List<StringNode>();
 
             // getting the child nodes
-            LoadNodes(file.DocumentElement.ChildNodes, nodes, stringNodes, out Dictionary<int, Version> versions);
+            LoadNodes(file.DocumentElement.ChildNodes, nodes, stringNodes, out List<Version> versions);
 
-            HeaderNode lang = new HeaderNode(versions, nodes, stringNodes);
+            string targetName = file.DocumentElement.GetAttribute("TargetName");
+
+            HeaderNode lang = new HeaderNode(targetName, versions, nodes, stringNodes);
 
             return lang;
         }
@@ -56,7 +56,7 @@ namespace SCRLanguageEditor.Data
         /// </summary>
         /// <param name="children">The children of the XML node, which need to be converted into our nodes</param>
         /// <param name="resultNodes">The output list (should be taken from a parentnode or languagenode)</param>
-        private static void LoadNodes(XmlNodeList children, List<Node> resultNodes, List<StringNode> stringNodes, out Dictionary<int, Version> versions)
+        private static void LoadNodes(XmlNodeList children, List<Node> resultNodes, List<StringNode> stringNodes, out List<Version> versions)
         {
             versions = null;
             foreach (XmlNode n in children)
@@ -86,10 +86,10 @@ namespace SCRLanguageEditor.Data
                         stringNodes.Add(strNode);
                         break;
                     case "Versions":
-                        versions = new Dictionary<int, Version>();
+                        versions = new List<Version>();
                         foreach(XmlNode node in n.ChildNodes)
                         {
-                            versions.Add(int.Parse(node.Attributes.GetNamedItem("Index").Value), Version.Parse(node.InnerText));
+                            versions.Add(Version.Parse(node.InnerText));
                         }
                         break;
                     default:

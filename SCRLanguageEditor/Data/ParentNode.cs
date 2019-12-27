@@ -7,6 +7,7 @@ namespace SCRLanguageEditor.Data
     /// </summary>
     public class ParentNode : Node
     {
+
         /// <summary>
         /// The children of this node
         /// </summary>

@@ -1,16 +1,18 @@
 ﻿using SCRLanguageEditor.Data;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SCRLanguageEditor.Viewmodel
 {
+    /// <summary>
+    /// Viewmodel for a parent node
+    /// </summary>
     public class VM_ParentNode : VM_Node
     {
-        private ParentNode CatNode
+        /// <summary>
+        /// The parent node which the viewmodel accesses and modifies
+        /// </summary>
+        private ParentNode ParentNode
         {
             get
             {
@@ -18,8 +20,14 @@ namespace SCRLanguageEditor.Viewmodel
             }
         }
 
+        /// <summary>
+        /// The node children of the parent node
+        /// </summary>
         public ObservableCollection<VM_Node> Children { get; set; }
 
+        /// <summary>
+        /// Expands and collapses the children properly
+        /// </summary>
         public bool IsExpanded
         {
             get
@@ -39,11 +47,18 @@ namespace SCRLanguageEditor.Viewmodel
             }
         }
 
+        /// <summary>
+        /// Base constructor
+        /// </summary>
+        /// <param name="node">The parent node</param>
         public VM_ParentNode(ParentNode node) : base(node)
         {
             ClearChildren();
         }
 
+        /// <summary>
+        /// Removes the children and places a dummy object
+        /// </summary>
         private void ClearChildren()
         {
             Children = new ObservableCollection<VM_Node>
@@ -52,10 +67,13 @@ namespace SCRLanguageEditor.Viewmodel
             };
         }
 
+        /// <summary>
+        /// Creates new node viewmodels from the node children to display
+        /// </summary>
         private void Expand()
         {
             Children.Clear();
-            foreach(Node n in CatNode.ChildNodes)
+            foreach(Node n in ParentNode.ChildNodes)
             {
                 switch (n.Type)
                 { 
@@ -69,6 +87,18 @@ namespace SCRLanguageEditor.Viewmodel
                         Children.Add(null);
                         break;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Updates the viewmodels properties and those of the loaded children
+        /// </summary>
+        public override void UpdateProperties()
+        {
+            OnPropertyChanged(nameof(RequiresUpdate));
+            foreach(VM_Node n in Children)
+            {
+                n?.UpdateProperties();
             }
         }
     }

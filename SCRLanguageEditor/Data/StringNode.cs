@@ -40,8 +40,6 @@
 
         public readonly int versionID;
 
-        public bool RequiresUpdate { get; private set; }
-
         /// <summary>
         /// Create a string node
         /// </summary>

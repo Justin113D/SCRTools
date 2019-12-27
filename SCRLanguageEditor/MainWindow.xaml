@@ -10,7 +10,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:VM_Main}"
-        Title="Language Editor" Height="500" Width="900"
+        Title="Language Editor" Height="500" Width="950"
         MinHeight="200" MinWidth="350"
         Icon="pack://application:,,,/SCRCommon;component/Icons/Dictionary_32x.png"
         Style="{DynamicResource WindowStyle}">
@@ -131,14 +131,16 @@
                     <HierarchicalDataTemplate x:Key="ParentNode" ItemsSource="{Binding Children}">
                         <Grid Margin="0, 4, 0, 4">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{Binding RequiresUpdate}"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="{Binding Path=ActualWidth,
                                     RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, 
                                     Converter={StaticResource WindowWidthConverter}}"/>
 
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{Binding Name}" Style="{DynamicResource {x:Type TextBlock}}" VerticalAlignment="Center" FontSize="22"/>
-                            <TextBlock Grid.Column="1" Text="{Binding Description}" Style="{DynamicResource {x:Type TextBlock}}" VerticalAlignment="Center" Margin="5"
+                            <Rectangle Grid.Column="0" SnapsToDevicePixels="True" Fill="#00ccf5" Margin="0,0,5,0"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Name}" Style="{DynamicResource {x:Type TextBlock}}" VerticalAlignment="Center" FontSize="22"/>
+                            <TextBlock Grid.Column="2" Text="{Binding Description}" Style="{DynamicResource {x:Type TextBlock}}" VerticalAlignment="Center" Margin="5"
                                      Foreground="{DynamicResource HintFontBrush}" />
                         </Grid>
                     </HierarchicalDataTemplate>
@@ -146,6 +148,7 @@
                         <Border BorderThickness="0 1 0 1" BorderBrush="{DynamicResource BG1}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="{Binding RequiresUpdate}"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="2*"/>
                                     <ColumnDefinition Width="{Binding Path=ActualWidth,
@@ -153,10 +156,11 @@
                                         Converter={StaticResource WindowWidthConverter}}"/>
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="{Binding Name}" Style="{DynamicResource {x:Type TextBlock}}" VerticalAlignment="Center" FontSize="22"/>
-                                <Rectangle Grid.Column="1" Fill="{DynamicResource BG3}"/>
-                                <TextBox Grid.Column="1" Text="{Binding Value, Mode=TwoWay}" Style="{DynamicResource {x:Type TextBox}}" AcceptsReturn="True" Padding="5,10,5,10" VerticalAlignment="Stretch"/>
-                                <TextBlock Grid.Column="2" Text="{Binding Description}" Style="{DynamicResource {x:Type TextBlock}}" Margin="5" VerticalAlignment="Center" Foreground="{DynamicResource HintFontBrush}"/>
+                                <Rectangle Grid.Column="0" SnapsToDevicePixels="True" Fill="#00ccf5" Margin="0,0,5,0"/>
+                                <TextBlock Grid.Column="1" Text="{Binding Name}" Style="{DynamicResource {x:Type TextBlock}}" VerticalAlignment="Center" FontSize="22"/>
+                                <Rectangle Grid.Column="2" Fill="{DynamicResource BG3}"/>
+                                <TextBox Grid.Column="2" Text="{Binding Value, Mode=TwoWay}" Style="{DynamicResource {x:Type TextBox}}" AcceptsReturn="True" Padding="5,10,5,10" VerticalAlignment="Stretch"/>
+                                <TextBlock Grid.Column="3" Text="{Binding Description}" Style="{DynamicResource {x:Type TextBlock}}" Margin="5" VerticalAlignment="Center" Foreground="{DynamicResource HintFontBrush}"/>
                             </Grid>
                         </Border>
                     </HierarchicalDataTemplate>
@@ -178,7 +182,7 @@
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*" MinWidth="110"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             
@@ -223,6 +227,8 @@
                 <TextBox Text="{Binding Language, Mode=TwoWay}" TextAlignment="Center" MinWidth="20" Margin="0, 0, 10, 0"/>
                 <Rectangle Width="2" SnapsToDevicePixels="True" Fill="{DynamicResource SelectedBG}"/>
                 <TextBlock Text="{Binding FileVersion}" Margin="10, 0, 10, 0"/>
+                <Rectangle Width="2" SnapsToDevicePixels="True" Fill="{DynamicResource SelectedBG}"/>
+                <TextBlock Text="{Binding FormatTargetName}" Margin="10, 0, 5, 0"/>
                 <Rectangle Width="2" SnapsToDevicePixels="True" Fill="{DynamicResource SelectedBG}"/>
                 <TextBlock Text="{Binding FormatVersion}" Margin="10, 0, 5, 0"/>
             </StackPanel>
