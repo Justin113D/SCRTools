@@ -1,4 +1,5 @@
-﻿using SCRLanguageEditor.Data;
+﻿using SCRCommon.Viewmodels;
+using SCRLanguageEditor.Data;
 
 namespace SCRLanguageEditor.Viewmodel
 {
@@ -34,12 +35,23 @@ namespace SCRLanguageEditor.Viewmodel
         }
 
         /// <summary>
+        /// Relaycommand for the ctrl + r binding
+        /// </summary>
+        public RelayCommand Cmd_Reset { get; private set; }
+
+        /// <summary>
         /// Base constructor
         /// </summary>
         /// <param name="node"></param>
         public VM_StringNode(StringNode node) : base(node)
         {
-            
+            Cmd_Reset = new RelayCommand(Reset);
+        }
+
+        private void Reset()
+        {
+            StrNode.ResetValue();
+            OnPropertyChanged(nameof(Value));
         }
 
         /// <summary>

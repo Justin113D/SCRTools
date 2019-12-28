@@ -2,6 +2,7 @@
 <Language TargetName="SCR">
 	<Versions>
 		<Version>0.0.27.2</Version>
+		<Version>0.0.27.3</Version>
 	</Versions>
 	<Cat Name="Titlescreen" Desc="Texts used in the title screen">
 		<Cat Name="Main" Desc="The Main-menu texts">
@@ -36,8 +37,8 @@
 			<Str vID="0" Name="volumeMusic" Desc="The label for the music volume option">Music</Str>
 			<Str vID="0" Name="volumeSFX" Desc="The label for the sounds volume option">Sounds</Str>
 			<Str vID="0" Name="volumeVoice" Desc="The label for the voices volume option">Voices</Str>
-			<Str vID="0" Name="Graphics1" Desc="First set of labels for the graphics options: &#10; Motion Blur, Texture Quality, Grass Density">Motion blur&#10;Texture quality&#10;Grass density</Str>
-			<Str vID="0" Name="Graphics2" Desc="Second set of labels for the graphics options: &#10; Depth of field">Depth of field</Str>
+			<Str vID="1" Name="graphics1" Desc="First set of labels for the graphics options: &#10; Motion Blur, Texture Quality, Grass Density">Motion blur&#10;Texture quality&#10;Grass density</Str>
+			<Str vID="1" Name="graphics2" Desc="Second set of labels for the graphics options: &#10; Depth of field">Depth of field</Str>
 		</Cat>
 		<Cat Name="Title Screen Story Summaries" Desc="Every time the game progresses storywise, the Story summaries on the title screen update, which are all stored here">
 			<Cat Name="Chapter 1" Desc="Story Summaries of Chapter 1">
@@ -126,13 +127,13 @@
 			<Str vID="0" Name="nothingSelected" Desc="No item/chao is selected">No items or&#10;chao selected</Str>
 		</Cat>
 		<Cat Name="Journal menu" Desc="Texts used in the journal menu">
-			<Str vID="0" Name="JHeader1" Desc="'Codex' directory header (lore, character info)">Codex</Str>
-			<Str vID="0" Name="JHeader2" Desc="'Missions' directory header">Missions</Str>
-			<Str vID="0" Name="JHeader3" Desc="'Guides' directory header">Guides</Str>
-			<Str vID="0" Name="JHeader4" Desc="'Videos' directory header">Videos</Str>
-			<Str vID="0" Name="JHeader5" Desc="'Credits' directory header">Credits</Str>
-			<Str vID="0" Name="JDefault" Desc="When no entry is selected; After opening the journal">Select a journal entry from one of the branches to get information about the universe of Sonic Chronicles: the Dark Brotherhood, and much more!</Str>
-			<Str vID="0" Name="JBack" Desc="Button label to close directory">Back</Str>
+			<Str vID="1" Name="jHeader1" Desc="'Codex' directory header (lore, character info)">Codex</Str>
+			<Str vID="1" Name="jHeader2" Desc="'Missions' directory header">Missions</Str>
+			<Str vID="1" Name="jHeader3" Desc="'Guides' directory header">Guides</Str>
+			<Str vID="1" Name="jHeader4" Desc="'Videos' directory header">Videos</Str>
+			<Str vID="1" Name="jHeader5" Desc="'Credits' directory header">Credits</Str>
+			<Str vID="1" Name="jDefault" Desc="When no entry is selected; After opening the journal">Select a journal entry from one of the branches to get information about the universe of Sonic Chronicles: the Dark Brotherhood, and much more!</Str>
+			<Str vID="1" Name="jBack" Desc="Button label to close directory">Back</Str>
 		</Cat>
 		<Cat Name="Overworld map menu" Desc="Texts used in the overworld map menu">
 			<Cat Name="Zone descriptions" Desc="Descriptions for each zone ingame">
@@ -448,7 +449,7 @@
 	</Cat>
 	<Cat Name="Journal Entries" Desc="Texts for the individual journal entries">
 		<Cat Name="Codex" Desc="">
-			<Str vID="0" Name="JE_Sonic">Sonic the Hedghehog&#10; </Str>
+			<Str vID="1" Name="je_Sonic">Sonic the Hedghehog&#10; </Str>
 		</Cat>
 		<Cat Name="Missions" Desc="">
 
@@ -460,37 +461,37 @@
 
 		</Cat>
 		<Cat Name="Credits" Desc="">
-			<Str vID="0" Name="JE_Credits"></Str>
-			<Str vID="0" Name="JE_FanCredits"></Str>
+			<Str vID="1" Name="je_Credits"></Str>
+			<Str vID="1" Name="je_FanCredits"></Str>
 		</Cat>
 	</Cat>
 	<Cat Name="Dialogs" Desc="Dialog texts">
 		<Cat Name="Story Dialogs" Desc="Dialogs that are played or change with the progression of the game">
-			<Cat Name="StoryDialogue_1" Desc="The conversation between Tails and Sonic after Sonic arrives in Green Hill">
-				<Str vID="0" Name="C1SD1_1" Desc="Tails:&#10;&quot;Sonic, you made it! I'm so glad to hear from you!&quot;"></Str>
-				<Str vID="0" Name="C1SD1_2" Desc="Sonic:&#10;&quot;I'm here, Tails. What's going on?&quot;"></Str>
-				<Str vID="0" Name="C1SD1_3" Desc="Tails:&#10;&quot;We're in big trouble, Sonic. Knuckles has gone missing. And so have the Chaos Emeralds!&quot;"></Str>
-				<Str vID="0" Name="C1SD1_4" Desc="Tails:&#10;&quot;A group of criminals called the Marauders kidnapped him! We need your help!&quot;"></Str>
-				<Str vID="0" Name="C1SD1_5" Desc="Sonic:&#10;&quot;Of course I'll help!&quot;"></Str>
-				<Str vID="0" Name="C1SD1_6" Desc="Tails:&#10;&quot;I knew you would! I just knew it!&quot;"></Str>
-				<Str vID="0" Name="C1SD1_7" Desc="Tails:&#10;&quot;I can see you on my Monitors, so even if I'm not with you, I'll guide you if you have any trouble.&quot;"></Str>
-				<Str vID="0" Name="C1SD1_8" Desc="Sonic:&#10;&quot;What else do you know about the situation?&quot;"></Str>
-				<Str vID="0" Name="C1SD1_9" Desc="Tails:&#10;&quot;Knuckles was fighting against the Marauders when he disappeared. We're not really sure who they are, but they're bad news!&quot;"></Str>
-				<Str vID="0" Name="C1SD1_10" Desc="Tails:&#10;&quot;Please Sonic. I'll explain more when you get here! We're losing time!&quot;"></Str>
-				<Str vID="0" Name="C1SD1_11" Desc="Sonic:&#10;&quot;Wait, they took the Chaos Emeralds too?&quot;"></Str>
-				<Str vID="0" Name="C1SD1_12" Desc="Tails:&#10;&quot;They did! And that means trouble!&quot;"></Str>
-				<Str vID="0" Name="C1SD1_13" Desc="Tails:&#10;&quot;The Chaos Emeralds are powerful gems, Sonic. Someone who knows how to use them could do just about anything with their power!&quot;"></Str>
-				<Str vID="0" Name="C1SD1_14" Desc="Tails:&#10;&quot;You know how you've used all the 7 Chaos Emeralds? By using their power to become Super Sonic, you were pretty much unbeatable!&quot;"></Str>
-				<Str vID="0" Name="C1SD1_15" Desc="Sonic:&#10;&quot;Well Yeah! How could i ever forget?&quot;"></Str>
-				<Str vID="0" Name="C1SD1_16" Desc="Tails:&#10;&quot;Without knowing who the Marauders are, there's no telling what they'll do with the Chaos Emeralds. We have to stop them!&quot;"></Str>
-				<Str vID="0" Name="C1SD1_17" Desc="Sonic:&#10;&quot;Right. Let's go!&quot;"></Str>
-				<Str vID="0" Name="C1SD1_18" Desc="Tails:&#10;&quot;Amy is on her way to meet you. Once you find her, meet me at my workshop near Central City.&quot;"></Str>
-				<Str vID="0" Name="C1SD1_19" Desc="Sonic:&#10;&quot;Sounds like a plan. I'll be there in a flash!&quot;"></Str>
-				<Str vID="0" Name="C1SD1_20" Desc="Tails:&#10;&quot;Great! Thanks, Sonic. With you on our side, I know we'll save Knuckles!&quot;"></Str>
-				<Str vID="0" Name="C1SD1_21" Desc="Sonic:&#10;&quot;O-Oh! ... A-Amy's tagging along? H-How quaint...&quot;"></Str>
-				<Str vID="0" Name="C1SD1_22" Desc="Tails:&#10;&quot;Well, you know how she is. She wanted to meet you halfway and make sure you got here safely.&quot;"></Str>
-				<Str vID="0" Name="C1SD1_23" Desc="Tails:&#10;&quot;I'll wait for you in the workshop. With you on the team, I know we'll save Knuckles!&quot;"></Str>
-				<Str vID="0" Name="C1SD1_24" Desc="Tails:&#10;&quot;Let's go!&quot;"></Str>
+			<Cat Name="StoryDialogue 1-1" Desc="The conversation between Tails and Sonic after Sonic arrives in Green Hill">
+				<Str vID="1" Name="c1sd1_1" Desc="Tails:&#10;&quot;Sonic, you made it! I'm so glad to hear from you!&quot;">Sonic, you made it! I'm so glad to hear from you!</Str>
+				<Str vID="1" Name="c1sd1_2" Desc="Sonic:&#10;&quot;I'm here, Tails. What's going on?&quot;">I'm here, Tails. What's going on?</Str>
+				<Str vID="1" Name="c1sd1_3" Desc="Tails:&#10;&quot;We're in big trouble, Sonic. Knuckles has gone missing. And so have the Chaos Emeralds!&quot;">We're in big trouble, Sonic. Knuckles has gone missing. And so have the Chaos Emeralds!</Str>
+				<Str vID="1" Name="c1sd1_4" Desc="Tails:&#10;&quot;A group of criminals called the Marauders kidnapped him! We need your help!&quot;">A group of criminals called the Marauders kidnapped him! We need your help!</Str>
+				<Str vID="1" Name="c1sd1_5" Desc="Sonic:&#10;&quot;Of course I'll help!&quot;">Of course I'll help!</Str>
+				<Str vID="1" Name="c1sd1_6" Desc="Tails:&#10;&quot;I knew you would! I just knew it!&quot;">I knew you would! I just knew it!</Str>
+				<Str vID="1" Name="c1sd1_7" Desc="Tails:&#10;&quot;I can see you on my Monitors, so even if I'm not with you, I'll guide you if you have any trouble.&quot;">I can see you on my Monitors, so even if I'm not with you, I'll guide you if you have any trouble.</Str>
+				<Str vID="1" Name="c1sd1_8" Desc="Sonic:&#10;&quot;What else do you know about the situation?&quot;">What else do you know about the situation?</Str>
+				<Str vID="1" Name="c1sd1_9" Desc="Tails:&#10;&quot;Knuckles was fighting against the Marauders when he disappeared. We're not really sure who they are, but they're bad news!&quot;">Knuckles was fighting against the Marauders when he disappeared. We're not really sure who they are, but they're bad news!</Str>
+				<Str vID="1" Name="c1sd1_10" Desc="Tails:&#10;&quot;Please Sonic. I'll explain more when you get here! We're losing time!&quot;">Please Sonic. I'll explain more when you get here! We're losing time!</Str>
+				<Str vID="1" Name="c1sd1_11" Desc="Sonic:&#10;&quot;Wait, they took the Chaos Emeralds too?&quot;">Wait, they took the Chaos Emeralds too?</Str>
+				<Str vID="1" Name="c1sd1_12" Desc="Tails:&#10;&quot;They did! And that means trouble!&quot;">They did! And that means trouble!</Str>
+				<Str vID="1" Name="c1sd1_13" Desc="Tails:&#10;&quot;The Chaos Emeralds are powerful gems, Sonic. Someone who knows how to use them could do just about anything with their power!&quot;">The Chaos Emeralds are powerful gems, Sonic. Someone who knows how to use them could do just about anything with their power!</Str>
+				<Str vID="1" Name="c1sd1_14" Desc="Tails:&#10;&quot;You know how you've used all the 7 Chaos Emeralds? By using their power to become Super Sonic, you were pretty much unbeatable!&quot;">You know how you've used all the 7 Chaos Emeralds? By using their power to become Super Sonic, you were pretty much unbeatable!</Str>
+				<Str vID="1" Name="c1sd1_15" Desc="Sonic:&#10;&quot;Well Yeah! How could i ever forget?&quot;">Well Yeah! How could i ever forget?</Str>
+				<Str vID="1" Name="c1sd1_16" Desc="Tails:&#10;&quot;Without knowing who the Marauders are, there's no telling what they'll do with the Chaos Emeralds. We have to stop them!&quot;">Without knowing who the Marauders are, there's no telling what they'll do with the Chaos Emeralds. We have to stop them!</Str>
+				<Str vID="1" Name="c1sd1_17" Desc="Sonic:&#10;&quot;Right. Let's go!&quot;">Right. Let's go!</Str>
+				<Str vID="1" Name="c1sd1_18" Desc="Tails:&#10;&quot;Amy is on her way to meet you. Once you find her, meet me at my workshop near Central City.&quot;">Amy is on her way to meet you. Once you find her, meet me at my workshop near Central City.</Str>
+				<Str vID="1" Name="c1sd1_19" Desc="Sonic:&#10;&quot;Sounds like a plan. I'll be there in a flash!&quot;">Sounds like a plan. I'll be there in a flash!</Str>
+				<Str vID="1" Name="c1sd1_20" Desc="Tails:&#10;&quot;Great! Thanks, Sonic. With you on our side, I know we'll save Knuckles!&quot;">Great! Thanks, Sonic. With you on our side, I know we'll save Knuckles!</Str>
+				<Str vID="1" Name="c1sd1_21" Desc="Sonic:&#10;&quot;O-Oh! ... A-Amy's tagging along? H-How quaint...&quot;">O-Oh! ... A-Amy's tagging along? H-How quaint...</Str>
+				<Str vID="1" Name="c1sd1_22" Desc="Tails:&#10;&quot;Well, you know how she is. She wanted to meet you halfway and make sure you got here safely.&quot;">Well, you know how she is. She wanted to meet you halfway and make sure you got here safely.</Str>
+				<Str vID="1" Name="c1sd1_23" Desc="Tails:&#10;&quot;I'll wait for you in the workshop. With you on the team, I know we'll save Knuckles!&quot;">I'll wait for you in the workshop. With you on the team, I know we'll save Knuckles!</Str>
+				<Str vID="1" Name="c1sd1_24" Desc="Tails:&#10;&quot;Let's go!&quot;">Let's go!</Str>
 			</Cat>
 		</Cat>
 	</Cat>

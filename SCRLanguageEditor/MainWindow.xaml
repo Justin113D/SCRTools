@@ -167,7 +167,11 @@
                                 <Rectangle Grid.Column="0" SnapsToDevicePixels="True" Fill="#00ccf5" Margin="0,0,5,0"/>
                                 <TextBlock Grid.Column="1" Text="{Binding Name}" Style="{DynamicResource {x:Type TextBlock}}" VerticalAlignment="Center" FontSize="22"/>
                                 <Rectangle Grid.Column="2" Fill="{DynamicResource BG3}"/>
-                                <TextBox Grid.Column="2" Text="{Binding Value, Mode=TwoWay}" Style="{DynamicResource {x:Type TextBox}}" AcceptsReturn="True" Padding="5,10,5,10" VerticalAlignment="Stretch"/>
+                                <TextBox Grid.Column="2" Text="{Binding Value, Mode=TwoWay}" Style="{DynamicResource {x:Type TextBox}}" AcceptsReturn="True" Padding="5,10,5,10" VerticalAlignment="Stretch">
+                                    <TextBox.InputBindings>
+                                        <KeyBinding Modifiers="Ctrl" Key="R" Command="{Binding Cmd_Reset}"/>
+                                    </TextBox.InputBindings>
+                                </TextBox>
                                 <TextBlock Grid.Column="3" Text="{Binding Description}" Style="{DynamicResource {x:Type TextBlock}}" Margin="5" VerticalAlignment="Center" Foreground="{DynamicResource HintFontBrush}"/>
                             </Grid>
                         </Border>

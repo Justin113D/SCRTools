@@ -172,8 +172,8 @@ namespace SCRLanguageEditor.Data
                 baseLines.Add(s.Name);
             }
 
-            File.WriteAllLines(path, lines);
-            File.WriteAllLines(path + ".base", baseLines);
+            File.WriteAllText(path, string.Join("\n", lines));
+            File.WriteAllText(path + ".base", string.Join("\n", baseLines));
         }
         
         /// <summary>
@@ -229,7 +229,7 @@ namespace SCRLanguageEditor.Data
                 }
                 else
                 {
-                    n.NodeValue = "";
+                    n.ResetValue();
                 }
             }
 
