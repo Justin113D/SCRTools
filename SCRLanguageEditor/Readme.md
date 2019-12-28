@@ -20,6 +20,8 @@ All string fields have a darker background to distinguish them from the category
 The dark box between the name and description is the value of the string, which is what will be displayed ingame. This textbox is what the translator is supposed to edit. <br/>
 If a file of older version than the current format version is loaded, then the program will check which string fields have been created or updated since the language file was saved and mark those and all the categorys with a blue box to the left of the name. This way the translator has an easier time updating the language file.
 
+Hint: Pressing Ctrl + R while editing a value resets it to the default value specified in the format file.
+
 ### Meta data
 Below the Window frame are various informations about the current format file and the loaded file:
 #### Author
