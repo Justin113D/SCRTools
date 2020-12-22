@@ -1,0 +1,82 @@
+{
+	"Name": "Example",
+	"Description": "",
+	"DefaultLanguage": "English",
+	"Versions": [
+	  "1.0.0.0",
+	  "1.1.0.0"
+	],
+	"ChildNodes": [
+		{
+			"Name": "Group 1",
+			"Description": "Texts of first subgroup",
+			"ChildNodes": [
+				{
+					"Name": "Sub-group 1",
+					"Description": "Texts used in the title screen",
+					"ChildNodes": [
+						{
+							"Name": "MyText1",
+							"Description": "This is my first text. translate with care",
+							"DefaultValue": "My first text!"
+						},
+						{
+							"Name": "MyText2",
+							"Description": "my second text, which is not really that importnat",
+							"DefaultValue": "Lesser known text"
+						},
+						{
+							"Name": "MyText3",
+							"Description": "This one includes knuckles. It changed with version 1.1.0.0!",
+							"DefaultValue": "My third text & knuckles",
+							"VersionID": 1
+						}
+					]
+				},
+				{
+					"Name": "Sub-group 2",
+					"Description": "Texts used in the title screen",
+					"ChildNodes": [
+						{
+							"Name": "MyText4",
+							"Description": "The fourth text in the series. unfortunately not as good as the first 3",
+							"DefaultValue": "Prerendered mess"
+						},
+						{
+							"Name": "MyText4Episode2",
+							"Description": "Second part of text4",
+							"DefaultValue": "Ok tbh, I actually never played the fourth game"
+						}
+					]
+				}
+			]
+		},
+		{
+			"Name": "Group 2",
+			"Description": "Texts that are best friends",
+			"ChildNodes": [
+				{
+					"Name": "Friend1",
+					"Description": "This is the first friend of the bunch!",
+					"DefaultValue": "Friend"
+				},
+				{
+					"Name": "Friend2",
+					"Description": "This is the second friend of the bunch!",
+					"DefaultValue": "Other friend"
+				}
+			]
+		},
+		{
+			"Name": "Group 3",
+			"Description": "The third group of texts. Kinda empty, ngl",
+			"ChildNodes": [
+				{
+					"Name": "IAmLonely",
+					"Description": "A lonely text",
+					"DefaultValue": "Lonely :("
+				}
+			]
+		}
+	]
+}

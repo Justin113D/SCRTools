@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Controls;
 using System.Windows;
+using System.Windows.Media;
 
 namespace SCRCommon.Viewmodels
 {
@@ -13,32 +14,55 @@ namespace SCRCommon.Viewmodels
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            TreeViewItem item = value as TreeViewItem;
-            if (item == null)
+            if(value is not TreeViewItem item)
                 return new Thickness(0);
 
             return new Thickness(Length * item.GetDepth(), 0, 0, 0);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+            => throw new NotImplementedException();
     }
 
-    [ValueConversion(typeof(int), typeof(GridLength))]
+    [ValueConversion(typeof(double), typeof(GridLength))]
     public class WindowWidthConverter : IValueConverter
     {
-        public float Percentage { get; set; }
+        public double Percentage { get; set; }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return new GridLength(Math.Round((double)value * Percentage), GridUnitType.Pixel);
-        }
+            => new GridLength((double)value * Percentage, GridUnitType.Pixel);
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+            => throw new NotImplementedException();
+    }
+
+    [ValueConversion(typeof(string), typeof(bool))]
+    public class StringEmptyConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            => string.IsNullOrWhiteSpace((string)value);
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => throw new NotSupportedException();
+    }
+
+    [ValueConversion(typeof(bool), typeof(bool))]
+    public class InverseBooleanConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            => !(bool)value;
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => throw new NotSupportedException();
+    }
+
+    [ValueConversion(typeof(bool), typeof(Visibility))]
+    public class VisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            => (bool)value ? Visibility.Visible : Visibility.Hidden;
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => throw new NotSupportedException();
     }
 }

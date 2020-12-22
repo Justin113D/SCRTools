@@ -7,7 +7,7 @@
         xmlns:wpfBase="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance {x:Type local:VM_Settings}}"
-        Title="Settings" Height="200" Width="500"
+        Title="Settings" Height="230" Width="500"
         x:Name="window"
         ResizeMode="NoResize"
         Style="{DynamicResource WindowStyle}">
@@ -36,6 +36,10 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="10"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -48,7 +52,7 @@
 
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0" Padding="2" Text="{Binding DefaultFormatPath, Mode=TwoWay}" TextWrapping="NoWrap" HorizontalAlignment="Stretch"/>
+                    <TextBox Grid.Column="0" Padding="2" Background="{DynamicResource BG2}" Text="{Binding DefaultFormatPath, Mode=TwoWay}" TextWrapping="NoWrap" HorizontalAlignment="Stretch"/>
                     <Button Grid.Column="1" Command="{Binding Cmd_SetDefaultPath}" Width="{Binding ActualHeight, ElementName=PathGrid}" Margin="5,0,0,0">
                         <Button.Style>
                             <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
@@ -65,13 +69,28 @@
                             ItemsSource="{Binding Themes}"
                             SelectedValue="{Binding WindowTheme, Mode=TwoWay}"/>
 
+                <!--Devmode setting-->
+                <TextBlock Grid.Column="0" Grid.Row="4" Text="Devmode" VerticalAlignment="Center"/>
+                <CheckBox Grid.Column="1" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="{Binding DevMode, Mode=TwoWay}" IsEnabled="False"/>
+
+                <!--JsonIndentation setting-->
+                <TextBlock Grid.Column="0" Grid.Row="6" Text="Json Indenting" VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding DevMode}" Value="False">
+                                    <Setter Property="Foreground" Value="{DynamicResource HintFontBrush}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <CheckBox Grid.Column="1" Grid.Row="6" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="{Binding JsonIndenting, Mode=TwoWay}" IsEnabled="{Binding DevMode}"/>
 
             </Grid>
-            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Ok" Width="100" Margin="0,0,10,0" Command="{Binding Cmd_Save}" CommandParameter="{x:Reference window}"/>
-                <Button Content="Cancel" Width="100" Command="{Binding Cmd_Cancel}" CommandParameter="{x:Reference window}"/>
-            </StackPanel>
-        </Grid>
 
+            <Label Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Content="Made by @Justin113D" Margin="-15" FontSize="11" Foreground="{DynamicResource FontBrush}"/>
+            <Button Grid.Row="1" HorizontalAlignment="Right" Content="Ok" Width="100" Margin="0,0,10,0" Command="{Binding Cmd_Save}" CommandParameter="{x:Reference window}"/>
+        </Grid>
     </Border>
 </Window>

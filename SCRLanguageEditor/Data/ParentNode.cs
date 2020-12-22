@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace SCRLanguageEditor.Data
 {
@@ -12,7 +13,7 @@ namespace SCRLanguageEditor.Data
         /// The children of this node
         /// </summary>
         public List<Node> ChildNodes { get; private set; }
-         
+
         /// <summary>
         /// Creates a parent node
         /// </summary>
@@ -32,5 +33,13 @@ namespace SCRLanguageEditor.Data
             ChildNodes = new List<Node>();
         }
 
+        protected override void WriteJsonInner(JsonTextWriter writer)
+        {
+            writer.WritePropertyName("ChildNodes");
+            writer.WriteStartArray();
+            foreach(Node n in ChildNodes)
+                n.WriteJson(writer);
+            writer.WriteEndArray();
+        }
     }
 }

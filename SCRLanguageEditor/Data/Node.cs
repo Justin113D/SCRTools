@@ -1,4 +1,7 @@
-﻿namespace SCRLanguageEditor.Data
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+
+namespace SCRLanguageEditor.Data
 {
     /// <summary>
     /// Base node class for other nodes in the file
@@ -16,6 +19,7 @@
             StringNode = 2
         }
 
+        [JsonIgnore]
         /// <summary>
         /// The type of the node
         /// </summary>
@@ -29,7 +33,7 @@
         /// <summary>
         /// Gets and sets the nodes name accordingly
         /// </summary>
-        public string Name
+        public virtual string Name
         {
             get
             {
@@ -75,6 +79,7 @@
             }
         }
 
+        [JsonIgnore]
         /// <summary>
         /// Whether this node (or any of its child nodes, if it has any) requires an update
         /// </summary>
@@ -103,5 +108,88 @@
             Type = type;
         }
 
+        /// <summary>
+        /// Writes the node as a json object
+        /// </summary>
+        /// <param name="writer"></param>
+        public void WriteJson(JsonTextWriter writer)
+        {
+            writer.WriteStartObject();
+
+            writer.WritePropertyName("Name");
+            writer.WriteValue(Name);
+
+            if(Description != null)
+            {
+                writer.WritePropertyName("Description");
+                writer.WriteValue(Description);
+            }
+
+
+            WriteJsonInner(writer);
+            writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Per Node data to write
+        /// </summary>
+        /// <param name="writer"></param>
+        protected abstract void WriteJsonInner(JsonTextWriter writer);
+
+        /// <summary>
+        /// Reads a Json node object
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static Node ReadJson(JsonTextReader reader)
+        {
+            string Name = null;
+            string Description = null;
+            string DefaultValue = null;
+            int version = 0;
+            List<Node> nodes = null;
+
+            while(reader.Read() && reader.TokenType != JsonToken.EndObject)
+            {
+                if(reader.TokenType == JsonToken.PropertyName)
+                {
+                    string tokenName = (string)reader.Value;
+                    reader.Read();
+                    switch(tokenName)
+                    {
+                        case "Name":
+                            Name = (string)reader.Value;
+                            break;
+                        case "Description":
+                            Description = (string)reader.Value;
+                            break;
+                        case "DefaultValue":
+                            DefaultValue = (string)reader.Value;
+                            break;
+                        case "VersionID":
+                            version = (int)((long)reader.Value);
+                            break;
+                        case "ChildNodes":
+                            nodes = new List<Node>();
+                            while(reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            {
+                                nodes.Add(ReadJson(reader));
+                            }
+                            break;
+                    }
+                }
+            }
+
+            if(nodes != null)
+            {
+                ParentNode result = new ParentNode(Name, Description);
+                result.ChildNodes.AddRange(nodes);
+                return result;
+            }
+            else
+            {
+                return new StringNode(Name, DefaultValue, version, Description);
+            }
+        }
     }
 }

@@ -81,8 +81,14 @@ The node of focus for the language file is the String file. It holds the value t
 The name has 3 attributes: `Name` which is the identifier by which its value will be accessed (required), `Desc` (the description) which is optional and used to guide the translator, and `vID` (version id), an integer, which tells the string in which version it was created or updated (required). <br/> 
 If the version id is 0, it was created/last updated in the oldest version of the format. If the id is 1, and a language file with a version older than that of the version of index 1, then the string will be marked as "update required" in the program, which allows the translators to update the language files more easily.
 
-### The .lang and .lang.base file
-TODO
+### The .lang and .langkey file
+To reduce redundancy, the language data is seperated into two files:
+The .lang file, which contains 4 lines of meta data and the actual strings. Each line represents a single string, where "\n" is used to represent a new line. <br/>
+The .langkey file, which determines the key of each string. <br/>
+<br/>
+The Keys are used to access a string from the file via programming. The text on line 5 in the language file corresponds to the key on line 1 in the key file. <br/>
+That way, the keys only need to be stored once, and the languages just store their corresponding text. In a Working game, the key layouts would all be the same either way. <br/>
+This reduces file and loading size, as you only need to load the keys once for the entire game and can then switch the dictionary values by loading another language file. <br/>
 
 ### Example:
 if the format file is:

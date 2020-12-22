@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 
@@ -11,50 +13,43 @@ namespace SCRLanguageEditor.Data
     /// </summary>
     public class HeaderNode : Node
     {
-        public readonly string targetName;
-
         /// <summary>
         /// Author of the document
         /// </summary>
-        private string author;
+        private string _author;
+
+        /// <summary>
+        /// The language of the current file
+        /// </summary>
+        private string _language;
 
         /// <summary>
         /// Gets and sets the documents author accordingly
         /// </summary>
         public string Author
         {
-            get
-            {
-                return author;
-            }
-            set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    author = null;
-                }
-                else
-                {
-                    author = value.Trim();
-                }
-            }
+            get => _author;
+            set => _author = string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+        }
+
+        /// <summary>
+        /// Sets and gets the language
+        /// </summary>
+        public string Language
+        {
+            get => _language;
+            set => _language = string.IsNullOrWhiteSpace(value) ? "-" : value.Trim();
         }
 
         /// <summary>
         /// The version map inside the format file, which is used to assign a "last updated" version for each string
         /// </summary>
-        private readonly Version[] Versions;
+        public List<Version> Versions;
 
         /// <summary>
         /// Version of the game that the file is for
         /// </summary>
-        public Version Version
-        {
-            get
-            {
-                return Versions[Versions.Length - 1];
-            }
-        }
+        public Version Version => Versions.Count == 0 ? null : Versions[^1];
 
         /// <summary>
         /// The version of the loaded file
@@ -62,66 +57,35 @@ namespace SCRLanguageEditor.Data
         public Version LoadedVersion { get; private set; }
 
         /// <summary>
-        /// The language of the current file
-        /// </summary>
-        private string language;
-
-        /// <summary>
-        /// Sets and gets the language
-        /// </summary>
-        public string Language
-        {
-            get
-            {
-                return language;
-            }
-            set
-            {
-                if(string.IsNullOrWhiteSpace(value))
-                {
-                    language = "-";
-                }
-                else
-                {
-                    language = value.Trim();
-                }
-            }
-        }
-
-        /// <summary>
         /// Contains all stringnodes that appear in the hierarchy
         /// </summary>
-        private readonly List<StringNode> stringNodes;
+        public SortedList<string, StringNode> StringNodes { get; private set; }
 
         /// <summary>
         /// The children of this node
         /// </summary>
         public List<Node> ChildNodes { get; private set; }
 
-        /// <summary>
-        /// Creates a Header node from language and version
-        /// </summary>
-        /// <param name="name">The language of the file</param>
-        /// <param name="version">The game version that the file is for</param>
-        public HeaderNode(string targetName, List<Version> versions, List<Node> children, List<StringNode> stringNodes) : base(null, NodeType.HeaderNode)
+
+        public HeaderNode() : base("New", NodeType.HeaderNode)
         {
-            this.targetName = targetName;
-            Versions = versions.OrderBy(x => x).ToArray();
-            Author = null;
+            Versions = new List<Version>()
+            {
+                new Version("0.0.0.1")
+            };
             Language = "English";
-            ChildNodes = children;
-            this.stringNodes = stringNodes.OrderBy(x => x.Name).ToList();
+            ChildNodes = new List<Node>();
+            StringNodes = new SortedList<string, StringNode>();
         }
+
 
         /// <summary>
         /// Resets all string in the stringnodes of the headers hierarchy
         /// </summary>
         public void ResetAllStrings()
         {
-            foreach(StringNode n in stringNodes)
-            {
-                n.ResetValue();
-            }
+            foreach(KeyValuePair<string, StringNode> n in StringNodes)
+                n.Value.ResetValue();
         }
 
         /// <summary>
@@ -138,7 +102,7 @@ namespace SCRLanguageEditor.Data
                 if(n is StringNode)
                 {
                     StringNode sn = n as StringNode;
-                    sn.RequiresUpdate = sn.versionID > minVerIndex;
+                    sn.RequiresUpdate = sn.versionID >= minVerIndex;
                     if (sn.RequiresUpdate) anyUpdated = true;
                 }
                 else if(n is ParentNode)
@@ -151,6 +115,93 @@ namespace SCRLanguageEditor.Data
             return anyUpdated;
         }
 
+
+        public static HeaderNode LoadFormatFromFile(string path)
+        {
+            HeaderNode result = new HeaderNode();
+
+            using JsonTextReader reader = new JsonTextReader(new StringReader(File.ReadAllText(path)));
+
+            while(reader.Read() && reader.TokenType != JsonToken.EndObject)
+            {
+                if(reader.TokenType == JsonToken.PropertyName)
+                {
+                    string tokenName = (string)reader.Value;
+                    reader.Read();
+                    switch(tokenName)
+                    {
+                        case "Name":
+                            result.Name = (string)reader.Value;
+                            break;
+                        case "Description":
+                            result.Description = (string)reader.Value;
+                            break;
+                        case "DefaultLanguage":
+                            result._language = (string)reader.Value;
+                            break;
+                        case "Versions":
+                            while(reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            {
+                                result.Versions.Add(new Version((string)reader.Value));
+                            }
+                            break;
+                        case "ChildNodes":
+                            while(reader.Read() && reader.TokenType != JsonToken.EndArray)
+                            {
+                                result.ChildNodes.Add(ReadJson(reader));
+                            }
+                            break;
+                    }
+                }
+            }
+
+            void GetStringNodes(List<Node> nodes)
+            {
+                foreach(Node node in nodes)
+                {
+                    if(node is ParentNode pn)
+                        GetStringNodes(pn.ChildNodes);
+                    else if(node is StringNode sn)
+                        result.StringNodes.Add(sn.Name.ToLower(), sn);
+                }
+            }
+
+            GetStringNodes(result.ChildNodes);
+
+            return result;
+        }
+        
+        public void SaveFormatToFile(string path)
+        {
+            using StringWriter strWriter = new StringWriter();
+            using JsonTextWriter writer = new JsonTextWriter(strWriter)
+            {
+                Formatting = Properties.Settings.Default.JsonIndenting ? Formatting.Indented : Formatting.None
+            };
+
+            WriteJson(writer);
+
+            File.WriteAllText(path, strWriter.ToString());
+        }
+
+        protected override void WriteJsonInner(JsonTextWriter writer)
+        {
+            writer.WritePropertyName("DefaultLanguage");
+            writer.WriteValue(_language);
+
+            writer.WritePropertyName("Versions");
+            writer.WriteStartArray();
+            foreach(var v in Versions)
+                writer.WriteValue(v.ToString());
+            writer.WriteEndArray();
+
+            writer.WritePropertyName("ChildNodes");
+            writer.WriteStartArray();
+            foreach(Node n in ChildNodes)
+                n.WriteJson(writer);
+            writer.WriteEndArray();
+        }
+    
         /// <summary>
         /// Save the current set strings to two files
         /// </summary>
@@ -159,21 +210,21 @@ namespace SCRLanguageEditor.Data
         {
             List<string> lines = new List<string>()
             {
-                targetName,
+                Name,
                 Version.ToString(),
                 Language,
                 Author ?? "",
             };
             List<string> baseLines = new List<string>();
             
-            foreach(StringNode s in stringNodes)
+            foreach(KeyValuePair<string, StringNode> s in StringNodes)
             {
-                lines.Add(s.NodeValue.Replace("\n", "\\n"));
-                baseLines.Add(s.Name);
+                lines.Add(s.Value.NodeValue.Replace("\n", "\\n"));
+                baseLines.Add(s.Key);
             }
 
             File.WriteAllText(path, string.Join("\n", lines));
-            File.WriteAllText(path + ".base", string.Join("\n", baseLines));
+            File.WriteAllText(Path.ChangeExtension(path, "langkey"), string.Join("\n", baseLines));
         }
         
         /// <summary>
@@ -182,28 +233,20 @@ namespace SCRLanguageEditor.Data
         /// <param name="path"></param>
         public void LoadContentsFromFile(string path)
         {
-            //checking the files first
-            if(Path.GetExtension(path) == ".base")
-            {
-                path = path.Substring(0, path.Length - 5);
-            }
-
             if(!File.Exists(path))
-            {
                 throw new FileNotFoundException(".lang file not found!");
-            }
-            if(!File.Exists(path + ".base"))
-            {
+
+            string keyPath = Path.ChangeExtension(path, "langkey");
+            if(!File.Exists(keyPath))
                 throw new FileNotFoundException(".base file not found!");
-            }
 
             //getting the lines
             string[] lines = File.ReadAllLines(path);
-            string[] baseLines = File.ReadAllLines(path + ".base");
+            string[] keyLines = File.ReadAllLines(keyPath);
 
             //checking if the targetname is correct
 
-            if(lines[0] != targetName)
+            if(lines[0] != Name)
             {
                 throw new InvalidDataException("Language file target does not match format target!");
             }
@@ -215,34 +258,28 @@ namespace SCRLanguageEditor.Data
 
             //loading the strings into a dictionary and assigning the strings to the values
             Dictionary<string, string> languageDictionary = new Dictionary<string, string>();
+            for(int i = 0; i < keyLines.Length; i++)
+                languageDictionary.Add(keyLines[i], lines[i + 4]);
 
-            for(int i = 0; i < baseLines.Length; i++)
+            foreach(KeyValuePair<string, StringNode> n in StringNodes)
             {
-                languageDictionary.Add(baseLines[i], lines[i + 4]);
-            }
-
-            foreach(StringNode n in stringNodes)
-            {
-                if(languageDictionary.ContainsKey(n.Name))
-                {
-                    n.NodeValue = languageDictionary[n.Name];
-                }
-                else
-                {
-                    n.ResetValue();
-                }
+                if(languageDictionary.ContainsKey(n.Key))
+                    n.Value.NodeValue = languageDictionary[n.Key];
+                else n.Value.ResetValue();
             }
 
             //updating the version check based on the file version
-            for(int i = 0; i < Versions.Length; i++)
+            // TODO there's gotta be a better way to do this
+            for(int i = 0; i < Versions.Count; i++)
             {
                 if(Versions[i] > LoadedVersion)
                 {
-                    CheckVersionDifference(ChildNodes, i - 1);
+                    CheckVersionDifference(ChildNodes, i);
                     return;
                 }
             }
-            CheckVersionDifference(ChildNodes, Versions.Length - 1);
         }
+
+
     }
 }

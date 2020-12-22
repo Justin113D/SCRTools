@@ -1,4 +1,5 @@
-﻿using SCRCommon.Viewmodels;
+﻿using PropertyChanged;
+using SCRCommon.Viewmodels;
 using SCRLanguageEditor.Data;
 
 namespace SCRLanguageEditor.Viewmodel
@@ -8,6 +9,11 @@ namespace SCRLanguageEditor.Viewmodel
     /// </summary>
     public abstract class VM_Node : BaseViewModel
     {
+        /// <summary>
+        /// Header node access
+        /// </summary>
+        protected VM_HeaderNode VMHeaderNode { get; }
+
         /// <summary>
         /// The node which the viewmodel accesses and modifies
         /// </summary>
@@ -28,14 +34,14 @@ namespace SCRLanguageEditor.Viewmodel
         /// <summary>
         /// The name of the node
         /// </summary>
-        public string Name
+        public virtual string Name
         {
-            get
-            {
-                return node.Name;
-            }
+            get => node.Name;
             set
             {
+                if(string.IsNullOrWhiteSpace(value))
+                    return;
+
                 node.Name = value;
             }
         }
@@ -45,15 +51,18 @@ namespace SCRLanguageEditor.Viewmodel
         /// </summary>
         public string Description
         {
-            get
-            {
-                return node.Description;
-            }
+            get => node.Description;
             set
             {
+                if(string.IsNullOrWhiteSpace(value))
+                    return;
+
                 node.Description = value;
             }
         }
+
+        [SuppressPropertyChangedWarnings]
+        public abstract bool IsExpanded { get; set; }
 
         /// <summary>
         /// The type of the node
@@ -64,9 +73,10 @@ namespace SCRLanguageEditor.Viewmodel
         /// Base constructor
         /// </summary>
         /// <param name="node">The assigned node</param>
-        protected VM_Node(Node node)
+        protected VM_Node(Node node, VM_HeaderNode vm)
         {
             this.node = node;
+            VMHeaderNode = vm;
         }
 
         /// <summary>

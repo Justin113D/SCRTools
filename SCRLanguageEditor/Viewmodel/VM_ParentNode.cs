@@ -28,7 +28,7 @@ namespace SCRLanguageEditor.Viewmodel
         /// <summary>
         /// Expands and collapses the children properly
         /// </summary>
-        public bool IsExpanded
+        public override bool IsExpanded
         {
             get
             {
@@ -51,7 +51,7 @@ namespace SCRLanguageEditor.Viewmodel
         /// Base constructor
         /// </summary>
         /// <param name="node">The parent node</param>
-        public VM_ParentNode(ParentNode node) : base(node)
+        public VM_ParentNode(ParentNode node, VM_HeaderNode vm) : base(node, vm)
         {
             ClearChildren();
         }
@@ -78,10 +78,10 @@ namespace SCRLanguageEditor.Viewmodel
                 switch (n.Type)
                 { 
                     case Node.NodeType.ParentNode:
-                        Children.Add(new VM_ParentNode((ParentNode)n));
+                        Children.Add(new VM_ParentNode((ParentNode)n, VMHeaderNode));
                         break;
                     case Node.NodeType.StringNode:
-                        Children.Add(new VM_StringNode((StringNode)n));
+                        Children.Add(new VM_StringNode((StringNode)n, VMHeaderNode));
                         break;
                     default:
                         Children.Add(null);

@@ -1,26 +1,24 @@
-﻿using SCRCommon.WpfStyles;
-using SCRLanguageEditor.Viewmodel;
-using System;
+﻿using SCRLanguageEditor.Viewmodel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace SCRLanguageEditor
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        private MainWindow()
+        public MainWindow()
         {
+            DataContext = new VM_Main();
             InitializeComponent();
-            
         }
 
-        public MainWindow(VM_Main mainViewModel) : this()
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            DataContext = mainViewModel;
+            if(e.Key == Key.Enter)
+            {
+                ((TextBox)sender).MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+            }
         }
     }
 }

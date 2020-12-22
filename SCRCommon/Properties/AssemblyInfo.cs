@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SCRCommon")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Shared code for SCRTools")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Team Nocturne")]
 [assembly: AssemblyProduct("SCRCommon")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]

@@ -8,22 +8,70 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SCRLanguageEditor.Properties
-{
-
-
+namespace SCRLanguageEditor.Properties {
+    
+    
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
-    {
-
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+        
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
+        
+        public static Settings Default {
+            get {
+                return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("LanguageFiles/Format.json")]
+        public string DefaultFormatPath {
+            get {
+                return ((string)(this["DefaultFormatPath"]));
+            }
+            set {
+                this["DefaultFormatPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Dark")]
+        public SCRCommon.WpfStyles.Theme WindowTheme
+        {
+            get {
+                return ((SCRCommon.WpfStyles.Theme)(this["WindowTheme"]));
+            }
+            set {
+                this["WindowTheme"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool JsonIndenting {
+            get {
+                return ((bool)(this["JsonIndenting"]));
+            }
+            set {
+                this["JsonIndenting"] = value;
+            }
+        }
 
-        public static Settings Default
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DevMode
         {
             get
             {
-                return defaultInstance;
+                return ((bool)(this["DevMode"]));
+            }
+            set
+            {
+                this["DevMode"] = value;
             }
         }
     }

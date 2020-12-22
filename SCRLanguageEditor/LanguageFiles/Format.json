@@ -1,0 +1,3029 @@
+{
+  "Name": "SCR",
+  "Description": "",
+  "DefaultLanguage": "English",
+  "Versions": [
+    "0.0.27.2",
+    "0.0.27.3",
+    "0.0.28.0"
+  ],
+  "ChildNodes": [
+    {
+      "Name": "Titlescreen",
+      "Description": "Texts used in the title screen",
+      "ChildNodes": [
+        {
+          "Name": "Main",
+          "Description": "The Main-menu texts",
+          "ChildNodes": [
+            {
+              "Name": "pressStart",
+              "Description": "\"Press start to begin\" (the gamepad button)",
+              "DefaultValue": "Press start to begin",
+              "VersionID": 0
+            },
+            {
+              "Name": "pressEnter",
+              "Description": "\"Press enter to begin\" (the keyboard key)",
+              "DefaultValue": "Press enter to begin",
+              "VersionID": 0
+            },
+            {
+              "Name": "clickAnywhere",
+              "Description": "\"Click anywhere to begin\" (with the mouse)",
+              "DefaultValue": "Click anywhere to begin",
+              "VersionID": 0
+            },
+            {
+              "Name": "newGame",
+              "Description": "The text on a savefile button when the savefile is empty",
+              "DefaultValue": "New game",
+              "VersionID": 0
+            },
+            {
+              "Name": "timeFormat",
+              "Description": "The time format of the region \nHas to be either \"AmPm\" or \"24H\"",
+              "DefaultValue": "AmPm",
+              "VersionID": 0
+            },
+            {
+              "Name": "chapterLabel",
+              "Description": "The 'Chapter'",
+              "DefaultValue": "Chapter",
+              "VersionID": 0
+            },
+            {
+              "Name": "startLabel",
+              "Description": "The 'Start game' label for the start-game-button",
+              "DefaultValue": "Start game",
+              "VersionID": 0
+            },
+            {
+              "Name": "deleteConfirmation",
+              "Description": "When deleting a savefile, this text pops up and asks for confirmation",
+              "DefaultValue": "Delete file?",
+              "VersionID": 2
+            },
+            {
+              "Name": "storyHeader",
+              "Description": "The header label of the story box; 'The story so far'",
+              "DefaultValue": "The story so far",
+              "VersionID": 0
+            },
+            {
+              "Name": "copyHeader",
+              "Description": "Asking where to save a copy of the selected file",
+              "DefaultValue": "Select the slot to copy the file to",
+              "VersionID": 2
+            }
+          ]
+        },
+        {
+          "Name": "Settings",
+          "Description": "Texts used for the Settings menu",
+          "ChildNodes": [
+            {
+              "Name": "Game",
+              "Description": "Texts for the game settings submenu",
+              "ChildNodes": [
+                {
+                  "Name": "sGTitle",
+                  "Description": "Gamesettings submenu title",
+                  "DefaultValue": "Game settings",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sGMotionBlur",
+                  "Description": "Motion blur label",
+                  "DefaultValue": "Motion blur",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sGMotionBlurD",
+                  "Description": "Motion blur description",
+                  "DefaultValue": "Blurs fast moving objects",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sGDepthOfField",
+                  "Description": "Depth of field label",
+                  "DefaultValue": "Depth of field",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sGDepthOfFieldD",
+                  "Description": "Depth of field description",
+                  "DefaultValue": "The further something is away from the camera, the blurrier it gets",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sGTextureQuality",
+                  "Description": "Texture quality label",
+                  "DefaultValue": "Texture quality",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sGTextureQualityD",
+                  "Description": "Texture quality description",
+                  "DefaultValue": "Texture quality on 3D models",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sGShadowQuality",
+                  "Description": "Shadow quality label",
+                  "DefaultValue": "Shadow quality",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sGShadowQualityD",
+                  "Description": "Shadow quality description",
+                  "DefaultValue": "Shadow resolution",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sGParallaxQuality",
+                  "Description": "Parallax quality label",
+                  "DefaultValue": "Parallax quality",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sGParallaxQualityD",
+                  "Description": "Parallax quality description",
+                  "DefaultValue": "Quality of parallax occlusion mapping effect on textures (virtual texture depth)",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sGGrassDensity",
+                  "Description": "Grass density label",
+                  "DefaultValue": "Grass density",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sGGrassDensityD",
+                  "Description": "Grass density description",
+                  "DefaultValue": "Amount of grass rendered on surfaces (leftmost will disable grass)",
+                  "VersionID": 2
+                }
+              ]
+            },
+            {
+              "Name": "Input",
+              "Description": "Texts for the input submenu",
+              "ChildNodes": [
+                {
+                  "Name": "sInpTitle",
+                  "Description": "Input submenu title",
+                  "DefaultValue": "Input",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sInpMode1",
+                  "Description": "Keyboard controls label",
+                  "DefaultValue": "Keyboard",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sInpMode1D",
+                  "Description": "Keyboard controls description",
+                  "DefaultValue": "Use the keyboard to play the game.\n\nNote: Still allows to interact with the UI using the cursor.",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sInpMode2",
+                  "Description": "Gamepad controls label",
+                  "DefaultValue": "Gamepad",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sInpMode2D",
+                  "Description": "Gamepad controls description",
+                  "DefaultValue": "Use a gamepad to play the game.\n Supported controller types:\n    • Xbox controller\n    • PS4 Controller\n    • Switch pro controller\n\nNote: Still allows to interact with the UI using the cursor.",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sInpMode3",
+                  "Description": "Cursor controls label",
+                  "DefaultValue": "Cursor",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sInpMode3D",
+                  "Description": "Cursor controls description",
+                  "DefaultValue": "Use solely the cursor (Mouse/Pen) to play the game (like in the original NDS game).",
+                  "VersionID": 2
+                }
+              ]
+            },
+            {
+              "Name": "Display",
+              "Description": "Texts for the display submenu",
+              "ChildNodes": [
+                {
+                  "Name": "sDisTitle",
+                  "Description": "Display submenu title",
+                  "DefaultValue": "Display",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sDisMode",
+                  "Description": "Display mode label",
+                  "DefaultValue": "Display mode",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sDisMode1",
+                  "Description": "Fullscreen option",
+                  "DefaultValue": "Fullscreen",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sDisMode2",
+                  "Description": "Fullscreen borderless option",
+                  "DefaultValue": "Fullscreen borderless",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sDisMode3",
+                  "Description": "Maximized window option",
+                  "DefaultValue": "Maximized window",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sDisMode4",
+                  "Description": "Windowed option",
+                  "DefaultValue": "Windowed",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sDisModeD",
+                  "Description": "Description for the different Display mode options",
+                  "DefaultValue": "The display mode of the application:\n\n    Fullscreen - Default fullscreen. Scales the window to the size of the monitor.\n\n    Fullscreen borderless - Like fullscreen, but allows you to tab out of the game without minimizing the window. Might cause performance issues.\n\n    Maximized window - Basically like Fullscreen borderless, but with task bar and window border.\n WARNING! Not supported on Windows OS; Will instead switch to fullscreen borderless.\n\n    Windowed - Regular application window.",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sDisMonitor",
+                  "Description": "Display monitor label",
+                  "DefaultValue": "Display monitor",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sDisMonitorD",
+                  "Description": "Description for the monitor label",
+                  "DefaultValue": "The monitor that the game should be displayed on (if more than one are available).\n\n    Requires a restart of the game to take action!",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sDisRes",
+                  "Description": "Resolution label",
+                  "DefaultValue": "Resolution",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sDisRes1",
+                  "Description": "Native resolution option (monitor resolution)",
+                  "DefaultValue": "Native",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sDisRes2",
+                  "Description": "Unity presets option",
+                  "DefaultValue": "Unity presets",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sDisRes3",
+                  "Description": "Custom option",
+                  "DefaultValue": "Custom",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sDisResD",
+                  "Description": "Description for the different resolution options",
+                  "DefaultValue": "Changes the render resolution:\n\n    Native - monitor resolution.\n\n    Unity presets -  Allows you to choose from Unitys builtin resolutions, from left (smallest) to right (biggest).\n\n    Custom - Enter a resolution of choice. Minimum resolution is 256 x 192, and ratio can only be between 4:3 and 16:9, to prevent the game from breaking.",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sDisFPS",
+                  "Description": "Target framerate label",
+                  "DefaultValue": "Target framerate",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sDisFPS1",
+                  "Description": "Unlimited option",
+                  "DefaultValue": "Unlimited",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sDisFPSD",
+                  "Description": "Target framerate description",
+                  "DefaultValue": "Sets the target framerate.\n\n    Moving the slider leftmost will enable VSync (Double buffering), and moving it rightmost will disable the limit",
+                  "VersionID": 2
+                }
+              ]
+            },
+            {
+              "Name": "Volume",
+              "Description": "Texts for the volume submenu",
+              "ChildNodes": [
+                {
+                  "Name": "sVolTitle",
+                  "Description": "Title label for the volumes submenu",
+                  "DefaultValue": "Volume",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sVolMusic",
+                  "Description": "The label for the music volume option",
+                  "DefaultValue": "Music",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sVolMusicD",
+                  "Description": "Music Volume description",
+                  "DefaultValue": "Changes the volume of the music.",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sVolSFX",
+                  "Description": "The label for the sounds volume option",
+                  "DefaultValue": "Sounds",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sVolSFXD",
+                  "Description": "Sound volume description",
+                  "DefaultValue": "Changes the volume of sound effects.",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sVolVoice",
+                  "Description": "The label for the voices volume option",
+                  "DefaultValue": "Voice acting",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "sVolVoiceD",
+                  "Description": "Voice volume description",
+                  "DefaultValue": "Changes the volume of voice lines.",
+                  "VersionID": 2
+                }
+              ]
+            },
+            {
+              "Name": "graphics1",
+              "Description": "First set of labels for the graphics options: \n Motion Blur, Texture Quality, Grass Density",
+              "DefaultValue": "Motion blur\nTexture quality\nGrass density",
+              "VersionID": 1
+            },
+            {
+              "Name": "graphics2",
+              "Description": "Second set of labels for the graphics options: \n Depth of field",
+              "DefaultValue": "Depth of field",
+              "VersionID": 1
+            }
+          ]
+        },
+        {
+          "Name": "Title Screen Story Summaries",
+          "Description": "Every time the game progresses storywise, the Story summaries on the title screen update, which are all stored here",
+          "ChildNodes": [
+            {
+              "Name": "Chapter 1",
+              "Description": "Story Summaries of Chapter 1",
+              "ChildNodes": [
+                {
+                  "Name": "storySum1_1",
+                  "Description": "\"While he was away exploring and solving problems elsewhere, Sonic received a message from Tails:\n Knuckles is missing! \n\nTails asked for Sonic's help to track down the Marauders, the mysterious villains who took Knuckles. Sonic returned from afar to help find Knuckles and bring these Marauders to justice! \"",
+                  "DefaultValue": "While he was away exploring and solving problems elsewhere, Sonic received a message from Tails:\n Knuckles is missing!\n\nTails asked for Sonic's help to track the Marauders, the mysterious villains who took Knuckles. Sonic returned from afar to help find Knuckles and bring these Marauders to justice!",
+                  "VersionID": 0
+                },
+                {
+                  "Name": "storySum1_2",
+                  "Description": "",
+                  "DefaultValue": "",
+                  "VersionID": 0
+                },
+                {
+                  "Name": "storySum1_3",
+                  "Description": "",
+                  "DefaultValue": "",
+                  "VersionID": 0
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "Ingame Menu",
+      "Description": "Texts used in the ingame menu",
+      "ChildNodes": [
+        {
+          "Name": "Save menu",
+          "Description": "Texts for the save menu",
+          "ChildNodes": [
+            {
+              "Name": "SavTitle",
+              "Description": "Title for the save menu",
+              "DefaultValue": "Save menu",
+              "VersionID": 2
+            },
+            {
+              "Name": "SavEmpty",
+              "Description": "When a game file is empty",
+              "DefaultValue": "Empty",
+              "VersionID": 2
+            },
+            {
+              "Name": "SavMessage",
+              "Description": "When the user wants to save on a slot which already holds save data; Reminding the user that the existing data will be overwritten",
+              "DefaultValue": "Are you sure? The selected file will be overwritten",
+              "VersionID": 2
+            },
+            {
+              "Name": "SavConfirm",
+              "Description": "'Confirm'; save on the selected slot",
+              "DefaultValue": "Confirm",
+              "VersionID": 2
+            },
+            {
+              "Name": "SavCancel",
+              "Description": "'Cancel'; dont save to the selected slot",
+              "DefaultValue": "Cancel",
+              "VersionID": 2
+            },
+            {
+              "Name": "SavRetMessage",
+              "Description": "Asking if the user wants to return to the title screen",
+              "DefaultValue": "Do you want to return to the title screen?",
+              "VersionID": 2
+            },
+            {
+              "Name": "SavRetConfirm",
+              "Description": "Confirming to return to the title screen",
+              "DefaultValue": "Return to title screen",
+              "VersionID": 2
+            },
+            {
+              "Name": "SavRetCancel",
+              "Description": "Deciding to continue to play the game",
+              "DefaultValue": "Continue playing",
+              "VersionID": 2
+            }
+          ]
+        },
+        {
+          "Name": "Profiler",
+          "Description": "Profile menu",
+          "ChildNodes": [
+            {
+              "Name": "PrfTitle",
+              "Description": "Title for the profiler menu",
+              "DefaultValue": "Profiler",
+              "VersionID": 2
+            },
+            {
+              "Name": "PrfLevel",
+              "Description": "'Level' label, displays the current level of the character",
+              "DefaultValue": "Level:",
+              "VersionID": 2
+            },
+            {
+              "Name": "PrfClass",
+              "Description": "The 'Class' label in the profile menu (the character fighter class)",
+              "DefaultValue": "Class:",
+              "VersionID": 2
+            },
+            {
+              "Name": "PrfNextLvl",
+              "Description": "'Next in' label, displays how many exp remain till the character reaches the next level",
+              "DefaultValue": "Next in:",
+              "VersionID": 2
+            },
+            {
+              "Name": "PrfTurns",
+              "Description": "'Turns' label, displays the amount of turns of the character in battles",
+              "DefaultValue": "Turns:",
+              "VersionID": 2
+            },
+            {
+              "Name": "PrfProp1",
+              "Description": "First property header",
+              "DefaultValue": "Equipment",
+              "VersionID": 2
+            },
+            {
+              "Name": "PrfProp2",
+              "Description": "Second property header",
+              "DefaultValue": "Movement abilities",
+              "VersionID": 2
+            },
+            {
+              "Name": "PrfProp3",
+              "Description": "Third property header",
+              "DefaultValue": "POW moves",
+              "VersionID": 2
+            },
+            {
+              "Name": "PrfSlotEmpty",
+              "Description": "Displays whether a characters equipment slot does not hold any gear",
+              "DefaultValue": "Nothing equipped",
+              "VersionID": 2
+            },
+            {
+              "Name": "PrfnoEquipSelected",
+              "Description": "Used in the equipment info box; Tells the user that no equipment is selected (and thus there is nothing to show in the info box)",
+              "DefaultValue": "Select an equipment slot, movement ability, or POW move below for more info",
+              "VersionID": 2
+            },
+            {
+              "Name": "PrfDequip",
+              "Description": "When dequipping a piece of equipment",
+              "DefaultValue": "Dequip",
+              "VersionID": 2
+            },
+            {
+              "Name": "PrfTestPow",
+              "Description": "When selecting a pow move to test",
+              "DefaultValue": "Test POW move",
+              "VersionID": 2
+            },
+            {
+              "Name": "PrfNoEquip",
+              "Description": "",
+              "DefaultValue": "The selected equipment slot is empty",
+              "VersionID": 2
+            },
+            {
+              "Name": "PrfPowLocked",
+              "Description": "",
+              "DefaultValue": "The selected pow move is locked. Unlock it by leveling up and assigning bonus points to it",
+              "VersionID": 2
+            }
+          ]
+        },
+        {
+          "Name": "Inventory menu",
+          "Description": "Texts for the inventory menu",
+          "ChildNodes": [
+            {
+              "Name": "invMenu1",
+              "Description": "When the 'Equipment' inventory is active",
+              "DefaultValue": "Equipment",
+              "VersionID": 0
+            },
+            {
+              "Name": "invMenu2",
+              "Description": "When the 'Consumables' inventory is active",
+              "DefaultValue": "Consumables",
+              "VersionID": 0
+            },
+            {
+              "Name": "invMenu3",
+              "Description": "When the 'Chao' inventory is active",
+              "DefaultValue": "Chao",
+              "VersionID": 0
+            },
+            {
+              "Name": "invMenu4",
+              "Description": "When the 'Quest items' inventory is active",
+              "DefaultValue": "Quest items",
+              "VersionID": 0
+            },
+            {
+              "Name": "invSort1",
+              "Description": "Sorting after type",
+              "DefaultValue": "Sorted after type",
+              "VersionID": 0
+            },
+            {
+              "Name": "invSort2",
+              "Description": "Sorting after name",
+              "DefaultValue": "Sorted after name",
+              "VersionID": 0
+            },
+            {
+              "Name": "invSort3",
+              "Description": "Sorting after amount",
+              "DefaultValue": "Sorted after amount",
+              "VersionID": 0
+            },
+            {
+              "Name": "equipItem",
+              "Description": "The selected item",
+              "DefaultValue": "Equip item",
+              "VersionID": 0
+            },
+            {
+              "Name": "unequipItem",
+              "Description": "The selected item is equipped and can be unequipped",
+              "DefaultValue": "Unequip item",
+              "VersionID": 0
+            },
+            {
+              "Name": "useItem",
+              "Description": "The selected item can be use/consumed",
+              "DefaultValue": "Use item",
+              "VersionID": 0
+            },
+            {
+              "Name": "equipChao",
+              "Description": "The selecte chao can be equipped",
+              "DefaultValue": "Equip chao",
+              "VersionID": 0
+            },
+            {
+              "Name": "unequipChao",
+              "Description": "The selected chao is equipped and can be unequipped",
+              "DefaultValue": "Unequip chao",
+              "VersionID": 0
+            },
+            {
+              "Name": "alreadyEquipped",
+              "Description": "The character already has an item/chao of this type equipped",
+              "DefaultValue": "Already equipped",
+              "VersionID": 0
+            },
+            {
+              "Name": "notEquippable",
+              "Description": "The character cant equip this type of item",
+              "DefaultValue": "Not equippable",
+              "VersionID": 0
+            },
+            {
+              "Name": "noItemThere",
+              "Description": "The selected inventory does not hold any items/chao",
+              "DefaultValue": "There are no items to display",
+              "VersionID": 0
+            },
+            {
+              "Name": "nothingSelected",
+              "Description": "No item/chao is selected",
+              "DefaultValue": "No items or\nchao selected",
+              "VersionID": 0
+            }
+          ]
+        },
+        {
+          "Name": "Journal menu",
+          "Description": "Texts used in the journal menu",
+          "ChildNodes": [
+            {
+              "Name": "jHeader1",
+              "Description": "'Codex' directory header (lore, character info)",
+              "DefaultValue": "Codex",
+              "VersionID": 1
+            },
+            {
+              "Name": "jHeader2",
+              "Description": "'Missions' directory header",
+              "DefaultValue": "Missions",
+              "VersionID": 1
+            },
+            {
+              "Name": "jHeader3",
+              "Description": "'Guides' directory header",
+              "DefaultValue": "Guides",
+              "VersionID": 1
+            },
+            {
+              "Name": "jHeader4",
+              "Description": "'Videos' directory header",
+              "DefaultValue": "Videos",
+              "VersionID": 1
+            },
+            {
+              "Name": "jHeader5",
+              "Description": "'Credits' directory header",
+              "DefaultValue": "Credits",
+              "VersionID": 1
+            },
+            {
+              "Name": "jDefault",
+              "Description": "When no entry is selected; After opening the journal",
+              "DefaultValue": "Select a journal entry from one of the branches to get information about the universe of Sonic Chronicles: the Dark Brotherhood, and much more!",
+              "VersionID": 1
+            },
+            {
+              "Name": "jBack",
+              "Description": "Button label to close directory",
+              "DefaultValue": "Back",
+              "VersionID": 1
+            }
+          ]
+        },
+        {
+          "Name": "Overworld map menu",
+          "Description": "Texts used in the overworld map menu",
+          "ChildNodes": [
+            {
+              "Name": "Zone descriptions",
+              "Description": "Descriptions for each zone ingame",
+              "ChildNodes": [
+                {
+                  "Name": "areaDesc1",
+                  "Description": "Green Hill Zone description: \n A tropical paradise that's home to some of the most exotic local wildlife, and with its abstract topography and luscious green grass, it's a popular destination for many travellers.",
+                  "DefaultValue": "A tropical paradise that's home to some of the most exotic local wildlife, and with its abstract topography and luscious green grass, it's a popular destination for many travellers.",
+                  "VersionID": 0
+                },
+                {
+                  "Name": "areaDesc2",
+                  "Description": "Central City description: \n An influential hub of commerce and industry, this diverse city is home to everything from a simple curio store to the militaristic G.U.N. Headquarters.",
+                  "DefaultValue": "An influential hub of commerce and industry, this diverse city is home to everything from a simple curio store to the militaristic G.U.N. Headquarters.",
+                  "VersionID": 0
+                },
+                {
+                  "Name": "areaDesc3",
+                  "Description": "Mystic Ruins description: \n This dense jungle was once home to an ancient civilization, which mysteriously disappeared thousands of years ago. Today, all that remains are their ruins, which surround the place with mystery.",
+                  "DefaultValue": "This dense jungle was once home to an ancient civilization, which mysteriously disappeared thousands of years ago. Today, all that remains are their ruins, which surround the place with mystery.",
+                  "VersionID": 0
+                },
+                {
+                  "Name": "areaDesc4",
+                  "Description": "Blue Ridge Zone description: \n A chilly alpine region abundant with snowfall and azure greenery, the survivors of Perfect Chaos eke out a modest lifestyle after Station Square’s destruction.",
+                  "DefaultValue": "A chilly alpine region abundant with snowfall and azure greenery, the survivors of Perfect Chaos eke out a modest lifestyle after Station Square’s destruction.",
+                  "VersionID": 0
+                },
+                {
+                  "Name": "areaDesc5",
+                  "Description": "Metropolis description: \n A dystopian wasteland Built by Dr. Ivo 'Eggman' Robotnik, which has fallen to ruin after his defeat several years ago. Now its filled with ghost factories and taskless robots walking around the site.",
+                  "DefaultValue": "A dystopian wasteland Built by Dr. Ivo \"Eggman\" Robotnik, which has fallen to ruin after his defeat several years ago. Now its filled with ghost factories and taskless robots walking around the site.",
+                  "VersionID": 0
+                },
+                {
+                  "Name": "areaDesc6",
+                  "Description": "Angel Island description: \n As the seat of the Master Emerald, this floating island is one of the last relics of an ancient civilization.The Island itself has crashed into the ocean several times in recent years.",
+                  "DefaultValue": "As the seat of the Master Emerald, this floating island is one of the last relics of an ancient civilization.The Island itself has crashed into the ocean several times in recent years.",
+                  "VersionID": 0
+                },
+                {
+                  "Name": "areaDesc7",
+                  "Description": "Metropolis Ground Zero description: \n TBD",
+                  "DefaultValue": "",
+                  "VersionID": 0
+                },
+                {
+                  "Name": "areaDesc8",
+                  "Description": "Kron Colony description: \n TBD",
+                  "DefaultValue": "",
+                  "VersionID": 0
+                },
+                {
+                  "Name": "areaDesc9",
+                  "Description": "N'rrgal colony description: \n TBD",
+                  "DefaultValue": "",
+                  "VersionID": 0
+                },
+                {
+                  "Name": "areaDesc10",
+                  "Description": "Zoah Colony description: \n TBD",
+                  "DefaultValue": "",
+                  "VersionID": 0
+                },
+                {
+                  "Name": "areaDesc11",
+                  "Description": "Voxai Colony Beta description: \n TBD",
+                  "DefaultValue": "",
+                  "VersionID": 0
+                },
+                {
+                  "Name": "areaDesc12",
+                  "Description": "Voxai Colony Alpha description: \n TBD",
+                  "DefaultValue": "",
+                  "VersionID": 0
+                },
+                {
+                  "Name": "areaDesc13",
+                  "Description": "Nocturne description: \n TBD",
+                  "DefaultValue": "",
+                  "VersionID": 0
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "General",
+      "Description": "General texts used throughout the entire game",
+      "ChildNodes": [
+        {
+          "Name": "Stat labels",
+          "Description": "Short labels for the stats in all kinds of menus",
+          "ChildNodes": [
+            {
+              "Name": "stat_level",
+              "Description": "Level short; 'Lvl'",
+              "DefaultValue": "Lvl",
+              "VersionID": 2
+            },
+            {
+              "Name": "stat_health",
+              "Description": "Health points short; 'HP'",
+              "DefaultValue": "HP",
+              "VersionID": 2
+            },
+            {
+              "Name": "stat_powerpoints",
+              "Description": "Power points short; 'PP'",
+              "DefaultValue": "PP",
+              "VersionID": 2
+            },
+            {
+              "Name": "stat_speed",
+              "Description": "Speed short; 'Spd'",
+              "DefaultValue": "Spd",
+              "VersionID": 2
+            },
+            {
+              "Name": "stat_power",
+              "Description": "Power short; 'Atk'",
+              "DefaultValue": "Atk",
+              "VersionID": 2
+            },
+            {
+              "Name": "stat_armor",
+              "Description": "Armor short; 'Def'",
+              "DefaultValue": "Def",
+              "VersionID": 2
+            },
+            {
+              "Name": "stat_accuracy",
+              "Description": "Accuracy short; 'Acc'",
+              "DefaultValue": "Acc",
+              "VersionID": 2
+            },
+            {
+              "Name": "stat_evasion",
+              "Description": "Evade short; 'Eva'",
+              "DefaultValue": "Eva",
+              "VersionID": 2
+            },
+            {
+              "Name": "stat_luck",
+              "Description": "Luck short; 'Lck'",
+              "DefaultValue": "Lck",
+              "VersionID": 2
+            },
+            {
+              "Name": "stat_exp",
+              "Description": "Experience short; 'Exp'",
+              "DefaultValue": "Exp",
+              "VersionID": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "Registers",
+      "Description": "Everything that gets registered dynamically (characters, world, items, etc)",
+      "ChildNodes": [
+        {
+          "Name": "Area names",
+          "Description": "The names of the areas visited throughout the game",
+          "ChildNodes": [
+            {
+              "Name": "stg_ghz",
+              "Description": "'Green Hill Zone'",
+              "DefaultValue": "Green Hill\nZone",
+              "VersionID": 2
+            },
+            {
+              "Name": "stg_cc",
+              "Description": "'Central City'",
+              "DefaultValue": "Central City",
+              "VersionID": 2
+            },
+            {
+              "Name": "stg_mr",
+              "Description": "'Mystic Ruins'",
+              "DefaultValue": "Mystic Ruins",
+              "VersionID": 2
+            },
+            {
+              "Name": "stg_brz",
+              "Description": "'Blue Ridge Zone'",
+              "DefaultValue": "Blue Ridge\nZone",
+              "VersionID": 2
+            },
+            {
+              "Name": "stg_me",
+              "Description": "'Metropolis'",
+              "DefaultValue": "Metropolis",
+              "VersionID": 2
+            },
+            {
+              "Name": "stg_ai",
+              "Description": "'Angel Island'",
+              "DefaultValue": "Angel Island",
+              "VersionID": 2
+            },
+            {
+              "Name": "stg_mgz",
+              "Description": "'Metropolis Ground Zero'",
+              "DefaultValue": "Metropolis Ground\nZero",
+              "VersionID": 2
+            },
+            {
+              "Name": "stg_kc",
+              "Description": "'Kron Colony'",
+              "DefaultValue": "Kron Colony",
+              "VersionID": 2
+            },
+            {
+              "Name": "stg_nc",
+              "Description": "'N'rrgal Colony'",
+              "DefaultValue": "N'rrgal Colony",
+              "VersionID": 2
+            },
+            {
+              "Name": "stg_zc",
+              "Description": "'Zoah Colony'",
+              "DefaultValue": "Zoah Colony",
+              "VersionID": 2
+            },
+            {
+              "Name": "stg_vcb",
+              "Description": "'Voxai Colony Beta'",
+              "DefaultValue": "Voxai Colony\nBeta",
+              "VersionID": 2
+            },
+            {
+              "Name": "stg_vca",
+              "Description": "'Voxai Colony Alpha'",
+              "DefaultValue": "Voxai Colony\nAlpha",
+              "VersionID": 2
+            },
+            {
+              "Name": "stg_no",
+              "Description": "'Nocturne'",
+              "DefaultValue": "Nocturne",
+              "VersionID": 2
+            }
+          ]
+        },
+        {
+          "Name": "Characters",
+          "Description": "character related texts/names",
+          "ChildNodes": [
+            {
+              "Name": "Sonic",
+              "Description": "",
+              "ChildNodes": [
+                {
+                  "Name": "char_sonic",
+                  "Description": "Sonics name",
+                  "DefaultValue": "Sonic",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "char_sonic_class",
+                  "Description": "Sonic class",
+                  "DefaultValue": "Power",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "char_sonic_pow0",
+                  "Description": "Axe kick POW name",
+                  "DefaultValue": "Axe Kick",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "char_sonic_pow0D",
+                  "Description": "Axe kick POW description",
+                  "DefaultValue": "Sonic spindashes into the enemy, directly followed by a jump to deliver a powerful double kick to a single foe.",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "char_sonic_pow1",
+                  "Description": "Whirlwind POW name",
+                  "DefaultValue": "Whirlwind",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "char_sonic_pow1D",
+                  "Description": "Whirlwind POW description",
+                  "DefaultValue": "Sonic runs in circles to create a strong windhose around the enemy team, lashing them all with a powerful wind attack.",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "char_sonic_pow2",
+                  "Description": "Blue Bomber POW name",
+                  "DefaultValue": "Blue Bomber",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "char_sonic_pow2D",
+                  "Description": "Blue Bomber POW description",
+                  "DefaultValue": "Tails carries Sonic over toe a single foe, and throws him  to deliver an extra powerful spinball that has a chance to weaken the target.",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "char_sonic_pow3",
+                  "Description": "Croquette Bomber POW name",
+                  "DefaultValue": "Croquette Bomber",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "char_sonic_pow3D",
+                  "Description": "Croquette Bomber POW description",
+                  "DefaultValue": "Amy uses her hammer to send Sonic spinballing into a foe for a triple attack that might make the target sluggish",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "char_sonic_pow4",
+                  "Description": "Triple Tornado POW name",
+                  "DefaultValue": "Triple Tornado",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "char_sonic_pow4D",
+                  "Description": "Triple Tornado POW description",
+                  "DefaultValue": "Sonic, Knuckles, and Tails join in on a powerful wind attack that may leave targets Sluggish.",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "char_sonic_pow5",
+                  "Description": "Hail Storm POW name",
+                  "DefaultValue": "Hail Storm",
+                  "VersionID": 2
+                },
+                {
+                  "Name": "char_sonic_pow5D",
+                  "Description": "Hail Storm POW description",
+                  "DefaultValue": "Knuckles, Tails and Amy smash a spinballing Sonic careening into single target, potentially stunning the foe.",
+                  "VersionID": 2
+                }
+              ]
+            },
+            {
+              "Name": "char_amy",
+              "Description": "Amys name",
+              "DefaultValue": "Amy",
+              "VersionID": 2
+            },
+            {
+              "Name": "char_tails",
+              "Description": "Tails' name",
+              "DefaultValue": "Tails",
+              "VersionID": 2
+            },
+            {
+              "Name": "char_rouge",
+              "Description": "Rouges name",
+              "DefaultValue": "Rouge",
+              "VersionID": 2
+            },
+            {
+              "Name": "char_big",
+              "Description": "Bigs name",
+              "DefaultValue": "Big",
+              "VersionID": 2
+            },
+            {
+              "Name": "char_knuckles",
+              "Description": "Knuckles' name",
+              "DefaultValue": "Knuckles",
+              "VersionID": 2
+            },
+            {
+              "Name": "char_cream",
+              "Description": "Creams name",
+              "DefaultValue": "Cream",
+              "VersionID": 2
+            },
+            {
+              "Name": "char_eggman",
+              "Description": "Shadows name",
+              "DefaultValue": "Eggman",
+              "VersionID": 2
+            },
+            {
+              "Name": "char_shadow",
+              "Description": "Eggmans name",
+              "DefaultValue": "Shadow",
+              "VersionID": 2
+            },
+            {
+              "Name": "char_omega",
+              "Description": "Omegas name",
+              "DefaultValue": "Omega",
+              "VersionID": 2
+            },
+            {
+              "Name": "char_shade",
+              "Description": "Shades name",
+              "DefaultValue": "Shade",
+              "VersionID": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "Items",
+      "Description": "Item/Chao names and descriptions",
+      "ChildNodes": [
+        {
+          "Name": "Item names",
+          "Description": "Names of all items that occur in the game",
+          "ChildNodes": [
+            {
+              "Name": "item1",
+              "Description": "'Alloy Boots'",
+              "DefaultValue": "Alloy Boots",
+              "VersionID": 0
+            },
+            {
+              "Name": "item2",
+              "Description": "'Alloy Slippers'",
+              "DefaultValue": "Alloy Slippers",
+              "VersionID": 0
+            },
+            {
+              "Name": "item3",
+              "Description": "'Angel Amulet'",
+              "DefaultValue": "Angel Amulet",
+              "VersionID": 0
+            },
+            {
+              "Name": "item4",
+              "Description": "'Blunt Claws'",
+              "DefaultValue": "Blunt Claws",
+              "VersionID": 0
+            },
+            {
+              "Name": "item5",
+              "Description": "'Boxing Gloves'",
+              "DefaultValue": "Boxing Gloves",
+              "VersionID": 0
+            },
+            {
+              "Name": "item6",
+              "Description": "'Chao Print Dress'",
+              "DefaultValue": "Chao Print Dress",
+              "VersionID": 0
+            },
+            {
+              "Name": "item7",
+              "Description": "'Cloth Gloves'",
+              "DefaultValue": "Cloth Gloves",
+              "VersionID": 0
+            },
+            {
+              "Name": "item8",
+              "Description": "'Cursed Claws'",
+              "DefaultValue": "Cursed Claws",
+              "VersionID": 0
+            },
+            {
+              "Name": "item9",
+              "Description": "'Cursed Gloves'",
+              "DefaultValue": "Cursed Gloves",
+              "VersionID": 0
+            },
+            {
+              "Name": "item10",
+              "Description": "'Dura-Hydraulics'\n(Robust robotic parts)",
+              "DefaultValue": "Dura-Hydraulics",
+              "VersionID": 0
+            },
+            {
+              "Name": "item11",
+              "Description": "'Earth Ring'",
+              "DefaultValue": "Earth Ring",
+              "VersionID": 0
+            },
+            {
+              "Name": "item12",
+              "Description": "'Economizer'\n(A device to reduce cost of power points, 'Economic', paying less",
+              "DefaultValue": "Economizer",
+              "VersionID": 0
+            },
+            {
+              "Name": "item13",
+              "Description": "'Fire Ring'",
+              "DefaultValue": "Fire Ring",
+              "VersionID": 0
+            },
+            {
+              "Name": "item14",
+              "Description": "'Golden Gloves'",
+              "DefaultValue": "Golden Gloves",
+              "VersionID": 0
+            },
+            {
+              "Name": "item15",
+              "Description": "'Grapple Claws'",
+              "DefaultValue": "Grapple Claws",
+              "VersionID": 0
+            },
+            {
+              "Name": "item16",
+              "Description": "'Gritty Gloves'",
+              "DefaultValue": "Gritty Gloves",
+              "VersionID": 0
+            },
+            {
+              "Name": "item17",
+              "Description": "'Ice Ring'",
+              "DefaultValue": "Ice Ring",
+              "VersionID": 0
+            },
+            {
+              "Name": "item18",
+              "Description": "'Immunity Talisman'",
+              "DefaultValue": "Immunity Talisman",
+              "VersionID": 0
+            },
+            {
+              "Name": "item19",
+              "Description": "'Iron Claws'",
+              "DefaultValue": "Iron Claws",
+              "VersionID": 0
+            },
+            {
+              "Name": "item20",
+              "Description": "'Iron Hydraulics'\n(Robotic parts made of iron)",
+              "DefaultValue": "Iron Hydraulics",
+              "VersionID": 0
+            },
+            {
+              "Name": "item21",
+              "Description": "'Kron Hammer'\n(A hammer made by the Kron)",
+              "DefaultValue": "Kron Hammer",
+              "VersionID": 0
+            },
+            {
+              "Name": "item22",
+              "Description": "'Light Boots'\n(Light as in lightweight)",
+              "DefaultValue": "Light Boots",
+              "VersionID": 0
+            },
+            {
+              "Name": "item23",
+              "Description": "'Light Slippers'\n(Light as in lightweight)",
+              "DefaultValue": "Light Slippers",
+              "VersionID": 0
+            },
+            {
+              "Name": "item24",
+              "Description": "'Light Sneakers'\n(Light as in lightweight)",
+              "DefaultValue": "Light Sneakers",
+              "VersionID": 0
+            },
+            {
+              "Name": "item25",
+              "Description": "'Lightning Ring'",
+              "DefaultValue": "Lightning Ring",
+              "VersionID": 0
+            },
+            {
+              "Name": "item26",
+              "Description": "'Lucky Gloves'",
+              "DefaultValue": "Lucky Gloves",
+              "VersionID": 0
+            },
+            {
+              "Name": "item27",
+              "Description": "'Master Hydraulics'\n(Advanced robotic parts)",
+              "DefaultValue": "Master Hydraulics",
+              "VersionID": 0
+            },
+            {
+              "Name": "item28",
+              "Description": "'Mirror Gloves'",
+              "DefaultValue": "Mirror Gloves",
+              "VersionID": 0
+            },
+            {
+              "Name": "item29",
+              "Description": "'Nimble Slippers'",
+              "DefaultValue": "Nimble Slippers",
+              "VersionID": 0
+            },
+            {
+              "Name": "item30",
+              "Description": "'Nocturne Blade'\n(Fighting blade made by the nocturne)",
+              "DefaultValue": "Nocturne Blade",
+              "VersionID": 0
+            },
+            {
+              "Name": "item31",
+              "Description": "'N'rrgal Module'\n(A piece of N'rrgal technology)",
+              "DefaultValue": "N'rrgal Module",
+              "VersionID": 0
+            },
+            {
+              "Name": "item32",
+              "Description": "'Oily Hydraulics'\n(Oiled robotic parts)",
+              "DefaultValue": "Oily Hydraulics",
+              "VersionID": 0
+            },
+            {
+              "Name": "item33",
+              "Description": "'Polymer Gloves'",
+              "DefaultValue": "Polymer Gloves",
+              "VersionID": 0
+            },
+            {
+              "Name": "item34",
+              "Description": "'Power Gloves'",
+              "DefaultValue": "Power Gloves",
+              "VersionID": 0
+            },
+            {
+              "Name": "item35",
+              "Description": "'Pretty Dress'",
+              "DefaultValue": "Pretty Dress",
+              "VersionID": 0
+            },
+            {
+              "Name": "item36",
+              "Description": "'Refresher'",
+              "DefaultValue": "Refresher",
+              "VersionID": 0
+            },
+            {
+              "Name": "item37",
+              "Description": "'Replenisher'\n(A device that refreshes the character)",
+              "DefaultValue": "Replenisher",
+              "VersionID": 0
+            },
+            {
+              "Name": "item38",
+              "Description": "'Rubber Gloves'",
+              "DefaultValue": "Rubber Gloves",
+              "VersionID": 0
+            },
+            {
+              "Name": "item39",
+              "Description": "'Rusty Hydraulics'\n(Rusty robotic parts)",
+              "DefaultValue": "Rusty Hydraulics",
+              "VersionID": 0
+            },
+            {
+              "Name": "item40",
+              "Description": "'Serrated Claws'",
+              "DefaultValue": "Serrated Claws",
+              "VersionID": 0
+            },
+            {
+              "Name": "item41",
+              "Description": "'Shielded Sneakers'",
+              "DefaultValue": "Shielded Sneakers",
+              "VersionID": 0
+            },
+            {
+              "Name": "item42",
+              "Description": "'Sparkly Gloves'",
+              "DefaultValue": "Sparkly Gloves",
+              "VersionID": 0
+            },
+            {
+              "Name": "item43",
+              "Description": "'Speedy Sneakers'",
+              "DefaultValue": "Speedy Sneakers",
+              "VersionID": 0
+            },
+            {
+              "Name": "item44",
+              "Description": "'Spiked Gloves'",
+              "DefaultValue": "Spiked Gloves",
+              "VersionID": 0
+            },
+            {
+              "Name": "item45",
+              "Description": "'Spiked Slippers'",
+              "DefaultValue": "Spiked Slippers",
+              "VersionID": 0
+            },
+            {
+              "Name": "item46",
+              "Description": "'Spiked Sneakers'",
+              "DefaultValue": "Spiked Sneakers",
+              "VersionID": 0
+            },
+            {
+              "Name": "item47",
+              "Description": "'Spiny Claws'",
+              "DefaultValue": "Spiny Claws",
+              "VersionID": 0
+            },
+            {
+              "Name": "item48",
+              "Description": "'Spooky Charm'",
+              "DefaultValue": "Spooky Charm",
+              "VersionID": 0
+            },
+            {
+              "Name": "item49",
+              "Description": "'Steel Toe Boots'\n(Boots with steel caps)",
+              "DefaultValue": "Steel Toe Boots",
+              "VersionID": 0
+            },
+            {
+              "Name": "item50",
+              "Description": "'Stiff Sneakers'",
+              "DefaultValue": "Stiff Sneakers",
+              "VersionID": 0
+            },
+            {
+              "Name": "item51",
+              "Description": "'Swift Boots'",
+              "DefaultValue": "Swift Boots",
+              "VersionID": 0
+            },
+            {
+              "Name": "item52",
+              "Description": "'Titanium Claws'",
+              "DefaultValue": "Titanium Claws",
+              "VersionID": 0
+            },
+            {
+              "Name": "item53",
+              "Description": "'Tough Slippers'",
+              "DefaultValue": "Tough Slippers",
+              "VersionID": 0
+            },
+            {
+              "Name": "item54",
+              "Description": "'Voxai Teleporter'\n(Teleporter gear made by the Voxai)",
+              "DefaultValue": "Voxai Teleporter",
+              "VersionID": 0
+            },
+            {
+              "Name": "item55",
+              "Description": "'Water Ring'",
+              "DefaultValue": "Water Ring",
+              "VersionID": 0
+            },
+            {
+              "Name": "item56",
+              "Description": "'Wind Ring'",
+              "DefaultValue": "Wind Ring",
+              "VersionID": 0
+            },
+            {
+              "Name": "item57",
+              "Description": "'Work Boots'",
+              "DefaultValue": "Work Boots",
+              "VersionID": 0
+            },
+            {
+              "Name": "item58",
+              "Description": "'Work Gloves'",
+              "DefaultValue": "Work Gloves",
+              "VersionID": 0
+            },
+            {
+              "Name": "item59",
+              "Description": "'Zoah Shield'\n(Shield made by the Zoah)",
+              "DefaultValue": "Zoah Shield",
+              "VersionID": 0
+            },
+            {
+              "Name": "item60",
+              "Description": "'Antidote'",
+              "DefaultValue": "Antidote",
+              "VersionID": 0
+            },
+            {
+              "Name": "item61",
+              "Description": "'Bug Spray'",
+              "DefaultValue": "Bug Spray",
+              "VersionID": 0
+            },
+            {
+              "Name": "item62",
+              "Description": "'Clover Juice'",
+              "DefaultValue": "Clover Juice",
+              "VersionID": 0
+            },
+            {
+              "Name": "item63",
+              "Description": "'Crazy Beans'",
+              "DefaultValue": "Crazy Beans",
+              "VersionID": 0
+            },
+            {
+              "Name": "item64",
+              "Description": "'Cure All Spray'",
+              "DefaultValue": "Cure All Spray",
+              "VersionID": 0
+            },
+            {
+              "Name": "item65",
+              "Description": "'Health Leaf'\n(Fills up HP)",
+              "DefaultValue": "Health Leaf",
+              "VersionID": 0
+            },
+            {
+              "Name": "item66",
+              "Description": "'Health Root'\n(Fills up HP)",
+              "DefaultValue": "Health Root",
+              "VersionID": 0
+            },
+            {
+              "Name": "item67",
+              "Description": "'Health Seed'\n(Fills up HP)",
+              "DefaultValue": "Health Seed",
+              "VersionID": 0
+            },
+            {
+              "Name": "item68",
+              "Description": "'Immunity Booster'\n(Debuff against negative buffs)",
+              "DefaultValue": "Immunity Booster",
+              "VersionID": 0
+            },
+            {
+              "Name": "item69",
+              "Description": "'Iron Tonic'",
+              "DefaultValue": "Iron Tonic",
+              "VersionID": 0
+            },
+            {
+              "Name": "item70",
+              "Description": "'Med Emitter'",
+              "DefaultValue": "Med Emitter",
+              "VersionID": 0
+            },
+            {
+              "Name": "item71",
+              "Description": "'POW Candy'\n(Fills up PP)",
+              "DefaultValue": "POW Candy",
+              "VersionID": 0
+            },
+            {
+              "Name": "item72",
+              "Description": "'POW Drink'\n(Fills up PP)",
+              "DefaultValue": "POW Drink",
+              "VersionID": 0
+            },
+            {
+              "Name": "item73",
+              "Description": "'POW Gum'\n(Fills up PP)",
+              "DefaultValue": "POW Gum",
+              "VersionID": 0
+            },
+            {
+              "Name": "item74",
+              "Description": "'Prune Juice'",
+              "DefaultValue": "Prune Juice",
+              "VersionID": 0
+            },
+            {
+              "Name": "item75",
+              "Description": "'Psychic Water'",
+              "DefaultValue": "Psychic Water",
+              "VersionID": 0
+            },
+            {
+              "Name": "item76",
+              "Description": "'Refresher Wave'",
+              "DefaultValue": "Refresher Wave",
+              "VersionID": 0
+            },
+            {
+              "Name": "item77",
+              "Description": "'Revival Ring'",
+              "DefaultValue": "Revival Ring",
+              "VersionID": 0
+            },
+            {
+              "Name": "item78",
+              "Description": "'Ring of Life'",
+              "DefaultValue": "Ring of Life",
+              "VersionID": 0
+            },
+            {
+              "Name": "item79",
+              "Description": "'Rock Salt'",
+              "DefaultValue": "Rock Salt",
+              "VersionID": 0
+            },
+            {
+              "Name": "item80",
+              "Description": "'Speed Bar'\n(A snack bar)",
+              "DefaultValue": "Speed Bar",
+              "VersionID": 0
+            },
+            {
+              "Name": "item81",
+              "Description": "'Beam Cannon'\n(A little cannon, made by Eggman)",
+              "DefaultValue": "Beam Cannon",
+              "VersionID": 0
+            },
+            {
+              "Name": "item82",
+              "Description": "'Red Chaos Emerald'",
+              "DefaultValue": "Red Chaos Emerald",
+              "VersionID": 0
+            },
+            {
+              "Name": "item83",
+              "Description": "'Sky Blue Chaos Emerald'",
+              "DefaultValue": "Sky Blue Chaos Emerald",
+              "VersionID": 0
+            },
+            {
+              "Name": "item84",
+              "Description": "'Green Chaos Emerald'",
+              "DefaultValue": "Green Chaos Emerald",
+              "VersionID": 0
+            },
+            {
+              "Name": "item85",
+              "Description": "' 'White' (Pink) Chaos Emerald'\n(It's actually the white emerald, but has been turned pink by the voxai)",
+              "DefaultValue": "'White' (Pink) Chaos Emerald",
+              "VersionID": 0
+            },
+            {
+              "Name": "item86",
+              "Description": "'Yellow Chaos Emerald'",
+              "DefaultValue": "Yellow Chaos Emerald",
+              "VersionID": 0
+            },
+            {
+              "Name": "item87",
+              "Description": "'Purple Chaos Emerald'",
+              "DefaultValue": "Purple Chaos Emerald",
+              "VersionID": 0
+            },
+            {
+              "Name": "item88",
+              "Description": "'Blue Chaos Emerald'",
+              "DefaultValue": "Blue Chaos Emerald",
+              "VersionID": 0
+            },
+            {
+              "Name": "item89",
+              "Description": "'Communicator'",
+              "DefaultValue": "Communicator",
+              "VersionID": 0
+            },
+            {
+              "Name": "item90",
+              "Description": "'Eggman Detector'\n(A device meant to find Eggman)",
+              "DefaultValue": "Eggman Detector",
+              "VersionID": 0
+            },
+            {
+              "Name": "item91",
+              "Description": "'Eggman Device'\n(A device made by Eggman)",
+              "DefaultValue": "Eggman Device",
+              "VersionID": 0
+            },
+            {
+              "Name": "item92",
+              "Description": "'GUN Official'\n(Top hierarchy GUN person)",
+              "DefaultValue": "GUN Official",
+              "VersionID": 0
+            },
+            {
+              "Name": "item93",
+              "Description": "'Little Boy'",
+              "DefaultValue": "Little Boy",
+              "VersionID": 0
+            },
+            {
+              "Name": "item94",
+              "Description": "'Nocturne Tech'\n(Tech made by the Nocturne)",
+              "DefaultValue": "Nocturne Tech",
+              "VersionID": 0
+            },
+            {
+              "Name": "item95",
+              "Description": "'Pattern Generator'\n(A device that generates patterns for... stuff. Probably to crack codes of sorts)",
+              "DefaultValue": "Pattern Generator",
+              "VersionID": 0
+            },
+            {
+              "Name": "item96",
+              "Description": "'Precursor Tablett'\n(A stone plate with ancient inscriptions, made by a long gone civilization of the twilight cage)",
+              "DefaultValue": "Precursor Tablett",
+              "VersionID": 0
+            },
+            {
+              "Name": "item97",
+              "Description": "'Prized Stapler'",
+              "DefaultValue": "Prized Stapler",
+              "VersionID": 0
+            },
+            {
+              "Name": "item98",
+              "Description": "'Timothy'\n(A person called Timothy)",
+              "DefaultValue": "Timothy",
+              "VersionID": 0
+            },
+            {
+              "Name": "item99",
+              "Description": "'Weapon Part'",
+              "DefaultValue": "Weapon Part",
+              "VersionID": 0
+            },
+            {
+              "Name": "item100",
+              "Description": "'N'rrgal Shipment'\n(Some expensive ware by the N'rrgal)",
+              "DefaultValue": "N'rrgal Shipment",
+              "VersionID": 0
+            },
+            {
+              "Name": "item101",
+              "Description": "'Kron Payment'\n(Payment by the Kron for the shipment)",
+              "DefaultValue": "Kron Payment",
+              "VersionID": 0
+            }
+          ]
+        },
+        {
+          "Name": "Item descriptions",
+          "Description": "Descriptions for each item",
+          "ChildNodes": [
+            {
+              "Name": "itemD1",
+              "Description": "Alloy Boots:\n\"Modern footwear made from very durable material. Moderately increases armor.\"",
+              "DefaultValue": "Modern footwear made from very durable material. Moderately increases armor.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD2",
+              "Description": "Alloy Slippers:\n\"Modern footwear made from very durable material. Moderately increases armor.\"",
+              "DefaultValue": "Modern footwear made from very durable material. Moderately increases armor.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD3",
+              "Description": "Angel Amulet:\n\"A mystical amulet with the inexhaustible poweer to put the fallen back on their feet.\"",
+              "DefaultValue": "A mystical amulet with the inexhaustible poweer to put the fallen back on their feet.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD4",
+              "Description": "Blunt Claws:\n\"Standard grade work claws. Slightly increases damage.\"",
+              "DefaultValue": "Standard grade work claws. Slightly increases damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD5",
+              "Description": "Boxing Gloves:\n\"Super tough gloves provide the maximum fighting edge. Slightly increases damage.\"",
+              "DefaultValue": "Super tough gloves provide the maximum fighting edge. Slightly increases damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD6",
+              "Description": "Chao Print Dress:\n\"A stylish dress sure to make one look extra striking. Moderately increases damage.\"",
+              "DefaultValue": "A stylish dress sure to make one look extra striking. Moderately increases damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD7",
+              "Description": "Cloth Gloves:\n\"Casual, stylish and comfortable.\"",
+              "DefaultValue": "Casual, stylish and comfortable.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD8",
+              "Description": "Cursed Claws:\n\"Prototype combat claws. Dif? cult to control, but very powerful. Immensely increases damage.\"",
+              "DefaultValue": "Prototype combat claws. Dif? cult to control, but very powerful. Immensely increases damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD9",
+              "Description": "Cursed Gloves:\n\"A prototype combat glove. Tough to control, but very powerful. Immensely increases damage.\"",
+              "DefaultValue": "A prototype combat glove. Tough to control, but very powerful. Immensely increases damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD10",
+              "Description": "Dura-Hydraulics:\n\"Double reinforced parts for maximum durability. Greatly increases armor.\"",
+              "DefaultValue": "Double reinforced parts for maximum durability. Greatly increases armor.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD11",
+              "Description": "Earth Ring:\n\"A ring infused with earthquake force. Gives Earth damage to basic attacks.\"",
+              "DefaultValue": "A ring infused with earthquake force. Gives Earth damage to basic attacks.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD12",
+              "Description": "Economizer:\n\"A wrist device able to boost its wearer's energy levels. Lowers PP cost of all POW Moves by 1.\"",
+              "DefaultValue": "A wrist device able to boost its wearer's energy levels. Lowers PP cost of all POW Moves by 1.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD13",
+              "Description": "Fire Ring:\n\"A ring infused with the power of inferno. Gives Fire damage to basic attacks.\"",
+              "DefaultValue": "A ring infused with the power of inferno. Gives Fire damage to basic attacks.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD14",
+              "Description": "Golden Gloves:\n\"A master crafted combat glove without peer, a rare artifact. Slightly increases damage.\"",
+              "DefaultValue": "A master crafted combat glove without peer, a rare artifact. Slightly increases damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD15",
+              "Description": "Grapple Claws:\n\"Standard grade, durable and reliable combat claws. Moderately increases damage.\"",
+              "DefaultValue": "Standard grade, durable and reliable combat claws. Moderately increases damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD16",
+              "Description": "Gritty Gloves:\n\"All-around tough gloves for tough customers. Moderately increases armor, moderately increases damage.\"",
+              "DefaultValue": "All-around tough gloves for tough customers. Moderately increases armor, moderately increases damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD17",
+              "Description": "Ice Ring:\n\"A ring infused with the power of subzero cold. Gives Ice damage to basic attacks.\"",
+              "DefaultValue": "A ring infused with the power of subzero cold. Gives Ice damage to basic attacks.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD18",
+              "Description": "Immunity Talisman:\n\"A mystical charm with the inexhaustible ability to make one immune to afflictions.\"",
+              "DefaultValue": "A mystical charm with the inexhaustible ability to make one immune to afflictions.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD19",
+              "Description": "Iron Claws:\n\"Extra durable work claws combine protection with power. Moderately increase damage, slightyl increase armor.\"",
+              "DefaultValue": "Extra durable work claws combine protection with power. Moderately increase damage, slightyl increase armor.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD20",
+              "Description": "Iron Hydraulics:\n\"Hardened metal for durability and greater hitting power. Moderately increases armor.\"",
+              "DefaultValue": "Hardened metal for durability and greater hitting power. Moderately increases armor.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD21",
+              "Description": "Kron Hammer:\n\"A rock hammer infused with ultimate combat power. Very greatly increases damage.\"",
+              "DefaultValue": "A rock hammer infused with ultimate combat power. Very greatly increases damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD22",
+              "Description": "Light Boots:\n\"Fashionable and comfortable boots. Slightly increases armor.\"",
+              "DefaultValue": "Fashionable and comfortable boots. Slightly increases armor.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD23",
+              "Description": "Light Slippers:\n\"Casual, stylish and comfortable. Slightly increases armor.\"",
+              "DefaultValue": "Casual, stylish and comfortable. Slightly increases armor.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD24",
+              "Description": "Light Sneakers:\n\"Simple, reliable sneakers. Slightly increases armor.\"",
+              "DefaultValue": "Simple, reliable sneakers. Slightly increases armor.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD25",
+              "Description": "Lightning Ring:\n\"A ring infused with the power of raw lightning. Gives Lightning damage to basic attacks.\"",
+              "DefaultValue": "A ring infused with the power of raw lightning. Gives Lightning damage to basic attacks.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD26",
+              "Description": "Lucky Gloves:\n\"Durable yet agile gloves soaked in clover juice.\"",
+              "DefaultValue": "Durable yet agile gloves soaked in clover juice.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD27",
+              "Description": "Master Hydraulics:\n\"Premium grade materials providing the best defense and armor. Greatly increases armor.\"",
+              "DefaultValue": "Premium grade materials providing the best defense and armor. Greatly increases armor.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD28",
+              "Description": "Mirror Gloves:\n\"Made with ?exible metal, these shiny gloves boost combat powers. Moderately increases damage.\"",
+              "DefaultValue": "Made with ?exible metal, these shiny gloves boost combat powers. Moderately increases damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD29",
+              "Description": "Nimble Slippers:\n\"Light, agile slippers for quick feet. Slightly increases armor.\"",
+              "DefaultValue": "Light, agile slippers for quick feet. Slightly increases armor.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD30",
+              "Description": "Nocturne Blade:\n\"A blade infused with ultimate martial skill.\"",
+              "DefaultValue": "A blade infused with ultimate martial skill.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD31",
+              "Description": "N'rrgal Module:\n\"This device has the uncanny ability to help one when trying to escape or catch someone.\"",
+              "DefaultValue": "This device has the uncanny ability to help one when trying to escape or catch someone.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD32",
+              "Description": "Oily Hydraulics:\n\"Well lubricated and lightweight parts for more agility. Slightly increases armor.\"",
+              "DefaultValue": "Well lubricated and lightweight parts for more agility. Slightly increases armor.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD33",
+              "Description": "Polymer Gloves:\n\"Gloves made with durable polymers. Slightly increases damage and armor.\"",
+              "DefaultValue": "Gloves made with durable polymers. Slightly increases damage and armor.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD34",
+              "Description": "Power Gloves:\n\"Infused with power, these gloves hit hard but can be tricky to handle. Greatly increases damage but reduces attack.\"",
+              "DefaultValue": "Infused with power, these gloves hit hard but can be tricky to handle. Greatly increases damage but reduces attack.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD35",
+              "Description": "Pretty Dress:\n\"A lovely dress sure to make one ? ght with extra grace and style.\"",
+              "DefaultValue": "A lovely dress sure to make one ? ght with extra grace and style.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD36",
+              "Description": "Refresher:\n\"A medical kit that recovers 1 POW Point at the end of each round of combat.\"",
+              "DefaultValue": "A medical kit that recovers 1 POW Point at the end of each round of combat.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD37",
+              "Description": "Replenisher:\n\"A wrist device able to regenerate the wearer's health over time. Regenerates 5% of maximum HP per round.\"",
+              "DefaultValue": "A wrist device able to regenerate the wearer's health over time. Regenerates 5% of maximum HP per round.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD38",
+              "Description": "Rubber Gloves:\n\"Light and smooth gloves for faster reaction. Moderately increases damage.\"",
+              "DefaultValue": "Light and smooth gloves for faster reaction. Moderately increases damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD39",
+              "Description": "Rusty Hydraulics:\n\"Leftover parts from disassembled E-100 series robots. Moderately increases armor but decreases defense.\"",
+              "DefaultValue": "Leftover parts from disassembled E-100 series robots. Moderately increases armor but decreases defense.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD40",
+              "Description": "Serrated Claws:\n\"Aggressive, razor sharp combat claws that require caution to use. Greatly increases damage.\"",
+              "DefaultValue": "Aggressive, razor sharp combat claws that require caution to use. Greatly increases damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD41",
+              "Description": "Shielded Sneakers:\n\"Prototype footwear offering the best armor available. Greatly increases armor.\"",
+              "DefaultValue": "Prototype footwear offering the best armor available. Greatly increases armor.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD42",
+              "Description": "Sparkly Gloves:\n\"Light and dazzling, these gloves tingle with energy. Greatly increases damage.\"",
+              "DefaultValue": "Light and dazzling, these gloves tingle with energy. Greatly increases damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD43",
+              "Description": "Speedy Sneakers:\n\"Light and well cushioned for more agility. Slightly increases armor.\"",
+              "DefaultValue": "Light and well cushioned for more agility. Slightly increases armor.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD44",
+              "Description": "Spiked Gloves:\n\"Cleated gloves that pack a nasty punch. Moderately increases damage.\"",
+              "DefaultValue": "Cleated gloves that pack a nasty punch. Moderately increases damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD45",
+              "Description": "Spiked Slippers:\n\"Aggressively styled footwear. Slightly increases armor.\"",
+              "DefaultValue": "Aggressively styled footwear. Slightly increases armor.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD46",
+              "Description": "Spiked Sneakers:\n\"Sneakers with cleats provide an edge in combat. Slightly increases armor.\"",
+              "DefaultValue": "Sneakers with cleats provide an edge in combat. Slightly increases armor.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD47",
+              "Description": "Spiny Claws:\n\"Needle-like claws that tear through steel. Greatly increases damage.\"",
+              "DefaultValue": "Needle-like claws that tear through steel. Greatly increases damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD48",
+              "Description": "Spooky Charm:\n\"A mystical charm likely to cause fear in one's enemies. Foes ? ee more often.\"",
+              "DefaultValue": "A mystical charm likely to cause fear in one's enemies. Foes ? ee more often.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD49",
+              "Description": "Steel Toe Boots:\n\"Steel reinforced to provide more kick in combat. Greatly increases armor. Moderately increases damage.\"",
+              "DefaultValue": "Steel reinforced to provide more kick in combat. Greatly increases armor. Moderately increases damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD50",
+              "Description": "Stiff Sneakers:\n\"Sneakers made wtih tough polymers. Moderately increases armor.\"",
+              "DefaultValue": "Sneakers made wtih tough polymers. Moderately increases armor.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD51",
+              "Description": "Swift Boots:\n\"Agile and speedy boots for the quick footed.\"",
+              "DefaultValue": "Agile and speedy boots for the quick footed.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD52",
+              "Description": "Titanium Claws:\n\"Master grade combat claws providing superior overall combat power. Greatly increases damage.\"",
+              "DefaultValue": "Master grade combat claws providing superior overall combat power. Greatly increases damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD53",
+              "Description": "Tough Slippers:\n\"Heavy duty slippers for outdoor use. Greatly increases armor but reduces defense.\"",
+              "DefaultValue": "Heavy duty slippers for outdoor use. Greatly increases armor but reduces defense.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD54",
+              "Description": "Voxai Teleporter:\n\"A teleporter infused with ultimate agility.\"",
+              "DefaultValue": "A teleporter infused with ultimate agility.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD55",
+              "Description": "Water Ring:\n\"A ring infused with the power of tidal fury. Gives Water damage to basic attacks.\"",
+              "DefaultValue": "A ring infused with the power of tidal fury. Gives Water damage to basic attacks.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD56",
+              "Description": "Wind Ring:\n\"A ring infused with the power of a hurricane. Gives Wind damage to basic attacks.\"",
+              "DefaultValue": "A ring infused with the power of a hurricane. Gives Wind damage to basic attacks.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD57",
+              "Description": "Work Boots:\n\"Durable and rugged for tough customers. Moderately increases armor.\"",
+              "DefaultValue": "Durable and rugged for tough customers. Moderately increases armor.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD58",
+              "Description": "Work Gloves:\n\"More durable gloves to pack extra punch. Slightly increases damage.\"",
+              "DefaultValue": "More durable gloves to pack extra punch. Slightly increases damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD59",
+              "Description": "Zoah Shield:\n\"An energy shield infused with Invulnerability. Greatly increases armor.\"",
+              "DefaultValue": "An energy shield infused with Invulnerability. Greatly increases armor.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD60",
+              "Description": "Antidote:\n\"A curative elixir that removes all bad status effects from one team member.\"",
+              "DefaultValue": "A curative elixir that removes all bad status effects from one team member.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD61",
+              "Description": "Bug Spray:\n\"A potent pesticide for pesky critters of the insect variety. Weakens insects.\"",
+              "DefaultValue": "A potent pesticide for pesky critters of the insect variety. Weakens insects.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD62",
+              "Description": "Clover Juice:\n\"Made with an extract capable of boosting ones luck for short periods.\"",
+              "DefaultValue": "Made with an extract capable of boosting ones luck for short periods.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD63",
+              "Description": "Crazy Beans:\n\"Boosts you in unpredictable ways. Try them and see what happens!\"",
+              "DefaultValue": "Boosts you in unpredictable ways. Try them and see what happens!",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD64",
+              "Description": "Cure All Spray:\n\"A large dose antidote able to remove status ailments from all team members at once.\"",
+              "DefaultValue": "A large dose antidote able to remove status ailments from all team members at once.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD65",
+              "Description": "Health Leaf:\n\"The leaf of a plant known for its healing effects.\"",
+              "DefaultValue": "The leaf of a plant known for its healing effects.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD66",
+              "Description": "Health Root:\n\"The root of a plant known for its healing effects.\"",
+              "DefaultValue": "The root of a plant known for its healing effects.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD67",
+              "Description": "Health Seed:\n\"The seed of a plant known for its healing effects.\"",
+              "DefaultValue": "The seed of a plant known for its healing effects.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD68",
+              "Description": "Immunity Booster:\n\"A vaccine effective in preventing debilitating systems for short periods.\"",
+              "DefaultValue": "A vaccine effective in preventing debilitating systems for short periods.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD69",
+              "Description": "Iron Tonic:\n\"Made with medicine capable of toughening the skin for short periods. Moderately increases armor.\"",
+              "DefaultValue": "Made with medicine capable of toughening the skin for short periods. Moderately increases armor.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD70",
+              "Description": "Med Emitter:\n\"An alien device that produces an energy pulse that heals all party members. Restores HP\"",
+              "DefaultValue": "An alien device that produces an energy pulse that heals all party members. Restores HP",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD71",
+              "Description": "POW Candy:\n\"A refreshing formula that invigorates mind and body.\"",
+              "DefaultValue": "A refreshing formula that invigorates mind and body.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD72",
+              "Description": "POW Drink:\n\"A refreshing formula that invigorates mind and body.\"",
+              "DefaultValue": "A refreshing formula that invigorates mind and body.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD73",
+              "Description": "POW Gum:\n\"A refreshing formula that invigorates mind and body.\"",
+              "DefaultValue": "A refreshing formula that invigorates mind and body.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD74",
+              "Description": "Prune Juice:\n\"Made with an extract guaranteed to improve combat abilities for short periods.\"",
+              "DefaultValue": "Made with an extract guaranteed to improve combat abilities for short periods.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD75",
+              "Description": "Psychic Water:\n\"A rare concoction capable of providing heightened premonition for short periods.\"",
+              "DefaultValue": "A rare concoction capable of providing heightened premonition for short periods.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD76",
+              "Description": "Refresher Wave:\n\"An alien device that produces an energy pulse that invigorates all party members.\"",
+              "DefaultValue": "An alien device that produces an energy pulse that invigorates all party members.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD77",
+              "Description": "Revival Ring:\n\"A ring with the power to put the fallen back on their feet. Revives one KO'ed team member.\"",
+              "DefaultValue": "A ring with the power to put the fallen back on their feet. Revives one KO'ed team member.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD78",
+              "Description": "Ring of Life:\n\"A ring with the power to put the fallen back into fighting shape. Revives one KO'ed team member.\"",
+              "DefaultValue": "A ring with the power to put the fallen back into fighting shape. Revives one KO'ed team member.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD79",
+              "Description": "Rock Salt:\n\"A rare earth extract capable of raising one's raw strength for short periods. Moderately increases damage.\"",
+              "DefaultValue": "A rare earth extract capable of raising one's raw strength for short periods. Moderately increases damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD80",
+              "Description": "Speed Bar:\n\"Made with medicine capable of boosting one's re?exes for short periods of time.\"",
+              "DefaultValue": "Made with medicine capable of boosting one's re?exes for short periods of time.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD81",
+              "Description": "Beam Cannon:\n\"A non-lethal weapon created to banish the Marauders without harming them.\"",
+              "DefaultValue": "A non-lethal weapon created to banish the Marauders without harming them.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD82",
+              "Description": "Red Chaos Emerald:\n\"One of the legendary Chaos Emeralds, found at the Kron Colony.\"",
+              "DefaultValue": "One of the legendary Chaos Emeralds, found at the Kron Colony.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD83",
+              "Description": "Sky Blue Chaos Emerald:\n\"One of the legendary Chaos Emeralds, found at the Zoah Colony.\"",
+              "DefaultValue": "One of the legendary Chaos Emeralds, found at the Zoah Colony.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD84",
+              "Description": "Green Chaos Emerald:\n\"One of the legendary Chaos Emeralds, found at the N'rrgal Colony.\"",
+              "DefaultValue": "One of the legendary Chaos Emeralds, found at the N'rrgal Colony.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD85",
+              "Description": "'White' (Pink) Chaos Emerald:\n\"One of the legendary Chaos Emeralds, found at the Voxai Colony Alpha. It's been turned pink by the Voxai.\"",
+              "DefaultValue": "One of the legendary Chaos Emeralds, found at the Voxai Colony Alpha. It's been turned pink by the Voxai.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD86",
+              "Description": "Yellow Chaos Emerald:\n\"One of the legendary Chaos Emeralds, found at the Voxai Colony Beta.\"",
+              "DefaultValue": "One of the legendary Chaos Emeralds, found at the Voxai Colony Beta.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD87",
+              "Description": "Purple Chaos Emerald:\n\"One of the legendary Chaos Emeralds, found at the Nocturne.\"",
+              "DefaultValue": "One of the legendary Chaos Emeralds, found at the Nocturne.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD88",
+              "Description": "Blue Chaos Emerald:\n\"One of the legendary Chaos Emeralds, found at the Nocturne.\"",
+              "DefaultValue": "One of the legendary Chaos Emeralds, found at the Nocturne.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD89",
+              "Description": "Communicator:\n\"A device used by the Marauders to keep in touch with their base.\"",
+              "DefaultValue": "A device used by the Marauders to keep in touch with their base.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD90",
+              "Description": "Eggman Detector:\n\"A device that detects Eggman's electronic signature.\"",
+              "DefaultValue": "A device that detects Eggman's electronic signature.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD91",
+              "Description": "Eggman Device:\n\"A device built by Eggman. It doesn't seem to do anything.\"",
+              "DefaultValue": "A device built by Eggman. It doesn't seem to do anything.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD92",
+              "Description": "GUN Official:\n\" \"Please, no time to talk. I must return to Station Square. I'm very important, you know!\" \"",
+              "DefaultValue": "\"Please, no time to talk. I must return to Station Square. I'm very important, you know!\"",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD93",
+              "Description": "Little Boy:\n\" \"Thanks so much for saving me, Sonic! Please take me home to Central City!\" \"",
+              "DefaultValue": "\"Thanks so much for saving me, Sonic! Please take me home to Central City!\"",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD94",
+              "Description": "Nocturnes Tech:\n\"A piece of Nocturnus Clan technology so advanced that even Tails can't figure out its function.\"",
+              "DefaultValue": "A piece of Nocturnus Clan technology so advanced that even Tails can't figure out its function.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD95",
+              "Description": "Pattern Generator:\n\"A device that generates code patterns that interfere with energy fields.\"",
+              "DefaultValue": "A device that generates code patterns that interfere with energy fields.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD96",
+              "Description": "Precursor Tablett:\n\"A stone tablet covered in strange writing.\"",
+              "DefaultValue": "A stone tablet covered in strange writing.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD97",
+              "Description": "Prized Stapler:\n\"A stunningly beautiful device, when you really look at it.\"",
+              "DefaultValue": "A stunningly beautiful device, when you really look at it.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD98",
+              "Description": "Timothy:\n\" \"My dad isn't really crazy, just old. He'll be glad to see me, I know.\" \"",
+              "DefaultValue": "\"My dad isn't really crazy, just old. He'll be glad to see me, I know.\"",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD99",
+              "Description": "Weapon Part:\n\"A part needed for Eggman and Tails to create their ultimate weapon.\"",
+              "DefaultValue": "A part needed for Eggman and Tails to create their ultimate weapon.",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD100",
+              "Description": "N'rrgal Shipment:\n\"A crate filled with N'rrgal Sweat. Ew!\"",
+              "DefaultValue": "A crate filled with N'rrgal Sweat. Ew!",
+              "VersionID": 0
+            },
+            {
+              "Name": "itemD101",
+              "Description": "Kron Payment:\n\"The payment for the N'rrgal Sweat delivery, addressed to the N'rrgal Trader.\"",
+              "DefaultValue": "The payment for the N'rrgal Sweat delivery, addressed to the N'rrgal Trader.",
+              "VersionID": 0
+            }
+          ]
+        },
+        {
+          "Name": "Chao names",
+          "Description": "Names of all Chao",
+          "ChildNodes": [
+            {
+              "Name": "chao1",
+              "Description": "'Barbo'",
+              "DefaultValue": "Barbo",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao2",
+              "Description": "'Belgog'",
+              "DefaultValue": "Belgog",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao3",
+              "Description": "'Bepke'",
+              "DefaultValue": "Bepke",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao4",
+              "Description": "'Blayze'",
+              "DefaultValue": "Blayze",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao5",
+              "Description": "'Bobo'",
+              "DefaultValue": "Bobo",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao6",
+              "Description": "'Cheese'",
+              "DefaultValue": "Cheese",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao7",
+              "Description": "'Cheezlet'",
+              "DefaultValue": "Cheezlet",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao8",
+              "Description": "'Choo'",
+              "DefaultValue": "Choo",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao9",
+              "Description": "'Choopaloo'",
+              "DefaultValue": "Choopaloo",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao10",
+              "Description": "'Churdle'",
+              "DefaultValue": "Churdle",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao11",
+              "Description": "'Dusty'",
+              "DefaultValue": "Dusty",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao12",
+              "Description": "'Ferox'",
+              "DefaultValue": "Ferox",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao13",
+              "Description": "'Fess'",
+              "DefaultValue": "Fess",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao14",
+              "Description": "'Ghise'",
+              "DefaultValue": "Ghise",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao15",
+              "Description": "'Gibber'",
+              "DefaultValue": "Gibber",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao16",
+              "Description": "'Griff'",
+              "DefaultValue": "Griff",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao17",
+              "Description": "'Hayda'",
+              "DefaultValue": "Hayda",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao18",
+              "Description": "'Jirna'",
+              "DefaultValue": "Jirna",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao19",
+              "Description": "'Joy'",
+              "DefaultValue": "Joy",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao20",
+              "Description": "'Kayla'",
+              "DefaultValue": "Kayla",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao21",
+              "Description": "'Keroyo'",
+              "DefaultValue": "Keroyo",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao22",
+              "Description": "'Knickt'",
+              "DefaultValue": "Knickt",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao23",
+              "Description": "'Koolet'",
+              "DefaultValue": "Koolet",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao24",
+              "Description": "'Korus'",
+              "DefaultValue": "Korus",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao25",
+              "Description": "'Luunan'",
+              "DefaultValue": "Luunan",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao26",
+              "Description": "'Oldarg'",
+              "DefaultValue": "Oldarg",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao27",
+              "Description": "'Oolean'",
+              "DefaultValue": "Oolean",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao28",
+              "Description": "'Ovus'",
+              "DefaultValue": "Ovus",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao29",
+              "Description": "'Perty'",
+              "DefaultValue": "Perty",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao30",
+              "Description": "'Pyraz'",
+              "DefaultValue": "Pyraz",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao31",
+              "Description": "'Radu'",
+              "DefaultValue": "Radu",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao32",
+              "Description": "'Rugle'",
+              "DefaultValue": "Rugle",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao33",
+              "Description": "'Seeri'",
+              "DefaultValue": "Seeri",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao34",
+              "Description": "'Seggo'",
+              "DefaultValue": "Seggo",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao35",
+              "Description": "'Spartoi'",
+              "DefaultValue": "Spartoi",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao36",
+              "Description": "'Stebsly'",
+              "DefaultValue": "Stebsly",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao37",
+              "Description": "'Stiglin'",
+              "DefaultValue": "Stiglin",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao38",
+              "Description": "'Velk'",
+              "DefaultValue": "Velk",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao39",
+              "Description": "'Zimbar'",
+              "DefaultValue": "Zimbar",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao40",
+              "Description": "'Zousar'",
+              "DefaultValue": "Zousar",
+              "VersionID": 0
+            },
+            {
+              "Name": "chao41",
+              "Description": "'Kuna'",
+              "DefaultValue": "Kuna",
+              "VersionID": 0
+            }
+          ]
+        },
+        {
+          "Name": "Chao descriptions",
+          "Description": "Descriptions for the ability of each Chao",
+          "ChildNodes": [
+            {
+              "Name": "chaoD1",
+              "Description": "Barbo:\n\"Increases Maximum HP of bonded character.\"",
+              "DefaultValue": "Increases Maximum HP of bonded character.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD2",
+              "Description": "Belgog:\n\"Bonded character is much harder to hit.\"",
+              "DefaultValue": "Bonded character is much harder to hit.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD3",
+              "Description": "Bepke:\n\"At least one enemy will automatically attack the bonded character instead of other team members.\"",
+              "DefaultValue": "At least one enemy will automatically attack the bonded character instead of other team members.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD4",
+              "Description": "Blayze:\n\"Bonded character does much more damage in battle.\"",
+              "DefaultValue": "Bonded character does much more damage in battle.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD5",
+              "Description": "Bobo:\n\"Bonded character will always find an extra reward item after combat.\"",
+              "DefaultValue": "Bonded character will always find an extra reward item after combat.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD6",
+              "Description": "Cheese:\n\"Greatly increases luck of all team members.\"",
+              "DefaultValue": "Greatly increases luck of all team members.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD7",
+              "Description": "Cheezlet:\n\"Bonded character does more damage in battle.\"",
+              "DefaultValue": "Bonded character does more damage in battle.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD8",
+              "Description": "Choo:\n\"Bonded character regenerates PP at the start of each combat round.\"",
+              "DefaultValue": "Bonded character regenerates PP at the start of each combat round.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD9",
+              "Description": "Choopaloo:\n\"Increases XP gained from each battle.\"",
+              "DefaultValue": "Increases XP gained from each battle.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD10",
+              "Description": "Churdle:\n\"Bonded character has a better chance of hitting targets in battle.\"",
+              "DefaultValue": "Bonded character has a better chance of hitting targets in battle.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD11",
+              "Description": "Dusty:\n\"Increases the chance that the team will catch a fleeing opponent.\"",
+              "DefaultValue": "Increases the chance that the team will catch a fleeing opponent.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD12",
+              "Description": "Ferox:\n\"Bonded character automatically succeeds using their POW moves.\"",
+              "DefaultValue": "Bonded character automatically succeeds using their POW moves.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD13",
+              "Description": "Fess:\n\"Increases the odds that Chao eggs will hatch rare or unique Chao.\"",
+              "DefaultValue": "Increases the odds that Chao eggs will hatch rare or unique Chao.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD14",
+              "Description": "Ghise:\n\"Bonded character's attacks do Water damage.\"",
+              "DefaultValue": "Bonded character's attacks do Water damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD15",
+              "Description": "Gibber:\n\"Bonded character has greatly increased resistance to damage.\"",
+              "DefaultValue": "Bonded character has greatly increased resistance to damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD16",
+              "Description": "Griff:\n\"Bonded character's attacks do Ice damage.\"",
+              "DefaultValue": "Bonded character's attacks do Ice damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD17",
+              "Description": "Hayda:\n\"Regenerates PP at the start of each combat round for all team members.\"",
+              "DefaultValue": "Regenerates PP at the start of each combat round for all team members.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD18",
+              "Description": "Jirna:\n\"Chao creates an earth shield to protect against damage.\"",
+              "DefaultValue": "Chao creates an earth shield to protect against damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD19",
+              "Description": "Joy:\n\"Regenerates HP at the start of each combat round for all team members.\"",
+              "DefaultValue": "Regenerates HP at the start of each combat round for all team members.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD20",
+              "Description": "Kayla:\n\"Reduces the team's chance of being ambushed.\"",
+              "DefaultValue": "Reduces the team's chance of being ambushed.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD21",
+              "Description": "Keroyo:\n\"Increases odds of enemies fleeing from battle.\"",
+              "DefaultValue": "Increases odds of enemies fleeing from battle.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD22",
+              "Description": "Knickt:\n\"Chao creates a shield of lightning to protect against damage.\"",
+              "DefaultValue": "Chao creates a shield of lightning to protect against damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD23",
+              "Description": "Koolet:\n\"Bonded character is harder to hit.\"",
+              "DefaultValue": "Bonded character is harder to hit.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD24",
+              "Description": "Korus:\n\"Chao creates a shield of fire to protect against damage.\"",
+              "DefaultValue": "Chao creates a shield of fire to protect against damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD25",
+              "Description": "Luunan:\n\"Greatly increases the maximum PP of bonded character.\"",
+              "DefaultValue": "Greatly increases the maximum PP of bonded character.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD26",
+              "Description": "Oldarg:\n\"Bonded character has a greatly increased chance to hit targets in battle.\"",
+              "DefaultValue": "Bonded character has a greatly increased chance to hit targets in battle.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD27",
+              "Description": "Oolean:\n\"Increases maximum PP of bonded character.\"",
+              "DefaultValue": "Increases maximum PP of bonded character.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD28",
+              "Description": "Ovus:\n\"Bonded character is automatically revived once during a battle.\"",
+              "DefaultValue": "Bonded character is automatically revived once during a battle.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD29",
+              "Description": "Perty:\n\"Chao creates a shield of water to protect against damage.\"",
+              "DefaultValue": "Chao creates a shield of water to protect against damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD30",
+              "Description": "Pyraz:\n\"Bonded character's attacks do fire damage.\"",
+              "DefaultValue": "Bonded character's attacks do fire damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD31",
+              "Description": "Radu:\n\"Greatly increases the maximum HP of bonded character.\"",
+              "DefaultValue": "Greatly increases the maximum HP of bonded character.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD32",
+              "Description": "Rugle:\n\"Bonded character has increased luck.\"",
+              "DefaultValue": "Bonded character has increased luck.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD33",
+              "Description": "Seeri:\n\"Chao creates a shield of wind to protect against damage.\"",
+              "DefaultValue": "Chao creates a shield of wind to protect against damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD34",
+              "Description": "Seggo:\n\"Bonded character's attacks do Wind damage.\"",
+              "DefaultValue": "Bonded character's attacks do Wind damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD35",
+              "Description": "Spartoi:\n\"Bonded character's attacks may cause instant KO against enemies.\"",
+              "DefaultValue": "Bonded character's attacks may cause instant KO against enemies.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD36",
+              "Description": "Stebsly:\n\"Bonded character regenerates HP at the start of every combat round.\"",
+              "DefaultValue": "Bonded character regenerates HP at the start of every combat round.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD37",
+              "Description": "Stiglin:\n\"Bonded character's attacks do Earth damage.\"",
+              "DefaultValue": "Bonded character's attacks do Earth damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD38",
+              "Description": "Velk:\n\"Bonded character has increased resistance to damage.\"",
+              "DefaultValue": "Bonded character has increased resistance to damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD39",
+              "Description": "Zimbar:\n\"Bonded character's attacks do Lightning damage.\"",
+              "DefaultValue": "Bonded character's attacks do Lightning damage.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD40",
+              "Description": "Zousar:\n\"Increases the team's chances of Ambushing opposing teams.\"",
+              "DefaultValue": "Increases the team's chances of Ambushing opposing teams.",
+              "VersionID": 0
+            },
+            {
+              "Name": "chaoD41",
+              "Description": "Kuna:\n\"Increases the amount of rings gathered at the end of a battle.\"",
+              "DefaultValue": "Increases the amount of rings gathered at the end of a battle.",
+              "VersionID": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "Dialogs",
+      "Description": "Dialog texts",
+      "ChildNodes": [
+        {
+          "Name": "Story Dialogs",
+          "Description": "Dialogs that are played or change with the progression of the game",
+          "ChildNodes": [
+            {
+              "Name": "StoryDialogue 1-1",
+              "Description": "The conversation between Tails and Sonic after Sonic arrives in Green Hill",
+              "ChildNodes": [
+                {
+                  "Name": "c1sd1_1",
+                  "Description": "Tails:\n\"Sonic, you made it! I'm so glad to hear from you!\"",
+                  "DefaultValue": "Sonic, you made it! I'm so glad to hear from you!",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_2",
+                  "Description": "Sonic:\n\"I'm here, Tails. What's going on?\"",
+                  "DefaultValue": "I'm here, Tails. What's going on?",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_3",
+                  "Description": "Tails:\n\"We're in big trouble, Sonic. Knuckles has gone missing. And so have the Chaos Emeralds!\"",
+                  "DefaultValue": "We're in big trouble, Sonic. Knuckles has gone missing. And so have the Chaos Emeralds!",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_4",
+                  "Description": "Tails:\n\"A group of criminals called the Marauders kidnapped him! We need your help!\"",
+                  "DefaultValue": "A group of criminals called the Marauders kidnapped him! We need your help!",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_5",
+                  "Description": "Sonic:\n\"Of course I'll help!\"",
+                  "DefaultValue": "Of course I'll help!",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_6",
+                  "Description": "Tails:\n\"I knew you would! I just knew it!\"",
+                  "DefaultValue": "I knew you would! I just knew it!",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_7",
+                  "Description": "Tails:\n\"I can see you on my Monitors, so even if I'm not with you, I'll guide you if you have any trouble.\"",
+                  "DefaultValue": "I can see you on my Monitors, so even if I'm not with you, I'll guide you if you have any trouble.",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_8",
+                  "Description": "Sonic:\n\"What else do you know about the situation?\"",
+                  "DefaultValue": "What else do you know about the situation?",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_9",
+                  "Description": "Tails:\n\"Knuckles was fighting against the Marauders when he disappeared. We're not really sure who they are, but they're bad news!\"",
+                  "DefaultValue": "Knuckles was fighting against the Marauders when he disappeared. We're not really sure who they are, but they're bad news!",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_10",
+                  "Description": "Tails:\n\"Please Sonic. I'll explain more when you get here! We're losing time!\"",
+                  "DefaultValue": "Please Sonic. I'll explain more when you get here! We're losing time!",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_11",
+                  "Description": "Sonic:\n\"Wait, they took the Chaos Emeralds too?\"",
+                  "DefaultValue": "Wait, they took the Chaos Emeralds too?",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_12",
+                  "Description": "Tails:\n\"They did! And that means trouble!\"",
+                  "DefaultValue": "They did! And that means trouble!",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_13",
+                  "Description": "Tails:\n\"The Chaos Emeralds are powerful gems, Sonic. Someone who knows how to use them could do just about anything with their power!\"",
+                  "DefaultValue": "The Chaos Emeralds are powerful gems, Sonic. Someone who knows how to use them could do just about anything with their power!",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_14",
+                  "Description": "Tails:\n\"You know how you've used all the 7 Chaos Emeralds? By using their power to become Super Sonic, you were pretty much unbeatable!\"",
+                  "DefaultValue": "You know how you've used all the 7 Chaos Emeralds? By using their power to become Super Sonic, you were pretty much unbeatable!",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_15",
+                  "Description": "Sonic:\n\"Well Yeah! How could i ever forget?\"",
+                  "DefaultValue": "Well Yeah! How could i ever forget?",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_16",
+                  "Description": "Tails:\n\"Without knowing who the Marauders are, there's no telling what they'll do with the Chaos Emeralds. We have to stop them!\"",
+                  "DefaultValue": "Without knowing who the Marauders are, there's no telling what they'll do with the Chaos Emeralds. We have to stop them!",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_17",
+                  "Description": "Sonic:\n\"Right. Let's go!\"",
+                  "DefaultValue": "Right. Let's go!",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_18",
+                  "Description": "Tails:\n\"Amy is on her way to meet you. Once you find her, meet me at my workshop near Central City.\"",
+                  "DefaultValue": "Amy is on her way to meet you. Once you find her, meet me at my workshop near Central City.",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_19",
+                  "Description": "Sonic:\n\"Sounds like a plan. I'll be there in a flash!\"",
+                  "DefaultValue": "Sounds like a plan. I'll be there in a flash!",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_20",
+                  "Description": "Tails:\n\"Great! Thanks, Sonic. With you on our side, I know we'll save Knuckles!\"",
+                  "DefaultValue": "Great! Thanks, Sonic. With you on our side, I know we'll save Knuckles!",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_21",
+                  "Description": "Sonic:\n\"O-Oh! ... A-Amy's tagging along? H-How quaint...\"",
+                  "DefaultValue": "O-Oh! ... A-Amy's tagging along? H-How quaint...",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_22",
+                  "Description": "Tails:\n\"Well, you know how she is. She wanted to meet you halfway and make sure you got here safely.\"",
+                  "DefaultValue": "Well, you know how she is. She wanted to meet you halfway and make sure you got here safely.",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_23",
+                  "Description": "Tails:\n\"I'll wait for you in the workshop. With you on the team, I know we'll save Knuckles!\"",
+                  "DefaultValue": "I'll wait for you in the workshop. With you on the team, I know we'll save Knuckles!",
+                  "VersionID": 1
+                },
+                {
+                  "Name": "c1sd1_24",
+                  "Description": "Tails:\n\"Let's go!\"",
+                  "DefaultValue": "Let's go!",
+                  "VersionID": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "Subtitles",
+      "Description": "Video Subtitles",
+      "ChildNodes": []
+    }
+  ]
+}

@@ -1,4 +1,6 @@
-﻿namespace SCRLanguageEditor.Data
+﻿using Newtonsoft.Json;
+
+namespace SCRLanguageEditor.Data
 {
     /// <summary>
     /// A node holding a text value, the main focus of the language/text file
@@ -18,6 +20,7 @@
         /// <summary>
         /// Gets and sets nodes value accordingly
         /// </summary>
+        [JsonIgnore]
         public string NodeValue
         {
             get
@@ -59,7 +62,6 @@
         {
             nodeValue = DefaultValue = value;
             this.versionID = versionID;
-            RequiresUpdate = false;
         }
 
         /// <summary>
@@ -68,6 +70,18 @@
         public void ResetValue()
         {
             NodeValue = DefaultValue;
+        }
+
+        protected override void WriteJsonInner(JsonTextWriter writer)
+        {
+            writer.WritePropertyName("DefaultValue");
+            writer.WriteValue(NodeValue);
+
+            if(versionID != 0)
+            {
+                writer.WritePropertyName("VersionID");
+                writer.WriteValue(versionID);
+            }
         }
     }
 }

@@ -1,6 +1,4 @@
 ﻿using SCRLanguageEditor.Viewmodel;
-using System.Collections;
-using System.Linq;
 using System.Windows;
 
 namespace SCRLanguageEditor
@@ -14,7 +12,6 @@ namespace SCRLanguageEditor
         {
             InitializeComponent();
             DataContext = settings;
-            Closed += (sender, e) => settings.Close();
         }
     }
 }

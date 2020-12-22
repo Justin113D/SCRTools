@@ -11,11 +11,19 @@ namespace SCRLanguageEditor.Viewmodel
         /// <summary>
         /// The string node which the viewmodel accesses and modifies
         /// </summary>
-        private StringNode StrNode
-        {
-            get
+        private StringNode StrNode => (StringNode)node;
+
+        public override string Name { 
+            get => base.Name; 
+            set
             {
-                return (StringNode)node;
+                if(string.IsNullOrWhiteSpace(value))
+                    return;
+
+                if(VMHeaderNode.ChangeKey(value, StrNode))
+                {
+                    base.Name = value;
+                }
             }
         }
 
@@ -24,14 +32,8 @@ namespace SCRLanguageEditor.Viewmodel
         /// </summary>
         public string Value
         {
-            get
-            {
-                return StrNode.NodeValue;
-            }
-            set
-            {
-                StrNode.NodeValue = value;
-            }
+            get => StrNode.NodeValue;
+            set => StrNode.NodeValue = value;
         }
 
         /// <summary>
@@ -39,11 +41,17 @@ namespace SCRLanguageEditor.Viewmodel
         /// </summary>
         public RelayCommand Cmd_Reset { get; private set; }
 
+        public override bool IsExpanded
+        {
+            get => false;
+            set => _ = value;
+        }
+
         /// <summary>
         /// Base constructor
         /// </summary>
         /// <param name="node"></param>
-        public VM_StringNode(StringNode node) : base(node)
+        public VM_StringNode(StringNode node, VM_HeaderNode vm) : base(node, vm)
         {
             Cmd_Reset = new RelayCommand(Reset);
         }

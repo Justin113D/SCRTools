@@ -9,7 +9,7 @@
     <Color x:Key="BGCol3">#333</Color>
 
     <Color x:Key="SelectedCol">#777</Color>
-    <Color x:Key="HighlightedCol">#888</Color>
+    <Color x:Key="HighlightedCol">#555</Color>
     <Color x:Key="PressedCol">#999</Color>
     <Color x:Key="DisabledCol">#282828</Color>
     

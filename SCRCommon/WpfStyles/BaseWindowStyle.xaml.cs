@@ -54,9 +54,9 @@ namespace SCRCommon.WpfStyles
                     // get the corresponding resource dictionary
                     foreach(ResourceDictionary rd in w.Resources.MergedDictionaries)
                     {
-                        if(rd is BaseWindowStyle)
+                        if(rd is BaseWindowStyle style)
                         {
-                            ((BaseWindowStyle)rd).MergedDictionaries[0] = theme;
+                            style.MergedDictionaries[0] = theme;
                             break;
                         }
                     }
@@ -95,22 +95,19 @@ namespace SCRCommon.WpfStyles
         /// <returns></returns>
         private static ResourceDictionary GetTheme(Theme theme)
         {
-            var asm = Assembly.Load("SCRCommon");
-            string path;
-            switch (theme)
+            //var asm = Assembly.Load("SCRCommon")
+            ResourceDictionary rd = new ResourceDictionary();
+            string path = theme switch
             {
-                case Theme.Dark:
-                    path = "SCRCommon.WpfStyles.DarkTheme.xaml";
-                    break;
-                case Theme.Light:
-                    path = "SCRCommon.WpfStyles.LightTheme.xaml";
-                    break;
-                default:
-                    path = "";
-                    break;
-            }
-            ResourceDictionary rd = (ResourceDictionary)XamlReader.Load(asm.GetManifestResourceStream(path));
+                Theme.Light => "LightTheme.xaml",
+                Theme.Dark => "DarkTheme.xaml",
+                _ => "DarkTheme.xaml",
+            };
+            rd.Source = new Uri("/SCRCommon;component/WpfStyles/" + path, UriKind.RelativeOrAbsolute);
             return rd;
+
+            //System.IO.Stream v = asm.GetManifestResourceStream(path);
+            //ResourceDictionary rd = (ResourceDictionary)XamlReader.Load(v);
         }
 
         /// <summary>

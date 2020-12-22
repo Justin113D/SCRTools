@@ -33,9 +33,8 @@ namespace SCRLanguageEditor.Viewmodel
         {
             //If the item isnt a VM_Node object, it is not valid
             if(!(item is VM_Node))
-            {
                 return null;
-            }
+
             //Returning the template based on the node type
             VM_Node node = (VM_Node)item;
             return node.Type == Data.Node.NodeType.StringNode ? StringTemplate : ParentTemplate;

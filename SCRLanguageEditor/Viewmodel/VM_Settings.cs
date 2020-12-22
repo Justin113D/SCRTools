@@ -4,10 +4,8 @@ using SCRCommon.WpfStyles;
 using SCRLanguageEditor.Data;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SCRLanguageEditor.Viewmodel
 {
@@ -17,14 +15,9 @@ namespace SCRLanguageEditor.Viewmodel
     public class VM_Settings : BaseViewModel
     {
         /// <summary>
-        /// The settings object, which the viewmodel accesses and modifies
-        /// </summary>
-        private readonly Settings settings;
-
-        /// <summary>
         /// Gets a list of themes to select from
         /// </summary>
-        public List<Theme> Themes
+        public static List<Theme> Themes
         {
             get
             {
@@ -39,18 +32,16 @@ namespace SCRLanguageEditor.Viewmodel
         {
             get
             {
-                return settings.DefaultFormatPath;
+                return Properties.Settings.Default.DefaultFormatPath;
             }
             set
             {
-                settings.DefaultFormatPath = value;
+                if(!Path.IsPathFullyQualified(value))
+                    return;
+
+                Properties.Settings.Default.DefaultFormatPath = Path.ChangeExtension(value, "json");
             }
         }
-
-        /// <summary>
-        /// Used for reverting the default format path when canceling
-        /// </summary>
-        private string oldDefaultFormatPath;
 
         /// <summary>
         /// Redirects to the window theme
@@ -59,23 +50,29 @@ namespace SCRLanguageEditor.Viewmodel
         {
             get
             {
-                return settings.WindowTheme;
+                return Properties.Settings.Default.WindowTheme;
             }
             set
             {
-                settings.WindowTheme = value;
+                Properties.Settings.Default.WindowTheme = value;
+                BaseWindowStyle.WindowTheme = value;
             }
         }
 
         /// <summary>
-        /// Used for reverting the window theme when cancelling
+        /// Whether the application currently is in developer mode (allows to edit the format)
         /// </summary>
-        private Theme oldWindowTheme;
+        public bool DevMode
+        {
+            get => Properties.Settings.Default.DevMode;
+            set => Properties.Settings.Default.DevMode = value;
+        }
 
-        /// <summary>
-        /// When the window is being closed via Ok or Cancel button
-        /// </summary>
-        private bool closing;
+        public bool JsonIndenting
+        {
+            get => Properties.Settings.Default.JsonIndenting;
+            set => Properties.Settings.Default.JsonIndenting = value;
+        }
 
         /// <summary>
         /// The command to select a default format path via dialog
@@ -88,22 +85,14 @@ namespace SCRLanguageEditor.Viewmodel
         public RelayCommand<SettingsWindow> Cmd_Save { get; private set; }
 
         /// <summary>
-        /// The cancel command
-        /// </summary>
-        public RelayCommand<SettingsWindow> Cmd_Cancel { get; private set; }
-
-        /// <summary>
         /// Base constructor; Sets up the viewmodel
         /// </summary>
         /// <param name="settings">The settings object for the viewmodel</param>
-        public VM_Settings(Settings settings)
+        public VM_Settings()
         {
-            this.settings = settings;
             Cmd_SetDefaultPath = new RelayCommand(SelectFormatPath);
             Cmd_Save = new RelayCommand<SettingsWindow>(Save);
-            Cmd_Cancel = new RelayCommand<SettingsWindow>(Cancel);
-            oldDefaultFormatPath = DefaultFormatPath;
-            oldWindowTheme = WindowTheme;
+            BaseWindowStyle.WindowTheme = WindowTheme;
         }
 
         private void SelectFormatPath()
@@ -125,36 +114,9 @@ namespace SCRLanguageEditor.Viewmodel
         /// /// <param name="w">The window that needs to be closed upon saving</param>
         private void Save(SettingsWindow w)
         {
-            settings.Save();
-            oldDefaultFormatPath = settings.DefaultFormatPath;
-            oldWindowTheme = settings.WindowTheme;
-            closing = true;
+            Properties.Settings.Default.Save();
             w.Close();
         }
 
-        /// <summary>
-        /// Reverts the settings
-        /// </summary>
-        /// <param name="w">The window that needs to be closed upon closing</param>
-        private void Cancel(SettingsWindow w)
-        {
-            DefaultFormatPath = oldDefaultFormatPath;
-            WindowTheme = oldWindowTheme;
-            closing = true;
-            w.Close();
-        }
-
-        /// <summary>
-        /// Reverts options when closing the window
-        /// </summary>
-        public void Close()
-        {
-            if(!closing)
-            {
-                DefaultFormatPath = oldDefaultFormatPath;
-                WindowTheme = oldWindowTheme;
-            }
-            closing = false;
-        }
     }
 }
