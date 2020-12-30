@@ -11,19 +11,31 @@ namespace SCRLanguageEditor.Viewmodel
         /// <summary>
         /// The string node which the viewmodel accesses and modifies
         /// </summary>
-        private StringNode StrNode => (StringNode)node;
+        private StringNode StringNode => (StringNode)Node;
 
-        public override string Name { 
-            get => base.Name; 
+        public override string Name
+        {
+            get => base.Name;
             set
             {
                 if(string.IsNullOrWhiteSpace(value))
                     return;
 
-                if(VMHeaderNode.ChangeKey(value, StrNode))
+                if(VMHeader.ChangeKey(value, StringNode))
                 {
                     base.Name = value;
+                    StringNode.VersionID = VMHeader.NewestFormatID;
                 }
+            }
+        }
+
+        public override string Description 
+        { 
+            get => base.Description;
+            set
+            {
+                base.Description = value;
+                StringNode.VersionID = VMHeader.NewestFormatID;
             }
         }
 
@@ -32,8 +44,19 @@ namespace SCRLanguageEditor.Viewmodel
         /// </summary>
         public string Value
         {
-            get => StrNode.NodeValue;
-            set => StrNode.NodeValue = value;
+            get => StringNode.NodeValue;
+            set
+            {
+                StringNode.NodeValue = value;
+                if(Properties.Settings.Default.DevMode)
+                {
+                    StringNode.DefaultValue = value;
+                    return;
+                }
+
+                OnPropertyChanged(nameof(NodeState));
+                Parent.UpdateNodeState();
+            }
         }
 
         /// <summary>
@@ -51,15 +74,16 @@ namespace SCRLanguageEditor.Viewmodel
         /// Base constructor
         /// </summary>
         /// <param name="node"></param>
-        public VM_StringNode(StringNode node, VM_HeaderNode vm) : base(node, vm)
+        public VM_StringNode(VM_ParentNode parent, StringNode node, VM_HeaderNode vm) : base(node, vm, parent)
         {
             Cmd_Reset = new RelayCommand(Reset);
         }
 
         private void Reset()
         {
-            StrNode.ResetValue();
-            OnPropertyChanged(nameof(Value));
+            StringNode.ResetValue();
+            UpdateProperties();
+            Parent?.UpdateNodeState();
         }
 
         /// <summary>
@@ -67,8 +91,14 @@ namespace SCRLanguageEditor.Viewmodel
         /// </summary>
         public override void UpdateProperties()
         {
-            OnPropertyChanged(nameof(RequiresUpdate));
+            OnPropertyChanged(nameof(NodeState));
             OnPropertyChanged(nameof(Value));
+        }
+
+        public override void Remove()
+        {
+            VMHeader.RemoveStringNode(StringNode);
+            base.Remove();
         }
     }
 }

@@ -66,6 +66,7 @@ namespace SCRLanguageEditor.Data
         /// </summary>
         public List<Node> ChildNodes { get; private set; }
 
+        public override int NodeState => throw new NotImplementedException();
 
         public HeaderNode() : base("New", NodeType.HeaderNode)
         {
@@ -94,27 +95,71 @@ namespace SCRLanguageEditor.Data
         /// <param name="nodes">The children of a parent or header node</param>
         /// <param name="minVerIndex">If the vID of a stringnode is bigger than this value, then it requires an update</param>
         /// <returns>Whether any of the updated nodes require an update</returns>
-        private bool CheckVersionDifference(List<Node> nodes, int minVerIndex)
+        private void CheckVersionDifference(List<Node> nodes, int minVerIndex)
         {
-            bool anyUpdated = false;
             foreach(Node n in nodes)
             {
                 if(n is StringNode)
                 {
                     StringNode sn = n as StringNode;
-                    sn.RequiresUpdate = sn.versionID >= minVerIndex;
-                    if (sn.RequiresUpdate) anyUpdated = true;
+                    sn.requiresUpdate = sn.VersionID >= minVerIndex;
                 }
                 else if(n is ParentNode)
                 {
                     ParentNode pn = n as ParentNode;
-                    pn.RequiresUpdate = CheckVersionDifference(pn.ChildNodes, minVerIndex);
-                    if (pn.RequiresUpdate) anyUpdated = true;
+                    CheckVersionDifference(pn.ChildNodes, minVerIndex);
                 }
             }
-            return anyUpdated;
         }
 
+        /// <summary>
+        /// Creates a new top-level parent node
+        /// </summary>
+        /// <returns></returns>
+        public ParentNode NewParentNode()
+        {
+            ParentNode node = new ParentNode("New Parent");
+            ChildNodes.Add(node);
+            return node;
+        }
+
+        /// <summary>
+        /// Creates a string node and adds it to the database
+        /// </summary>
+        /// <returns></returns>
+        private StringNode CreateStringNode()
+        {
+            int number = 1;
+            while(StringNodes.ContainsKey("newString" + number))
+                number++;
+            StringNode node = new StringNode("newString" + number, "value", Versions.Count - 1);
+            StringNodes.Add(node.Name, node);
+            return node;
+        }
+
+        /// <summary>
+        /// Creates a new top-level string node
+        /// </summary>
+        /// <returns></returns>
+        public StringNode NewStringNode()
+        {
+            StringNode node = CreateStringNode();
+            ChildNodes.Add(node);
+            return node;
+        }
+
+        /// <summary>
+        /// Creates a new string node and makes it a child of another parent node
+        /// </summary>
+        /// <param name="parent">Parent of the new node</param>
+        public StringNode NewStringNode(ParentNode parent)
+        {
+            StringNode node = CreateStringNode();
+            parent.ChildNodes.Add(node);
+            return node;
+        }
+
+        #region Reading and writing files
 
         public static HeaderNode LoadFormatFromFile(string path)
         {
@@ -140,6 +185,7 @@ namespace SCRLanguageEditor.Data
                             result._language = (string)reader.Value;
                             break;
                         case "Versions":
+                            result.Versions.Clear();
                             while(reader.Read() && reader.TokenType != JsonToken.EndArray)
                             {
                                 result.Versions.Add(new Version((string)reader.Value));
@@ -264,8 +310,12 @@ namespace SCRLanguageEditor.Data
             foreach(KeyValuePair<string, StringNode> n in StringNodes)
             {
                 if(languageDictionary.ContainsKey(n.Key))
+                {
                     n.Value.NodeValue = languageDictionary[n.Key];
-                else n.Value.ResetValue();
+                    n.Value.retranslated = false;
+                }
+                else
+                    n.Value.ResetValue();
             }
 
             //updating the version check based on the file version
@@ -280,6 +330,6 @@ namespace SCRLanguageEditor.Data
             }
         }
 
-
+        #endregion
     }
 }

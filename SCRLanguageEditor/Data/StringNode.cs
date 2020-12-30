@@ -13,35 +13,45 @@ namespace SCRLanguageEditor.Data
         private string nodeValue;
 
         /// <summary>
+        /// Version id of this node in the format
+        /// </summary>
+        public int VersionID { get; set; }
+
+        public bool requiresUpdate;
+
+        public bool retranslated;
+
+        /// <summary>
         /// The default value for this node
         /// </summary>
-        public string DefaultValue { get; private set; }
+        public string DefaultValue { get; set; }
 
         /// <summary>
         /// Gets and sets nodes value accordingly
         /// </summary>
-        [JsonIgnore]
         public string NodeValue
         {
-            get
-            {
-                return nodeValue;
-            }
+            get => nodeValue;
             set
             {
-                if(value == null)
-                {
-                    nodeValue = "";
-                }
-                else
-                {
-                    // remove all spaces before and after
-                    nodeValue = value.Trim(' ');
-                }
+                nodeValue = value == null ? "" : value.Trim(' ');
+                retranslated = true;
             }
         }
 
-        public readonly int versionID;
+        public override int NodeState
+        {
+            get
+            {
+                if(NodeValue == DefaultValue)
+                    return 0;
+
+                if(requiresUpdate)
+                    return retranslated ? 2 : 1;
+
+                return 3;
+            }
+        }
 
         /// <summary>
         /// Create a string node
@@ -50,7 +60,7 @@ namespace SCRLanguageEditor.Data
         public StringNode(string name, string value, int versionID) : base(name, NodeType.StringNode)
         {
             nodeValue = DefaultValue = value;
-            this.versionID = versionID;
+            this.VersionID = versionID;
         }
 
         /// <summary>
@@ -61,7 +71,7 @@ namespace SCRLanguageEditor.Data
         public StringNode(string name, string value, int versionID, string description) : base(name, description, NodeType.StringNode)
         {
             nodeValue = DefaultValue = value;
-            this.versionID = versionID;
+            VersionID = versionID;
         }
 
         /// <summary>
@@ -70,6 +80,8 @@ namespace SCRLanguageEditor.Data
         public void ResetValue()
         {
             NodeValue = DefaultValue;
+            requiresUpdate = false;
+            retranslated = false;
         }
 
         protected override void WriteJsonInner(JsonTextWriter writer)
@@ -77,10 +89,10 @@ namespace SCRLanguageEditor.Data
             writer.WritePropertyName("DefaultValue");
             writer.WriteValue(NodeValue);
 
-            if(versionID != 0)
+            if(VersionID != 0)
             {
                 writer.WritePropertyName("VersionID");
-                writer.WriteValue(versionID);
+                writer.WriteValue(VersionID);
             }
         }
     }

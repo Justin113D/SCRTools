@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SCRLanguageEditor.Data
 {
@@ -8,11 +9,12 @@ namespace SCRLanguageEditor.Data
     /// </summary>
     public class ParentNode : Node
     {
-
         /// <summary>
         /// The children of this node
         /// </summary>
         public List<Node> ChildNodes { get; private set; }
+
+        public override int NodeState => ChildNodes.Count == 0 ? -1 : ChildNodes.Min(x => x.NodeState);
 
         /// <summary>
         /// Creates a parent node
@@ -41,5 +43,6 @@ namespace SCRLanguageEditor.Data
                 n.WriteJson(writer);
             writer.WriteEndArray();
         }
+    
     }
 }

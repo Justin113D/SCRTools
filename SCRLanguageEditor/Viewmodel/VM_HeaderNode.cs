@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
+using System.Linq;
 
 namespace SCRLanguageEditor.Viewmodel
 {
@@ -21,7 +22,7 @@ namespace SCRLanguageEditor.Viewmodel
         /// </summary>
         private readonly HeaderNode _node;
 
-        public ObservableCollection<VM_Node> Nodes { get; }
+        public ObservableCollection<VM_Node> Children { get; private set; }
 
         /// <summary>
         /// Filepath to the loaded format file
@@ -89,12 +90,29 @@ namespace SCRLanguageEditor.Viewmodel
             get => _node.Version.ToString();
             set
             {
-                Version version = new Version(value);
-                _node.Versions.Add(version);
-
-                _mainViewModel.Message = "";
+                try
+                {
+                    if(_node.StringNodes.Count == 0)
+                        _node.Versions.Clear();
+                    else
+                    {
+                        while(!_node.StringNodes.Any(x => x.Value.VersionID == _node.Versions.Count - 1))
+                            _node.Versions.RemoveAt(_node.Versions.Count - 1);
+                    }
+                    _node.Versions.Add(new Version(value));
+                    _mainViewModel.Message = "";
+                }
+                catch(FormatException)
+                {
+                    _mainViewModel.Message = "Version not valid! Please follow the pattern: Major.Minor.Build.Revision";
+                }
             }
         }
+
+        /// <summary>
+        /// The newest format version id
+        /// </summary>
+        public int NewestFormatID => _node.Versions.Count - 1;
 
         /// <summary>
         /// Redirects to the loaded file version of the format object
@@ -109,7 +127,7 @@ namespace SCRLanguageEditor.Viewmodel
         {
             _mainViewModel = mainViewModel;
             _node = new HeaderNode();
-            Nodes = new ObservableCollection<VM_Node>();
+            Children = new ObservableCollection<VM_Node>();
         }
 
         /// <summary>
@@ -128,27 +146,32 @@ namespace SCRLanguageEditor.Viewmodel
             catch(Exception e)
             {
                 _node = new HeaderNode();
-                Nodes = new ObservableCollection<VM_Node>();
+                Children = new ObservableCollection<VM_Node>();
                 MessageBox.Show("An error occured while loading the format: " + e.GetType().Name + "\n " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             FormatFilePath = formatPath;
 
+            UpdateChildren();
+        }
+
+        public void UpdateChildren()
+        {
             List<VM_Node> nodes = new List<VM_Node>();
             foreach(Node n in _node.ChildNodes)
             {
                 switch(n.Type)
                 {
                     case Node.NodeType.ParentNode:
-                        nodes.Add(new VM_ParentNode((ParentNode)n, this));
+                        nodes.Add(new VM_ParentNode(null, (ParentNode)n, this));
                         break;
                     case Node.NodeType.StringNode:
-                        nodes.Add(new VM_StringNode((StringNode)n, this));
+                        nodes.Add(new VM_StringNode(null, (StringNode)n, this));
                         break;
                 }
-            }            
-            Nodes = new ObservableCollection<VM_Node>(nodes);
+            }
+            Children = new ObservableCollection<VM_Node>(nodes);
         }
 
         /// <summary>
@@ -169,6 +192,36 @@ namespace SCRLanguageEditor.Viewmodel
             }
             _mainViewModel.Message = $"Key \"{newKey}\" already exists";
             return false;
+        }
+
+        public void AddStringNode()
+        {
+            _node.NewStringNode();
+            UpdateChildren();
+        }
+
+        public StringNode AddStringNode(ParentNode parent) 
+            => _node.NewStringNode(parent);
+
+        public void RemoveStringNode(StringNode node)
+            => _node.StringNodes.Remove(node.Name.ToLower());
+
+        public void AddParentNode()
+        {
+            _node.NewParentNode();
+            UpdateChildren();
+        }
+
+        public void InsertChild(VM_Node node, int index)
+        {
+            _node.ChildNodes.Insert(index, node.Node);
+            Children.Insert(index, node);
+        }
+
+        public void RemoveChild(VM_Node node)
+        {
+            _node.ChildNodes.Remove(node.Node);
+            Children.Remove(node);
         }
 
         /// <summary>
@@ -217,7 +270,7 @@ namespace SCRLanguageEditor.Viewmodel
             }
             return true;
         }
-
+        
         /// <summary>
         /// Resets the strings to their default values
         /// </summary>
@@ -260,7 +313,7 @@ namespace SCRLanguageEditor.Viewmodel
             OnPropertyChanged(nameof(Author));
             OnPropertyChanged(nameof(Language));
 
-            foreach(VM_Node n in Nodes)
+            foreach(VM_Node n in Children)
             {
                 n.UpdateProperties();
             }

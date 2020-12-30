@@ -1,6 +1,9 @@
 ﻿using PropertyChanged;
 using SCRCommon.Viewmodels;
 using SCRLanguageEditor.Data;
+using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Input;
 
 namespace SCRLanguageEditor.Viewmodel
 {
@@ -9,79 +12,226 @@ namespace SCRLanguageEditor.Viewmodel
     /// </summary>
     public abstract class VM_Node : BaseViewModel
     {
+        #region commands
+
+        /// <summary>
+        /// Attached to the red remove button; Removes the node from the hierarchy <br/>
+        /// Calls <see cref="Remove"/>
+        /// </summary>
+        public RelayCommand Cmd_Remove { get; }
+
+        /// <summary>
+        /// Attached to the grip button; Initiates a drag-drop <br/>
+        /// Calls <see cref="MouseDown(MouseButtonEventArgs)"/>
+        /// </summary>
+        public RelayCommand<MouseButtonEventArgs> Cmd_MouseDown { get; }
+
+        /// <summary>
+        /// Gets called when dragging over the node. <br/>
+        /// Calls <see cref="DragOver(DragEventArgs)"/>
+        /// </summary>
+        public RelayCommand<DragEventArgs> Cmd_DragOver { get; }
+
+        /// <summary>
+        /// Gets called when when dragging away from the node. <br/>
+        /// Calls <see cref="DragLeave"/>
+        /// </summary>
+        public RelayCommand Cmd_DragLeave { get; }
+
+        /// <summary>
+        /// Gets called when dropping another node on this node <br/>
+        /// Calls <see cref="Drop(DragEventArgs)"/>
+        /// </summary>
+        public RelayCommand<DragEventArgs> Cmd_Drop { get; }
+
+        #endregion
+
+        /// <summary>
+        /// The data node
+        /// </summary>
+        public Node Node { get; }
+
         /// <summary>
         /// Header node access
         /// </summary>
-        protected VM_HeaderNode VMHeaderNode { get; }
+        protected VM_HeaderNode VMHeader { get; }
 
         /// <summary>
-        /// The node which the viewmodel accesses and modifies
+        /// Viewmodel parent of this node
         /// </summary>
-        protected Node node;
+        public VM_ParentNode Parent { get; private set; }
+
 
         /// <summary>
-        /// Whether the node requires an update, based on the file and format version
-        /// Returns a width for the rectangle of the template
+        /// Whether the node is expanded
         /// </summary>
-        public int RequiresUpdate
-        {
-            get
-            {
-                return node.RequiresUpdate ? 10 : 0;
-            }
-        }
+        [SuppressPropertyChangedWarnings]
+        public abstract bool IsExpanded { get; set; }
+
+        /// <summary>
+        /// Whether a the cursor is above the node while dragging another node
+        /// </summary>
+        public bool IsDragOver { get; private set; }
+
+        /// <summary>
+        /// Whether the dragged-over node can be dropped
+        /// </summary>
+        public bool IsDragValid { get; private set; }
+
+        /// <summary>
+        /// The state of the translation
+        /// </summary>
+        public int NodeState => Node.NodeState;
 
         /// <summary>
         /// The name of the node
         /// </summary>
         public virtual string Name
         {
-            get => node.Name;
+            get => Node.Name;
             set
             {
                 if(string.IsNullOrWhiteSpace(value))
                     return;
 
-                node.Name = value;
+                Node.Name = value;
             }
         }
 
         /// <summary>
         /// The description of the node
         /// </summary>
-        public string Description
+        public virtual string Description
         {
-            get => node.Description;
+            get => Node.Description;
             set
             {
                 if(string.IsNullOrWhiteSpace(value))
                     return;
 
-                node.Description = value;
+                Node.Description = value;
             }
         }
-
-        [SuppressPropertyChangedWarnings]
-        public abstract bool IsExpanded { get; set; }
 
         /// <summary>
         /// The type of the node
         /// </summary>
-        public Node.NodeType Type { get { return node.Type; } }
+        public Node.NodeType Type => Node.Type;
 
         /// <summary>
         /// Base constructor
         /// </summary>
         /// <param name="node">The assigned node</param>
-        protected VM_Node(Node node, VM_HeaderNode vm)
+        protected VM_Node(Node node, VM_HeaderNode vm, VM_ParentNode parent)
         {
-            this.node = node;
-            VMHeaderNode = vm;
+            Node = node;
+            VMHeader = vm;
+            Parent = parent;
+            Cmd_Remove = new RelayCommand(() => Remove());
+            Cmd_MouseDown = new RelayCommand<MouseButtonEventArgs>((x) => MouseDown(x));
+            Cmd_DragOver = new RelayCommand<DragEventArgs>((x) => DragOver(x));
+            Cmd_DragLeave = new RelayCommand(() => DragLeave());
+            Cmd_Drop = new RelayCommand<DragEventArgs>((x) => Drop(x));
         }
+
+        /// <summary>
+        /// Handles grabbing the node
+        /// </summary>
+        /// <param name="args"></param>
+        private void MouseDown(MouseButtonEventArgs args)
+        {
+            if(args.LeftButton == MouseButtonState.Pressed)
+            {
+                DataObject data = new DataObject("object", this);
+                DragDrop.DoDragDrop((DependencyObject)args.Source, data, DragDropEffects.Move);
+                args.Handled = true;
+            }
+        }
+
+        /// <summary>
+        /// Handles dragging nodes over this node
+        /// </summary>
+        /// <param name="args"></param>
+        private void DragOver(DragEventArgs args)
+        {
+            VM_Node dragging = (VM_Node)args.Data.GetData("object");
+
+            if(dragging == this)
+                return;
+
+            // check if dragged object is in the parent hierarchy
+            VM_ParentNode current = Parent;
+            while(current != null && current != dragging)
+                current = current.Parent;
+
+            IsDragOver = dragging != this;
+            IsDragValid = current == null;
+            args.Effects = IsDragValid ? DragDropEffects.Move : DragDropEffects.None;
+            args.Handled = true;
+        }
+
+        /// <summary>
+        /// Sets dragover to false
+        /// </summary>
+        private void DragLeave() => IsDragOver = false;
+
+        /// <summary>
+        /// Handles node dropping
+        /// </summary>
+        /// <param name="args"></param>
+        private void Drop(DragEventArgs args)
+        {
+            IsDragOver = false;
+            if(!IsDragValid)
+                return;
+            VM_Node dropped = (VM_Node)args.Data.GetData("object");
+            InsertNode(dropped);
+            args.Handled = true;
+        }
+
+        /// <summary>
+        /// Moves a node from its original parent to "below this node"
+        /// </summary>
+        /// <param name="insertNode"></param>
+        protected virtual void InsertNode(VM_Node insertNode)
+        {
+            if(insertNode.Parent == null)
+                VMHeader.RemoveChild(insertNode);
+            else
+                insertNode.Parent.RemoveChild(insertNode);
+
+            ObservableCollection<VM_Node> children = Parent == null ? VMHeader.Children : Parent.Children;
+
+            // insert it below this node
+            int index = children.IndexOf(this);
+
+            //adjust data nodetree
+            if(Parent == null)
+            {
+                VMHeader.InsertChild(insertNode, index + 1);
+            }
+            else
+            {
+                children.Insert(index + 1, insertNode);
+                ((ParentNode)Parent.Node).ChildNodes.Insert(index, insertNode.Node);
+            }
+        }
+        
 
         /// <summary>
         /// Abstract method to update necessary properties manually
         /// </summary>
         public abstract void UpdateProperties();
+
+        /// <summary>
+        /// Removes the node and its children from the hierarchy
+        /// </summary>
+        public virtual void Remove()
+        {
+            if(Parent != null)
+                Parent.RemoveChild(this);
+            else
+                VMHeader.RemoveChild(this);
+        }
     }
 }

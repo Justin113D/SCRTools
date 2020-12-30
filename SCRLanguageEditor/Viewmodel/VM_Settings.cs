@@ -30,12 +30,15 @@ namespace SCRLanguageEditor.Viewmodel
         /// </summary>
         public string DefaultFormatPath
         {
-            get
-            {
-                return Properties.Settings.Default.DefaultFormatPath;
-            }
+            get => Properties.Settings.Default.DefaultFormatPath;
             set
             {
+                if(string.IsNullOrWhiteSpace(value))
+                {
+                    Properties.Settings.Default.DefaultFormatPath = "";
+                    return;
+                }
+
                 if(!Path.IsPathFullyQualified(value))
                     return;
 

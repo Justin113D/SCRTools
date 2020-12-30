@@ -52,7 +52,12 @@ namespace SCRLanguageEditor.Viewmodel
         /// </summary>
         public RelayCommand Cmd_Settings { get; }
 
+        public RelayCommand Cmd_AddStringNode { get; }
+
+        public RelayCommand Cmd_AddParentNode { get; }
+
         #endregion
+
         public VM_HeaderNode Format { get; private set; }
 
         /// <summary>
@@ -64,6 +69,8 @@ namespace SCRLanguageEditor.Viewmodel
         /// Error/warning message that is displayed in the main window
         /// </summary>
         public string Message { get; set; }
+
+        public bool Dragging { get; set; }
 
         /// <summary>
         /// Sets up the viewmodel 
@@ -84,8 +91,13 @@ namespace SCRLanguageEditor.Viewmodel
             Cmd_SaveAs = new RelayCommand(() => Format.SaveContent(true));
 
             Cmd_Settings = new RelayCommand(() => OpenSettings());
+            Cmd_AddStringNode = new RelayCommand(() => Format.AddStringNode());
+            Cmd_AddParentNode = new RelayCommand(() => Format.AddParentNode());
 
-            Format = new VM_HeaderNode(this, Properties.Settings.Default.DefaultFormatPath);
+            if(string.IsNullOrWhiteSpace(Properties.Settings.Default.DefaultFormatPath))
+                Format = new VM_HeaderNode(this);
+            else
+                Format = new VM_HeaderNode(this, Properties.Settings.Default.DefaultFormatPath);
         }
 
         /// <summary>
@@ -122,5 +134,6 @@ namespace SCRLanguageEditor.Viewmodel
         /// Creates a settings dialog
         /// </summary>
         private void OpenSettings() => new SettingsWindow(Settings).ShowDialog();
+
     }
 }

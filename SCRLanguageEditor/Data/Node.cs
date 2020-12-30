@@ -35,16 +35,11 @@ namespace SCRLanguageEditor.Data
         /// </summary>
         public virtual string Name
         {
-            get
-            {
-                return name;
-            }
+            get => name; 
             set
             {
                 if (value == null)
-                {
                     name = "";
-                }
                 else
                 {
                     // remove all spaces before and after
@@ -52,6 +47,8 @@ namespace SCRLanguageEditor.Data
                 }
             }
         }
+
+        public abstract int NodeState { get; }
 
         /// <summary>
         /// The description of the node
@@ -78,12 +75,6 @@ namespace SCRLanguageEditor.Data
                 }
             }
         }
-
-        [JsonIgnore]
-        /// <summary>
-        /// Whether this node (or any of its child nodes, if it has any) requires an update
-        /// </summary>
-        public bool RequiresUpdate;
 
         /// <summary>
         /// Creates a node with only a name

@@ -3,7 +3,7 @@
                     x:Class="SCRCommon.WpfStyles.BaseWindowStyle"
                     x:ClassModifier="public">
 
-    
+
     <SolidColorBrush x:Key="FontBrush" Color="{DynamicResource FontColor}"/>
     <SolidColorBrush x:Key="HintFontBrush" Color="{DynamicResource HintFontColor}"/>
 
@@ -16,13 +16,14 @@
     <SolidColorBrush x:Key="PressedBG" Color="{DynamicResource PressedCol}"/>
     <SolidColorBrush x:Key="DisabledBG" Color="{DynamicResource DisabledCol}"/>
 
-    
     <Style x:Key="ToolbarButton" TargetType="{x:Type Button}">
         <Setter Property="OverridesDefaultStyle" Value="False"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Foreground" Value="{DynamicResource FontBrush}"/>
-        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontSize" Value="18"/>
         <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -52,9 +53,14 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
-                    <Border Tag="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"  Initialized="Window_Initialized" Background="{DynamicResource BG2}" Padding="2, 42, 2, 2">
+                    <Border x:Name="Border" Tag="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Initialized="Window_Initialized" Background="{DynamicResource BG2}" Padding="2, 42, 2, 2">
                         <ContentPresenter Content="{TemplateBinding Content}"/>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="WindowState" Value="Maximized">
+                            <Setter TargetName="Border" Property="Padding" Value="5, 45, 5, 5"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -63,34 +69,36 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
-                    <Border BorderThickness="0" Background="{DynamicResource BG2}" Padding="2">
+                    <Border x:Name="Border" BorderThickness="0" Background="{DynamicResource BG2}" Padding="2">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
-                            <Grid Height="40">
+                            <Grid Height="30">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="40"/>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="45"/>
-                                    <ColumnDefinition Width="45"/>
-                                    <ColumnDefinition Width="45"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Image Height="32" Width="32" HorizontalAlignment="Center" VerticalAlignment="Center" Source="{TemplateBinding Icon}"/>
-                                <TextBlock Grid.Column="1" Text="{TemplateBinding Title}" Foreground="{DynamicResource FontBrush}" x:Name="TitleBar" FontSize="20" TextAlignment="Center" VerticalAlignment="Center"/>
-                                <Button Grid.Column="2" WindowChrome.IsHitTestVisibleInChrome="True" Click="Minimize" Width="45"
-                                            Content="🗕" Style="{DynamicResource ToolbarButton}" />
-                                <Button Grid.Column="3" WindowChrome.IsHitTestVisibleInChrome="True" Click="Maximize" Width="45"
-                                            Content="☐" Initialized="MaximizeButton_Initialized" Style="{DynamicResource ToolbarButton}"/>
-                                <Button Grid.Column="4" WindowChrome.IsHitTestVisibleInChrome="True" Click="Close" Width="45"
-                                            Content="✕" Style="{DynamicResource ToolbarButton}"/>
+                                <Image Height="24" Width="24" HorizontalAlignment="Center" VerticalAlignment="Center" Source="{TemplateBinding Icon}"/>
+                                <TextBlock Grid.Column="1" Text="{TemplateBinding Title}" Foreground="{DynamicResource FontBrush}" x:Name="TitleBar" FontSize="18" TextAlignment="Center" VerticalAlignment="Center"/>
+                                <Button Grid.Column="2" Click="Minimize" Content="🗕" Style="{DynamicResource ToolbarButton}" />
+                                <Button Grid.Column="3" Click="Maximize" Content="☐" Style="{DynamicResource ToolbarButton}" Initialized="MaximizeButton_Initialized"/>
+                                <Button Grid.Column="4" Click="Close"    Content="✕" Style="{DynamicResource ToolbarButton}"/>
                             </Grid>
                             <ContentPresenter Grid.Row="1" Content="{TemplateBinding Content}"/>
                         </Grid>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="WindowState" Value="Maximized">
+                            <Setter TargetName="Border" Property="Padding" Value="9"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -99,7 +107,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
-                    <Border BorderThickness="0" Background="{DynamicResource BG2}" Padding="2">
+                    <Border x:Name="Border" BorderThickness="0" Background="{DynamicResource BG2}" Padding="2">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
@@ -115,11 +123,16 @@
 
                                 <Image      Grid.Column="0" Source="{TemplateBinding Icon}" Height="24" Width="24" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                 <TextBlock  Grid.Column="1" Text="{TemplateBinding Title}" Foreground="{DynamicResource FontBrush}" FontSize="18" TextAlignment="Center" VerticalAlignment="Center"/>
-                                <Button     Grid.Column="2" Click="Close" Content="✕" Width="35" FontSize="18" Style="{DynamicResource ToolbarButton}" WindowChrome.IsHitTestVisibleInChrome="True"/>
+                                <Button     Grid.Column="2" Click="Close" Content="✕" Style="{DynamicResource ToolbarButton}"/>
                             </Grid>
                             <ContentPresenter Grid.Row="1" Content="{TemplateBinding Content}"/>
                         </Grid>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="WindowState" Value="Maximized">
+                            <Setter TargetName="Border" Property="Padding" Value="5"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:mainwindow="clr-namespace:SCRLanguageEditor"
         xmlns:local="clr-namespace:SCRLanguageEditor.Viewmodel"
         xmlns:vmBase="clr-namespace:SCRCommon.Viewmodels;assembly=SCRCommon"
         xmlns:base="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
@@ -38,6 +40,9 @@
                     <vmBase:BindingProxy x:Key="DescriptionWidth" Data="{Binding ElementName=Window, Path=ActualWidth, Converter={StaticResource WindowWidthConverter}}"/>
                     <vmBase:StringEmptyConverter x:Key="StringEmptyConverter"/>
                     <vmBase:VisibilityConverter x:Key="VisibilityConverter"/>
+                    <vmBase:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+                    <vmBase:LeftMarginMultiplierConverter x:Key="LeftMarginMultiplierConverter" Length="20"/>
+                    <local:NodeStateConverter x:Key="NodeStateConverter"/>
 
                     <Style x:Key="ExpandCollapseToggleStyle" TargetType="ToggleButton">
                         <Setter Property="Focusable" Value="False"/>
@@ -62,35 +67,100 @@
                         </Setter>
                     </Style>
                     <ControlTemplate x:Key="TVI_Base" TargetType="{x:Type TreeViewItem}">
-                        <ControlTemplate.Resources>
-                            <vmBase:LeftMarginMultiplierConverter Length="20" x:Key="LengthConverter"/>
-                        </ControlTemplate.Resources>
                         <StackPanel MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}">
-                            <Border x:Name="Bd"
-                                Background="{TemplateBinding Background}"
-                                BorderThickness="0"
-                                Margin="0 0 5 0">
-                                <Grid Margin="{Binding Converter={StaticResource LengthConverter},
-                                    RelativeSource={RelativeSource TemplatedParent}}"
-                                      VerticalAlignment="Center">
+                            <Border x:Name="OuterBorder"
+                                    Background="{TemplateBinding Background}"
+                                    AllowDrop="True"
+                                    Padding="{Binding Converter={StaticResource LeftMarginMultiplierConverter},
+                                    RelativeSource={RelativeSource TemplatedParent}}">
 
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="20" />
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="DragOver">
+                                        <i:InvokeCommandAction Command="{Binding Cmd_DragOver}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="DragLeave">
+                                        <i:InvokeCommandAction Command="{Binding Cmd_DragLeave}"/>
+                                    </i:EventTrigger>
+                                     <i:EventTrigger EventName="Drop">
+                                        <i:InvokeCommandAction Command="{Binding Cmd_Drop}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>                                   
+                                </i:Interaction.Triggers>
 
-                                    <ToggleButton x:Name="Expander"
-                                        Style="{DynamicResource ExpandCollapseToggleStyle}"
-                                        IsChecked="{Binding Path=IsExpanded,
-                                        RelativeSource={RelativeSource TemplatedParent}}"
-                                        ClickMode="Press"/>
+                                <Border x:Name="InnerBorder"
+                                        BorderBrush="#78B159"
+                                        Padding="0,0,0,3"
+                                        IsHitTestVisible="{Binding Data.Dragging, Source={StaticResource proxy}, Converter={StaticResource InverseBooleanConverter}}">
 
-                                    <ContentPresenter x:Name="contentPresenter" Grid.Column="1" Margin="2 0 0 0"
-                                                      HorizontalAlignment="Stretch" ContentSource="Header" Tag="Hidden"/>
-                                </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition x:Name="FeatureWidth" Width="15" />
+                                            <ColumnDefinition x:Name="ExpanderWidth" Width="20" />
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Rectangle x:Name="GrabSurface" 
+                                                   Margin="2,6,1,6" 
+                                                   Cursor="Hand" 
+                                                   SnapsToDevicePixels="True" 
+                                                   UseLayoutRounding="True">
+                                            <Rectangle.Fill>
+                                                <VisualBrush TileMode="Tile" 
+                                                             Viewport="0,0,4,4" 
+                                                             ViewportUnits="Absolute" 
+                                                             Viewbox="0,0,4,4" 
+                                                             ViewboxUnits="Absolute" 
+                                                             RenderOptions.BitmapScalingMode="NearestNeighbor">
+                                                    <VisualBrush.Visual>
+                                                        <Grid>
+                                                            <Path Fill="{DynamicResource HintFontBrush}">
+                                                                <Path.Data>
+                                                                    <RectangleGeometry Rect="0,0,1,1"/>
+                                                                </Path.Data>
+                                                            </Path>
+                                                            <Path Fill="{DynamicResource HintFontBrush}">
+                                                                <Path.Data>
+                                                                    <RectangleGeometry Rect="2,2,1,1"/>
+                                                                </Path.Data>
+                                                            </Path>
+                                                        </Grid>
+                                                    </VisualBrush.Visual>
+                                                </VisualBrush>
+                                            </Rectangle.Fill>
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseDown">
+                                                    <i:InvokeCommandAction Command="{Binding Cmd_MouseDown}" PassEventArgsToCommand="True"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </Rectangle>
+
+                                        <Border x:Name="StateMarker" CornerRadius="5" Background="{Binding NodeState, Converter={StaticResource NodeStateConverter}}" Margin="2,5,2,5"/>
+
+                                        <ToggleButton x:Name="Expander" Grid.Column="1"
+                                            Style="{DynamicResource ExpandCollapseToggleStyle}"
+                                            IsChecked="{Binding Path=IsExpanded,
+                                            RelativeSource={RelativeSource TemplatedParent}}"
+                                            ClickMode="Press"/>
+
+                                        <ContentPresenter x:Name="contentPresenter" 
+                                                          Grid.Column="2" 
+                                                          Margin="3 0 0 0" 
+                                                          MinHeight="19" 
+                                                          HorizontalAlignment="Stretch" 
+                                                          ContentSource="Header" 
+                                                          Tag="{x:Static Visibility.Hidden}"/>
+
+                                        <Button x:Name="RemoveButton" 
+                                                Grid.Column="3" 
+                                                Width="20" 
+                                                Content="X" 
+                                                Style="{DynamicResource RedButton}" 
+                                                Command="{Binding Cmd_Remove}" 
+                                                Visibility="Hidden"/>
+                                    </Grid>
+                                </Border>
                             </Border>
-                            <Border x:Name="ItemsHost" Padding="0,3,0,3"
-                                    BorderThickness="0, 0, 0, 3" BorderBrush="{DynamicResource BG3}">
+                            <Border x:Name="ItemsHost">
                                 <ItemsPresenter/>
                             </Border>
                         </StackPanel>
@@ -101,33 +171,33 @@
                             <Trigger Property="HasItems" Value="false">
                                 <Setter TargetName="Expander" Property="Visibility" Value="Hidden"/>
                             </Trigger>
-                            <DataTrigger Binding="{Binding IsMouseOver, ElementName=Bd}" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource HighlightedBG}"/>
+                            <DataTrigger Binding="{Binding IsMouseOver, ElementName=OuterBorder}" Value="True">
+                                <Setter TargetName="OuterBorder" Property="Background" Value="{DynamicResource HighlightedBG}"/>
                             </DataTrigger>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="HasHeader" Value="false"/>
-                                    <Condition Property="Height" Value="Auto"/>
-                                </MultiTrigger.Conditions>
-                                <Setter TargetName="contentPresenter" Property="MinHeight" Value="19"/>
-                            </MultiTrigger>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsSelected" Value="true"/>
-                                    <Condition Property="IsSelectionActive" Value="false"/>
-                                </MultiTrigger.Conditions>
-                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SelectedBG}"/>
-                            </MultiTrigger>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource DisabledBG}"/>
-                            </Trigger>
                             <MultiDataTrigger>
                                 <MultiDataTrigger.Conditions>
-                                    <Condition Binding="{Binding IsMouseOver, ElementName=Bd}" Value="True"/>
+                                    <Condition Binding="{Binding IsMouseOver, ElementName=OuterBorder}" Value="True"/>
                                     <Condition Binding="{Binding Data.Settings.DevMode, Source={StaticResource proxy}}" Value="True"/>
                                 </MultiDataTrigger.Conditions>
-                                <Setter TargetName="contentPresenter" Property="Tag" Value="Visible"/>
+                                <Setter TargetName="contentPresenter" Property="Tag" Value="{x:Static Visibility.Visible}"/>
+                                <Setter TargetName="RemoveButton" Property="Visibility" Value="Visible"/>
                             </MultiDataTrigger>
+                            <DataTrigger Binding="{Binding IsDragOver}" Value="True">
+                                <Setter TargetName="InnerBorder" Property="BorderThickness" Value="0,0,0,3"/>
+                                <Setter TargetName="InnerBorder" Property="Padding" Value="0"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsDragValid}" Value="False">
+                                <Setter TargetName="InnerBorder" Property="BorderBrush" Value="#DD2E44"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Data.Settings.DevMode, Source={StaticResource proxy}}" Value="False">
+                                <Setter TargetName="GrabSurface" Property="Visibility" Value="Hidden"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Data.Settings.DevMode, Source={StaticResource proxy}}" Value="True">
+                                <Setter TargetName="StateMarker" Property="Visibility" Value="Hidden"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static data:Node+NodeType.StringNode}">
+                                <Setter TargetName="ExpanderWidth" Property="Width" Value="0"/>
+                            </DataTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                     <Style x:Key="Node" TargetType="{x:Type TreeViewItem}">
@@ -172,48 +242,43 @@
                         </Style.Triggers>
                     </Style>
 
-
                     <!--Node Templates-->
                     <HierarchicalDataTemplate x:Key="ParentNode" ItemsSource="{Binding Children}">
                         <Grid Margin="0, 4, 0, 4">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="{Binding RequiresUpdate}"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="{Binding Source={StaticResource DescriptionWidth}, Path=Data}"/>
                             </Grid.ColumnDefinitions>
-                            <Rectangle Grid.Column="0" SnapsToDevicePixels="True" Fill="#00ccf5" Margin="0,0,5,0"/>
-                            <TextBox x:Name="NameBox" Grid.Column="1" Text="{Binding Name}" Style="{StaticResource DescriptionStyle}" FontSize="22" Foreground="{DynamicResource FontBrush}"/>
+                            <TextBox x:Name="NameBox" Grid.Column="0" Text="{Binding Name}" Style="{StaticResource DescriptionStyle}" FontSize="22" Foreground="{DynamicResource FontBrush}"/>
 
-                            <StackPanel Grid.Column="2" Orientation="Horizontal" FlowDirection="LeftToRight" Height="{Binding ActualHeight, ElementName=NameBox}"
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" FlowDirection="LeftToRight" Height="{Binding ActualHeight, ElementName=NameBox}"
                                         Visibility="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" >
-                                <Button Content="Add Parent" Style="{DynamicResource BlueButton}" Padding="10,0,10,0" Margin="5,0,5,0"/>
-                                <Button Content="Add String" Style="{DynamicResource GreenButton}" Padding="10,0,10,0" Margin="5,0,5,0"/>                                
+                                <Button Content="Add Parent" Style="{DynamicResource BlueButton}" Padding="5,0,5,0" Margin="5,0,5,0" Command="{Binding Cmd_AddParentNode}"/>
+                                <Button Content="Add String" Style="{DynamicResource GreenButton}" Padding="5,0,5,0" Margin="5,0,5,0" Command="{Binding Cmd_AddStringNode}"/>
                             </StackPanel>
-                            
 
-                            
-                            <TextBox Grid.Column="3" Text="{Binding Description}" Style="{StaticResource DescriptionStyle}"/>
+                            <TextBox Grid.Column="2" Text="{Binding Description}" Style="{StaticResource DescriptionStyle}"/>
                         </Grid>
                     </HierarchicalDataTemplate>
                     <HierarchicalDataTemplate x:Key="StringNode" ItemsSource="{x:Null}">
                         <Border BorderThickness="0 1 0 1" BorderBrush="{DynamicResource BG1}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="{Binding RequiresUpdate}"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="2*"/>
                                     <ColumnDefinition Width="{Binding Source={StaticResource DescriptionWidth}, Path=Data}"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Rectangle Grid.Column="0" SnapsToDevicePixels="True" Fill="#00ccf5" Margin="0,0,5,0"/>
-                                <TextBox Grid.Column="1" Text="{Binding Name}" Style="{StaticResource DescriptionStyle}" FontSize="22" Foreground="{DynamicResource FontBrush}"/>
-                                <Rectangle Grid.Column="2" Fill="{DynamicResource BG3}"/>
-                                <TextBox Grid.Column="2" Text="{Binding Value, Mode=TwoWay}" Style="{DynamicResource {x:Type TextBox}}" AcceptsReturn="True" Padding="5,10,5,10" VerticalAlignment="Stretch">
-                                    <TextBox.InputBindings>
-                                        <KeyBinding Modifiers="Ctrl" Key="R" Command="{Binding Cmd_Reset}"/>
-                                    </TextBox.InputBindings>
-                                </TextBox>
+                                <TextBox Grid.Column="0" Text="{Binding Name}" Style="{StaticResource DescriptionStyle}" FontSize="22" Foreground="{DynamicResource FontBrush}"/>
+                                <Border Grid.Column="1" Background="{DynamicResource BG3}">
+                                    <TextBox Text="{Binding Value, Mode=TwoWay}" Style="{DynamicResource {x:Type TextBox}}" AcceptsReturn="True" Padding="5,10,5,10" VerticalAlignment="Stretch">
+                                        <TextBox.InputBindings>
+                                            <KeyBinding Modifiers="Ctrl" Key="R" Command="{Binding Cmd_Reset}"/>
+                                        </TextBox.InputBindings>
+                                    </TextBox>                                    
+                                </Border>
+
                                 <TextBox Grid.Column="3" Text="{Binding Description}" Style="{StaticResource DescriptionStyle}"/>
                             </Grid>
                         </Border>
@@ -329,19 +394,45 @@
                 <TextBlock Text="{Binding FileVersion}"/>
                 <Rectangle/>
                 <TextBlock Text="Target Name:"/>
-                <TextBox Text="{Binding FormatTargetName}" IsReadOnly="True"/>
+                <TextBox Text="{Binding FormatTargetName}" IsReadOnly="{Binding Data.Settings.DevMode, Source={StaticResource proxy}, Converter={StaticResource InverseBooleanConverter}}"/>
                 <Rectangle/>
                 <TextBlock Text="Format Version:"/>
-                <TextBox Text="{Binding FormatVersion}" IsReadOnly="True"/>
+                <TextBox Text="{Binding FormatVersion}" IsReadOnly="{Binding Data.Settings.DevMode, Source={StaticResource proxy}, Converter={StaticResource InverseBooleanConverter}}"/>
             </StackPanel>
             
         </Grid>
 
         <TreeView Grid.Row="1"
-                    ItemsSource="{Binding Format.Nodes}"
+                  x:Name="Elements"
+                    ItemsSource="{Binding Format.Children}"
                     ItemContainerStyle="{DynamicResource Node}" 
                     ItemTemplateSelector="{StaticResource TemplateSelector}" 
-                    KeyboardNavigation.TabNavigation="Contained"/>
+                    AllowDrop="True"
+                    KeyboardNavigation.TabNavigation="Contained">
+            <TreeView.Template>
+                <ControlTemplate TargetType="{x:Type TreeView}">
+                    <ScrollViewer Focusable="False"
+                                  CanContentScroll="False"
+                                  Padding="4" Background="{DynamicResource BG1}">
+                        <StackPanel>
+                            <ItemsPresenter />
+                            <Grid Margin="5" DataContext="" Visibility="{Binding Data.Settings.DevMode, Source={StaticResource proxy}, Converter={StaticResource VisibilityConverter}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Column="1" Style="{DynamicResource BlueButton}" Content="Add Parent" Command="{Binding Data.Cmd_AddParentNode, Source={StaticResource proxy}}"/>
+                                <Button Grid.Column="3" Style="{DynamicResource GreenButton}" Content="Add String" Command="{Binding Data.Cmd_AddStringNode, Source={StaticResource proxy}}"/>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </ControlTemplate>
+            </TreeView.Template>
+        </TreeView>
 
         <Border Grid.Row="2" Padding="3">
             <Border.Style>

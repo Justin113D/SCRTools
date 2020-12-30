@@ -8,25 +8,15 @@ namespace SCRCommon.Viewmodels
     /// </summary>
     public class RelayCommand<ParameterType> : ICommand
     {
-        #region Private Members
-
         /// <summary>
         /// The action to run
         /// </summary>
         private Action<ParameterType> mAction;
 
-        #endregion
-
-        #region Public Events
-
         /// <summary>
         /// The event thats fired when the <see cref="CanExecute(object)"/> value has changed
         /// </summary>
         public event EventHandler CanExecuteChanged = (sender, e) => { };
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// Default constructor
@@ -36,19 +26,12 @@ namespace SCRCommon.Viewmodels
             mAction = action;
         }
 
-        #endregion
-
-        #region Command Methods
-
         /// <summary>
         /// A relay command can always execute
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
+        public bool CanExecute(object parameter) => true;
 
         /// <summary>
         /// Executes the commands Action
@@ -56,12 +39,11 @@ namespace SCRCommon.Viewmodels
         /// <param name="parameter"></param>
         public void Execute(object parameter)
         {
-            if (typeof(ParameterType) == null || parameter.GetType() == typeof(ParameterType))
+            if(typeof(ParameterType) == null || parameter.GetType() == typeof(ParameterType))
                 mAction((ParameterType)parameter);
-            else throw new ArgumentException("Parameter of type " + parameter.GetType() + ", but it should be " + typeof(ParameterType), "parameter");
+            else
+                throw new ArgumentException("Parameter of type " + parameter.GetType() + ", but it should be " + typeof(ParameterType), "parameter");
         }
-
-        #endregion
     }
 
     /// <summary>
@@ -69,25 +51,16 @@ namespace SCRCommon.Viewmodels
     /// </summary>
     public class RelayCommand : ICommand
     {
-        #region Private Members
-
         /// <summary>
         /// The action to run
         /// </summary>
         private readonly Action mAction;
 
-        #endregion
-
-        #region Public Events
-
         /// <summary>
         /// The event thats fired when the <see cref="CanExecute(object)"/> value has changed
         /// </summary>
         public event EventHandler CanExecuteChanged = (sender, e) => { };
-        #endregion
-
-        #region Constructor
-
+    
         /// <summary>
         /// Constructor
         /// </summary>
@@ -96,10 +69,6 @@ namespace SCRCommon.Viewmodels
         {
             mAction = action;
         }
-
-        #endregion
-
-        #region Command Methods
 
         /// <summary>
         /// A relay command can always execute
@@ -120,6 +89,6 @@ namespace SCRCommon.Viewmodels
             mAction();
         }
 
-        #endregion
     }
+
 }

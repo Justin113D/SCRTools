@@ -71,7 +71,7 @@
 
                 <!--Devmode setting-->
                 <TextBlock Grid.Column="0" Grid.Row="4" Text="Devmode" VerticalAlignment="Center"/>
-                <CheckBox Grid.Column="1" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="{Binding DevMode, Mode=TwoWay}" IsEnabled="False"/>
+                <CheckBox Grid.Column="1" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="{Binding DevMode, Mode=TwoWay}"/>
 
                 <!--JsonIndentation setting-->
                 <TextBlock Grid.Column="0" Grid.Row="6" Text="Json Indenting" VerticalAlignment="Center">
