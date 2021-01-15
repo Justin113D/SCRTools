@@ -94,7 +94,15 @@ namespace SCRLanguageEditor.Viewmodel
                 if(string.IsNullOrWhiteSpace(value))
                     return;
 
+                // support undo/redo
+                VMHeader.Tracker.TrackChange(new ChangedValue<string>((v) =>
+                {
+                    Node.Name = v;
+                    OnPropertyChanged(nameof(Name));
+                }, Node.Name, value));
+
                 Node.Name = value;
+
             }
         }
 
@@ -107,7 +115,14 @@ namespace SCRLanguageEditor.Viewmodel
             set
             {
                 if(string.IsNullOrWhiteSpace(value))
-                    return;
+                    value = "";
+
+                // support undo/redo
+                VMHeader.Tracker.TrackChange(new ChangedValue<string>((v) =>
+                {
+                    Node.Description = v;
+                    OnPropertyChanged(nameof(Description));
+                }, Node.Description, value));
 
                 Node.Description = value;
             }
@@ -195,28 +210,29 @@ namespace SCRLanguageEditor.Viewmodel
         /// <param name="insertNode"></param>
         protected virtual void InsertNode(VM_Node insertNode)
         {
+            VMHeader.Tracker.BeginGroup();
+
             if(insertNode.Parent == null)
                 VMHeader.RemoveChild(insertNode);
             else
                 insertNode.Parent.RemoveChild(insertNode);
 
-            ObservableCollection<VM_Node> children = Parent == null ? VMHeader.Children : Parent.Children;
-
             // insert it below this node
-            int index = children.IndexOf(this);
+            int index = (Parent == null ? VMHeader.Children : Parent.Children).IndexOf(this);
 
             //adjust data nodetree
             if(Parent == null)
-            {
                 VMHeader.InsertChild(insertNode, index + 1);
-            }
             else
-            {
-                children.Insert(index + 1, insertNode);
-                ((ParentNode)Parent.Node).ChildNodes.Insert(index, insertNode.Node);
-            }
+                Parent.InsertChild(insertNode, index + 1);
+
+            VMHeader.Tracker.EndGroup();
         }
         
+        protected virtual void ExpandParents()
+        {
+            Parent?.ExpandParents();
+        }
 
         /// <summary>
         /// Abstract method to update necessary properties manually
@@ -232,6 +248,11 @@ namespace SCRLanguageEditor.Viewmodel
                 Parent.RemoveChild(this);
             else
                 VMHeader.RemoveChild(this);
+        }
+
+        public override string ToString()
+        {
+            return $"{Type} - {Name}";
         }
     }
 }

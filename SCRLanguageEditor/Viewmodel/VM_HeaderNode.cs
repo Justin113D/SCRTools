@@ -4,7 +4,6 @@ using SCRLanguageEditor.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Windows;
 using System.Linq;
 
@@ -12,6 +11,13 @@ namespace SCRLanguageEditor.Viewmodel
 {
     public class VM_HeaderNode : BaseViewModel
     {
+        /// <summary>
+        /// Undo/Redo tracker
+        /// </summary>
+        public ChangeTracker Tracker { get; }
+
+        #region private members
+
         /// <summary>
         /// Main view model access
         /// </summary>
@@ -21,6 +27,30 @@ namespace SCRLanguageEditor.Viewmodel
         /// Data object
         /// </summary>
         private readonly HeaderNode _node;
+                
+        /// <summary>
+        /// Pin for when the program was saved last
+        /// </summary>
+        private ChangeTracker.Pin _savePin;
+
+        /// <summary>
+        /// Whether the savebin is from devmode or contentmode
+        /// </summary>
+        private bool _devmodePin;
+
+        /// <summary>
+        /// Filepath to the loaded language file
+        /// </summary>
+        private string _contentFilePath;
+
+        /// <summary>
+        /// Whether every parent node has been expanded at least once
+        /// </summary>
+        private bool _expandedAll;
+
+        #endregion
+
+        #region Properties
 
         public ObservableCollection<VM_Node> Children { get; private set; }
 
@@ -30,11 +60,6 @@ namespace SCRLanguageEditor.Viewmodel
         public string FormatFilePath { get; private set; }
 
         /// <summary>
-        /// Filepath to the loaded language file
-        /// </summary>
-        private string _contentFilePath;
-
-        /// <summary>
         /// The name of the node
         /// </summary>
         public string FormatTargetName
@@ -42,8 +67,14 @@ namespace SCRLanguageEditor.Viewmodel
             get => _node.Name;
             set
             {
-                if(string.IsNullOrWhiteSpace(value))
+                if(string.IsNullOrWhiteSpace(value) || _node.Name == value)
                     return;
+
+                Tracker.TrackChange(new ChangedValue<string>((v) =>
+                {
+                    _node.Name = v;
+                    OnPropertyChanged(nameof(FormatTargetName));
+                }, _node.Name, value));
 
                 _node.Name = value;
             }
@@ -57,8 +88,14 @@ namespace SCRLanguageEditor.Viewmodel
             get => _node.Description;
             set
             {
-                if(string.IsNullOrWhiteSpace(value))
+                if(_node.Description == value)
                     return;
+
+                Tracker.TrackChange(new ChangedValue<string>((v) =>
+                {
+                    _node.Description = v;
+                    OnPropertyChanged(nameof(Description));
+                }, _node.Description, value));
 
                 _node.Description = value;
             }
@@ -70,7 +107,19 @@ namespace SCRLanguageEditor.Viewmodel
         public string Language
         {
             get => _node.Language;
-            set => _node.Language = value;
+            set
+            {
+                if(string.IsNullOrWhiteSpace(value) || _node.Language == value)
+                    return;
+
+                Tracker.TrackChange(new ChangedValue<string>((v) =>
+                {
+                    _node.Language = v;
+                    OnPropertyChanged(nameof(Language));
+                }, _node.Language, value));
+
+                _node.Language = value;
+            }
         }
 
         /// <summary>
@@ -79,7 +128,19 @@ namespace SCRLanguageEditor.Viewmodel
         public string Author
         {
             get => _node.Author ?? "";
-            set => _node.Author = value;
+            set
+            {
+                if(_node.Author == (string.IsNullOrWhiteSpace(value) ? null : value))
+                    return;
+
+                Tracker.TrackChange(new ChangedValue<string>((v) =>
+                {
+                    _node.Author = v;
+                    OnPropertyChanged(nameof(Author));
+                }, _node.Author, value));
+
+                _node.Author = value;
+            }
         }
 
         /// <summary>
@@ -90,22 +151,37 @@ namespace SCRLanguageEditor.Viewmodel
             get => _node.Version.ToString();
             set
             {
+                Version newVersion = null;
                 try
                 {
-                    if(_node.StringNodes.Count == 0)
-                        _node.Versions.Clear();
-                    else
-                    {
-                        while(!_node.StringNodes.Any(x => x.Value.VersionID == _node.Versions.Count - 1))
-                            _node.Versions.RemoveAt(_node.Versions.Count - 1);
-                    }
-                    _node.Versions.Add(new Version(value));
-                    _mainViewModel.Message = "";
+                    newVersion = new Version(value);
                 }
                 catch(FormatException)
                 {
                     _mainViewModel.Message = "Version not valid! Please follow the pattern: Major.Minor.Build.Revision";
                 }
+
+                var oldState = _node.Versions.ToArray();
+
+                if(_node.StringNodes.Count == 0)
+                    _node.Versions.Clear();
+                else
+                {
+                    List<Version> removedVersions = new List<Version>();
+                    while(!_node.StringNodes.Any(x => x.Value.VersionID == _node.Versions.Count - 1))
+                    {
+                        removedVersions.Insert(0, _node.Versions[^1]);
+                        _node.Versions.RemoveAt(_node.Versions.Count - 1);
+                    }
+                }
+
+                _node.Versions.Add(newVersion);
+                _mainViewModel.Message = "";
+
+                Tracker.TrackChange(new ChangedList<Version>(_node.Versions, oldState, () =>
+                {
+                    OnPropertyChanged(FormatVersion);
+                }));
             }
         }
 
@@ -119,12 +195,32 @@ namespace SCRLanguageEditor.Viewmodel
         /// </summary>
         public string FileVersion => _node.LoadedVersion == null ? "No file loaded" : "File version:  " + _node.LoadedVersion;
 
+        
+        /// <summary>
+        /// Nodes that have been translated already
+        /// </summary>
+        public int NodesTranslated { get; private set; }
+
+        /// <summary>
+        /// Nodes that need to be updated
+        /// </summary>
+        public int NodesNeedUpdate { get; private set; }
+
+        /// <summary>
+        /// Nodes that need to be translated
+        /// </summary>
+        public int NodesNeedTranslation { get; private set; }
+
+        #endregion
+
         /// <summary>
         /// Creates a new empty header node viewmodel
         /// </summary>
         /// <param name="mainViewModel">Main viewmodel</param>
         public VM_HeaderNode(VM_Main mainViewModel)
         {
+            Tracker = new ChangeTracker();
+            UpdatePin();
             _mainViewModel = mainViewModel;
             _node = new HeaderNode();
             Children = new ObservableCollection<VM_Node>();
@@ -137,6 +233,9 @@ namespace SCRLanguageEditor.Viewmodel
         /// <param name="formatPath">Path to the format file</param>
         public VM_HeaderNode(VM_Main mainViewModel, string formatPath)
         {
+            Tracker = new ChangeTracker();
+            UpdatePin();
+
             _mainViewModel = mainViewModel;
 
             try
@@ -153,10 +252,93 @@ namespace SCRLanguageEditor.Viewmodel
 
             FormatFilePath = formatPath;
 
-            UpdateChildren();
+            Expand();
         }
 
-        public void UpdateChildren()
+        private void UpdatePin()
+        {
+            _savePin = Tracker.PinCurrent();
+            _devmodePin = Properties.Settings.Default.DevMode;
+        }
+
+        /// <summary>
+        /// Called upon changing to/from dev mode
+        /// </summary>
+        public void ChangedMode(bool devmode)
+        {
+            if(devmode == Properties.Settings.Default.DevMode)
+                return;
+
+            if(!_savePin.CheckValid() && !Tracker.ResetOnNextChange)
+            {
+                if(devmode)
+                {
+                    MessageBoxResult r = MessageBox.Show("You are about to switch to Devmode, and did not save your changes!\nDo you want to save your content before?", "Warning!", MessageBoxButton.YesNoCancel, MessageBoxImage.Exclamation);
+                    switch(r)
+                    {
+                        case MessageBoxResult.Yes:
+                            if(!SaveContent(false))
+                                return;
+                            break;
+                        case MessageBoxResult.No:
+                            break;
+                        case MessageBoxResult.None:
+                        case MessageBoxResult.Cancel:
+                        default:
+                            return;
+                    }
+                }
+                else
+                {
+                    MessageBoxResult r = MessageBox.Show("You are about to switch to Contentmode, and did not save your changes!\nDo you want to save your format before?", "Warning!", MessageBoxButton.YesNoCancel, MessageBoxImage.Exclamation);
+                    switch(r)
+                    {
+                        case MessageBoxResult.Yes:
+                            if(!SaveContent(false))
+                                return;
+                            break;
+                        case MessageBoxResult.No:
+                            break;
+                        case MessageBoxResult.None:
+                        case MessageBoxResult.Cancel:
+                        default:
+                            return;
+                    }
+                }
+            }
+
+            Properties.Settings.Default.DevMode = devmode;
+            Tracker.ResetOnNextChange = !Tracker.ResetOnNextChange;
+            RefreshHierarchy();
+
+            if(!Properties.Settings.Default.DevMode)
+            {
+                NodesTranslated = 0;
+                NodesNeedUpdate = 0;
+                NodesNeedTranslation = 0;
+
+                foreach(var p in _node.StringNodes)
+                {
+                    switch(p.Value.NodeState)
+                    {
+                        case 0:
+                            NodesNeedTranslation++;
+                            break;
+                        case 1:
+                            NodesNeedUpdate++;
+                            break;
+                        case 2:
+                        case 3:
+                            NodesTranslated++;
+                            break;
+                    }
+                }
+            }
+        }
+
+        #region Hierarchy Methods
+
+        private void Expand()
         {
             List<VM_Node> nodes = new List<VM_Node>();
             foreach(Node n in _node.ChildNodes)
@@ -172,6 +354,8 @@ namespace SCRLanguageEditor.Viewmodel
                 }
             }
             Children = new ObservableCollection<VM_Node>(nodes);
+
+            NodesNeedTranslation = _node.StringNodes.Count;
         }
 
         /// <summary>
@@ -183,83 +367,268 @@ namespace SCRLanguageEditor.Viewmodel
         public bool ChangeKey(string newKey, StringNode node)
         {
             newKey = newKey.ToLower();
-            if(!_node.StringNodes.ContainsKey(newKey))
+            if(_node.StringNodes.ContainsKey(newKey))
             {
-                _node.StringNodes.Remove(node.Name.ToLower());
-                _node.StringNodes.Add(newKey, node);
-                _mainViewModel.Message = "";
-                return true;
+                _mainViewModel.Message = $"Key \"{newKey}\" already exists";
+                return false;
             }
-            _mainViewModel.Message = $"Key \"{newKey}\" already exists";
-            return false;
+
+            string oldKey = node.Name.ToLower();
+
+            Tracker.TrackChange(new Change((b) =>
+            {
+                if(b) // redo
+                {
+                    _node.StringNodes.Remove(oldKey);
+                    _node.StringNodes.Add(newKey, node);
+                }
+                else
+                {
+                    _node.StringNodes.Remove(newKey);
+                    _node.StringNodes.Add(oldKey, node);
+                }
+            }));
+
+            _node.StringNodes.Remove(oldKey);
+            _node.StringNodes.Add(newKey, node);
+            _mainViewModel.Message = "";
+            return true;
         }
 
+        /// <summary>
+        /// Removes a stringnode key from the format
+        /// </summary>
+        /// <param name="key"></param>
+        public void RemoveKey(string key)
+        {
+            key = key.ToLower();
+            StringNode node = _node.StringNodes[key];
+
+            Tracker.TrackChange(new Change((b) =>
+            {
+                if(b) // redo
+                    _node.StringNodes.Remove(key);
+                else
+                    _node.StringNodes.Add(key, node);
+            }));
+
+            _node.StringNodes.Remove(key);
+        }
+        
+        /// <summary>
+        /// Creates a new stringnode 
+        /// </summary>
+        /// <returns></returns>
+        public StringNode NewKey()
+        {
+            StringNode node = _node.CreateStringNode();
+
+            string key = node.Name.ToLower();
+
+            Tracker.TrackChange(new Change((b) =>
+            {
+                if(b) // redo
+                    _node.StringNodes.Add(key, node);
+                else
+                    _node.StringNodes.Remove(key);
+            }));
+
+            return node;
+        }
+
+
+        public void NodeUpdated(int oldstate, int newstate)
+        {
+            if(oldstate == newstate)
+                return;
+
+            switch(oldstate)
+            {
+                case 0:
+                    NodesNeedTranslation--;        
+                    break;
+                case 1:
+                    NodesNeedUpdate--;
+                    break;
+                case 2:
+                case 3:
+                    NodesTranslated--;
+                    break;
+            }
+
+            switch(newstate)
+            {
+                case 0:
+                    NodesNeedTranslation++;
+                    break;
+                case 1:
+                    NodesNeedUpdate++;
+                    break;
+                case 2:
+                case 3:
+                    NodesTranslated++;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Creates a top-level stringnode
+        /// </summary>
         public void AddStringNode()
         {
-            _node.NewStringNode();
-            UpdateChildren();
+            Tracker.BeginGroup();
+
+            VM_StringNode vmnode = new VM_StringNode(null, NewKey(), this);
+
+            Tracker.TrackChange(new ChangedListSingleEntry<VM_Node>(Children, vmnode, Children.Count, () => OnPropertyChanged(nameof(Children))));
+
+            Children.Add(vmnode);
+
+            Tracker.EndGroup();
         }
 
-        public StringNode AddStringNode(ParentNode parent) 
-            => _node.NewStringNode(parent);
-
-        public void RemoveStringNode(StringNode node)
-            => _node.StringNodes.Remove(node.Name.ToLower());
-
+        /// <summary>
+        /// Creates a top-level parent node
+        /// </summary>
         public void AddParentNode()
         {
-            _node.NewParentNode();
-            UpdateChildren();
+            ParentNode node = new ParentNode("New Parent");
+            VM_ParentNode vmnode = new VM_ParentNode(null, node, this);
+
+            Tracker.BeginGroup();
+            Tracker.TrackChange(new ChangedListSingleEntry<Node>(_node.ChildNodes, node, _node.ChildNodes.Count, null));
+            Tracker.TrackChange(new ChangedListSingleEntry<VM_Node>(Children, vmnode, Children.Count, () => OnPropertyChanged(nameof(Children))));
+            Tracker.EndGroup();
+
+            _node.ChildNodes.Add(node);
+            Children.Add(vmnode);
         }
 
-        public void InsertChild(VM_Node node, int index)
+        /// <summary>
+        /// Moves a node to the top level hierarchy
+        /// </summary>
+        /// <param name="vmNode"></param>
+        /// <param name="index"></param>
+        public void InsertChild(VM_Node vmNode, int index)
         {
-            _node.ChildNodes.Insert(index, node.Node);
-            Children.Insert(index, node);
+            Tracker.BeginGroup();
+            Tracker.TrackChange(new ChangedListSingleEntry<Node>(_node.ChildNodes, vmNode.Node, index, null));
+            Tracker.TrackChange(new ChangedListSingleEntry<VM_Node>(Children, vmNode, index, () => OnPropertyChanged(nameof(Children))));
+            Tracker.EndGroup();
+
+            _node.ChildNodes.Insert(index, vmNode.Node);
+            Children.Insert(index, vmNode);
         }
 
-        public void RemoveChild(VM_Node node)
+        /// <summary>
+        /// Removes a node from the top level hierarchy
+        /// </summary>
+        /// <param name="node"></param>
+        public void RemoveChild(VM_Node vmNode)
         {
-            _node.ChildNodes.Remove(node.Node);
-            Children.Remove(node);
+            Tracker.BeginGroup();
+            Tracker.TrackChange(new ChangedListSingleEntry<Node>(_node.ChildNodes, vmNode.Node, null, null));
+            Tracker.TrackChange(new ChangedListSingleEntry<VM_Node>(Children, vmNode, null, () => OnPropertyChanged(nameof(Children))));
+            Tracker.EndGroup();
+
+            _node.ChildNodes.Remove(vmNode.Node);
+            Children.Remove(vmNode);
         }
+
+        /// <summary>
+        /// Expands the entire hierarchy
+        /// </summary>
+        public void ExpandAll()
+        {
+            if(_node.StringNodes.Count > 100 && !_expandedAll)
+            {
+                MessageBoxResult r = MessageBox.Show("This format has more than a hundred nodes! It could take a while to expand all of it. \n Proceed?", "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                if(r != MessageBoxResult.Yes)
+                    return;
+            }
+            _mainViewModel.ShowWaitCursor.Invoke();
+            ChangeAllExpansions(Children, true);
+            _expandedAll = true;
+        }
+
+        /// <summary>
+        /// Collapses the entire tree
+        /// </summary>
+        public void CollapseAll() => ChangeAllExpansions(Children, false);
+
+        /// <summary>
+        /// Changes all expansions
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <param name="state"></param>
+        private void ChangeAllExpansions(ObservableCollection<VM_Node> nodes, bool state)
+        {
+            foreach(var n in nodes)
+            {
+                if(n == null)
+                    return;
+
+                if(n.Type == Node.NodeType.ParentNode)
+                {
+                    n.IsExpanded = state;
+                    ChangeAllExpansions(((VM_ParentNode)n).Children, state);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates the entire hierarchy (wpf notifications)
+        /// </summary>
+        public void RefreshHierarchy()
+        {
+            foreach(VM_Node n in Children)
+                n.UpdateProperties();
+        }
+
+        #endregion
+
+        #region File methods
 
         /// <summary>
         /// Writes the format to a file
         /// </summary>
         /// <param name="newPath">Whether to open a SafeFileDialog to change the file path</param>
-        public void SaveFormat(bool newPath)
+        public bool SaveFormat(bool newPath)
         {
-            if(!Properties.Settings.Default.DevMode)
-                return;
-
             if(newPath || FormatFilePath == null)
             {
                 SaveFileDialog sfd = new SaveFileDialog()
                 {
                     Title = "Save to format file",
                     Filter = "Json File|*.json",
-
                 };
 
                 if(sfd.ShowDialog() != true)
-                    return;
+                    return false;
 
                 FormatFilePath = sfd.FileName;
             }
 
             _node.SaveFormatToFile(FormatFilePath);
+            UpdatePin();
+            return true;
         }
 
-        private bool ContentConfirmation()
+        /// <summary>
+        /// Used to confirm whether the user wants to overwrite the current data
+        /// </summary>
+        /// <returns></returns>
+        public bool OverwriteConfirmation()
         {
-            // TODO check if things changed at all
+            if(_savePin.CheckValid())
+                return true;
 
             MessageBoxResult r = MessageBox.Show("Unsaved changes will be reset!\nDo you want to save before?", "Warning!", MessageBoxButton.YesNoCancel, MessageBoxImage.Exclamation);
             switch(r)
             {
                 case MessageBoxResult.Yes:
-                    SaveContent(false);
+                    if(!SaveContent(false))
+                        return false;
                     break;
                 case MessageBoxResult.No:
                     break;
@@ -276,9 +645,13 @@ namespace SCRLanguageEditor.Viewmodel
         /// </summary>
         public void ResetContent()
         {
-            if(!ContentConfirmation())
+            if(!OverwriteConfirmation())
                 return;
             _node.ResetAllStrings();
+            Tracker.Reset();
+
+            foreach(var n in Children)
+                n.UpdateProperties();
         }
 
         /// <summary>
@@ -286,7 +659,7 @@ namespace SCRLanguageEditor.Viewmodel
         /// </summary>
         public void LoadContentsFromFile()
         {
-            if(!ContentConfirmation())
+            if(!OverwriteConfirmation())
                 return;
 
             OpenFileDialog ofd = new OpenFileDialog
@@ -317,13 +690,15 @@ namespace SCRLanguageEditor.Viewmodel
             {
                 n.UpdateProperties();
             }
+
+            Tracker.Reset();
         }
 
         /// <summary>
         /// Writes the language data to a file
         /// </summary>
         /// <param name="newPath">Whether to open a SafeFileDialog to change the file path</param>
-        public void SaveContent(bool newPath)
+        public bool SaveContent(bool newPath)
         {
             if(newPath || _contentFilePath == null)
             {
@@ -334,12 +709,16 @@ namespace SCRLanguageEditor.Viewmodel
                 };
 
                 if(sfd.ShowDialog() != true)
-                    return;
+                    return false;
 
                 _contentFilePath = sfd.FileName;
             }
 
             _node.SaveContentsToFile(_contentFilePath);
+            UpdatePin();
+            return true;
         }
+
+        #endregion
     }
 }

@@ -18,24 +18,42 @@ namespace SCRLanguageEditor.Viewmodel
             get => base.Name;
             set
             {
-                if(string.IsNullOrWhiteSpace(value))
-                    return;
-
-                if(VMHeader.ChangeKey(value, StringNode))
+                VMHeader.Tracker.BeginGroup();
+                if(string.IsNullOrWhiteSpace(value) || !VMHeader.ChangeKey(value, StringNode))
                 {
-                    base.Name = value;
+                    VMHeader.Tracker.EndGroup();
+                    return;
+                }
+
+
+                if(StringNode.VersionID != VMHeader.NewestFormatID)
+                {
+                    VMHeader.Tracker.TrackChange(new ChangedValue<int>((v) => StringNode.VersionID = v, StringNode.VersionID, VMHeader.NewestFormatID));
                     StringNode.VersionID = VMHeader.NewestFormatID;
                 }
+
+                base.Name = value;
+
+                VMHeader.Tracker.EndGroup();
             }
         }
 
-        public override string Description 
-        { 
+        public override string Description
+        {
             get => base.Description;
             set
             {
+                VMHeader.Tracker.BeginGroup();
+
+                if(StringNode.VersionID != VMHeader.NewestFormatID)
+                {
+                    VMHeader.Tracker.TrackChange(new ChangedValue<int>((v) => StringNode.VersionID = v, StringNode.VersionID, VMHeader.NewestFormatID));
+                    StringNode.VersionID = VMHeader.NewestFormatID;
+                }
+
                 base.Description = value;
-                StringNode.VersionID = VMHeader.NewestFormatID;
+
+                VMHeader.Tracker.EndGroup();
             }
         }
 
@@ -44,25 +62,61 @@ namespace SCRLanguageEditor.Viewmodel
         /// </summary>
         public string Value
         {
-            get => StringNode.NodeValue;
+            get => Properties.Settings.Default.DevMode ? StringNode.DefaultValue : StringNode.NodeValue;
             set
             {
-                StringNode.NodeValue = value;
                 if(Properties.Settings.Default.DevMode)
                 {
-                    StringNode.DefaultValue = value;
-                    return;
-                }
+                    if(StringNode.DefaultValue == value)
+                        return;
 
-                OnPropertyChanged(nameof(NodeState));
-                Parent.UpdateNodeState();
+                    VMHeader.Tracker.TrackChange(new ChangedValue<string>((v) =>
+                    { 
+                        StringNode.DefaultValue = v;
+                        OnPropertyChanged(nameof(Value));
+                    }, StringNode.DefaultValue, value));
+                    StringNode.DefaultValue = value;
+                }
+                else
+                {
+                    if(StringNode.NodeValue == value)
+                        return;
+
+                    int oldstate = Node.NodeState;
+                    string oldNodeValue = StringNode.NodeValue;
+                    StringNode.NodeValue = value;
+                    int newState = Node.NodeState;
+                    bool wasRetranslated = StringNode.retranslated;
+
+                    VMHeader.Tracker.TrackChange(new Change((v) =>
+                    {
+                        StringNode.NodeValue = v ? value : oldNodeValue;
+                        UpdateProperties();
+                        Parent?.UpdateNodeState();
+
+                        if(v)
+                        {
+                            StringNode.retranslated = wasRetranslated;
+                            VMHeader.NodeUpdated(oldstate, newState);
+                        }
+                        else
+                        {
+                            VMHeader.NodeUpdated(newState, oldstate);
+                        }
+
+                    }));
+
+                    UpdateProperties();
+                    Parent?.UpdateNodeState();
+                    VMHeader.NodeUpdated(oldstate, Node.NodeState);
+                }
             }
         }
 
         /// <summary>
         /// Relaycommand for the ctrl + r binding
         /// </summary>
-        public RelayCommand Cmd_Reset { get; private set; }
+        public RelayCommand Cmd_Reset { get; }
 
         public override bool IsExpanded
         {
@@ -81,6 +135,19 @@ namespace SCRLanguageEditor.Viewmodel
 
         private void Reset()
         {
+            VMHeader.Tracker.BeginGroup();
+
+            VMHeader.Tracker.TrackChange(new ChangedValue<bool>((v) => StringNode.requiresUpdate = v, StringNode.requiresUpdate, false));
+            VMHeader.Tracker.TrackChange(new ChangedValue<bool>((v) => StringNode.retranslated = v, StringNode.retranslated, false));
+            VMHeader.Tracker.TrackChange(new ChangedValue<string>((v) =>
+            {
+                StringNode.NodeValue = v;
+                UpdateProperties();
+                Parent?.UpdateNodeState();
+            }, StringNode.NodeValue, StringNode.DefaultValue));
+
+            VMHeader.Tracker.EndGroup();
+
             StringNode.ResetValue();
             UpdateProperties();
             Parent?.UpdateNodeState();
@@ -97,8 +164,10 @@ namespace SCRLanguageEditor.Viewmodel
 
         public override void Remove()
         {
-            VMHeader.RemoveStringNode(StringNode);
+            VMHeader.Tracker.BeginGroup();
+            VMHeader.RemoveKey(Name);
             base.Remove();
+            VMHeader.Tracker.EndGroup();
         }
     }
 }

@@ -42,8 +42,11 @@ namespace SCRLanguageEditor.Viewmodel
             get => _isExpanded;
             set
             {
+                if(ParentNode.ChildNodes.Count == 0)
+                    return;
+
                 _isExpanded = value;
-                if(Children[0] == null)
+                if(value && Children[0] == null)
                     Expand();
             }
         }
@@ -82,6 +85,12 @@ namespace SCRLanguageEditor.Viewmodel
             Children = new ObservableCollection<VM_Node>(children);
         }
 
+        protected override void ExpandParents()
+        {
+            IsExpanded = true;
+            base.ExpandParents();
+        }
+
         /// <summary>
         /// Updates the viewmodels properties and those of the loaded children
         /// </summary>
@@ -105,7 +114,15 @@ namespace SCRLanguageEditor.Viewmodel
         /// </summary>
         private void AddStringNode()
         {
-            StringNode node = VMHeader.AddStringNode(ParentNode);
+            VMHeader.Tracker.BeginGroup();
+            StringNode node = VMHeader.NewKey();
+            VM_StringNode vmNode = new VM_StringNode(this, node, VMHeader);
+
+            VMHeader.Tracker.TrackChange(new ChangedListSingleEntry<Node>(ParentNode.ChildNodes, node, ParentNode.ChildNodes.Count, null));
+            VMHeader.Tracker.TrackChange(new ChangedListSingleEntry<VM_Node>(Children, vmNode, Children.Count, () => OnPropertyChanged(nameof(Children))));
+            VMHeader.Tracker.EndGroup();
+
+            ParentNode.ChildNodes.Add(node);
             Children.Add(new VM_StringNode(this, node, VMHeader));
         }
 
@@ -115,18 +132,44 @@ namespace SCRLanguageEditor.Viewmodel
         private void AddParentNode()
         {
             ParentNode node = new ParentNode("New Parent");
+            VM_ParentNode vmNode = new VM_ParentNode(this, node, VMHeader);
+
+            VMHeader.Tracker.BeginGroup();
+            VMHeader.Tracker.TrackChange(new ChangedListSingleEntry<Node>(ParentNode.ChildNodes, node, ParentNode.ChildNodes.Count, null));
+            VMHeader.Tracker.TrackChange(new ChangedListSingleEntry<VM_Node>(Children, vmNode, Children.Count, () => OnPropertyChanged(nameof(Children))));
+            VMHeader.Tracker.EndGroup();
+
             ParentNode.ChildNodes.Add(node);
-            Children.Add(new VM_ParentNode(this, node, VMHeader));
+            Children.Add(vmNode);
+        }
+
+        public void InsertChild(VM_Node vmNode, int index)
+        {
+            VMHeader.Tracker.BeginGroup();
+            VMHeader.Tracker.TrackChange(new ChangedListSingleEntry<Node>(ParentNode.ChildNodes, vmNode.Node, index, null));
+            VMHeader.Tracker.TrackChange(new ChangedListSingleEntry<VM_Node>(Children, vmNode, index, () => OnPropertyChanged(nameof(Children))));
+            VMHeader.Tracker.EndGroup();
+
+            ParentNode.ChildNodes.Insert(index, vmNode.Node);
+            Children.Insert(index, vmNode);
         }
 
         /// <summary>
         /// Removes a child from the nodes children
         /// </summary>
-        /// <param name="node"></param>
-        public void RemoveChild(VM_Node node)
+        /// <param name="vmNode"></param>
+        public void RemoveChild(VM_Node vmNode)
         {
-            ParentNode.ChildNodes.Remove(node.Node);
-            Children.Remove(node);
+            VMHeader.Tracker.BeginGroup();
+            VMHeader.Tracker.TrackChange(new ChangedListSingleEntry<Node>(ParentNode.ChildNodes, vmNode.Node, null, null));
+            VMHeader.Tracker.TrackChange(new ChangedListSingleEntry<VM_Node>(Children, vmNode, null, () => OnPropertyChanged(nameof(Children))));
+            VMHeader.Tracker.EndGroup();
+
+            ParentNode.ChildNodes.Remove(vmNode.Node);
+            Children.Remove(vmNode);
+
+            if(ParentNode.ChildNodes.Count == 0)
+                _isExpanded = false;
         }
 
         public override void Remove()
@@ -160,7 +203,16 @@ namespace SCRLanguageEditor.Viewmodel
                 }
             }
 
+            VMHeader.Tracker.BeginGroup();
+
+            // now remove all string nodes
+            foreach(var n in stringNodes)
+            {
+                VMHeader.RemoveKey(n.Name);
+            }
+
             base.Remove();
+            VMHeader.Tracker.EndGroup();
         }
 
         protected override void InsertNode(VM_Node insertNode)

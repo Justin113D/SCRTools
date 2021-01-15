@@ -1,10 +1,7 @@
 ﻿using Microsoft.Win32;
 using SCRCommon.Viewmodels;
-using SCRLanguageEditor.Data;
 using System;
-using System.Collections.ObjectModel;
-using System.Windows;
-using System.Collections.Generic;
+using System.Windows.Controls;
 
 namespace SCRLanguageEditor.Viewmodel
 {
@@ -16,23 +13,11 @@ namespace SCRLanguageEditor.Viewmodel
         #region Relay commands
 
         /// <summary>
-        /// Command for the "new format" button
-        /// </summary>
-        public RelayCommand Cmd_NewFormat { get; }
-        /// <summary>
         /// Command for the "load format" button
         /// </summary>
         public RelayCommand Cmd_LoadFormat { get; }
         /// <summary>
         /// Command for the "Save Format" button
-        /// </summary>
-        public RelayCommand Cmd_SaveFormat { get; }
-        /// <summary>
-        /// Command for the "Save format as..." button
-        /// </summary>
-        public RelayCommand Cmd_SaveFormatAs { get; }
-        /// <summary>
-        /// Command for the "new file" button
         /// </summary>
         public RelayCommand Cmd_NewFile { get; }
         /// <summary>
@@ -51,14 +36,33 @@ namespace SCRLanguageEditor.Viewmodel
         /// Command for the "settings" button
         /// </summary>
         public RelayCommand Cmd_Settings { get; }
-
+        /// <summary>
+        /// Gets called by the top-level "Add String" button
+        /// </summary>
         public RelayCommand Cmd_AddStringNode { get; }
-
+        /// <summary>
+        /// Gets called by the top-level "Add Parent" button
+        /// </summary>
         public RelayCommand Cmd_AddParentNode { get; }
-
+        /// <summary>
+        /// Bound to Ctrl+Z
+        /// </summary>
+        public RelayCommand Cmd_Undo { get; }
+        /// <summary>
+        /// Bound to Ctrl+Y
+        /// </summary>
+        public RelayCommand Cmd_Redo { get; }
+        /// <summary>
+        /// Used to Expand all nodes. <br/>
+        /// Calls <see cref="VM_HeaderNode.ExpandAll"/>
+        /// </summary>
+        public RelayCommand Cmd_ExpandAll { get; }
+        /// <summary>
+        /// Used to Collapse all nodes. <br/>
+        /// Calls <see cref="VM_HeaderNode.CollapseAll"/>
+        /// </summary>
+        public RelayCommand Cmd_CollapseAll { get; }
         #endregion
-
-        public VM_HeaderNode Format { get; private set; }
 
         /// <summary>
         /// Settings viewmodel, used for initializing the settings window
@@ -66,11 +70,23 @@ namespace SCRLanguageEditor.Viewmodel
         public VM_Settings Settings { get; }
 
         /// <summary>
+        /// currently used format viewmodel
+        /// </summary>
+        public VM_HeaderNode Format { get; private set; }
+
+        /// <summary>
         /// Error/warning message that is displayed in the main window
         /// </summary>
         public string Message { get; set; }
 
+        /// <summary>
+        /// Whether a node is being dragged
+        /// </summary>
         public bool Dragging { get; set; }
+
+        public Action UpdateTextBox { get; set; }
+
+        public Action ShowWaitCursor { get; set; }
 
         /// <summary>
         /// Sets up the viewmodel 
@@ -78,21 +94,22 @@ namespace SCRLanguageEditor.Viewmodel
         /// <param name="settings">The settings viewmodel, which was created before in order to load the correct settings</param>
         public VM_Main()
         {
-            Settings = new VM_Settings();
-            
-            Cmd_NewFormat = new RelayCommand(() => NewFormat());
-            Cmd_LoadFormat = new RelayCommand(() => OpenFormat());
-            Cmd_SaveFormat = new RelayCommand(() => Format.SaveFormat(false));
-            Cmd_SaveFormatAs = new RelayCommand(() => Format.SaveFormat(true));
+            Settings = new VM_Settings(this);
+            Cmd_LoadFormat = new RelayCommand(OpenFormat);
 
-            Cmd_NewFile = new RelayCommand(() => Format.ResetContent());
-            Cmd_Open = new RelayCommand(() => Format.LoadContentsFromFile());
-            Cmd_Save = new RelayCommand(() => Format.SaveContent(false));
-            Cmd_SaveAs = new RelayCommand(() => Format.SaveContent(true));
+            Cmd_NewFile = new RelayCommand(NewFile);
+            Cmd_Open = new RelayCommand(OpenFile);
+            Cmd_Save = new RelayCommand(SaveFile);
+            Cmd_SaveAs = new RelayCommand(SaveFileAs);
 
-            Cmd_Settings = new RelayCommand(() => OpenSettings());
+            Cmd_Settings = new RelayCommand(OpenSettings);
             Cmd_AddStringNode = new RelayCommand(() => Format.AddStringNode());
             Cmd_AddParentNode = new RelayCommand(() => Format.AddParentNode());
+
+            Cmd_Undo = new RelayCommand(Undo);
+            Cmd_Redo = new RelayCommand(Redo);
+            Cmd_ExpandAll = new RelayCommand(() => Format.ExpandAll());
+            Cmd_CollapseAll = new RelayCommand(() => Format.CollapseAll());
 
             if(string.IsNullOrWhiteSpace(Properties.Settings.Default.DefaultFormatPath))
                 Format = new VM_HeaderNode(this);
@@ -100,12 +117,44 @@ namespace SCRLanguageEditor.Viewmodel
                 Format = new VM_HeaderNode(this, Properties.Settings.Default.DefaultFormatPath);
         }
 
+        private void NewFile()
+        {
+            if(Properties.Settings.Default.DevMode)
+                NewFormat();
+            else
+                Format.ResetContent();
+        }
+
+        private void OpenFile()
+        {
+            if(Properties.Settings.Default.DevMode)
+                OpenFormat();
+            else
+                Format.LoadContentsFromFile();
+        }
+
+        private void SaveFile()
+        {
+            if(Properties.Settings.Default.DevMode)
+                Format.SaveFormat(false);
+            else
+                Format.SaveContent(false);
+        }
+
+        private void SaveFileAs()
+        {
+            if(Properties.Settings.Default.DevMode)
+                Format.SaveFormat(true);
+            else
+                Format.SaveContent(true);
+        }
+
         /// <summary>
         /// Creates a new format file
         /// </summary>
         private void NewFormat()
         {
-            if(!Properties.Settings.Default.DevMode)
+            if(!Format.OverwriteConfirmation())
                 return;
             Format = new VM_HeaderNode(this);
         }
@@ -115,6 +164,9 @@ namespace SCRLanguageEditor.Viewmodel
         /// </summary>
         private void OpenFormat()
         {
+            if(!Format.OverwriteConfirmation())
+                return;
+
             OpenFileDialog ofd = new OpenFileDialog
             {
                 Title = "Open format file",
@@ -134,6 +186,24 @@ namespace SCRLanguageEditor.Viewmodel
         /// Creates a settings dialog
         /// </summary>
         private void OpenSettings() => new SettingsWindow(Settings).ShowDialog();
+
+        /// <summary>
+        /// Performs an Undo. If a textbox is focused, the binding will be updated
+        /// </summary>
+        private void Undo()
+        {
+            UpdateTextBox.Invoke();
+            Format.Tracker.Undo();
+        }
+
+        /// <summary>
+        /// Performs an Undo. If a textbox is focused, the binding will be updated
+        /// </summary>
+        private void Redo()
+        {
+            UpdateTextBox.Invoke();
+            Format.Tracker.Redo();
+        }
 
     }
 }

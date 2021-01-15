@@ -39,6 +39,13 @@ namespace SCRLanguageEditor.Data
             }
         }
 
+        /// <summary>
+        /// Nodestate </br>
+        /// 0 = Untranslated </br> 
+        /// 1 = Requires update </br>
+        /// 2 = Retranslated </br>
+        /// 3 = Translated
+        /// </summary>
         public override int NodeState
         {
             get

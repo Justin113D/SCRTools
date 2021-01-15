@@ -113,49 +113,16 @@ namespace SCRLanguageEditor.Data
         }
 
         /// <summary>
-        /// Creates a new top-level parent node
-        /// </summary>
-        /// <returns></returns>
-        public ParentNode NewParentNode()
-        {
-            ParentNode node = new ParentNode("New Parent");
-            ChildNodes.Add(node);
-            return node;
-        }
-
-        /// <summary>
         /// Creates a string node and adds it to the database
         /// </summary>
         /// <returns></returns>
-        private StringNode CreateStringNode()
+        public StringNode CreateStringNode()
         {
             int number = 1;
-            while(StringNodes.ContainsKey("newString" + number))
+            while(StringNodes.ContainsKey("newstring" + number))
                 number++;
             StringNode node = new StringNode("newString" + number, "value", Versions.Count - 1);
-            StringNodes.Add(node.Name, node);
-            return node;
-        }
-
-        /// <summary>
-        /// Creates a new top-level string node
-        /// </summary>
-        /// <returns></returns>
-        public StringNode NewStringNode()
-        {
-            StringNode node = CreateStringNode();
-            ChildNodes.Add(node);
-            return node;
-        }
-
-        /// <summary>
-        /// Creates a new string node and makes it a child of another parent node
-        /// </summary>
-        /// <param name="parent">Parent of the new node</param>
-        public StringNode NewStringNode(ParentNode parent)
-        {
-            StringNode node = CreateStringNode();
-            parent.ChildNodes.Add(node);
+            StringNodes.Add(node.Name.ToLower(), node);
             return node;
         }
 

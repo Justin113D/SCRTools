@@ -14,6 +14,8 @@ namespace SCRLanguageEditor.Viewmodel
     /// </summary>
     public class VM_Settings : BaseViewModel
     {
+        private readonly VM_Main _mainViewModel;
+
         /// <summary>
         /// Gets a list of themes to select from
         /// </summary>
@@ -68,7 +70,7 @@ namespace SCRLanguageEditor.Viewmodel
         public bool DevMode
         {
             get => Properties.Settings.Default.DevMode;
-            set => Properties.Settings.Default.DevMode = value;
+            set => _mainViewModel.Format.ChangedMode(value);
         }
 
         public bool JsonIndenting
@@ -91,8 +93,9 @@ namespace SCRLanguageEditor.Viewmodel
         /// Base constructor; Sets up the viewmodel
         /// </summary>
         /// <param name="settings">The settings object for the viewmodel</param>
-        public VM_Settings()
+        public VM_Settings(VM_Main mainViewModel)
         {
+            _mainViewModel = mainViewModel;
             Cmd_SetDefaultPath = new RelayCommand(SelectFormatPath);
             Cmd_Save = new RelayCommand<SettingsWindow>(Save);
             BaseWindowStyle.WindowTheme = WindowTheme;
