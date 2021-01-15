@@ -71,7 +71,7 @@ namespace SCRLanguageEditor.Viewmodel
                         return;
 
                     VMHeader.Tracker.TrackChange(new ChangedValue<string>((v) =>
-                    { 
+                    {
                         StringNode.DefaultValue = v;
                         OnPropertyChanged(nameof(Value));
                     }, StringNode.DefaultValue, value));

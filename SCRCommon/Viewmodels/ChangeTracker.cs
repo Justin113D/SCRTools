@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SCRCommon.Viewmodels
 {
@@ -243,7 +241,7 @@ namespace SCRCommon.Viewmodels
     {
         private readonly Action<bool> _modifyCallback;
 
-        public Change(Action<bool> modifyCallback )
+        public Change(Action<bool> modifyCallback)
         {
             _modifyCallback = modifyCallback ?? throw new ArgumentNullException("Modifycallback cant be null!");
         }

@@ -16,7 +16,7 @@ namespace SCRCommon.Viewmodels
         public static int GetDepth(this TreeViewItem item)
         {
             TreeViewItem parent;
-            while ((parent = GetParent(item)) != null)
+            while((parent = GetParent(item)) != null)
             {
                 return GetDepth(parent) + 1;
             }
@@ -31,7 +31,7 @@ namespace SCRCommon.Viewmodels
         private static TreeViewItem GetParent(TreeViewItem item)
         {
             var parent = VisualTreeHelper.GetParent(item);
-            while (!(parent is TreeViewItem || parent is TreeView))
+            while(!(parent is TreeViewItem || parent is TreeView))
             {
                 parent = VisualTreeHelper.GetParent(parent);
             }

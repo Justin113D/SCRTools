@@ -2,7 +2,6 @@
 using SCRLanguageEditor.Data;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 
 namespace SCRLanguageEditor.Viewmodel
@@ -72,8 +71,8 @@ namespace SCRLanguageEditor.Viewmodel
             List<VM_Node> children = new List<VM_Node>();
             foreach(Node n in ParentNode.ChildNodes)
             {
-                switch (n.Type)
-                { 
+                switch(n.Type)
+                {
                     case Node.NodeType.ParentNode:
                         children.Add(new VM_ParentNode(this, (ParentNode)n, VMHeader));
                         break;

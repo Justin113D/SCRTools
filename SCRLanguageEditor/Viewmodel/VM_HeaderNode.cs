@@ -4,8 +4,8 @@ using SCRLanguageEditor.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows;
 using System.Linq;
+using System.Windows;
 
 namespace SCRLanguageEditor.Viewmodel
 {
@@ -27,7 +27,7 @@ namespace SCRLanguageEditor.Viewmodel
         /// Data object
         /// </summary>
         private readonly HeaderNode _node;
-                
+
         /// <summary>
         /// Pin for when the program was saved last
         /// </summary>
@@ -195,7 +195,7 @@ namespace SCRLanguageEditor.Viewmodel
         /// </summary>
         public string FileVersion => _node.LoadedVersion == null ? "No file loaded" : "File version:  " + _node.LoadedVersion;
 
-        
+
         /// <summary>
         /// Nodes that have been translated already
         /// </summary>
@@ -414,7 +414,7 @@ namespace SCRLanguageEditor.Viewmodel
 
             _node.StringNodes.Remove(key);
         }
-        
+
         /// <summary>
         /// Creates a new stringnode 
         /// </summary>
@@ -445,7 +445,7 @@ namespace SCRLanguageEditor.Viewmodel
             switch(oldstate)
             {
                 case 0:
-                    NodesNeedTranslation--;        
+                    NodesNeedTranslation--;
                     break;
                 case 1:
                     NodesNeedUpdate--;
@@ -639,7 +639,7 @@ namespace SCRLanguageEditor.Viewmodel
             }
             return true;
         }
-        
+
         /// <summary>
         /// Resets the strings to their default values
         /// </summary>

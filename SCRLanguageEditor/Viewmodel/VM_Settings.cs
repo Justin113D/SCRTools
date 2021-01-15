@@ -1,7 +1,6 @@
 ﻿using Microsoft.Win32;
 using SCRCommon.Viewmodels;
 using SCRCommon.WpfStyles;
-using SCRLanguageEditor.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,7 +25,7 @@ namespace SCRLanguageEditor.Viewmodel
                 return Enum.GetValues(typeof(Theme)).Cast<Theme>().ToList();
             }
         }
-        
+
         /// <summary>
         /// Redirects to the default format path
         /// </summary>

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Win32;
 using SCRCommon.Viewmodels;
 using System;
-using System.Windows.Controls;
 
 namespace SCRLanguageEditor.Viewmodel
 {

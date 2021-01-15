@@ -1,9 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 
 namespace SCRLanguageEditor.Data
 {
@@ -183,7 +181,7 @@ namespace SCRLanguageEditor.Data
 
             return result;
         }
-        
+
         public void SaveFormatToFile(string path)
         {
             using StringWriter strWriter = new StringWriter();
@@ -214,7 +212,7 @@ namespace SCRLanguageEditor.Data
                 n.WriteJson(writer);
             writer.WriteEndArray();
         }
-    
+
         /// <summary>
         /// Save the current set strings to two files
         /// </summary>
@@ -229,7 +227,7 @@ namespace SCRLanguageEditor.Data
                 Author ?? "",
             };
             List<string> baseLines = new List<string>();
-            
+
             foreach(KeyValuePair<string, StringNode> s in StringNodes)
             {
                 lines.Add(s.Value.NodeValue.Replace("\n", "\\n"));
@@ -239,7 +237,7 @@ namespace SCRLanguageEditor.Data
             File.WriteAllText(path, string.Join("\n", lines));
             File.WriteAllText(Path.ChangeExtension(path, "langkey"), string.Join("\n", baseLines));
         }
-        
+
         /// <summary>
         /// Loads String values from a file
         /// </summary>

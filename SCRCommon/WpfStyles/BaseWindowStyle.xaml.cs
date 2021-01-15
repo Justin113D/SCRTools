@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Markup;
 
 namespace SCRCommon.WpfStyles
 {
@@ -38,7 +37,8 @@ namespace SCRCommon.WpfStyles
             }
             set
             {
-                if (windowTheme == value) return;
+                if(windowTheme == value)
+                    return;
                 windowTheme = value;
 
 
@@ -187,11 +187,11 @@ namespace SCRCommon.WpfStyles
                 window = ((Border)sender).Tag as Window;
                 window.StateChanged += WindowStateChanged;
                 window.Closed += RemoveWindow;
-                
+
                 Style windowStyle = (bool)typeof(Window).GetField("_showingAsDialog", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(window) ? (Style)this["DialogWindowStyle"] : (Style)this["DefaultWindowStyle"];
                 window.Style = windowStyle;
 
-                if (activeWindows == null)
+                if(activeWindows == null)
                 {
                     activeWindows = new List<Window>();
                 }

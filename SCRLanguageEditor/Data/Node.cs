@@ -35,10 +35,10 @@ namespace SCRLanguageEditor.Data
         /// </summary>
         public virtual string Name
         {
-            get => name; 
+            get => name;
             set
             {
-                if (value == null)
+                if(value == null)
                     name = "";
                 else
                 {
@@ -64,7 +64,8 @@ namespace SCRLanguageEditor.Data
             {
                 return description;
             }
-            set {
+            set
+            {
                 if(string.IsNullOrWhiteSpace(value))
                 {
                     description = null;

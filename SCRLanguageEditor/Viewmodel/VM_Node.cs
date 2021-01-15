@@ -1,7 +1,6 @@
 ﻿using PropertyChanged;
 using SCRCommon.Viewmodels;
 using SCRLanguageEditor.Data;
-using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -228,7 +227,7 @@ namespace SCRLanguageEditor.Viewmodel
 
             VMHeader.Tracker.EndGroup();
         }
-        
+
         protected virtual void ExpandParents()
         {
             Parent?.ExpandParents();

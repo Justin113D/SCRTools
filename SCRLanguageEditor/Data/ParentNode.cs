@@ -43,6 +43,6 @@ namespace SCRLanguageEditor.Data
                 n.WriteJson(writer);
             writer.WriteEndArray();
         }
-    
+
     }
 }

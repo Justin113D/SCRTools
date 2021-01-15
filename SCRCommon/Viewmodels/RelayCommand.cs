@@ -60,7 +60,7 @@ namespace SCRCommon.Viewmodels
         /// The event thats fired when the <see cref="CanExecute(object)"/> value has changed
         /// </summary>
         public event EventHandler CanExecuteChanged = (sender, e) => { };
-    
+
         /// <summary>
         /// Constructor
         /// </summary>
