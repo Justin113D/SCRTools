@@ -142,6 +142,9 @@ namespace SCRLanguageEditor.Viewmodel
 
         private void Reset()
         {
+            if(Properties.Settings.Default.DevMode)
+                return;
+
             VMHeader.Tracker.BeginGroup();
 
             VMHeader.Tracker.TrackChange(new ChangedValue<bool>((v) => StringNode.requiresUpdate = v, StringNode.requiresUpdate, false));
