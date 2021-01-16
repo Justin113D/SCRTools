@@ -14,16 +14,16 @@ namespace SCRLanguageEditor.Viewmodel
             switch((int)value)
             {
                 case 0: // not yet translated, Red
-                    result = Color.FromRgb(221, 46, 68);
+                    result = SCRCommon.WpfStyles.Colors.Red;
                     break;
                 case 1: // received update, yellow
-                    result = Color.FromRgb(244, 144, 12);
+                    result = SCRCommon.WpfStyles.Colors.Yellow;
                     break;
                 case 2: // translated after update, blue
-                    result = Color.FromRgb(85, 172, 238);
+                    result = SCRCommon.WpfStyles.Colors.Blue;
                     break;
                 case 3: // translated, green
-                    result = Color.FromRgb(120, 177, 89);
+                    result = SCRCommon.WpfStyles.Colors.Green;
                     break;
 
             }

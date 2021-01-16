@@ -18,6 +18,12 @@ namespace SCRLanguageEditor.Viewmodel
             get => base.Name;
             set
             {
+                if(value != base.Name && value.ToLower() == base.Name.ToLower())
+                {
+                    base.Name = value;
+                    return;
+                }
+
                 VMHeader.Tracker.BeginGroup();
                 if(string.IsNullOrWhiteSpace(value) || !VMHeader.ChangeKey(value, StringNode))
                 {
@@ -110,6 +116,7 @@ namespace SCRLanguageEditor.Viewmodel
                     Parent?.UpdateNodeState();
                     VMHeader.NodeUpdated(oldstate, Node.NodeState);
                 }
+                VMHeader.MainViewModel.ResetMessage();
             }
         }
 

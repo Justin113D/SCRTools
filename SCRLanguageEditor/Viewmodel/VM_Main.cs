@@ -1,6 +1,9 @@
 ﻿using Microsoft.Win32;
 using SCRCommon.Viewmodels;
 using System;
+using System.Timers;
+using System.Windows;
+using System.Windows.Media;
 
 namespace SCRLanguageEditor.Viewmodel
 {
@@ -76,15 +79,31 @@ namespace SCRLanguageEditor.Viewmodel
         /// <summary>
         /// Error/warning message that is displayed in the main window
         /// </summary>
-        public string Message { get; set; }
+        public string Message { get; private set; }
+
+        /// <summary>
+        /// Color of the message
+        /// </summary>
+        public SolidColorBrush MessageColor { get; private set; }
+
+        /// <summary>
+        /// Used to display the message
+        /// </summary>
+        public Visibility ShowMessage { get; private set; } = Visibility.Hidden;
 
         /// <summary>
         /// Whether a node is being dragged
         /// </summary>
         public bool Dragging { get; set; }
 
+        /// <summary>
+        /// An action passed down by the mainwindow. Forces the binding to send its data to the viewmodel
+        /// </summary>
         public Action UpdateTextBox { get; set; }
 
+        /// <summary>
+        /// Shows the wait cursor until the next update
+        /// </summary>
         public Action ShowWaitCursor { get; set; }
 
         /// <summary>
@@ -110,12 +129,19 @@ namespace SCRLanguageEditor.Viewmodel
             Cmd_ExpandAll = new RelayCommand(() => Format.ExpandAll());
             Cmd_CollapseAll = new RelayCommand(() => Format.CollapseAll());
 
+            MessageColor = new SolidColorBrush(Colors.Transparent);
+
             if(string.IsNullOrWhiteSpace(Properties.Settings.Default.DefaultFormatPath))
                 Format = new VM_HeaderNode(this);
             else
                 Format = new VM_HeaderNode(this, Properties.Settings.Default.DefaultFormatPath);
         }
 
+        #region File handling
+
+        /// <summary>
+        /// Creates a new set of data
+        /// </summary>
         private void NewFile()
         {
             if(Properties.Settings.Default.DevMode)
@@ -124,6 +150,9 @@ namespace SCRLanguageEditor.Viewmodel
                 Format.ResetContent();
         }
 
+        /// <summary>
+        /// Reads data from a file
+        /// </summary>
         private void OpenFile()
         {
             if(Properties.Settings.Default.DevMode)
@@ -132,20 +161,48 @@ namespace SCRLanguageEditor.Viewmodel
                 Format.LoadContentsFromFile();
         }
 
+        /// <summary>
+        /// Save the current data into a file. If no file is validly open, it will jump to <see cref="SaveFileAs"/>
+        /// </summary>
         private void SaveFile()
         {
+            UpdateTextBox.Invoke();
             if(Properties.Settings.Default.DevMode)
-                Format.SaveFormat(false);
+            {
+                if (Format.SaveFormat(false))
+                {
+                    SetMessage("Format Saved!");
+                }
+            }
             else
-                Format.SaveContent(false);
+            {
+                if(Format.SaveContent(false))
+                {
+                    SetMessage("Content Saved!");
+                }
+            }
         }
 
+        /// <summary>
+        /// Saves the current data into a new file
+        /// </summary>
         private void SaveFileAs()
         {
+            UpdateTextBox.Invoke();
             if(Properties.Settings.Default.DevMode)
-                Format.SaveFormat(true);
+            {
+                if(Format.SaveFormat(true))
+                {
+                    SetMessage("Format Saved!");
+                }
+            }
             else
-                Format.SaveContent(true);
+            {
+                if(Format.SaveContent(true))
+                {
+                    SetMessage("Content Saved!");
+                }
+            }
         }
 
         /// <summary>
@@ -153,9 +210,11 @@ namespace SCRLanguageEditor.Viewmodel
         /// </summary>
         private void NewFormat()
         {
+            UpdateTextBox.Invoke();
             if(!Format.OverwriteConfirmation())
                 return;
             Format = new VM_HeaderNode(this);
+            ResetMessage();
         }
 
         /// <summary>
@@ -163,6 +222,7 @@ namespace SCRLanguageEditor.Viewmodel
         /// </summary>
         private void OpenFormat()
         {
+            UpdateTextBox.Invoke();
             if(!Format.OverwriteConfirmation())
                 return;
 
@@ -179,7 +239,10 @@ namespace SCRLanguageEditor.Viewmodel
             if(newFormat.FormatFilePath != ofd.FileName)
                 return;
             Format = newFormat;
+            ResetMessage();
         }
+
+        #endregion
 
         /// <summary>
         /// Creates a settings dialog
@@ -192,7 +255,10 @@ namespace SCRLanguageEditor.Viewmodel
         private void Undo()
         {
             UpdateTextBox.Invoke();
-            Format.Tracker.Undo();
+            if(Format.Tracker.Undo())
+            {
+                SetMessage("Performed Undo!");
+            }
         }
 
         /// <summary>
@@ -201,8 +267,46 @@ namespace SCRLanguageEditor.Viewmodel
         private void Redo()
         {
             UpdateTextBox.Invoke();
-            Format.Tracker.Redo();
+            if(Format.Tracker.Redo())
+            {
+                SetMessage("Performed Redo!");
+            }
         }
 
+        /// <summary>
+        /// Resets the message
+        /// </summary>
+        public void ResetMessage()
+        {
+            if(Message == "")
+                return;
+            Message = "";
+            ShowMessage = Visibility.Hidden;
+            MessageColor = new SolidColorBrush(Colors.Transparent);
+        }
+
+        /// <summary>
+        /// Sets the message and the message type
+        /// </summary>
+        /// <param name="newMessage">New message string</param>
+        /// <param name="warning">Whether the message is a warning</param>
+        public void SetMessage(string newMessage, bool warning = false)
+        {
+            Message = newMessage;
+            ShowMessage = Visibility.Visible;
+
+            if(warning)
+            {
+                // red
+                MessageColor = new SolidColorBrush(SCRCommon.WpfStyles.Colors.Red);
+            }
+            else
+            {
+                // green
+                MessageColor = new SolidColorBrush(SCRCommon.WpfStyles.Colors.Green);
+            }
+
+            OnPropertyChanged(nameof(ShowMessage));
+        }
     }
 }

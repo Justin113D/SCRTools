@@ -10,7 +10,7 @@
         xmlns:base="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
         xmlns:data="clr-namespace:SCRLanguageEditor.Data"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance local:VM_Main}"
+        d:DataContext="{d:DesignInstance Type=local:VM_Main}"
         Title="Language Editor" Height="500" Width="950"
         MinHeight="200" MinWidth="350"
         Icon="pack://application:,,,/SCRCommon;component/Icons/Dictionary_32x.png"
@@ -44,6 +44,7 @@
                     <vmBase:VisibilityConverter x:Key="VisibilityConverter"/>
                     <vmBase:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
                     <vmBase:LeftMarginMultiplierConverter x:Key="LeftMarginMultiplierConverter" Length="20"/>
+                    <vmBase:TagVisibilityConverter x:Key="TagVisibilityConverter"/>
                     <local:NodeStateConverter x:Key="NodeStateConverter"/>
 
                     <Style x:Key="TextBoxNoUndo" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
@@ -263,7 +264,7 @@
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-
+                    
                     <!--Node Templates-->
                     <HierarchicalDataTemplate x:Key="ParentNode" ItemsSource="{Binding Children}">
                         <Grid Margin="0, 4, 0, 4">
@@ -275,12 +276,12 @@
                             <TextBox x:Name="NameBox" Grid.Column="0" Text="{Binding Name}" Style="{StaticResource DescriptionStyle}" FontSize="22" Foreground="{DynamicResource FontBrush}"/>
 
                             <StackPanel Grid.Column="1" Orientation="Horizontal" FlowDirection="LeftToRight" Height="{Binding ActualHeight, ElementName=NameBox}"
-                                        Visibility="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" >
+                                        Visibility="{Binding Tag, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource TagVisibilityConverter}}" >
                                 <Button Content="Add Parent" Style="{DynamicResource BlueButton}" Padding="5,0,5,0" Margin="5,0,5,0" Command="{Binding Cmd_AddParentNode}"/>
                                 <Button Content="Add String" Style="{DynamicResource GreenButton}" Padding="5,0,5,0" Margin="5,0,5,0" Command="{Binding Cmd_AddStringNode}"/>
                             </StackPanel>
 
-                            <TextBox Grid.Column="2" Text="{Binding Description}" Style="{StaticResource DescriptionStyle}"/>
+                            <TextBox Grid.Column="2" Text="{Binding Description}" Style="{StaticResource DescriptionStyle}" AcceptsReturn="True"/>
                         </Grid>
                     </HierarchicalDataTemplate>
                     <HierarchicalDataTemplate x:Key="StringNode" ItemsSource="{x:Null}">
@@ -301,7 +302,7 @@
                                     </TextBox>                                    
                                 </Border>
 
-                                <TextBox Grid.Column="3" Text="{Binding Description}" Style="{StaticResource DescriptionStyle}"/>
+                                <TextBox Grid.Column="3" Text="{Binding Description}" Style="{StaticResource DescriptionStyle}" AcceptsReturn="True"/>
                             </Grid>
                         </Border>
                     </HierarchicalDataTemplate>
@@ -494,19 +495,26 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            
-            <Border Grid.Column="0" Padding="3">
-                <Border.Style>
-                    <Style TargetType="{x:Type Border}">
-                        <Setter Property="Background" Value="{DynamicResource BG2}"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Message, Converter={StaticResource StringEmptyConverter}}" Value="False">
-                                <Setter Property="Background" Value="#DD2E44"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
-                <TextBlock Text="{Binding Message}"/>
+
+            <Border Background="{Binding MessageColor}">
+                <TextBlock Visibility="{Binding ShowMessage, NotifyOnTargetUpdated=True}" Padding="3" Background="Transparent">
+                    <TextBlock.Inlines>
+                        <Run FontWeight="Bold" Foreground="#111111" Text="{Binding Message, Mode=OneWay}"/>
+                    </TextBlock.Inlines>
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <EventTrigger RoutedEvent="Binding.TargetUpdated">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetProperty="Background.Color" From="#88FFFFFF" To="Transparent" Duration="0:0:1" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </Border>
 
             <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="3">

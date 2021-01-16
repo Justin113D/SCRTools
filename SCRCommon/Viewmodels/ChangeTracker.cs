@@ -124,31 +124,33 @@ namespace SCRCommon.Viewmodels
         /// <summary>
         /// Undos the last change
         /// </summary>
-        public void Undo()
+        public bool Undo()
         {
             if(_currentGroup != null)
                 throw new InvalidOperationException("Cannot perform Redo while grouping is active! Make sure to stop grouping using EndGroup()!");
 
             if(_currentChangeIndex == -1 || ResetOnNextChange)
-                return;
+                return false;
 
             _trackedChanges[_currentChangeIndex].Undo();
             _currentChangeIndex--;
+            return true;
         }
 
         /// <summary>
         /// Redos the last undo
         /// </summary>
-        public void Redo()
+        public bool Redo()
         {
             if(_currentGroup != null)
                 throw new InvalidOperationException("Cannot perform Redo while grouping is active! Make sure to stop grouping using EndGroup()!");
 
             if(_currentChangeIndex == _trackedChanges.Count - 1 || ResetOnNextChange)
-                return;
+                return false;
 
             _currentChangeIndex++;
             _trackedChanges[_currentChangeIndex].Redo();
+            return true;
         }
 
         /// <summary>

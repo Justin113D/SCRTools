@@ -101,7 +101,7 @@ namespace SCRLanguageEditor.Viewmodel
                 }, Node.Name, value));
 
                 Node.Name = value;
-
+                VMHeader.MainViewModel.ResetMessage();
             }
         }
 
@@ -124,6 +124,7 @@ namespace SCRLanguageEditor.Viewmodel
                 }, Node.Description, value));
 
                 Node.Description = value;
+                VMHeader.MainViewModel.ResetMessage();
             }
         }
 

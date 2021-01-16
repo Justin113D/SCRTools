@@ -21,7 +21,7 @@ namespace SCRLanguageEditor.Viewmodel
         /// <summary>
         /// Main view model access
         /// </summary>
-        private readonly VM_Main _mainViewModel;
+        public VM_Main MainViewModel { get; }
 
         /// <summary>
         /// Data object
@@ -77,6 +77,7 @@ namespace SCRLanguageEditor.Viewmodel
                 }, _node.Name, value));
 
                 _node.Name = value;
+                MainViewModel.ResetMessage();
             }
         }
 
@@ -98,6 +99,7 @@ namespace SCRLanguageEditor.Viewmodel
                 }, _node.Description, value));
 
                 _node.Description = value;
+                MainViewModel.ResetMessage();
             }
         }
 
@@ -119,6 +121,7 @@ namespace SCRLanguageEditor.Viewmodel
                 }, _node.Language, value));
 
                 _node.Language = value;
+                MainViewModel.ResetMessage();
             }
         }
 
@@ -140,6 +143,7 @@ namespace SCRLanguageEditor.Viewmodel
                 }, _node.Author, value));
 
                 _node.Author = value;
+                MainViewModel.ResetMessage();
             }
         }
 
@@ -158,7 +162,7 @@ namespace SCRLanguageEditor.Viewmodel
                 }
                 catch(FormatException)
                 {
-                    _mainViewModel.Message = "Version not valid! Please follow the pattern: Major.Minor.Build.Revision";
+                    MainViewModel.SetMessage("Version not valid! Please follow the pattern: Major.Minor.Build.Revision", true);
                 }
 
                 var oldState = _node.Versions.ToArray();
@@ -176,7 +180,7 @@ namespace SCRLanguageEditor.Viewmodel
                 }
 
                 _node.Versions.Add(newVersion);
-                _mainViewModel.Message = "";
+                MainViewModel.ResetMessage();
 
                 Tracker.TrackChange(new ChangedList<Version>(_node.Versions, oldState, () =>
                 {
@@ -221,7 +225,7 @@ namespace SCRLanguageEditor.Viewmodel
         {
             Tracker = new ChangeTracker();
             UpdatePin();
-            _mainViewModel = mainViewModel;
+            MainViewModel = mainViewModel;
             _node = new HeaderNode();
             Children = new ObservableCollection<VM_Node>();
         }
@@ -236,7 +240,7 @@ namespace SCRLanguageEditor.Viewmodel
             Tracker = new ChangeTracker();
             UpdatePin();
 
-            _mainViewModel = mainViewModel;
+            MainViewModel = mainViewModel;
 
             try
             {
@@ -334,6 +338,7 @@ namespace SCRLanguageEditor.Viewmodel
                     }
                 }
             }
+            MainViewModel.ResetMessage();
         }
 
         #region Hierarchy Methods
@@ -369,7 +374,7 @@ namespace SCRLanguageEditor.Viewmodel
             newKey = newKey.ToLower();
             if(_node.StringNodes.ContainsKey(newKey))
             {
-                _mainViewModel.Message = $"Key \"{newKey}\" already exists";
+                MainViewModel.SetMessage($"Key \"{newKey}\" already exists", true);
                 return false;
             }
 
@@ -391,7 +396,7 @@ namespace SCRLanguageEditor.Viewmodel
 
             _node.StringNodes.Remove(oldKey);
             _node.StringNodes.Add(newKey, node);
-            _mainViewModel.Message = "";
+            MainViewModel.ResetMessage();
             return true;
         }
 
@@ -478,10 +483,13 @@ namespace SCRLanguageEditor.Viewmodel
         {
             Tracker.BeginGroup();
 
-            VM_StringNode vmnode = new VM_StringNode(null, NewKey(), this);
+            StringNode node = NewKey();
+            VM_StringNode vmnode = new VM_StringNode(null, node, this);
 
+            Tracker.TrackChange(new ChangedListSingleEntry<Node>(_node.ChildNodes, node, _node.ChildNodes.Count, null));
             Tracker.TrackChange(new ChangedListSingleEntry<VM_Node>(Children, vmnode, Children.Count, () => OnPropertyChanged(nameof(Children))));
 
+            _node.ChildNodes.Add(node);
             Children.Add(vmnode);
 
             Tracker.EndGroup();
@@ -546,7 +554,7 @@ namespace SCRLanguageEditor.Viewmodel
                 if(r != MessageBoxResult.Yes)
                     return;
             }
-            _mainViewModel.ShowWaitCursor.Invoke();
+            MainViewModel.ShowWaitCursor.Invoke();
             ChangeAllExpansions(Children, true);
             _expandedAll = true;
         }
@@ -652,6 +660,8 @@ namespace SCRLanguageEditor.Viewmodel
 
             foreach(var n in Children)
                 n.UpdateProperties();
+
+            _contentFilePath = null;
         }
 
         /// <summary>

@@ -94,7 +94,7 @@ namespace SCRLanguageEditor.Data
         protected override void WriteJsonInner(JsonTextWriter writer)
         {
             writer.WritePropertyName("DefaultValue");
-            writer.WriteValue(NodeValue);
+            writer.WriteValue(DefaultValue);
 
             if(VersionID != 0)
             {

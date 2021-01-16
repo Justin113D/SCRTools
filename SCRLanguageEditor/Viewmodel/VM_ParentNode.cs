@@ -123,6 +123,7 @@ namespace SCRLanguageEditor.Viewmodel
 
             ParentNode.ChildNodes.Add(node);
             Children.Add(new VM_StringNode(this, node, VMHeader));
+            IsExpanded = true;
         }
 
         /// <summary>
@@ -140,6 +141,7 @@ namespace SCRLanguageEditor.Viewmodel
 
             ParentNode.ChildNodes.Add(node);
             Children.Add(vmNode);
+            IsExpanded = true;
         }
 
         public void InsertChild(VM_Node vmNode, int index)

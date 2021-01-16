@@ -1,0 +1,56 @@
+{
+  "Name": "Test Format",
+  "DefaultLanguage": "German",
+  "Versions": [
+    "1.0.0.0"
+  ],
+  "ChildNodes": [
+    {
+      "Name": "title",
+      "Description": "Title of the window",
+      "DefaultValue": "Language Tester"
+    },
+    {
+      "Name": "language",
+      "Description": "Name of the Language in its language;\r\nE.g.: German = Deutsch",
+      "DefaultValue": "English"
+    },
+    {
+      "Name": "Left side",
+      "Description": "Left side of the window (Look, i know this group doesnt make sense, but i need to present how groups work ok?)",
+      "ChildNodes": [
+        {
+          "Name": "list",
+          "Description": "Header of the list",
+          "DefaultValue": "Languages:"
+        },
+        {
+          "Name": "loaded",
+          "Description": "Used to display the name of the active language",
+          "DefaultValue": "Active language:"
+        }
+      ]
+    },
+    {
+      "Name": "Right side",
+      "Description": "Right side of the window",
+      "ChildNodes": [
+        {
+          "Name": "status",
+          "Description": "Telling the user the amount of languages loaded;\r\n#COUNT gets replaced by the number of loaded languages (do not translate this \"word\"!)",
+          "DefaultValue": "There are #COUNT languages loaded right now."
+        },
+        {
+          "Name": "info",
+          "Description": "Info to inform the user to select a language",
+          "DefaultValue": "Select a language from the left hand menu"
+        },
+        {
+          "Name": "thanks",
+          "Description": "a little something at the bottom of the window",
+          "DefaultValue": "Hope this test helped!"
+        }
+      ]
+    }
+  ]
+}
