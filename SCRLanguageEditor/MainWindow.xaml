@@ -420,6 +420,9 @@
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Settings" Command="{Binding Cmd_Settings}"/>
+                <MenuItem Header="Help">
+                    <MenuItem Header="Wiki" Command="{Binding Cmd_OpenWiki}"/>
+                </MenuItem>
             </Menu>
             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" DataContext="{Binding Format}">
                 <StackPanel.Resources>

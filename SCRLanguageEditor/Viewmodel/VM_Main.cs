@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using SCRCommon.Viewmodels;
 using System;
+using System.Diagnostics;
 using System.Timers;
 using System.Windows;
 using System.Windows.Media;
@@ -64,6 +65,8 @@ namespace SCRLanguageEditor.Viewmodel
         /// Calls <see cref="VM_HeaderNode.CollapseAll"/>
         /// </summary>
         public RelayCommand Cmd_CollapseAll { get; }
+
+        public RelayCommand Cmd_OpenWiki { get; }
         #endregion
 
         /// <summary>
@@ -128,6 +131,7 @@ namespace SCRLanguageEditor.Viewmodel
             Cmd_Redo = new RelayCommand(Redo);
             Cmd_ExpandAll = new RelayCommand(() => Format.ExpandAll());
             Cmd_CollapseAll = new RelayCommand(() => Format.CollapseAll());
+            Cmd_OpenWiki = new RelayCommand(OpenWiki);
 
             MessageColor = new SolidColorBrush(Colors.Transparent);
 
@@ -307,6 +311,16 @@ namespace SCRLanguageEditor.Viewmodel
             }
 
             OnPropertyChanged(nameof(ShowMessage));
+        }
+    
+        private void OpenWiki()
+        {
+            var psi = new ProcessStartInfo
+            {
+                UseShellExecute = true,
+                FileName = "https://github.com/Justin113D/SCRTools/wiki/Language-Editor"
+            };
+            Process.Start(psi);   
         }
     }
 }
