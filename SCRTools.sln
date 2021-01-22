@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCRLanguageEditor", "SCRLan
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCRCommon", "SCRCommon\SCRCommon.csproj", "{F0EE3117-EF36-42FD-8BC2-9341246C49E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCRLanguageTest", "SCRLanguageTest\SCRLanguageTest.csproj", "{0BC8ABCB-A381-47DC-A57E-099BBF1282CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCRLanguageTest", "SCRLanguageTest\SCRLanguageTest.csproj", "{0BC8ABCB-A381-47DC-A57E-099BBF1282CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

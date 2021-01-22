@@ -25,7 +25,7 @@ namespace SCRLanguageEditor.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("LanguageFiles/Format.json")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string DefaultFormatPath {
             get {
                 return ((string)(this["DefaultFormatPath"]));
