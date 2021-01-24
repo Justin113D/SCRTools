@@ -80,8 +80,10 @@ namespace SCRLanguageEditor.Viewmodel
                     {
                         StringNode.DefaultValue = v;
                         OnPropertyChanged(nameof(Value));
+                        OnPropertyChanged(nameof(DefaultValue));
                     }, StringNode.DefaultValue, value));
                     StringNode.DefaultValue = value;
+                    OnPropertyChanged(nameof(DefaultValue));
                 }
                 else
                 {
@@ -120,6 +122,8 @@ namespace SCRLanguageEditor.Viewmodel
             }
         }
 
+        public string DefaultValue => StringNode.DefaultValue;
+
         /// <summary>
         /// Relaycommand for the ctrl + r binding
         /// </summary>
@@ -145,13 +149,24 @@ namespace SCRLanguageEditor.Viewmodel
             if(Properties.Settings.Default.DevMode)
                 return;
 
+            int oldstate = Node.NodeState;
+
             VMHeader.Tracker.BeginGroup();
 
             VMHeader.Tracker.TrackChange(new ChangedValue<bool>((v) => StringNode.requiresUpdate = v, StringNode.requiresUpdate, false));
             VMHeader.Tracker.TrackChange(new ChangedValue<bool>((v) => StringNode.retranslated = v, StringNode.retranslated, false));
+            VMHeader.Tracker.TrackChange(new Change((v) =>
+            {
+                if(v)
+                    VMHeader.NodeUpdated(oldstate, 0);
+                else
+                    VMHeader.NodeUpdated(0, oldstate);
+
+            }));
             VMHeader.Tracker.TrackChange(new ChangedValue<string>((v) =>
             {
                 StringNode.NodeValue = v;
+
                 UpdateProperties();
                 Parent?.UpdateNodeState();
             }, StringNode.NodeValue, StringNode.DefaultValue));
@@ -159,6 +174,7 @@ namespace SCRLanguageEditor.Viewmodel
             VMHeader.Tracker.EndGroup();
 
             StringNode.ResetValue();
+            VMHeader.NodeUpdated(oldstate, 0);
             UpdateProperties();
             Parent?.UpdateNodeState();
         }

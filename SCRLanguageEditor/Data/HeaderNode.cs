@@ -235,7 +235,7 @@ namespace SCRLanguageEditor.Data
             }
 
             File.WriteAllText(path, string.Join("\n", lines));
-            File.WriteAllText(Path.ChangeExtension(path, "langkey"), string.Join("\n", baseLines));
+            File.WriteAllText(Path.ChangeExtension(path, "langkey"), string.Join("\n", baseLines), System.Text.Encoding.UTF8);
         }
 
         /// <summary>

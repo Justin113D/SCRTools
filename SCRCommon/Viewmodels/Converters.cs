@@ -59,7 +59,7 @@ namespace SCRCommon.Viewmodels
     public class VisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-            => (bool)value ? Visibility.Visible : Visibility.Hidden;
+            => (bool)value ? Visibility.Visible : Visibility.Collapsed;
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
             => throw new NotSupportedException();
@@ -71,11 +71,9 @@ namespace SCRCommon.Viewmodels
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if(value is Visibility v)
-            {
                 return v;
-            }
             else
-                return Visibility.Hidden;
+                return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

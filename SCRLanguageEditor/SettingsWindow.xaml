@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SCRLanguageEditor.Viewmodel"
         xmlns:wpfBase="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
+        xmlns:vmbase="clr-namespace:SCRCommon.Viewmodels;assembly=SCRCommon"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance {x:Type local:VM_Settings}}"
-        Title="Settings" Height="230" Width="500"
+        Title="Settings" Height="260" Width="500"
         x:Name="window"
         ResizeMode="NoResize"
         Style="{DynamicResource WindowStyle}">
@@ -16,44 +17,48 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <wpfBase:BaseWindowStyle/>
+
+                <ResourceDictionary>
+                    <vmbase:InverseBooleanConverter x:Key="BoolInvert"/>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
 
     <Border Background="{DynamicResource BG1}">
-        <Grid Margin="20">
+        <Grid Margin="20 5 20 20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="10"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="10"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="10"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Vertical" Margin="0">
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type StackPanel}">
+                        <Setter Property="Orientation" Value="Horizontal"/>
+                        <Setter Property="Margin" Value="0 5 0 5"/>
+                    </Style>
+                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="Margin" Value="0 0 20 0"/>
+                    </Style>
+                    <Style TargetType="{x:Type CheckBox}">
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                    </Style>
+                </StackPanel.Resources>
+                
+                <!--Theme setting-->
+                <StackPanel>
+                    <TextBlock Text="Theme" Margin="0 0 90 0"/>
+                    <ComboBox Width="100" HorizontalAlignment="Left" Foreground="Black"
+                            ItemsSource="{Binding Themes}" SelectedValue="{Binding WindowTheme, Mode=TwoWay}"/>
+                </StackPanel>
 
                 <!-- Default path setting -->
-                <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Text="Default Format File" Margin="0,0,10,0"/>
-                <Grid Grid.Column="1" Grid.Row="0" x:Name="PathGrid" HorizontalAlignment="Left" Width="320">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="auto"/>
-
-                    </Grid.ColumnDefinitions>
-
-                    <TextBox Grid.Column="0" Padding="2" Background="{DynamicResource BG2}" Text="{Binding DefaultFormatPath, Mode=TwoWay}" TextWrapping="NoWrap" HorizontalAlignment="Stretch"/>
-                    <Button Grid.Column="1" Command="{Binding Cmd_SetDefaultPath}" Width="{Binding ActualHeight, ElementName=PathGrid}" Margin="5,0,0,0">
+                <StackPanel x:Name="PathPanel">
+                    <TextBlock Text="Default Format File" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                    <TextBox Padding="2" Background="{DynamicResource BG2}" Text="{Binding DefaultFormatPath, Mode=TwoWay}" TextWrapping="NoWrap" Width="292"/>
+                    <Button Command="{Binding Cmd_SetDefaultPath}" Margin="5,0,0,0">
                         <Button.Style>
                             <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
                                 <Setter Property="Background" Value="Transparent"/>
@@ -61,34 +66,47 @@
                         </Button.Style>
                         <Image Source="pack://application:,,,/SCRCommon;component/Icons/OpenFolder.png" Height="16" Width="16"/>
                     </Button>
-                </Grid>
+                </StackPanel>
 
-                <!--Theme setting-->
-                <TextBlock Grid.Column="0" Grid.Row="2" Text="Theme" VerticalAlignment="Center"/>
-                <ComboBox Grid.Column="1" Grid.Row="2" Width="100" HorizontalAlignment="Left" Foreground="Black"
-                            ItemsSource="{Binding Themes}"
-                            SelectedValue="{Binding WindowTheme, Mode=TwoWay}"/>
+                <!--Display Original setting-->
+                <StackPanel>
+                    <TextBlock Text="Display Original Text below description">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DevMode}" Value="True">
+                                        <Setter Property="Foreground" Value="{DynamicResource HintFontBrush}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <CheckBox IsChecked="{Binding DisplayOriginal, Mode=TwoWay}" IsEnabled="{Binding DevMode, Converter={StaticResource BoolInvert}}"/>
+                </StackPanel>
 
                 <!--Devmode setting-->
-                <TextBlock Grid.Column="0" Grid.Row="4" Text="Devmode" VerticalAlignment="Center"/>
-                <CheckBox Grid.Column="1" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="{Binding DevMode, Mode=TwoWay}"/>
+                <StackPanel>
+                    <TextBlock Text="Devmode" Margin="0 0 70 0"/>
+                    <CheckBox IsChecked="{Binding DevMode, Mode=TwoWay}"/>
+                </StackPanel>
 
                 <!--JsonIndentation setting-->
-                <TextBlock Grid.Column="0" Grid.Row="6" Text="Json Indenting" VerticalAlignment="Center">
-                    <TextBlock.Style>
-                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding DevMode}" Value="False">
-                                    <Setter Property="Foreground" Value="{DynamicResource HintFontBrush}"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-                <CheckBox Grid.Column="1" Grid.Row="6" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="{Binding JsonIndenting, Mode=TwoWay}" IsEnabled="{Binding DevMode}"/>
-
-            </Grid>
-
+                <StackPanel>
+                    <TextBlock Text="Json Indenting" Margin="0 0 37 0">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DevMode}" Value="False">
+                                        <Setter Property="Foreground" Value="{DynamicResource HintFontBrush}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <CheckBox IsChecked="{Binding JsonIndenting, Mode=TwoWay}" IsEnabled="{Binding DevMode}"/>
+                </StackPanel>
+            </StackPanel>
+            
             <Label Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Content="Made by @Justin113D" Margin="-15" FontSize="11" Foreground="{DynamicResource FontBrush}"/>
             <Button Grid.Row="1" HorizontalAlignment="Right" Content="Ok" Width="100" Margin="0,0,10,0" Command="{Binding Cmd_Save}" CommandParameter="{x:Reference window}"/>
         </Grid>

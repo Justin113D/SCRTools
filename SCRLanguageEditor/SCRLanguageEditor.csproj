@@ -14,6 +14,7 @@
 
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <AssemblyName>LanguageEditor</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

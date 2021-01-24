@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:mainwindow="clr-namespace:SCRLanguageEditor"
         xmlns:local="clr-namespace:SCRLanguageEditor.Viewmodel"
         xmlns:vmBase="clr-namespace:SCRCommon.Viewmodels;assembly=SCRCommon"
         xmlns:base="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
@@ -250,7 +249,6 @@
                     </Style>
                     <Style x:Key="DescriptionStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxNoUndo}">
                         <Setter Property="IsReadOnly" Value="True"/>
-                        <Setter Property="Margin" Value="5"/>
                         <Setter Property="VerticalAlignment" Value="Center"/>
                         <Setter Property="Foreground" Value="{DynamicResource HintFontBrush}"/>
                         <Style.Triggers>
@@ -264,7 +262,7 @@
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                    
+
                     <!--Node Templates-->
                     <HierarchicalDataTemplate x:Key="ParentNode" ItemsSource="{Binding Children}">
                         <Grid Margin="0, 4, 0, 4">
@@ -285,7 +283,7 @@
                         </Grid>
                     </HierarchicalDataTemplate>
                     <HierarchicalDataTemplate x:Key="StringNode" ItemsSource="{x:Null}">
-                        <Border BorderThickness="0 1 0 1" BorderBrush="{DynamicResource BG1}">
+                        <Border BorderThickness="0 2 0 0" BorderBrush="{DynamicResource BG1}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
@@ -302,7 +300,13 @@
                                     </TextBox>                                    
                                 </Border>
 
-                                <TextBox Grid.Column="3" Text="{Binding Description}" Style="{StaticResource DescriptionStyle}" AcceptsReturn="True"/>
+                                <StackPanel Grid.Column="3" Margin="5" VerticalAlignment="Center">
+                                    <TextBox Text="{Binding Description}" Style="{StaticResource DescriptionStyle}" AcceptsReturn="True"/>
+                                    <Border Margin="20 2 20 2" BorderBrush="{DynamicResource BG1}" Height="1" BorderThickness="1" Focusable="False"
+                                            Visibility="{Binding Data.Settings.DisplayOriginalReal, Source={StaticResource proxy}, Converter={StaticResource VisibilityConverter}}"/>
+                                    <TextBox Text="{Binding DefaultValue, Mode=OneWay}" IsReadOnly="True" Foreground="{DynamicResource HintFontBrush}" FontWeight="Bold"
+                                             Visibility="{Binding Data.Settings.DisplayOriginalReal, Source={StaticResource proxy}, Converter={StaticResource VisibilityConverter}}"/>
+                                </StackPanel>
                             </Grid>
                         </Border>
                     </HierarchicalDataTemplate>

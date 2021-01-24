@@ -47,6 +47,18 @@ namespace SCRLanguageEditor.Viewmodel
             }
         }
 
+        public bool DisplayOriginal
+        {
+            get => Properties.Settings.Default.DisplayOriginal;
+            set
+            {
+                Properties.Settings.Default.DisplayOriginal = value;
+                OnPropertyChanged(nameof(DisplayOriginalReal));
+            }
+        }
+
+        public bool DisplayOriginalReal => DisplayOriginal && !DevMode;
+
         /// <summary>
         /// Redirects to the window theme
         /// </summary>
@@ -62,6 +74,7 @@ namespace SCRLanguageEditor.Viewmodel
                 BaseWindowStyle.WindowTheme = value;
             }
         }
+
 
         /// <summary>
         /// Whether the application currently is in developer mode (allows to edit the format)

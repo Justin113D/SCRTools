@@ -4,9 +4,84 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SCRDialogEditor"
+        xmlns:vmBase="clr-namespace:SCRCommon.Viewmodels;assembly=SCRCommon"
+        xmlns:base="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Dialog Editor" Height="500" Width="950"
+        MinHeight="200" MinWidth="350"
+        Style="{DynamicResource WindowStyle}"
+        x:Name="Window" >
+    
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <base:BaseWindowStyle/>
+
+                <ResourceDictionary>
+
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0">
+            <Menu.Resources>
+                <Style TargetType="{x:Type Image}">
+                    <Setter Property="Height" Value="16"/>
+                    <Setter Property="Width" Value="16"/>
+                    <Setter Property="SnapsToDevicePixels" Value="True"/>
+                </Style>
+            </Menu.Resources>
+            <MenuItem Header="File">
+                <MenuItem Header="New file" InputGestureText="Ctrl+N">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/NewFile.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Open" InputGestureText="Ctrl+O">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/OpenFolder.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="Save" InputGestureText="Ctrl+S">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/Save.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Save as..." InputGestureText="Ctrl+Shift+S">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/SaveAs.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Undo" InputGestureText="Ctrl+Z">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/Undo.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Redo" InputGestureText="Ctrl+Y">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/Redo.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Settings"/>
+            <MenuItem Header="Help">
+                <MenuItem Header="Wiki"/>
+            </MenuItem>
+        </Menu>
+
+        <Border Grid.Row="1" Background="{DynamicResource BG1}">
+            
+        </Border>
         
     </Grid>
 </Window>

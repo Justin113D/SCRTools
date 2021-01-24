@@ -74,5 +74,20 @@ namespace SCRLanguageEditor.Properties {
                 this["DevMode"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DisplayOriginal
+        {
+            get
+            {
+                return ((bool)(this["DisplayOriginal"]));
+            }
+            set
+            {
+                this["DisplayOriginal"] = value;
+            }
+        }
     }
 }
