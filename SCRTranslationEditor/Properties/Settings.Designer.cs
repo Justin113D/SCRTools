@@ -89,5 +89,20 @@ namespace SCRTranslationEditor.Properties {
                 this["DisplayOriginal"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public int Fontsize
+        {
+            get
+            {
+                return ((int)(this["Fontsize"]));
+            }
+            set
+            {
+                this["Fontsize"] = value;
+            }
+        }
     }
 }

@@ -8,7 +8,7 @@
         xmlns:vmbase="clr-namespace:SCRCommon.Viewmodels;assembly=SCRCommon"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance {x:Type local:VM_Settings}}"
-        Title="Settings" Height="260" Width="500"
+        Title="Settings" Height="280" Width="500"
         x:Name="window"
         ResizeMode="NoResize"
         Style="{DynamicResource WindowStyle}">
@@ -40,7 +40,6 @@
                     </Style>
                     <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
                         <Setter Property="VerticalAlignment" Value="Center"/>
-                        <Setter Property="Margin" Value="0 0 20 0"/>
                     </Style>
                     <Style TargetType="{x:Type CheckBox}">
                         <Setter Property="VerticalAlignment" Value="Center"/>
@@ -49,14 +48,14 @@
                 
                 <!--Theme setting-->
                 <StackPanel>
-                    <TextBlock Text="Theme" Margin="0 0 90 0"/>
+                    <TextBlock Text="Theme" Width="140"/>
                     <ComboBox Width="100" HorizontalAlignment="Left" Foreground="Black"
                             ItemsSource="{Binding Themes}" SelectedValue="{Binding WindowTheme, Mode=TwoWay}"/>
                 </StackPanel>
 
                 <!-- Default path setting -->
                 <StackPanel x:Name="PathPanel">
-                    <TextBlock Text="Default Format File" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="Default Format File" Width="140"/>
                     <TextBox Padding="2" Background="{DynamicResource BG2}" Text="{Binding DefaultFormatPath, Mode=TwoWay}" TextWrapping="NoWrap" Width="292"/>
                     <Button Command="{Binding Cmd_SetDefaultPath}" Margin="5,0,0,0">
                         <Button.Style>
@@ -70,7 +69,7 @@
 
                 <!--Display Original setting-->
                 <StackPanel>
-                    <TextBlock Text="Display Original Text below description">
+                    <TextBlock Text="Display Original Text below description" Margin="0 0 10 0">
                         <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
                                 <Style.Triggers>
@@ -84,15 +83,20 @@
                     <CheckBox IsChecked="{Binding DisplayOriginal, Mode=TwoWay}" IsEnabled="{Binding DevMode, Converter={StaticResource BoolInvert}}"/>
                 </StackPanel>
 
+                <StackPanel>
+                    <TextBlock Text="Fontsize" Width="140"/>
+                    <TextBox Background="{DynamicResource BG2}" Width="40" PreviewTextInput="TextBox_PreviewTextInput" Text="{Binding FontSize}" TextAlignment="Right"/>
+                </StackPanel>
+
                 <!--Devmode setting-->
                 <StackPanel>
-                    <TextBlock Text="Devmode" Margin="0 0 70 0"/>
+                    <TextBlock Text="Devmode" Width="140"/>
                     <CheckBox IsChecked="{Binding DevMode, Mode=TwoWay}"/>
                 </StackPanel>
 
                 <!--JsonIndentation setting-->
                 <StackPanel>
-                    <TextBlock Text="Json Indenting" Margin="0 0 37 0">
+                    <TextBlock Text="Json Indenting" Width="140">
                         <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
                                 <Style.Triggers>

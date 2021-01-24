@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+#pragma warning disable CS1822
+
 namespace SCRTranslationEditor.Viewmodel
 {
     /// <summary>
@@ -23,6 +25,22 @@ namespace SCRTranslationEditor.Viewmodel
             get
             {
                 return Enum.GetValues(typeof(Theme)).Cast<Theme>().ToList();
+            }
+        }
+
+        /// <summary>
+        /// Redirects to the window theme
+        /// </summary>
+        public Theme WindowTheme
+        {
+            get
+            {
+                return Properties.Settings.Default.WindowTheme;
+            }
+            set
+            {
+                Properties.Settings.Default.WindowTheme = value;
+                BaseWindowStyle.WindowTheme = value;
             }
         }
 
@@ -47,6 +65,9 @@ namespace SCRTranslationEditor.Viewmodel
             }
         }
 
+        /// <summary>
+        /// Used to show the original text below description
+        /// </summary>
         public bool DisplayOriginal
         {
             get => Properties.Settings.Default.DisplayOriginal;
@@ -57,24 +78,28 @@ namespace SCRTranslationEditor.Viewmodel
             }
         }
 
+        /// <summary>
+        /// Whether to actually display the original text
+        /// </summary>
         public bool DisplayOriginalReal => DisplayOriginal && !DevMode;
 
         /// <summary>
-        /// Redirects to the window theme
+        /// Settings fontsize
         /// </summary>
-        public Theme WindowTheme
+        public int FontSize
         {
-            get
-            {
-                return Properties.Settings.Default.WindowTheme;
-            }
+            get => Properties.Settings.Default.Fontsize;
             set
             {
-                Properties.Settings.Default.WindowTheme = value;
-                BaseWindowStyle.WindowTheme = value;
+                if(value > 48)
+                    value = 48;
+                Properties.Settings.Default.Fontsize = value;
             }
         }
 
+        public int RealFontSize { get; private set; }
+
+        public int GroupFontSize { get; private set; }
 
         /// <summary>
         /// Whether the application currently is in developer mode (allows to edit the format)
@@ -85,6 +110,9 @@ namespace SCRTranslationEditor.Viewmodel
             set => _mainViewModel.Format.ChangedMode(value);
         }
 
+        /// <summary>
+        /// Enables json indenting when saving formats
+        /// </summary>
         public bool JsonIndenting
         {
             get => Properties.Settings.Default.JsonIndenting;
@@ -108,6 +136,8 @@ namespace SCRTranslationEditor.Viewmodel
         public VM_Settings(VM_Main mainViewModel)
         {
             _mainViewModel = mainViewModel;
+            RealFontSize = FontSize;
+            GroupFontSize = FontSize + 3;
             Cmd_SetDefaultPath = new RelayCommand(SelectFormatPath);
             Cmd_Save = new RelayCommand<SettingsWindow>(Save);
             BaseWindowStyle.WindowTheme = WindowTheme;
@@ -132,6 +162,11 @@ namespace SCRTranslationEditor.Viewmodel
         /// /// <param name="w">The window that needs to be closed upon saving</param>
         private void Save(SettingsWindow w)
         {
+            if(FontSize != RealFontSize)
+            {
+                RealFontSize = FontSize;
+                GroupFontSize = RealFontSize + 3;
+            }
             Properties.Settings.Default.Save();
             w.Close();
         }

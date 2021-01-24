@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SCRLanguageTest"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
-        Title="{Binding Texts.Title}" Height="200" Width="470">
+        Title="{Binding Texts.Title}" Height="250" Width="470">
     <Grid>
         <Grid.Resources>
             <Style TargetType="{x:Type TextBlock}">

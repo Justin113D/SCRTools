@@ -4,11 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SCRDialogEditor"
+        xmlns:vm="clr-namespace:SCRDialogEditor.Viewmodel"
         xmlns:vmBase="clr-namespace:SCRCommon.Viewmodels;assembly=SCRCommon"
         xmlns:base="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
         mc:Ignorable="d"
         Title="Dialog Editor" Height="500" Width="950"
         MinHeight="200" MinWidth="350"
+        d:DataContext="{d:DesignInstance Type=vm:VMMain}"
         Style="{DynamicResource WindowStyle}"
         x:Name="Window" >
     
@@ -79,8 +81,32 @@
             </MenuItem>
         </Menu>
 
-        <Border Grid.Row="1" Background="{DynamicResource BG1}">
-            
+        <Border Grid.Row="1" Background="{DynamicResource BG2}">
+            <ItemsControl DataContext="{Binding Grid}" ItemsSource="{Binding Nodes}">
+                <ItemsControl.Resources>
+                    <DataTemplate DataType="{x:Type vm:VMNode}">
+                        <Border BorderBrush="{DynamicResource BG3}" BorderThickness="2" Background="{DynamicResource BG2}" MinHeight="100" MinWidth="50">
+                            <StackPanel Margin="2">
+                                <TextBlock Text="{Binding NodeID}"/>
+
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.Resources>
+                
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas Background="{Binding Background}"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="Canvas.Left" Value="{Binding PositionX}"/>
+                        <Setter Property="Canvas.Top" Value="{Binding PositionY}"/>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+            </ItemsControl>
         </Border>
         
     </Grid>

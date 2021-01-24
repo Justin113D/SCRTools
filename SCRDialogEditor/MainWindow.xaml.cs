@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using SCRDialogEditor.Viewmodel;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace SCRDialogEditor
 {
@@ -9,7 +11,9 @@ namespace SCRDialogEditor
     {
         public MainWindow()
         {
+            DataContext = new VMMain();
             InitializeComponent();
+            
         }
     }
 }

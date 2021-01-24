@@ -17,7 +17,7 @@
         x:Name="Window" >
 
     <Window.InputBindings>
-        <KeyBinding Modifiers="Ctrl+Alt"        Key="O" Command="{Binding Cmd_LoadFormat}"/>
+        <KeyBinding Modifiers="Ctrl+Alt"    Key="O" Command="{Binding Cmd_LoadFormat}"/>
 
         <KeyBinding Modifiers="Ctrl"        Key="N" Command="{Binding Cmd_NewFile}"/>
         <KeyBinding Modifiers="Ctrl"        Key="O" Command="{Binding Cmd_Open}"/>
@@ -36,7 +36,7 @@
                 <base:BaseWindowStyle/>
 
                 <ResourceDictionary>
-                    <vmBase:BindingProxy x:Key="proxy" Data="{Binding}" />
+                    <vmBase:BindingProxy x:Key="proxy" Data="{Binding }" />
                     <vmBase:WindowWidthConverter x:Key="WindowWidthConverter" Percentage="0.4"/>
                     <vmBase:BindingProxy x:Key="DescriptionWidth" Data="{Binding ElementName=Window, Path=ActualWidth, Converter={StaticResource WindowWidthConverter}}"/>
                     <vmBase:StringEmptyConverter x:Key="StringEmptyConverter"/>
@@ -46,7 +46,8 @@
                     <vmBase:TagVisibilityConverter x:Key="TagVisibilityConverter"/>
                     <local:NodeStateConverter x:Key="NodeStateConverter"/>
 
-                    <Style x:Key="TextBoxNoUndo" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                    <Style x:Key="TextBoxBase" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                        <Setter Property="FontSize" Value="{Binding Data.Settings.RealFontSize, Source={StaticResource proxy}}"/>
                         <Setter Property="IsUndoEnabled" Value="False"/>
                         <Setter Property="vmBase:InputBindingAttach.InputBindings">
                             <Setter.Value>
@@ -58,7 +59,13 @@
                         </Setter>
                         <EventSetter Event="KeyDown" Handler="TextBox_KeyDown"/>
                     </Style>
-
+                    <Style x:Key="TextBlockBase" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                        <Setter Property="FontSize" Value="{Binding Data.Settings.RealFontSize, Source={StaticResource proxy}}"/>
+                    </Style>
+                    <Style x:Key="MenuItemBase" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                        <Setter Property="FontSize" Value="{Binding Data.Settings.RealFontSize, Source={StaticResource proxy}}"/>
+                    </Style>
+                    
                     <Style x:Key="ExpandCollapseToggleStyle" TargetType="ToggleButton">
                         <Setter Property="Focusable" Value="False"/>
                         <Setter Property="Template">
@@ -231,7 +238,7 @@
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                    <Style x:Key="ContentMenuItem" TargetType="{x:Type MenuItem}">
+                    <Style x:Key="ContentMenuItem" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MenuItemBase}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Settings.DevMode}" Value="true">
                                 <Setter Property="Visibility" Value="Hidden"/>
@@ -239,7 +246,7 @@
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                    <Style x:Key="DevmodeMenuItem" TargetType="{x:Type MenuItem}">
+                    <Style x:Key="DevmodeMenuItem" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MenuItemBase}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Settings.DevMode}" Value="false">
                                 <Setter Property="Visibility" Value="Hidden"/>
@@ -247,7 +254,7 @@
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                    <Style x:Key="DescriptionStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxNoUndo}">
+                    <Style x:Key="DescriptionStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxBase}">
                         <Setter Property="IsReadOnly" Value="True"/>
                         <Setter Property="VerticalAlignment" Value="Center"/>
                         <Setter Property="Foreground" Value="{DynamicResource HintFontBrush}"/>
@@ -271,12 +278,16 @@
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="{Binding Source={StaticResource DescriptionWidth}, Path=Data}"/>
                             </Grid.ColumnDefinitions>
-                            <TextBox x:Name="NameBox" Grid.Column="0" Text="{Binding Name}" Style="{StaticResource DescriptionStyle}" FontSize="22" Foreground="{DynamicResource FontBrush}"/>
+                            <TextBox x:Name="NameBox" Grid.Column="0" Text="{Binding Name}" Style="{StaticResource DescriptionStyle}" 
+                                    FontSize="{Binding Data.Settings.GroupFontSize, Source={StaticResource proxy}}"
+                                    Foreground="{DynamicResource FontBrush}"/>
 
                             <StackPanel Grid.Column="1" Orientation="Horizontal" FlowDirection="LeftToRight" Height="{Binding ActualHeight, ElementName=NameBox}"
                                         Visibility="{Binding Tag, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource TagVisibilityConverter}}" >
-                                <Button Content="Add Parent" Style="{DynamicResource BlueButton}" Padding="5,0,5,0" Margin="5,0,5,0" Command="{Binding Cmd_AddParentNode}"/>
-                                <Button Content="Add String" Style="{DynamicResource GreenButton}" Padding="5,0,5,0" Margin="5,0,5,0" Command="{Binding Cmd_AddStringNode}"/>
+                                <Button Content="Add Parent" Style="{DynamicResource BlueButton}" Padding="5,0,5,0" Margin="5,0,5,0" Command="{Binding Cmd_AddParentNode}"
+                                        FontSize="{Binding Data.Settings.RealFontSize, Source={StaticResource proxy}}"/>
+                                <Button Content="Add String" Style="{DynamicResource GreenButton}" Padding="5,0,5,0" Margin="5,0,5,0" Command="{Binding Cmd_AddStringNode}"
+                                        FontSize="{Binding Data.Settings.RealFontSize, Source={StaticResource proxy}}"/>
                             </StackPanel>
 
                             <TextBox Grid.Column="2" Text="{Binding Description}" Style="{StaticResource DescriptionStyle}" AcceptsReturn="True"/>
@@ -291,9 +302,9 @@
                                     <ColumnDefinition Width="{Binding Source={StaticResource DescriptionWidth}, Path=Data}"/>
                                 </Grid.ColumnDefinitions>
 
-                                <TextBox Grid.Column="0" Text="{Binding Name}" Style="{StaticResource DescriptionStyle}" FontSize="22" Foreground="{DynamicResource FontBrush}"/>
+                                <TextBox Grid.Column="0" Text="{Binding Name}" Style="{StaticResource DescriptionStyle}" Foreground="{DynamicResource FontBrush}"/>
                                 <Border Grid.Column="1" Background="{DynamicResource BG3}">
-                                    <TextBox Text="{Binding Value, Mode=TwoWay}" Style="{StaticResource TextBoxNoUndo}" AcceptsReturn="True" Padding="5,10,5,10" VerticalAlignment="Stretch">
+                                    <TextBox Text="{Binding Value, Mode=TwoWay}" Style="{StaticResource TextBoxBase}" AcceptsReturn="True" Padding="5,10,5,10" VerticalAlignment="Stretch">
                                         <TextBox.InputBindings>
                                             <KeyBinding Modifiers="Ctrl" Key="R" Command="{Binding Cmd_Reset}"/>
                                         </TextBox.InputBindings>
@@ -304,7 +315,7 @@
                                     <TextBox Text="{Binding Description}" Style="{StaticResource DescriptionStyle}" AcceptsReturn="True"/>
                                     <Border Margin="20 2 20 2" BorderBrush="{DynamicResource BG1}" Height="1" BorderThickness="1" Focusable="False"
                                             Visibility="{Binding Data.Settings.DisplayOriginalReal, Source={StaticResource proxy}, Converter={StaticResource VisibilityConverter}}"/>
-                                    <TextBox Text="{Binding DefaultValue, Mode=OneWay}" IsReadOnly="True" Foreground="{DynamicResource HintFontBrush}" FontWeight="Bold"
+                                    <TextBox Text="{Binding DefaultValue, Mode=OneWay}" Style="{StaticResource TextBoxBase}" IsReadOnly="True" Foreground="{DynamicResource HintFontBrush}" FontWeight="Bold"
                                              Visibility="{Binding Data.Settings.DisplayOriginalReal, Source={StaticResource proxy}, Converter={StaticResource VisibilityConverter}}"/>
                                 </StackPanel>
                             </Grid>
@@ -335,6 +346,7 @@
 
             <Menu Grid.Column="0">
                 <Menu.Resources>
+                    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MenuItemBase}"/>
                     <Style TargetType="{x:Type Image}">
                         <Setter Property="Height" Value="16"/>
                         <Setter Property="Width" Value="16"/>
@@ -435,10 +447,10 @@
                         <Setter Property="Fill" Value="{DynamicResource SelectedBG}"/>
                         <Setter Property="SnapsToDevicePixels" Value="True"/>
                     </Style>
-                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockBase}">
                         <Setter Property="Margin" Value="10, 0, 5, 0"/>
                     </Style>
-                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxNoUndo}">
+                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxBase}">
                         <Setter Property="Margin" Value="0, 0, 10, 0"/>
                         <Setter Property="TextAlignment" Value="Center"/>
                         <Setter Property="MinWidth" Value="20"/>
@@ -488,8 +500,10 @@
                                     <ColumnDefinition Width="2*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Button Grid.Column="1" Style="{DynamicResource BlueButton}" Content="Add Parent" Command="{Binding Data.Cmd_AddParentNode, Source={StaticResource proxy}}"/>
-                                <Button Grid.Column="3" Style="{DynamicResource GreenButton}" Content="Add String" Command="{Binding Data.Cmd_AddStringNode, Source={StaticResource proxy}}"/>
+                                <Button Grid.Column="1" Style="{DynamicResource BlueButton}" Content="Add Parent" Command="{Binding Data.Cmd_AddParentNode, Source={StaticResource proxy}}"
+                                        FontSize="{Binding Data.Settings.RealFontSize, Source={StaticResource proxy}}"/>
+                                <Button Grid.Column="3" Style="{DynamicResource GreenButton}" Content="Add String" Command="{Binding Data.Cmd_AddStringNode, Source={StaticResource proxy}}"
+                                        FontSize="{Binding Data.Settings.RealFontSize, Source={StaticResource proxy}}"/>
                             </Grid>
                         </StackPanel>
                     </ScrollViewer>
@@ -534,6 +548,11 @@
                         </Style.Triggers>
                     </Style>
                 </StackPanel.Style>
+
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockBase}"/>
+                </StackPanel.Resources>
+                
                 <TextBlock Text="{Binding Format.NodesNeedTranslation}" Foreground="#DD2E44"/>
                 <TextBlock Text=" / " />
                 <TextBlock Text="{Binding Format.NodesNeedUpdate}" Foreground="#F4900C"/>
