@@ -6,7 +6,7 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Media;
 
-namespace SCRLanguageEditor.Viewmodel
+namespace SCRTranslationEditor.Viewmodel
 {
     /// <summary>
     /// Viewmodel for the main window

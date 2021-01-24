@@ -1,9 +1,9 @@
-﻿using SCRLanguageEditor.Viewmodel;
+﻿using SCRTranslationEditor.Viewmodel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace SCRLanguageEditor
+namespace SCRTranslationEditor
 {
     public partial class MainWindow : Window
     {

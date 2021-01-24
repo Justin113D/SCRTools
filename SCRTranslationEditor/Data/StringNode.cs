@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace SCRLanguageEditor.Data
+namespace SCRTranslationEditor.Data
 {
     /// <summary>
     /// A node holding a text value, the main focus of the language/text file

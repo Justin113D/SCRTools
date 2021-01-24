@@ -43,7 +43,7 @@
         {
           "Name": "info",
           "Description": "Info to inform the user to select a language",
-          "DefaultValue": "Select a language from the left hand menu"
+          "DefaultValue": "Select a language from the left hand menu."
         },
         {
           "Name": "thanks",

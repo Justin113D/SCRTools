@@ -1,7 +1,7 @@
-﻿using SCRLanguageEditor.Viewmodel;
+﻿using SCRTranslationEditor.Viewmodel;
 using System.Windows;
 
-namespace SCRLanguageEditor
+namespace SCRTranslationEditor
 {
     /// <summary>
     /// Interaction logic for Settings.xaml

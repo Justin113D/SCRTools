@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SCRLanguageEditor.Data
+namespace SCRTranslationEditor.Data
 {
     /// <summary>
     /// A node which holds more nodes as children (hierarchy node)

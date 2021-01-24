@@ -1,10 +1,10 @@
 ﻿using SCRCommon.Viewmodels;
-using SCRLanguageEditor.Data;
+using SCRTranslationEditor.Data;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 
-namespace SCRLanguageEditor.Viewmodel
+namespace SCRTranslationEditor.Viewmodel
 {
     /// <summary>
     /// Viewmodel for a parent node

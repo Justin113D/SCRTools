@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace SCRLanguageEditor.Viewmodel
+namespace SCRTranslationEditor.Viewmodel
 {
     /// <summary>
     /// Returns according HierarchyDataTemplate based on the given node type

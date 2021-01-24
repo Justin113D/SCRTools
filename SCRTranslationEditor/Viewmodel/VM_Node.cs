@@ -1,10 +1,10 @@
 ﻿using PropertyChanged;
 using SCRCommon.Viewmodels;
-using SCRLanguageEditor.Data;
+using SCRTranslationEditor.Data;
 using System.Windows;
 using System.Windows.Input;
 
-namespace SCRLanguageEditor.Viewmodel
+namespace SCRTranslationEditor.Viewmodel
 {
     /// <summary>
     /// Base viewmodel for a node object

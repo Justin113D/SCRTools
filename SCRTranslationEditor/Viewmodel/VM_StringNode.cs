@@ -1,7 +1,7 @@
 ﻿using SCRCommon.Viewmodels;
-using SCRLanguageEditor.Data;
+using SCRTranslationEditor.Data;
 
-namespace SCRLanguageEditor.Viewmodel
+namespace SCRTranslationEditor.Viewmodel
 {
     /// <summary>
     /// Viewmodel for a string node

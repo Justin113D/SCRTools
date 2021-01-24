@@ -7,14 +7,11 @@
 
   <ItemGroup>
     <Resource Include="Icon.ico" />
-    <Content Include="LanguageFiles\**">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
-    <AssemblyName>LanguageEditor</AssemblyName>
+    <AssemblyName>TranslationEditor</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

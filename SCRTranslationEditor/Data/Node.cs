@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace SCRLanguageEditor.Data
+namespace SCRTranslationEditor.Data
 {
     /// <summary>
     /// Base node class for other nodes in the file

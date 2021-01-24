@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace SCRLanguageEditor.Data
+namespace SCRTranslationEditor.Data
 {
     /// <summary>
     /// The Header/Language node of the file, which holds all other nodes.

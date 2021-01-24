@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCRDialogEditor", "SCRDialogEditor\SCRDialogEditor.csproj", "{31C68FA6-A020-466D-A58D-49BEC711227A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCRLanguageEditor", "SCRLanguageEditor\SCRLanguageEditor.csproj", "{D0D4E997-FDC3-4718-A50D-1D84A35EA2E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCRTranslationEditor", "SCRTranslationEditor\SCRTranslationEditor.csproj", "{D0D4E997-FDC3-4718-A50D-1D84A35EA2E4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCRCommon", "SCRCommon\SCRCommon.csproj", "{F0EE3117-EF36-42FD-8BC2-9341246C49E0}"
 EndProject

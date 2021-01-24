@@ -91,8 +91,6 @@ namespace SCRCommon.Viewmodels
 
         private int _groupings;
 
-        private int _resets;
-
         public bool ResetOnNextChange { get; set; }
 
         /// <summary>
@@ -118,7 +116,6 @@ namespace SCRCommon.Viewmodels
         {
             _trackedChanges.Clear();
             _currentChangeIndex = -1;
-            _resets++;
         }
 
         /// <summary>
@@ -245,7 +242,7 @@ namespace SCRCommon.Viewmodels
 
         public Change(Action<bool> modifyCallback)
         {
-            _modifyCallback = modifyCallback ?? throw new ArgumentNullException("Modifycallback cant be null!");
+            _modifyCallback = modifyCallback ?? throw new ArgumentNullException(nameof(modifyCallback));
         }
 
         public void Redo()
@@ -268,7 +265,7 @@ namespace SCRCommon.Viewmodels
 
         public ChangedValue(Action<T> modifyCallback, T oldValue, T newValue)
         {
-            _modifyCallback = modifyCallback ?? throw new ArgumentNullException("Modifycallback cant be null!");
+            _modifyCallback = modifyCallback ?? throw new ArgumentNullException(nameof(modifyCallback));
             _oldValue = oldValue;
             _newValue = newValue;
         }

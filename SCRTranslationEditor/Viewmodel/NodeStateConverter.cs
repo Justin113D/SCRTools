@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace SCRLanguageEditor.Viewmodel
+namespace SCRTranslationEditor.Viewmodel
 {
     [ValueConversion(typeof(int), typeof(SolidColorBrush))]
     class NodeStateConverter : IValueConverter

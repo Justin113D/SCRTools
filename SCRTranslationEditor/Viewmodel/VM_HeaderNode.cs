@@ -1,13 +1,13 @@
 ﻿using Microsoft.Win32;
 using SCRCommon.Viewmodels;
-using SCRLanguageEditor.Data;
+using SCRTranslationEditor.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 
-namespace SCRLanguageEditor.Viewmodel
+namespace SCRTranslationEditor.Viewmodel
 {
     public class VM_HeaderNode : BaseViewModel
     {
