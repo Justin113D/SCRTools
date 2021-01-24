@@ -16,9 +16,4 @@
 	    </Content>
     </ItemGroup>
 
-    <ItemGroup>
-      <None Remove="Languages\French.lang" />
-      <None Remove="Languages\Portuguese.lang" />
-    </ItemGroup>
-
 </Project>

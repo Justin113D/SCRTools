@@ -265,6 +265,33 @@ namespace SCRTranslationEditor.Viewmodel
             _devmodePin = Properties.Settings.Default.DevMode;
         }
 
+        private void RefreshNodeStates()
+        {
+            if(!Properties.Settings.Default.DevMode)
+            {
+                NodesTranslated = 0;
+                NodesNeedUpdate = 0;
+                NodesNeedTranslation = 0;
+
+                foreach(var p in _node.StringNodes)
+                {
+                    switch(p.Value.NodeState)
+                    {
+                        case 0:
+                            NodesNeedTranslation++;
+                            break;
+                        case 1:
+                            NodesNeedUpdate++;
+                            break;
+                        case 2:
+                        case 3:
+                            NodesTranslated++;
+                            break;
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Called upon changing to/from dev mode
         /// </summary>
@@ -315,29 +342,7 @@ namespace SCRTranslationEditor.Viewmodel
             Tracker.ResetOnNextChange = !Tracker.ResetOnNextChange;
             RefreshHierarchy();
 
-            if(!Properties.Settings.Default.DevMode)
-            {
-                NodesTranslated = 0;
-                NodesNeedUpdate = 0;
-                NodesNeedTranslation = 0;
-
-                foreach(var p in _node.StringNodes)
-                {
-                    switch(p.Value.NodeState)
-                    {
-                        case 0:
-                            NodesNeedTranslation++;
-                            break;
-                        case 1:
-                            NodesNeedUpdate++;
-                            break;
-                        case 2:
-                        case 3:
-                            NodesTranslated++;
-                            break;
-                    }
-                }
-            }
+            RefreshNodeStates();
             MainViewModel.ResetMessage();
         }
 
@@ -661,6 +666,8 @@ namespace SCRTranslationEditor.Viewmodel
             foreach(var n in Children)
                 n.UpdateProperties();
 
+            RefreshNodeStates();
+
             _contentFilePath = null;
         }
 
@@ -700,6 +707,8 @@ namespace SCRTranslationEditor.Viewmodel
             {
                 n.UpdateProperties();
             }
+
+            RefreshNodeStates();
 
             Tracker.Reset();
         }
