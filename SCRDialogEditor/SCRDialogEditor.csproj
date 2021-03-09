@@ -6,10 +6,20 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="ColorPickerWPF" Version="1.0.9" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="PropertyChanged.Fody" Version="3.3.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SCRCommon\SCRCommon.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="XAML\WndSettings.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="App.xaml" />
   </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@ namespace SCRTranslationEditor
     /// </summary>
     public partial class SettingsWindow : Window
     {
-        private readonly Regex _regex = new Regex("[^0-9]+"); 
+        private readonly Regex _regex = new Regex("[^0-9]+");
 
         public SettingsWindow(VM_Settings settings)
         {

@@ -1,0 +1,174 @@
+﻿<UserControl x:Class="SCRDialogEditor.XAML.UcNodeEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:SCRDialogEditor.Viewmodel"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:wpfBase="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance Type=vm:VmNode}"
+             x:Name="Top">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <wpfBase:BaseWindowStyle/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <StackPanel>
+        <TextBlock 
+            Text="Outputs" 
+            HorizontalAlignment="Center"/>
+
+        <ScrollViewer 
+            HorizontalScrollBarVisibility="Disabled" 
+            VerticalScrollBarVisibility="Auto" 
+            Background="Transparent">
+            <StackPanel>
+
+                <ListBox 
+                    ItemsSource="{Binding Outputs}" 
+                    BorderThickness="0" 
+                    Background="Transparent" 
+                    HorizontalContentAlignment="Stretch"
+                    Template="{DynamicResource BasicListControl}"
+                    ItemContainerStyle="{DynamicResource ListBoxItemDisableSelect}">
+
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:VmNodeOutput}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Output Header -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="20"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Output Expander -->
+                                    <ToggleButton 
+                                        IsChecked="{Binding IsExpanded}" 
+                                        Content="{Binding Name}" 
+                                        FontSize="15" 
+                                        VerticalAlignment="Center"/>
+
+                                    <!-- Output Delete Button -->
+                                    <Button 
+                                        Grid.Column="1" 
+                                        Command="{Binding Cmd_Delete}"
+                                        Content="✕" 
+                                        Padding="2" 
+                                        Margin="0 6">
+                                        <Button.Style>
+                                            <Style 
+                                                TargetType="{x:Type Button}" 
+                                                BasedOn="{StaticResource RedButton}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ElementName=Top, Path=DataContext.Outputs.Count}" Value="1">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </Grid>
+
+                                <!-- Expandable Area -->
+                                <Border 
+                                    Grid.Row="1" 
+                                    Margin="4" 
+                                    Padding="0 0 0 5">
+                                    <Border.Style>
+                                        <Style TargetType="{x:Type Border}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsExpanded}" Value="false">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+
+                                    <StackPanel>
+                                        <StackPanel.Resources>
+                                            <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                                <Setter Property="Margin" Value="0 0 0 5"/>
+                                                <Setter Property="Padding" Value="4"/>
+                                                <Setter Property="IsEditable" Value="True"/>
+                                                <Setter Property="IsReadOnly" Value="True"/>
+                                            </Style>
+                                            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                                                <Setter Property="Background" Value="{DynamicResource BG2}"/>
+                                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                                <Setter Property="Padding" Value="4"/>
+                                            </Style>
+                                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                                <Setter Property="Margin" Value="0 0 0 5"/>
+                                            </Style>
+                                        </StackPanel.Resources>
+
+                                        <!-- Expression Selection Combobox -->
+                                        <ComboBox 
+                                            ItemsSource="{Binding ElementName=Top, Path=DialogOptions.VMExpressionOptions.RawOptions}"
+                                            SelectedItem="{Binding Expression, Mode=TwoWay}" 
+                                            Text="{Binding ExpressionText, Mode=OneWay}"/>
+
+                                        <!-- Character Selection Combobox -->
+                                        <ComboBox
+                                            ItemsSource="{Binding ElementName=Top, Path=DialogOptions.VMCharacterOptions.RawOptions}"
+                                            SelectedItem="{Binding Character, Mode=TwoWay}" 
+                                            Text="{Binding CharacterText, Mode=OneWay}"/>
+
+                                        <Border Height="2" Background="{DynamicResource BG3}" Margin="2 4"/>
+
+                                        <!-- Output Dialog/Text -->
+                                        <TextBlock Text="Dialog:"/>
+                                        <TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                        <Border Height="2" Background="{DynamicResource BG3}" Margin="2 4"/>
+                                        
+                                        <CheckBox 
+                                            Margin="0 3"
+                                            Padding="4"
+                                            Content="Keep Enabled on Return" 
+                                            IsChecked="{Binding KeepEnabled}"/>
+
+
+                                        <TextBlock Text="Flag Condition:"/>
+                                        <TextBox Text="{Binding Condition, Mode=TwoWay}"/>
+
+                                    </StackPanel>
+                                </Border>
+
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <!-- Add Output Button -->
+                <Button 
+                    Content="Add Output" 
+                    Command="{Binding Cmd_AddOutput}" 
+                    HorizontalAlignment="Stretch" 
+                    Margin="2 0">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BlueButton}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding }" Value="{x:Null}">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+        </ScrollViewer>
+    </StackPanel>
+</UserControl>

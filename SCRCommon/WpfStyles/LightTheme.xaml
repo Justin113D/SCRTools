@@ -4,13 +4,17 @@
     <Color x:Key="FontColor">#FF0E0E0E</Color>
     <Color x:Key="HintFontColor">#FF151515</Color>
 
-    <Color x:Key="BGCol1">#FFF0F0F0</Color>
-    <Color x:Key="BGCol2">#FFD8D8D8</Color>
-    <Color x:Key="BGCol3">#FFC9C9C9</Color>
+    <Color x:Key="BGCol1">#F0F0F0</Color>
+    <Color x:Key="BGCol2">#D8D8D8</Color>
+    <Color x:Key="BGCol3">#C9C9C9</Color>
+    <Color x:Key="BGCol4">#BABABA</Color>
 
     <Color x:Key="SelectedBGCol">#FFACC4D4</Color>
     <Color x:Key="DisabledBGCol">#FF5F5F5F</Color>
 
+    <Color x:Key="OutlineCol">#aaa</Color>
+    <Color x:Key="OutlineHGCol">#777</Color>
+    
     <Color x:Key="SelectedCol">#b4cce0</Color>
     <Color x:Key="HighlightedCol">#b7d3eb</Color>
     <Color x:Key="PressedCol">#a7c4d4</Color>

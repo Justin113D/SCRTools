@@ -1,8 +1,10 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     x:Class="SCRCommon.WpfStyles.BaseWindowStyle"
-                    x:ClassModifier="public">
-
+                    x:ClassModifier="public"
+                    xmlns:local="clr-namespace:SCRCommon.WpfStyles">
+    
+    <!-- Brushes based on the theme colors -->
 
     <SolidColorBrush x:Key="FontBrush" Color="{DynamicResource FontColor}"/>
     <SolidColorBrush x:Key="HintFontBrush" Color="{DynamicResource HintFontColor}"/>
@@ -10,12 +12,38 @@
     <SolidColorBrush x:Key="BG1" Color="{DynamicResource BGCol1}"/>
     <SolidColorBrush x:Key="BG2" Color="{DynamicResource BGCol2}"/>
     <SolidColorBrush x:Key="BG3" Color="{DynamicResource BGCol3}"/>
+    <SolidColorBrush x:Key="BG4" Color="{DynamicResource BGCol4}"/>
+    
+    <SolidColorBrush x:Key="Outline" Color="{DynamicResource OutlineCol}"/>
+    <SolidColorBrush x:Key="OutlineHG" Color="{DynamicResource OutlineHGCol}"/>
 
     <SolidColorBrush x:Key="SelectedBG" Color="{DynamicResource SelectedCol}"/>
     <SolidColorBrush x:Key="HighlightedBG" Color="{DynamicResource HighlightedCol}"/>
     <SolidColorBrush x:Key="PressedBG" Color="{DynamicResource PressedCol}"/>
     <SolidColorBrush x:Key="DisabledBG" Color="{DynamicResource DisabledCol}"/>
 
+    <!-- Red Colors-->
+    <SolidColorBrush x:Key="Red" Color="{x:Static local:Colors.Red}"/>
+    <SolidColorBrush x:Key="Red.Disabled" Color="#813A43"/>
+    <SolidColorBrush x:Key="Red.Highlighted" Color="#FF3953"/>
+    <SolidColorBrush x:Key="Red.Selected" Color="#B00E25"/>
+    
+    <!-- Blue Colors-->
+    <SolidColorBrush x:Key="Blue" Color="{x:Static local:Colors.Blue}"/>
+    <SolidColorBrush x:Key="Blue.Disabled" Color="#456379"/>
+    <SolidColorBrush x:Key="Blue.Highlighted" Color="#4DA2E5"/>
+    <SolidColorBrush x:Key="Blue.Selected" Color="#1472BA"/>
+
+    <!-- Green Colors -->
+    <SolidColorBrush x:Key="Green" Color="{x:Static local:Colors.Green}"/>
+    <SolidColorBrush x:Key="Green.Disabled" Color="#677E5A"/>
+    <SolidColorBrush x:Key="Green.Highlighted" Color="#86C961"/>
+    <SolidColorBrush x:Key="Green.Selected" Color="#509826"/>
+
+    <!-- General Colors-->
+    <SolidColorBrush x:Key="Yellow" Color="{x:Static local:Colors.Yellow}"/>
+
+    <!-- Window Styles-->
     <Style x:Key="ToolbarButton" TargetType="{x:Type Button}">
         <Setter Property="OverridesDefaultStyle" Value="False"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -53,7 +81,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
-                    <Border x:Name="Border" Tag="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Initialized="Window_Initialized" Background="{DynamicResource BG2}" Padding="2, 42, 2, 2">
+                    <Border x:Name="Border" Tag="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Initialized="Window_Initialized"  Background="{DynamicResource BG2}" Padding="2, 42, 2, 2">
                         <ContentPresenter Content="{TemplateBinding Content}"/>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -104,6 +132,7 @@
         </Setter>
     </Style>
     <Style x:Key="DialogWindowStyle" TargetType="{x:Type Window}" BasedOn="{StaticResource WindowStyle}">
+        <Setter Property="ResizeMode" Value="CanMinimize"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
@@ -138,6 +167,7 @@
         </Setter>
     </Style>
 
+    <!-- Button Styles -->
     <Style TargetType="{x:Type Button}">
         <Style.Resources>
             <SolidColorBrush x:Key="Default" Color="{Binding Source={StaticResource BG2}, Path=Color}"/>
@@ -179,28 +209,34 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="RedButton" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+    <Style x:Key="RedButton" 
+        TargetType="{x:Type Button}" 
+        BasedOn="{StaticResource {x:Type Button}}">
         <Style.Resources>
-            <SolidColorBrush x:Key="Default" Color="#DD2E44"/>
-            <SolidColorBrush x:Key="Disabled" Color="#813A43"/>
-            <SolidColorBrush x:Key="Hover" Color="#FF3953"/>
-            <SolidColorBrush x:Key="Clicked" Color="#B00E25"/>
+            <SolidColorBrush x:Key="Default" Color="{Binding Source={StaticResource Red}, Path=Color}"/>
+            <SolidColorBrush x:Key="Disabled" Color="{Binding Source={StaticResource Red.Disabled}, Path=Color}"/>
+            <SolidColorBrush x:Key="Hover" Color="{Binding Source={StaticResource Red.Highlighted}, Path=Color}"/>
+            <SolidColorBrush x:Key="Clicked" Color="{Binding Source={StaticResource Red.Selected}, Path=Color}"/>
         </Style.Resources>
     </Style>
-    <Style x:Key="GreenButton" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+    <Style x:Key="GreenButton" 
+        TargetType="{x:Type Button}" 
+        BasedOn="{StaticResource {x:Type Button}}">
         <Style.Resources>
-            <SolidColorBrush x:Key="Default" Color="#77B255"/>
-            <SolidColorBrush x:Key="Disabled" Color="#677E5A"/>
-            <SolidColorBrush x:Key="Hover" Color="#86C961"/>
-            <SolidColorBrush x:Key="Clicked" Color="#509826"/>
+            <SolidColorBrush x:Key="Default" Color="{Binding Source={StaticResource Green}, Path=Color}"/>
+            <SolidColorBrush x:Key="Disabled" Color="{Binding Source={StaticResource Green.Disabled}, Path=Color}"/>
+            <SolidColorBrush x:Key="Hover" Color="{Binding Source={StaticResource Green.Highlighted}, Path=Color}"/>
+            <SolidColorBrush x:Key="Clicked" Color="{Binding Source={StaticResource Green.Selected}, Path=Color}"/>
         </Style.Resources>
     </Style>
-    <Style x:Key="BlueButton" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+    <Style x:Key="BlueButton" 
+        TargetType="{x:Type Button}" 
+        BasedOn="{StaticResource {x:Type Button}}">
         <Style.Resources>
-            <SolidColorBrush x:Key="Default" Color="#3B88C3"/>
-            <SolidColorBrush x:Key="Disabled" Color="#456379"/>
-            <SolidColorBrush x:Key="Hover" Color="#4DA2E5"/>
-            <SolidColorBrush x:Key="Clicked" Color="#1472BA"/>
+            <SolidColorBrush x:Key="Default" Color="{Binding Source={StaticResource Blue}, Path=Color}"/>
+            <SolidColorBrush x:Key="Disabled" Color="{Binding Source={StaticResource Blue.Disabled}, Path=Color}"/>
+            <SolidColorBrush x:Key="Hover" Color="{Binding Source={StaticResource Blue.Highlighted}, Path=Color}"/>
+            <SolidColorBrush x:Key="Clicked" Color="{Binding Source={StaticResource Blue.Selected}, Path=Color}"/>
         </Style.Resources>
     </Style>
 
@@ -230,6 +266,30 @@
     <Style TargetType="{x:Type ScrollBar}">
         <Setter Property="BorderThickness" Value="0"/>
     </Style>
+    <Style TargetType="{x:Type CheckBox}">
+        <Setter Property="Foreground" Value="{DynamicResource FontBrush}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="15"/>
+    </Style>
+
+    <ControlTemplate x:Key="BasicListControl">
+        <ItemsPresenter/>
+    </ControlTemplate>
+
+    <Style x:Key="ListBoxItemDisableSelect" 
+        TargetType="{x:Type ListBoxItem}">
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                    <ContentPresenter 
+                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <!--Modified template for menu item menus-->
     <Geometry x:Key="Checkmark">M 0,5.1 L 1.7,5.2 L 3.4,7.1 L 8,0.4 L 9.2,0 L 3.3,10.8 Z</Geometry>
@@ -237,7 +297,36 @@
     <Geometry x:Key="DownArrow">M 0,0 L 3.5,4 L 7,0 Z</Geometry>
     <Geometry x:Key="RightArrow">M 0,0 L 4,3.5 L 0,7 Z</Geometry>
     <MenuScrollingVisibilityConverter x:Key="MenuScrollingVisibilityConverter"/>
-    
+
+    <Style TargetType="{x:Type ToggleButton}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Padding="{TemplateBinding Padding}" Margin="{TemplateBinding Margin}">
+                        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Path x:Name="ExpandPath"
+                                    HorizontalAlignment="Left" 
+                                    VerticalAlignment="Center" 
+                                    Margin="1"
+                                    Fill="{DynamicResource FontBrush}"
+                                    Data="M 4 0 L 8 4 L 4 8 Z"/>
+                            <TextBlock Grid.Column="1" Text="{TemplateBinding Content}" Foreground="{DynamicResource FontBrush}"/>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Data" TargetName="ExpandPath" Value="M 0 4 L 8 4 L 4 8 Z"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <ControlTemplate x:Key="{ComponentResourceKey ResourceId=SubmenuItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}" TargetType="{x:Type MenuItem}">
         <Grid SnapsToDevicePixels="true">
             <Rectangle x:Name="Bg" Fill="{TemplateBinding Background}" RadiusY="2" RadiusX="2"/>
@@ -522,10 +611,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <LinearGradientBrush x:Key="ComboBox.Static.Background" EndPoint="0,1" StartPoint="0,0">
-        <GradientStop Color="#FFF0F0F0" Offset="0.0"/>
-        <GradientStop Color="Red" Offset="1.0"/>
-    </LinearGradientBrush>
     <SolidColorBrush x:Key="ComboBox.Static.Border" Color="#FFACACAC"/>
     <SolidColorBrush x:Key="ComboBox.Static.Editable.Background" Color="#FFFFFFFF"/>
     <SolidColorBrush x:Key="ComboBox.Static.Editable.Border" Color="#FFABADB3"/>
@@ -688,6 +773,7 @@
     </ControlTemplate>
     
     <Style x:Key="ComboBoxEditableTextBox" TargetType="{x:Type TextBox}">
+        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="OverridesDefaultStyle" Value="true"/>
         <Setter Property="AllowDrop" Value="true"/>
         <Setter Property="MinWidth" Value="0"/>
@@ -710,7 +796,7 @@
                 <ColumnDefinition MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" Width="0"/>
             </Grid.ColumnDefinitions>
             <Popup x:Name="PART_Popup" AllowsTransparency="true" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom">
-                <Border x:Name="dropDownBorder" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" BorderThickness="1" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+                <Border x:Name="dropDownBorder" BorderThickness="0"  Background="{DynamicResource BG2}">
                     <ScrollViewer x:Name="DropDownScrollViewer">
                         <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
                             <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
@@ -722,17 +808,20 @@
                 </Border>
             </Popup>
             <ToggleButton x:Name="toggleButton" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.ColumnSpan="2" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource ComboBoxToggleButton}"/>
-            <Border x:Name="border" Background="{StaticResource TextBox.Static.Background}" Margin="{TemplateBinding BorderThickness}">
-                <TextBox x:Name="PART_EditableTextBox" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}}" Margin="{TemplateBinding Padding}" Style="{StaticResource ComboBoxEditableTextBox}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+            <Border x:Name="border" Background="{TemplateBinding Background}" Margin="{TemplateBinding BorderThickness}">
+                <Grid>
+                    <TextBox x:Name="PART_EditableTextBox" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}}" Margin="{TemplateBinding Padding}" Style="{StaticResource ComboBoxEditableTextBox}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    <TextBlock x:Name="PART_ReadonlyText" Text="{TemplateBinding Text}" Visibility="Collapsed" Margin="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}"/>
+                </Grid>
             </Border>
         </Grid>
         <ControlTemplate.Triggers>
             <Trigger Property="IsEnabled" Value="false">
                 <Setter Property="Opacity" TargetName="border" Value="0.56"/>
             </Trigger>
-            <Trigger Property="IsKeyboardFocusWithin" Value="true">
+            <!--<Trigger Property="IsKeyboardFocusWithin" Value="true">
                 <Setter Property="Foreground" Value="Black"/>
-            </Trigger>
+            </Trigger>-->
             <Trigger Property="HasItems" Value="false">
                 <Setter Property="Height" TargetName="dropDownBorder" Value="95"/>
             </Trigger>
@@ -746,6 +835,11 @@
             <Trigger Property="ScrollViewer.CanContentScroll" SourceName="DropDownScrollViewer" Value="false">
                 <Setter Property="Canvas.Top" TargetName="opaqueRect" Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}"/>
                 <Setter Property="Canvas.Left" TargetName="opaqueRect" Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}"/>
+            </Trigger>
+            <Trigger Property="IsReadOnly" Value="True">
+                <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Collapsed"/>
+                <Setter TargetName="PART_ReadonlyText" Property="Visibility" Value="Visible"/>
+                <Setter TargetName="border" Property="IsHitTestVisible" Value="False"/>
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -762,6 +856,7 @@
         <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
         <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
         <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+        <Setter Property="FontSize" Value="15"/>
         <Setter Property="Template" Value="{StaticResource ComboBoxTemplate}"/>
         <Style.Triggers>
             <Trigger Property="IsEditable" Value="true">

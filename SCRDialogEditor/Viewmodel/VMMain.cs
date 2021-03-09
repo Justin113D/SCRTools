@@ -1,22 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.ObjectModel;
-using SCRCommon.Viewmodels;
+﻿using SCRCommon.Viewmodels;
+using SCRDialogEditor.Data;
+using SCRDialogEditor.XAML;
 
 namespace SCRDialogEditor.Viewmodel
 {
-    public class VMMain : BaseViewModel
+    public class VmMain : FileBaseViewModel
     {
-        public VMGrid Grid { get; private set; }
+        /// <summary>
+        /// Command for the "settings" button
+        /// </summary>
+        public RelayCommand Cmd_Settings 
+            => new(OpenSettings);
 
-        public VMMain()
+        public RelayCommand Cmd_DialogOptions 
+            => new(OpenDialogOptions);
+
+        public VmGrid Grid { get; }
+
+        public VmDialogOptions DialogOptions { get; private set; }
+
+        public VmSettings Settings { get; }
+
+        public override string FileFilter 
+            => "Json File (*.json)|*.json";
+
+        public override string FileTypeName 
+            => "Json";
+
+        public VmMain()
         {
-            Grid = new VMGrid();
+            Settings = new VmSettings(this);
+            DialogOptions = new VmDialogOptions();
+            Grid = new VmGrid(this);
+        }
 
-            Grid.Nodes.Add(new VMNode(1));
+        /// <summary>
+        /// Creates a settings dialog
+        /// </summary>
+        private void OpenSettings() => new WndSettings(Settings).ShowDialog();
+
+        private void OpenDialogOptions() => new WndDialogOptions(DialogOptions).ShowDialog();
+
+      
+        public override bool Load(string path)
+        {
+            Dialog data;
+            try
+            {
+                data = Dialog.LoadFromFile(path);
+            }
+            catch
+            {
+                return false;
+            }
+
+            Grid.SetDialog(data);
+            return true;
+        }
+
+        public override void Save(string path)
+        {
+            Grid.Data.SaveToFile(path);
+        }
+
+        public override bool ResetConfirmation()
+            => true;
+
+        public override void Reset()
+        {
+            Grid.SetDialog(new Dialog());
         }
     }
 }

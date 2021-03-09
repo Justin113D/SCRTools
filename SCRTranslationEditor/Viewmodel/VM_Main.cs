@@ -2,7 +2,6 @@
 using SCRCommon.Viewmodels;
 using System;
 using System.Diagnostics;
-using System.Timers;
 using System.Windows;
 using System.Windows.Media;
 
@@ -18,56 +17,58 @@ namespace SCRTranslationEditor.Viewmodel
         /// <summary>
         /// Command for the "load format" button
         /// </summary>
-        public RelayCommand Cmd_LoadFormat { get; }
+        public RelayCommand Cmd_LoadFormat => new RelayCommand(OpenFormat);
         /// <summary>
         /// Command for the "Save Format" button
         /// </summary>
-        public RelayCommand Cmd_NewFile { get; }
+        public RelayCommand Cmd_NewFile => new RelayCommand(NewFile);
         /// <summary>
         /// Command for the "Open File" button
         /// </summary>
-        public RelayCommand Cmd_Open { get; }
+        public RelayCommand Cmd_Open => new RelayCommand(OpenFile);
         /// <summary>
         /// Command for the "save" button
         /// </summary>
-        public RelayCommand Cmd_Save { get; }
+        public RelayCommand Cmd_Save => new RelayCommand(OpenFile);
         /// <summary>
         /// Command for the "save as" button
         /// </summary>
-        public RelayCommand Cmd_SaveAs { get; }
+        public RelayCommand Cmd_SaveAs => new RelayCommand(SaveFileAs);
         /// <summary>
         /// Command for the "settings" button
         /// </summary>
-        public RelayCommand Cmd_Settings { get; }
+        public RelayCommand Cmd_Settings => new RelayCommand(OpenSettings);
         /// <summary>
         /// Gets called by the top-level "Add String" button
         /// </summary>
-        public RelayCommand Cmd_AddStringNode { get; }
+        public RelayCommand Cmd_AddStringNode => new RelayCommand(() => Format.AddStringNode());
         /// <summary>
         /// Gets called by the top-level "Add Parent" button
         /// </summary>
-        public RelayCommand Cmd_AddParentNode { get; }
+        public RelayCommand Cmd_AddParentNode => new RelayCommand(() => Format.AddParentNode());
         /// <summary>
         /// Bound to Ctrl+Z
         /// </summary>
-        public RelayCommand Cmd_Undo { get; }
+        public RelayCommand Cmd_Undo => new RelayCommand(Undo);
         /// <summary>
         /// Bound to Ctrl+Y
         /// </summary>
-        public RelayCommand Cmd_Redo { get; }
+        public RelayCommand Cmd_Redo => new RelayCommand(Redo);
         /// <summary>
         /// Used to Expand all nodes. <br/>
         /// Calls <see cref="VM_HeaderNode.ExpandAll"/>
         /// </summary>
-        public RelayCommand Cmd_ExpandAll { get; }
+        public RelayCommand Cmd_ExpandAll => new RelayCommand(() => Format.ExpandAll());
         /// <summary>
         /// Used to Collapse all nodes. <br/>
         /// Calls <see cref="VM_HeaderNode.CollapseAll"/>
         /// </summary>
-        public RelayCommand Cmd_CollapseAll { get; }
+        public RelayCommand Cmd_CollapseAll => new RelayCommand(() => Format.CollapseAll());
 
-        public RelayCommand Cmd_OpenWiki { get; }
+        public RelayCommand Cmd_OpenWiki => new RelayCommand(OpenWiki);
         #endregion
+
+        #region properties
 
         /// <summary>
         /// Settings viewmodel, used for initializing the settings window
@@ -109,6 +110,8 @@ namespace SCRTranslationEditor.Viewmodel
         /// </summary>
         public Action ShowWaitCursor { get; set; }
 
+        #endregion
+
         /// <summary>
         /// Sets up the viewmodel 
         /// </summary>
@@ -116,23 +119,6 @@ namespace SCRTranslationEditor.Viewmodel
         public VM_Main()
         {
             Settings = new VM_Settings(this);
-            Cmd_LoadFormat = new RelayCommand(OpenFormat);
-
-            Cmd_NewFile = new RelayCommand(NewFile);
-            Cmd_Open = new RelayCommand(OpenFile);
-            Cmd_Save = new RelayCommand(SaveFile);
-            Cmd_SaveAs = new RelayCommand(SaveFileAs);
-
-            Cmd_Settings = new RelayCommand(OpenSettings);
-            Cmd_AddStringNode = new RelayCommand(() => Format.AddStringNode());
-            Cmd_AddParentNode = new RelayCommand(() => Format.AddParentNode());
-
-            Cmd_Undo = new RelayCommand(Undo);
-            Cmd_Redo = new RelayCommand(Redo);
-            Cmd_ExpandAll = new RelayCommand(() => Format.ExpandAll());
-            Cmd_CollapseAll = new RelayCommand(() => Format.CollapseAll());
-            Cmd_OpenWiki = new RelayCommand(OpenWiki);
-
             MessageColor = new SolidColorBrush(Colors.Transparent);
 
             if(string.IsNullOrWhiteSpace(Properties.Settings.Default.DefaultFormatPath))
@@ -173,7 +159,7 @@ namespace SCRTranslationEditor.Viewmodel
             UpdateTextBox.Invoke();
             if(Properties.Settings.Default.DevMode)
             {
-                if (Format.SaveFormat(false))
+                if(Format.SaveFormat(false))
                 {
                     SetMessage("Format Saved!");
                 }
@@ -248,6 +234,8 @@ namespace SCRTranslationEditor.Viewmodel
 
         #endregion
 
+        #region Tool methods
+
         /// <summary>
         /// Creates a settings dialog
         /// </summary>
@@ -312,7 +300,7 @@ namespace SCRTranslationEditor.Viewmodel
 
             OnPropertyChanged(nameof(ShowMessage));
         }
-    
+
         private void OpenWiki()
         {
             var psi = new ProcessStartInfo
@@ -320,7 +308,9 @@ namespace SCRTranslationEditor.Viewmodel
                 UseShellExecute = true,
                 FileName = "https://github.com/Justin113D/SCRTools/wiki/Language-Editor"
             };
-            Process.Start(psi);   
+            Process.Start(psi);
         }
+
+        #endregion
     }
 }

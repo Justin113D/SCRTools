@@ -148,7 +148,7 @@ namespace SCRTranslationEditor.Viewmodel
             OpenFileDialog ofd = new OpenFileDialog()
             {
                 Title = "Select format file",
-                Filter = "Xml file (*.xml)|*.xml"
+                Filter = "JSON file (*.json)|*.json"
             };
             if(ofd.ShowDialog() == true)
             {

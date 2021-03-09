@@ -26,23 +26,21 @@ namespace SCRCommon.WpfStyles
         /// </summary>
         private static Theme windowTheme = Theme.Dark;
 
+        public static ResourceDictionary currentTheme { get; private set; }
+
         /// <summary>
         /// Gets, sets and updates the window theme accordingly
         /// </summary>
         public static Theme WindowTheme
         {
-            get
-            {
-                return windowTheme;
-            }
+            get => windowTheme;
             set
             {
                 if(windowTheme == value)
                     return;
                 windowTheme = value;
 
-
-                ResourceDictionary theme = GetTheme(value);
+                currentTheme = GetTheme(value);
 
                 if(activeWindows == null)
                 {
@@ -56,7 +54,7 @@ namespace SCRCommon.WpfStyles
                     {
                         if(rd is BaseWindowStyle style)
                         {
-                            style.MergedDictionaries[0] = theme;
+                            style.MergedDictionaries[0] = currentTheme;
                             break;
                         }
                     }
@@ -79,12 +77,17 @@ namespace SCRCommon.WpfStyles
         /// </summary>
         private Window window;
 
+        static BaseWindowStyle()
+        {
+            currentTheme = GetTheme(WindowTheme);
+        }
+
         /// <summary>
         /// Default constructor
         /// </summary>
         public BaseWindowStyle()
         {
-            MergedDictionaries.Add(GetTheme(WindowTheme));
+            MergedDictionaries.Add(currentTheme);
             InitializeComponent();
         }
 
@@ -151,6 +154,8 @@ namespace SCRCommon.WpfStyles
         /// <param name="e"></param>
         private void WindowStateChanged(object sender, EventArgs e)
         {
+            if(maximizeButton == null)
+                return;
             maximizeButton.Content = window.WindowState == WindowState.Maximized ? "◱" : "☐";
         }
 

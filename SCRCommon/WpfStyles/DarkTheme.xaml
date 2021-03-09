@@ -7,6 +7,10 @@
     <Color x:Key="BGCol1">#444</Color>
     <Color x:Key="BGCol2">#383838</Color>
     <Color x:Key="BGCol3">#333</Color>
+    <Color x:Key="BGCol4">#282828</Color>
+
+    <Color x:Key="OutlineCol">#666</Color>
+    <Color x:Key="OutlineHGCol">#888</Color>
 
     <Color x:Key="SelectedCol">#777</Color>
     <Color x:Key="HighlightedCol">#555</Color>

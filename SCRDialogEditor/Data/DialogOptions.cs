@@ -1,0 +1,98 @@
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Windows.Media;
+
+namespace SCRDialogEditor.Data
+{
+    /// <summary>
+    /// Single type of option for a Node
+    /// </summary>
+    [Serializable]
+    public class NodeOption
+    {
+
+        /// <summary>
+        /// Name of the Emotion
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Color to represent the emotion
+        /// </summary>
+        public Color Color { get; set; }
+
+        public NodeOption()
+        {
+            Color = Colors.LightGray;
+        }
+
+        public override string ToString() => Name;
+    }
+
+    /// <summary>
+    /// Node output icon
+    /// </summary>
+    [Serializable]
+    public class NodeIcon
+    {
+        /// <summary>
+        /// Descriptor name for the icon
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Image path to the icon
+        /// </summary>
+        public string IconPath;
+
+        public override string ToString() => Name;
+    }
+
+    /// <summary>
+    /// Dialog options
+    /// </summary>
+    [Serializable]
+    public class DialogOptions
+    {
+        /// <summary>
+        /// All available character options
+        /// </summary>
+        public List<NodeOption> CharacterOptions { get; private set; }
+
+        /// <summary>
+        /// All available emotion options
+        /// </summary>
+        public List<NodeOption> ExpressionOptions { get; private set; }
+
+        public List<NodeIcon> PathTypes { get; private set; }
+
+        public DialogOptions()
+        {
+            CharacterOptions = new List<NodeOption>();
+            ExpressionOptions = new List<NodeOption>();
+            PathTypes = new List<NodeIcon>();
+        }
+
+        /// <summary>
+        /// Saves dialog options to a json file
+        /// </summary>
+        /// <param name="Path"></param>
+        public void SaveToFile(string Path)
+        {
+            string output = JsonConvert.SerializeObject(this);
+            File.WriteAllText(Path, output);
+        }
+
+        /// <summary>
+        /// Reads dialog options from a json file
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static DialogOptions ReadFromFile(string path)
+        {
+            return JsonConvert.DeserializeObject<DialogOptions>(File.ReadAllText(path));
+        }
+    }
+}

@@ -26,5 +26,35 @@ namespace SCRDialogEditor.Properties
                 return defaultInstance;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Dark")]
+        public SCRCommon.WpfStyles.Theme WindowTheme
+        {
+            get
+            {
+                return ((SCRCommon.WpfStyles.Theme)(this["WindowTheme"]));
+            }
+            set
+            {
+                this["WindowTheme"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DialogOptionsPath
+        {
+            get
+            {
+                return ((string)(this["DialogOptionsPath"]));
+            }
+            set
+            {
+                this["DialogOptionsPath"] = value;
+            }
+        }
     }
 }
