@@ -73,10 +73,7 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         public VisualBrush Background { get; private set; }
 
-        /// <summary>
-        /// Grid translation
-        /// </summary>
-        public TranslateTransform Position { get; private set; }
+        public MatrixTransform Transform { get; private set; }
 
         public Color BackgroundColor
         {
@@ -133,7 +130,7 @@ namespace SCRDialogEditor.Viewmodel
             Data = dialog;
 
             Outputs = new();
-            Position = new();
+            Transform = new();
             Nodes = new();
 
             Dictionary<Node, VmNode> viewmodelPairs = new();
@@ -172,7 +169,8 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         public void UpdateBackground()
         {
-            Background.Viewport = new Rect(Position.X, Position.Y, brushDim, brushDim);
+            double width = brushDim * Transform.Matrix.M11;
+            Background.Viewport = new Rect(Transform.Matrix.OffsetX, Transform.Matrix.OffsetY, width, width);
         }
 
         /// <summary>
@@ -190,9 +188,10 @@ namespace SCRDialogEditor.Viewmodel
         /// <param name="dif"></param>
         public void MoveGrid(Point dif)
         {
-            Position.X += dif.X;
-            Position.Y += dif.Y;
-            OnPropertyChanged(nameof(Position));
+            Matrix m = Transform.Matrix;
+            m.Translate(dif.X, dif.Y);
+            Transform.Matrix = m;
+
             UpdateBackground();
         }
 
@@ -204,12 +203,8 @@ namespace SCRDialogEditor.Viewmodel
         /// <param name="absolute"></param>
         public void MoveGrabbed(Point dif, Point absolute)
         {
-            Grabbed?.Move(dif);
-
-            Connecting?.UpdateEndPosition(
-                new Point(absolute.X - Position.X, absolute.Y - Position.Y)
-            );
-
+            Grabbed?.Move( dif );
+            Connecting?.UpdateEndPosition(absolute);
         }
 
         /// <summary>
@@ -252,7 +247,7 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         private void RecenterContents()
         {
-            if(Outputs.Count == 0)
+            if(Nodes.Count == 0)
                 return;
 
             // find the starter node
@@ -271,8 +266,10 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         private void RecenterView()
         {
-            Position.X = 0;
-            Position.Y = 0;
+            Matrix m = Transform.Matrix;
+            m.OffsetX = 0;
+            m.OffsetY = 0;
+            Transform.Matrix = m;
             UpdateBackground();
         }
     }

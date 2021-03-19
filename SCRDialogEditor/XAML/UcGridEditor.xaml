@@ -44,7 +44,8 @@
             MouseDown="GridBorder_MouseDown"
             MouseUp="GridBorder_MouseUp"
             MouseMove="GridBorder_MouseMove"
-            MouseLeave="GridBorder_MouseLeave">
+            MouseLeave="GridBorder_MouseLeave"
+            MouseWheel="GridBorder_MouseWheel">
 
             <Grid.Background>
                 <RadialGradientBrush RadiusX="0.8" RadiusY="0.8" ColorInterpolationMode="SRgbLinearInterpolation">
@@ -56,7 +57,7 @@
 
             <!-- Used to display the connections between the nodes -->
             <ItemsControl ItemsSource="{Binding Outputs}"
-                        RenderTransform="{Binding Position}"
+                        RenderTransform="{Binding Transform}"
                         Focusable="False">
 
                 <ItemsControl.Template>
@@ -73,7 +74,7 @@
             </ItemsControl>
 
             <ItemsControl ItemsSource="{Binding Nodes}" 
-                        RenderTransform="{Binding Position}"
+                        RenderTransform="{Binding Transform}"
                         Focusable="False">
 
                 <ItemsControl.ItemTemplate>
