@@ -3,9 +3,8 @@ using SCRCommon.WpfStyles;
 using SCRDialogEditor.Data;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -14,6 +13,7 @@ namespace SCRDialogEditor.Viewmodel
     public class VmGrid : BaseViewModel
     {
         #region constants
+
         /// <summary>
         /// Grid background cell width
         /// </summary>
@@ -23,65 +23,44 @@ namespace SCRDialogEditor.Viewmodel
         /// Half the width of a background cell
         /// </summary>
         public const int halfBrushDim = brushDim / 2;
+
         #endregion
 
         #region Commands
-        /// <summary>
-        /// Command for MouseMove event
-        /// </summary>
-        public RelayCommand<MouseEventArgs> Cmd_MouseMove 
-            => new(MouseMove);
 
         /// <summary>
-        /// Command for MouseLeave event
+        /// Deletes the active node from the grid
         /// </summary>
-        public RelayCommand<MouseEventArgs> Cmd_MouseLeave 
-            => new(MouseLeave);
+        public RelayCommand Cmd_DeleteNode
+            => new(DeleteActiveNode);
 
-        /// <summary>
-        /// Command for MouseDown event
-        /// </summary>
-        public RelayCommand<MouseButtonEventArgs> Cmd_MouseDown 
-            => new(MouseDown);
+        public RelayCommand Cmd_RecenterContents
+            => new(RecenterContents);
 
-        /// <summary>
-        /// Command for MouseUp event
-        /// </summary>
-        public RelayCommand<MouseButtonEventArgs> Cmd_MouseUp 
-            => new(MouseUp);
-
-        /// <summary>
-        /// Gets initiated once the grid container is loaded
-        /// </summary>
-        public RelayCommand<Grid> Cmd_ContainerLoaded 
-            => new(ContainerLoaded);
-
-        /// <summary>
-        /// Adds a node to the grid
-        /// </summary>
-        public RelayCommand<KeyEventArgs> Cmd_AddNode 
-            => new(AddNode);
-
-        public RelayCommand Cmd_DeleteNode 
-            => new(DeleteNode);
-
-        public RelayCommand Cmd_Focus
-            => new(() => _container?.Focus());
+        public RelayCommand Cmd_RecenterView
+            => new(RecenterView);
 
         #endregion
 
-        public VmMain VmMain { get; }
+        #region Private Fields
+
+        private VmNode _grabbed;
+
+        private VmNodeOutput _connecting;
+
+        #endregion
+
+        public VmMain Main { get; }
 
         /// <summary>
         /// Dialog data
         /// </summary>
-        public Dialog Data { get; private set; }
+        public Dialog Data { get; }
 
         /// <summary>
         /// Nodes to display
         /// </summary>
         public ObservableCollection<VmNode> Nodes { get; }
-
 
         /// <summary>
         /// All note outputs
@@ -105,29 +84,26 @@ namespace SCRDialogEditor.Viewmodel
             set => ((SolidColorBrush)((Path)Background.Visual).Fill).Color = value;
         }
 
-
-        /// <summary>
-        /// Border object to capture mouse position
-        /// </summary>
-        private Grid _container;
-
-        /// <summary>
-        /// Last mouse position (null = mouse no longer inside window
-        /// </summary>
-        private Point? _mousePos;
-
         /// <summary>
         /// Grabbed Node
         /// </summary>
-        public VmNode Grabbed { get; set; }
+        public VmNode Grabbed
+        {
+            get => _grabbed;
+            set
+            {
+                if(_grabbed == value)
+                    return;
+
+                _grabbed?.EndGrab();
+                _grabbed = value;
+            }
+        }
 
         /// <summary>
         /// Selected Node to edit
         /// </summary>
         public VmNode Active { get; set; }
-
-
-        private VmNodeOutput _connecting;
 
         /// <summary>
         /// The nodeoutput that is currently being "dragged"
@@ -150,18 +126,30 @@ namespace SCRDialogEditor.Viewmodel
             }
         }
 
-        public Point DragPosition { get; set; }
 
-
-
-        public VmGrid(VmMain mainVM)
+        public VmGrid(VmMain mainVM, Dialog dialog)
         {
-            VmMain = mainVM;
-            Data = new Dialog();
+            Main = mainVM;
+            Data = dialog;
 
             Outputs = new();
             Position = new();
             Nodes = new();
+
+            Dictionary<Node, VmNode> viewmodelPairs = new();
+            foreach(Node node in dialog.Nodes)
+            {
+                VmNode vmnode = new(this, node);
+                Nodes.Add(vmnode);
+                viewmodelPairs.Add(node, vmnode);
+            }
+
+            foreach(VmNode vmnode in Nodes)
+                foreach(VmNodeOutput vmout in vmnode.Outputs)
+                    if(vmout.Data.Output != null)
+                    {
+                        vmout.VmOutput = viewmodelPairs[vmout.Data.Output];
+                    }
 
             Background = new()
             {
@@ -179,39 +167,6 @@ namespace SCRDialogEditor.Viewmodel
             UpdateBackground();
         }
 
-        public void SetDialog(Dialog dialog)
-        {
-            foreach(VmNode vmnode in Nodes)
-            {
-                foreach(VmNodeOutput vmout in vmnode.Outputs)
-                {
-                    vmout.VmOutput = null;
-                    vmout.Displaying = false;
-                }
-            }
-            Nodes.Clear();
-            Active = null;
-
-            // create new data
-            Dictionary<Node, VmNode> viewmodelPairs = new();
-            foreach(Node node in dialog.Nodes)
-            {
-                VmNode vmnode = new(this, node);
-                Nodes.Add(vmnode);
-                viewmodelPairs.Add(node, vmnode);
-            }
-
-            foreach(VmNode vmnode in Nodes)
-                foreach(VmNodeOutput vmout in vmnode.Outputs)
-                    if(vmout.Data.Output != null)
-                    {
-                        vmout.VmOutput = viewmodelPairs[vmout.Data.Output];
-                        vmout.Displaying = true;
-                    }
-
-            Data = dialog;
-        }
-
         /// <summary>
         /// Updates the background brush
         /// </summary>
@@ -221,152 +176,105 @@ namespace SCRDialogEditor.Viewmodel
         }
 
         /// <summary>
-        /// Gets position of a node socket by using its border
+        /// Lets go of the grabbed connection/node
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
-        public Point GetPosition(FrameworkElement element)
+        public void LetGo()
         {
-            try
-            {
-                Point p = element?.TransformToAncestor(_container).Transform(default) ?? default;
-                p.X -= Position.X;
-                p.Y -= Position.Y;
-                return p;
-            }
-            catch
-            {
-                return default;
-            }
+            Grabbed = null;
+            Connecting = null;
+        }
+
+        /// <summary>
+        /// Moves the grid by a difference
+        /// </summary>
+        /// <param name="dif"></param>
+        public void MoveGrid(Point dif)
+        {
+            Position.X += dif.X;
+            Position.Y += dif.Y;
+            OnPropertyChanged(nameof(Position));
+            UpdateBackground();
+        }
+
+        /// <summary>
+        /// Moves whatever is grabbed <br/>
+        /// nodes require difference, while connections the absolute position
+        /// </summary>
+        /// <param name="dif"></param>
+        /// <param name="absolute"></param>
+        public void MoveGrabbed(Point dif, Point absolute)
+        {
+            Grabbed?.Move(dif);
+
+            Connecting?.UpdateEndPosition(
+                new Point(absolute.X - Position.X, absolute.Y - Position.Y)
+            );
+
         }
 
         /// <summary>
         /// Adds a new node at Mouse position
         /// </summary>
-        public void AddNode(KeyEventArgs t)
+        public void CreateNode(Point position)
         {
-            t.Handled = true;
-            if(!_mousePos.HasValue || t.IsRepeat)
-                return;
+            Node node = Data.CreateNode();
 
-            Node node = new Node(Data);
-            Data.Nodes.Add(node);
+            VmNode vmnode = new(this, node, position);
 
-            int posX = (int)(_mousePos?.X - Position.X);
-            int posY = (int)(_mousePos?.Y - Position.Y);
-
-            VmNode vmnode = new VmNode(this, node)
-            {
-                PositionX = posX + halfBrushDim * (posX < 0 ? -1 : 1),
-                PositionY = posY + halfBrushDim * (posY < 0 ? -1 : 1)
-            };
             Nodes.Add(vmnode);
         }
 
-        public void DeleteNode()
+        /// <summary>
+        /// Deletes a node from the grid
+        /// </summary>
+        /// <param name="node"></param>
+        public void DeleteNode(VmNode node)
         {
-            Active?.Delete();
+            node.Disconnect();
+            Nodes.Remove(node);
+            Data.RemoveNode(node.Data);
+        }
+
+        /// <summary>
+        /// Deletes the active noe
+        /// </summary>
+        private void DeleteActiveNode()
+        {
+            if(Active == null)
+                return;
+
+            DeleteNode(Active);
             Active = null;
         }
 
-        #region Eventmethods
-
         /// <summary>
-        /// Sets the container once its loaded
+        /// Recenters the contents by the start of the node structure
         /// </summary>
-        /// <param name="container"></param>
-        private void ContainerLoaded(Grid container) => _container = container;
-
-        /// <summary>
-        /// MouseLeave event method <br/>
-        /// Force-ends grabbing
-        /// </summary>
-        /// <param name="args"></param>
-        private void MouseLeave(MouseEventArgs args)
+        private void RecenterContents()
         {
-            _mousePos = null;
-            if(args.MiddleButton == MouseButtonState.Pressed)
-                Mouse.OverrideCursor = null;
-            Grabbed?.EndGrab();
-        }
+            if(Outputs.Count == 0)
+                return;
 
-        /// <summary>
-        /// MouseDown event method <br/>
-        /// Initiates Grabbing or Moving
-        /// </summary>
-        /// <param name="args"></param>
-        public void MouseDown(MouseButtonEventArgs args)
-        {
-            if(args.MiddleButton == MouseButtonState.Pressed)
-                Mouse.OverrideCursor = Cursors.SizeAll;
-            if(args.LeftButton != MouseButtonState.Pressed)
-                Grabbed?.EndGrab();
-        }
+            // find the starter node
+            VmNode start = Nodes.First(x => x.Data == Data.StartNode);
+            Point offset = new(-start.Position.X, -start.Position.Y);
 
-        /// <summary>
-        /// MouseUp event method <br/>
-        /// Ends grabbing 
-        /// </summary>
-        /// <param name="args"></param>
-        public void MouseUp(MouseButtonEventArgs args)
-        {
-            if(args.MiddleButton != MouseButtonState.Pressed)
-                Mouse.OverrideCursor = null;
-            if(args.LeftButton != MouseButtonState.Pressed)
+            foreach(var n in Nodes)
             {
-                Grabbed?.EndGrab();
-                Connecting = null;
+                n.Move(offset);
+                n.UpdateDataPosition();
             }
         }
 
         /// <summary>
-        /// MouseMove event method <br/>
-        /// 
+        /// Recenters the view
         /// </summary>
-        /// <param name="args"></param>
-        public void MouseMove(MouseEventArgs args)
+        private void RecenterView()
         {
-            Point t = args.GetPosition(_container);
-
-            int difX = (int)(t.X - (_mousePos?.X) ?? 0);
-            int difY = (int)(t.Y - (_mousePos?.Y) ?? 0);
-
-            if(args.MiddleButton == MouseButtonState.Pressed)
-            {
-                if(!_mousePos.HasValue)
-                    Mouse.OverrideCursor = Cursors.SizeAll;
-                else
-                {
-                    Position.X += difX;
-                    Position.Y += difY;
-                    OnPropertyChanged(nameof(Position));
-
-                    UpdateBackground();
-                }
-            }
-            else if(args.LeftButton == MouseButtonState.Pressed)
-            {
-                if(!_mousePos.HasValue)
-                    Mouse.OverrideCursor = Cursors.SizeAll;
-                else if (Grabbed != null)
-                {
-                    int newX = (int)DragPosition.X + difX;
-                    int newY = (int)DragPosition.Y + difY;
-                    DragPosition = new Point(newX, newY);
-                    Grabbed?.RefreshPosition();
-                }
-                else if (Connecting != null)
-                {
-                    DragPosition = new Point((_mousePos?.X ?? 0) - Position.X, (_mousePos?.Y ?? 0) - Position.Y);
-                    Connecting?.RefreshDisplay();
-                }
-
-            }
-
-            _mousePos = t;
+            Position.X = 0;
+            Position.Y = 0;
+            UpdateBackground();
         }
-
-        #endregion
     }
 }
 

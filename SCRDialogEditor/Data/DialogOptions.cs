@@ -59,20 +59,23 @@ namespace SCRDialogEditor.Data
         /// <summary>
         /// All available character options
         /// </summary>
-        public List<NodeOption> CharacterOptions { get; private set; }
+        public List<NodeOption> CharacterOptions { get; }
 
         /// <summary>
         /// All available emotion options
         /// </summary>
-        public List<NodeOption> ExpressionOptions { get; private set; }
+        public List<NodeOption> ExpressionOptions { get; }
 
-        public List<NodeIcon> PathTypes { get; private set; }
+        /// <summary>
+        /// available node icons
+        /// </summary>
+        public List<NodeIcon> NodeIcons { get; }
 
         public DialogOptions()
         {
-            CharacterOptions = new List<NodeOption>();
-            ExpressionOptions = new List<NodeOption>();
-            PathTypes = new List<NodeIcon>();
+            CharacterOptions = new();
+            ExpressionOptions = new();
+            NodeIcons = new();
         }
 
         /// <summary>

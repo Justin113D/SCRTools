@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace SCRDialogEditor.Data
 {
@@ -8,83 +9,118 @@ namespace SCRDialogEditor.Data
     /// </summary>
     public class Node
     {
-        private readonly Dialog _dialog;
+        /// <summary>
+        /// Outputs list
+        /// </summary>
+        private readonly List<NodeOutput> _outputs;
 
-        public int Index => _dialog.Nodes.IndexOf(this);
+        /// <summary>
+        /// Inputs list
+        /// </summary>
+        private readonly List<NodeOutput> _inputs;
 
+        /// <summary>
+        /// Grid location on the X Axis
+        /// </summary>
         public int LocationX { get; set; }
+
+        /// <summary>
+        /// Grid location on the Y Axis
+        /// </summary>
         public int LocationY { get; set; }
+
+        /// <summary>
+        /// If true, the portrait will be placed/focused on the right. Else on the left
+        /// </summary>
+        public bool RightPortrait { get; set; }
 
         /// <summary>
         /// Input references
         /// </summary>
-        public List<NodeOutput> Inputs { get; }
+        public ReadOnlyCollection<NodeOutput> Inputs { get; }
 
         /// <summary>
         /// Output Sockets
         /// </summary>
-        public List<NodeOutput> Outputs { get; }
+        public ReadOnlyCollection<NodeOutput> Outputs { get; }
 
 
-        public Node(Dialog dialog)
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public Node()
         {
-            _dialog = dialog;
-            Inputs = new();
-            Outputs = new()
+            _outputs = new()
             {
-                // default output
-                new NodeOutput(this)
+                new()
             };
+            _inputs = new();
+
+            Outputs = _outputs.AsReadOnly();
+            Inputs = _inputs.AsReadOnly();
         }
+
 
         /// <summary>
         /// Deletes the node from the dialog
         /// </summary>
-        public void Delete()
+        public void Disconnect()
         {
-            foreach(NodeOutput no in Inputs)
-                no.SetOutput(null);
-            foreach(NodeOutput no in Outputs)
-                no.SetOutput(null);
-            _dialog.Nodes.Remove(this);
-            if(_dialog.StartNode == this)
-                _dialog.StartNode = null;
+            foreach(NodeOutput no in _inputs)
+                no.Disconnect();
+            foreach(NodeOutput no in _outputs)
+                no.Disconnect();
         }
 
         /// <summary>
         /// Adds output to the Node
         /// </summary>
         /// <returns></returns>
-        public NodeOutput AddOutput()
+        public NodeOutput CreateOutput()
         {
-            NodeOutput result = new NodeOutput(this)
+            NodeOutput result = new()
             {
                 Expression = Outputs[0].Expression,
                 Character = Outputs[0].Character
             };
-            Outputs.Add(result);
+            _outputs.Add(result);
             return result;
         }
 
         /// <summary>
         /// Removes a specific output
         /// </summary>
-        /// <param name="output"></param>
+        /// <param name="nodeOutput"></param>
         /// <returns></returns>
-        public bool RemoveOutput(NodeOutput output)
+        public bool RemoveOutput(NodeOutput nodeOutput)
         {
-            if(Outputs.Count < 2)
+            if(_outputs.Count < 2
+               || !_outputs.Contains(nodeOutput))
                 return false;
 
-            if(!Outputs.Contains(output))
-                return false;
-
-            Outputs.Remove(output);
-            output.SetOutput(null);
+            nodeOutput.Disconnect();
+            _outputs.Remove(nodeOutput);
             return true;
         }
 
-        public void WriteJSON(JsonWriter writer)
+        /// <summary>
+        /// Registers a connected input
+        /// </summary>
+        /// <param name="nodeOutput"></param>
+        public void AddInput(NodeOutput nodeOutput)
+            => _inputs.Add(nodeOutput);
+
+        /// <summary>
+        /// Deregisters a connected input
+        /// </summary>
+        /// <param name="nodeOutput"></param>
+        public void RemoveInput(NodeOutput nodeOutput)
+            => _inputs.Remove(nodeOutput);
+
+        /// <summary>
+        /// Writes the Node to a json stream
+        /// </summary>
+        public void WriteJSON(JsonWriter writer, Dialog dialog)
         {
             writer.WriteStartObject();
 
@@ -98,16 +134,22 @@ namespace SCRDialogEditor.Data
             writer.WriteStartArray();
 
             foreach(NodeOutput no in Outputs)
-                no.WriteJson(writer);
+                no.WriteJson(writer, dialog);
 
             writer.WriteEndArray();
 
             writer.WriteEndObject();
         }
 
-        public static Node ReadJson(JsonReader reader, Dialog dialog, Dictionary<NodeOutput, int> outputIndices)
+        /// <summary>
+        /// Reads the node from a json stream
+        /// </summary>
+        /// <param name="reader">The json source reader</param>
+        /// <param name="outputIndices"></param>
+        /// <returns></returns>
+        public static Node ReadJson(JsonReader reader, Dictionary<NodeOutput, int> outputIndices)
         {
-            Node result = new(dialog);
+            Node result = new();
 
             while(reader.Read() && reader.TokenType != JsonToken.EndObject)
             {
@@ -125,9 +167,7 @@ namespace SCRDialogEditor.Data
                             break;
                         case "Outputs":
                             while(reader.Read() && reader.TokenType != JsonToken.EndArray)
-                            {
-                                result.Outputs.Add(NodeOutput.ReadJson(reader, result, outputIndices));
-                            }
+                                result._outputs.Add(NodeOutput.ReadJson(reader, outputIndices));
                             break;
                     }
                 }
@@ -137,5 +177,8 @@ namespace SCRDialogEditor.Data
 
             return result;
         }
+
+        public override string ToString()
+            => $"Loc ({LocationX}, {LocationY}); Out: {_outputs.Count}, In: {_inputs.Count}";
     }
 }

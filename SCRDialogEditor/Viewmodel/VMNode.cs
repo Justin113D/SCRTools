@@ -1,51 +1,30 @@
 ﻿using SCRCommon.Viewmodels;
 using SCRDialogEditor.Data;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace SCRDialogEditor.Viewmodel
 {
     public class VmNode : BaseViewModel
     {
         #region Commands
-        
+
         /// <summary>
         /// Add Output Command <br/>
         /// Adds a new node output
         /// </summary>
-        public RelayCommand Cmd_AddOutput 
+        public RelayCommand Cmd_AddOutput
             => new(AddOutput);
-
-        /// <summary>
-        /// MouseUp event command
-        /// </summary>
-        public RelayCommand Cmd_MouseUp 
-            => new(MouseUp);
-
-        /// <summary>
-        /// Mouse down event
-        /// </summary>
-        public RelayCommand<MouseButtonEventArgs> Cmd_MouseDown 
-            => new(MouseDown);
-
-        /// <summary>
-        /// Layout Updated event command
-        /// </summary>
-        public RelayCommand<Canvas> Cmd_LayoutLoaded 
-            => new(LayoutLoaded);
 
         #endregion
 
         /// <summary>
         /// Grid parent
         /// </summary>
-        public VmGrid VmGrid { get; }
+        public VmGrid Grid { get; }
 
         /// <summary>
         /// Data object
@@ -53,16 +32,6 @@ namespace SCRDialogEditor.Viewmodel
         public Node Data { get; }
 
         #region Properties
-
-        /// <summary>
-        /// Element that represents the node
-        /// </summary>
-        private FrameworkElement _element;
-
-        /// <summary>
-        /// Last element position
-        /// </summary>
-        private Point _elementPosition;
 
         /// <summary>
         /// Viewmodel objects for the outputs
@@ -75,52 +44,31 @@ namespace SCRDialogEditor.Viewmodel
         private readonly List<VmNodeOutput> _inputs;
 
         /// <summary>
-        /// Whether this Node is selected
+        /// Outputs attached to this node
         /// </summary>
-        public bool IsActive 
-            => VmGrid.Active == this;
-
-        /// <summary>
-        /// X Position
-        /// </summary>
-        public int PositionX
-        {
-            get
-            {
-                if(VmGrid.Grabbed == this)
-                    return (int)VmGrid.DragPosition.X;
-                else
-                    return Data.LocationX * VmGrid.brushDim + VmGrid.halfBrushDim;
-            }
-            set => Data.LocationX = (value - VmGrid.halfBrushDim) / VmGrid.brushDim;
-        }
-
-        /// <summary>
-        /// Y Position
-        /// </summary>
-        public int PositionY
-        {
-            get
-            {
-                if(VmGrid.Grabbed == this)
-                    return (int)VmGrid.DragPosition.Y;
-                else
-                    return Data.LocationY * VmGrid.brushDim + VmGrid.halfBrushDim;
-            }
-            set => Data.LocationY = (value - VmGrid.halfBrushDim) / VmGrid.brushDim;
-        }
+        public ReadOnlyCollection<VmNodeOutput> Inputs { get; }
 
         /// <summary>
         /// Header Character Color
         /// </summary>
-        public SolidColorBrush CharacterColor 
+        public SolidColorBrush CharacterColor
             => new(Outputs[0].Character?.Color ?? Colors.Gray);
 
         /// <summary>
         /// Header Expression Color
         /// </summary>
-        public SolidColorBrush ExpressionColor 
+        public SolidColorBrush ExpressionColor
             => new(Outputs[0].Expression?.Color ?? Colors.Gray);
+
+        public Point Position { get; private set; }
+
+        /// <summary>
+        /// Whether this Node is selected
+        /// </summary>
+        public bool IsActive
+            => Grid.Active == this;
+
+        public int UpdatePositionCounter { get; private set; }
 
         #endregion
 
@@ -129,11 +77,14 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         /// <param name="grid"></param>
         /// <param name="node"></param>
-        public VmNode(VmGrid grid, Node node)
+        public VmNode(VmGrid grid, Node node, Point position = default)
         {
-            VmGrid = grid;
+            Grid = grid;
             Data = node;
+
             _inputs = new();
+            Inputs = new ReadOnlyCollection<VmNodeOutput>(_inputs);
+
             Outputs = new();
             foreach(NodeOutput no in node.Outputs)
             {
@@ -141,22 +92,36 @@ namespace SCRDialogEditor.Viewmodel
                 Outputs.Add(VmOutput);
             }
 
+            if(position != default)
+            {
+                Position = position;
+                UpdateDataPosition();
+            }
+            else
+            {
+                Position = new Point(
+                    Data.LocationX * VmGrid.brushDim + VmGrid.halfBrushDim,
+                    Data.LocationY * VmGrid.brushDim + VmGrid.halfBrushDim
+                    );
+            }
         }
 
         #region Methods
+        public void Move(Point dif)
+        {
+            Position = new Point(Position.X + dif.X, Position.Y + dif.Y);
+        }
+
         /// <summary>
         /// Delets the node
         /// </summary>
-        public void Delete()
+        public void Disconnect()
         {
             foreach(VmNodeOutput no in Outputs)
-                no.VmOutput = null;
+                no.Disconnect();
 
             foreach(VmNodeOutput no in _inputs.ToArray())
-                no.VmOutput = null;
-
-            VmGrid.Data.Nodes.Remove(Data);
-            VmGrid.Nodes.Remove(this);
+                no.Disconnect();
         }
 
 
@@ -165,8 +130,8 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         public void AddOutput()
         {
-            NodeOutput output = Data.AddOutput();
-            VmNodeOutput vmOutput = new VmNodeOutput(output, this);
+            NodeOutput output = Data.CreateOutput();
+            VmNodeOutput vmOutput = new(output, this);
             Outputs.Add(vmOutput);
         }
 
@@ -181,8 +146,7 @@ namespace SCRDialogEditor.Viewmodel
             if(Outputs.Remove(vmOutput))
             {
                 vmOutput.VmOutput = null;
-                vmOutput.Displaying = false;
-                Data.Outputs.Remove(vmOutput.Data);
+                Data.RemoveOutput(vmOutput.Data);
             }
             RefreshColor();
         }
@@ -194,9 +158,8 @@ namespace SCRDialogEditor.Viewmodel
         /// <param name="vmInput"></param>
         public void AddInput(VmNodeOutput vmInput)
         {
-            if(_inputs.Count == 0 && _element != null)
-                _element.LayoutUpdated += LayoutUpdated;
             _inputs.Add(vmInput);
+            UpdatePositionCounter++;
         }
 
         /// <summary>
@@ -206,19 +169,35 @@ namespace SCRDialogEditor.Viewmodel
         public void RemoveInput(VmNodeOutput vmInput)
         {
             _inputs.Remove(vmInput);
-            if(_inputs.Count == 0)
-                _element.LayoutUpdated -= LayoutUpdated;
+            UpdatePositionCounter--;
         }
-
 
         /// <summary>
-        /// Refreshes the position Properties
+        /// Displays an output connection
         /// </summary>
-        public void RefreshPosition()
+        /// <param name="vmOutput"></param>
+        public void DisplayOutput(VmNodeOutput vmOutput)
         {
-            OnPropertyChanged(nameof(PositionX));
-            OnPropertyChanged(nameof(PositionY));
+            if(!Outputs.Contains(vmOutput) || vmOutput.Displaying)
+                return;
+
+            Grid.Outputs.Add(vmOutput);
+            UpdatePositionCounter++;
         }
+
+        /// <summary>
+        /// Hides an output connection
+        /// </summary>
+        /// <param name="vmOutput"></param>
+        public void HideOutput(VmNodeOutput vmOutput)
+        {
+            if(!Outputs.Contains(vmOutput) || !vmOutput.Displaying)
+                return;
+
+            Grid.Outputs.Remove(vmOutput);
+            UpdatePositionCounter--;
+        }
+
 
         /// <summary>
         /// Refreshes the Color properties
@@ -234,74 +213,35 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         public void EndGrab()
         {
-            VmGrid.Grabbed = null;
+            Point start = new(
+                Data.LocationX * VmGrid.brushDim + VmGrid.halfBrushDim,
+                Data.LocationY * VmGrid.brushDim + VmGrid.halfBrushDim
+                );
 
-            int difX = Math.Abs(PositionX - (int)VmGrid.DragPosition.X);
-            int difY = Math.Abs(PositionY - (int)VmGrid.DragPosition.Y);
+            int difX = (int)Math.Abs(start.X - Position.X);
+            int difY = (int)Math.Abs(start.Y - Position.Y);
 
             if(difX < 2 && difY < 2)
             {
-                VmNode oldSelected = VmGrid.Active;
-                VmGrid.Active = this;
+                VmNode oldSelected = Grid.Active;
+                Grid.Active = this;
 
                 oldSelected?.OnPropertyChanged(nameof(IsActive));
                 OnPropertyChanged(nameof(IsActive));
             }
             else
-            {
-                PositionX = (int)VmGrid.DragPosition.X + VmGrid.halfBrushDim * (VmGrid.DragPosition.X < 0 ? -1 : 1);
-                PositionY = (int)VmGrid.DragPosition.Y + VmGrid.halfBrushDim * (VmGrid.DragPosition.Y < 0 ? -1 : 1);
-            }
+                UpdateDataPosition();
         }
 
-        #endregion
-
-        #region Event methods
-
-        /// <summary>
-        /// MouseDown event method <br/>
-        /// Initiates moving the nodes
-        /// </summary>
-        private void MouseDown(MouseButtonEventArgs args)
+        public void UpdateDataPosition()
         {
-            if(args.LeftButton == MouseButtonState.Pressed)
-            {
-                VmGrid.DragPosition = new Point(PositionX, PositionY);
-                VmGrid.Grabbed = this;
-            }
-            VmGrid.MouseDown(args);
-        }
+            Data.LocationX = ((int)Position.X - VmGrid.halfBrushDim * (Position.X < 0 ? 2 : 0)) / VmGrid.brushDim;
+            Data.LocationY = ((int)Position.Y - VmGrid.halfBrushDim * (Position.Y < 0 ? 2 : 0)) / VmGrid.brushDim;
 
-        /// <summary>
-        /// MouseUp event method <br/>
-        /// If a connection was being dragged, it will be connected to this node
-        /// </summary>
-        private void MouseUp()
-        {
-            if(VmGrid.Connecting == null)
-                return;
-
-            VmGrid.Connecting.VmOutput = this;
-            VmGrid.Connecting = null;
-        }
-
-        private void LayoutLoaded(Canvas c)
-        {
-            _element = c;
-            if(_inputs.Count > 0)
-                _element.LayoutUpdated += LayoutUpdated;
-        }
-
-        private void LayoutUpdated(object sender, EventArgs args)
-        {
-            Point newPos = VmGrid.GetPosition(_element);
-
-            if(newPos != _elementPosition)
-            {
-                _elementPosition = newPos;
-                foreach(VmNodeOutput no in _inputs)
-                    no.RefreshDisplay();
-            }
+            Position = new Point(
+                Data.LocationX * VmGrid.brushDim + VmGrid.halfBrushDim,
+                Data.LocationY * VmGrid.brushDim + VmGrid.halfBrushDim
+                );
         }
 
         #endregion

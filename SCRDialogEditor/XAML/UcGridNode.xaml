@@ -1,0 +1,171 @@
+﻿<UserControl
+    x:Class="SCRDialogEditor.XAML.UcGridNode"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:wpfbase="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
+    xmlns:local="clr-namespace:SCRDialogEditor.XAML"
+    xmlns:vm="clr-namespace:SCRDialogEditor.Viewmodel"
+    mc:Ignorable="d" 
+    d:DataContext="{d:DesignInstance Type=vm:VmNode}"
+    Loaded="OnLoaded"
+    Unloaded="OnUnloaded"
+    MouseUp="OnMouseUp"
+    x:Name="Wrapper">
+
+    <UserControl.Resources>
+        <wpfbase:StaticStyle/>
+    </UserControl.Resources>
+
+    <UserControl.Template>
+        <ControlTemplate TargetType="{x:Type local:UcGridNode}">
+            <ControlTemplate.Resources>
+
+                <Style TargetType="{x:Type Border}" x:Key="Socket">
+                    <Setter Property="BorderBrush" Value="{Binding Outline, ElementName=Wrapper}"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="BorderBrush" Value="{Binding OutlineHg, ElementName=Wrapper}"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ControlTemplate.Resources>
+            
+            <Canvas>
+                <Border 
+                    Canvas.Left="-10"
+                    Canvas.Top="33"
+                    Width="20"
+                    Height="20"
+                    BorderThickness="3"
+                    Background="{TemplateBinding Background}"
+                    Style="{StaticResource Socket}">
+
+                </Border>
+                <Border 
+                    x:Name="Outline"
+                    CornerRadius="11" 
+                    BorderThickness="3" 
+                    BorderBrush="{TemplateBinding local:UcGridNode.Outline}" 
+                    Background="{TemplateBinding local:UcGridNode.Background}">
+
+                    <Grid MinWidth="120" MaxWidth="180">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="Auto" MinHeight="120"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid x:Name="GrabGrid" 
+                            Cursor="Hand"
+                            MouseDown="Grab_MouseDown">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border 
+                                CornerRadius="8 0 0 0" 
+                                Background="{Binding ExpressionColor}"
+                                SnapsToDevicePixels="True"/>
+                            <Border 
+                                Grid.Column="1" 
+                                CornerRadius="0 8 0 0" 
+                                Background="{Binding CharacterColor}"
+                                SnapsToDevicePixels="True"/>
+                        </Grid>
+
+                        <ListBox 
+                            Grid.Row="1"
+                            ItemsSource="{Binding Outputs}" 
+                            BorderThickness="0" 
+                            Background="Transparent"
+                            HorizontalContentAlignment="Stretch">
+
+                            <ListBox.Template>
+                                <ControlTemplate>
+                                    <ItemsPresenter/>
+                                </ControlTemplate>
+                            </ListBox.Template>
+
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListBoxItem}">
+                                    <Setter Property="Focusable" Value="False"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                                <ContentPresenter 
+                                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+
+                            <ListBox.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vm:VmNodeOutput}">
+                                    <Grid Height="30">
+
+                                        <TextBlock 
+                                            Text="{Binding Text}"
+                                            TextTrimming="WordEllipsis"
+                                            TextWrapping="NoWrap"
+                                            VerticalAlignment="Center"
+                                            Padding="5 5 10 5"
+                                            Foreground="{Binding Foreground, ElementName=Wrapper}"
+                                            FontSize="{Binding FontSize, ElementName=Wrapper}"/>
+
+                                        <Canvas HorizontalAlignment="Right">
+                                            <Border
+                                                Width="18"
+                                                Height="18"
+                                                Canvas.Right="-9"
+                                                Canvas.Top="9"
+                                                Background="{Binding CharacterColor}" 
+                                                BorderThickness="3"
+                                                Loaded="Socket_Loaded"
+                                                Unloaded="Socket_Unloaded"
+                                                MouseLeave="Socket_MouseLeave"
+                                                Style="{StaticResource Socket}">
+
+                                                <Polygon Points="0,0 0,11 11,0" Fill="{Binding ExpressionColor}"/>
+                                            </Border>
+                                        </Canvas>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+
+                        </ListBox>
+
+                    </Grid>
+                </Border>
+                <ContentPresenter/>
+            </Canvas>
+
+            <ControlTemplate.Triggers>
+                <Trigger SourceName="GrabGrid" Property="IsMouseOver" Value="True">
+                    <Setter TargetName="Outline" Property="BorderBrush" Value="{Binding OutlineHg, ElementName=Wrapper}"/>
+                </Trigger>
+
+                <DataTrigger Binding="{Binding IsActive}" Value="True">
+                    <Setter TargetName="Outline" Property="BorderBrush" Value="{DynamicResource Green}"/>
+                </DataTrigger>
+
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsActive}" Value="True"/>
+                        <Condition Binding="{Binding IsMouseOver, ElementName=GrabGrid}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <MultiDataTrigger.Setters>
+                        <Setter TargetName="Outline" Property="BorderBrush" Value="{DynamicResource Green.Highlighted}"/>
+                    </MultiDataTrigger.Setters>
+                </MultiDataTrigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </UserControl.Template>
+
+    <Grid/>
+</UserControl>

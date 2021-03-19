@@ -14,18 +14,20 @@ namespace SCRDialogEditor.Viewmodel
         public VmNodeOptions(List<NodeOption> options)
         {
             RawOptions = options;
-            Options = new ObservableCollection<VmNodeOption>();
+            Options = new();
             foreach(var o in RawOptions)
-                Options.Add(new VmNodeOption(this, o));
-            Options.Add(new VmNodeOption(this, null));
+                Options.Add(new(this, o));
+            Options.Add(new(this, null));
         }
 
         public void QualifyNode(NodeOption option)
         {
             RawOptions.Add(option);
-            Options.Add(new VmNodeOption(this, null));
+            Options.Add(new(this, null));
             OnPropertyChanged(nameof(RawOptions));
         }
 
+        public NodeOption GetOption(string name)
+            => RawOptions.Find(x => x.Name == name);
     }
 }

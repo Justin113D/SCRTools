@@ -8,7 +8,7 @@ namespace SCRDialogEditor.Viewmodel
 {
     public class VmDialogOptions : FileBaseViewModel
     {
-        public RelayCommand Cmd_SetDialogOptionsPath 
+        public RelayCommand Cmd_SetDialogOptionsPath
             => new(SetDialogOptionsPath);
 
         public DialogOptions DialogOptions { get; private set; }
@@ -23,10 +23,10 @@ namespace SCRDialogEditor.Viewmodel
             set => Properties.Settings.Default.DialogOptionsPath = value;
         }
 
-        public override string FileFilter 
+        public override string FileFilter
             => "Json File |*.json";
 
-        public override string FileTypeName 
+        public override string FileTypeName
             => "Dialog Options";
 
         public VmDialogOptions()

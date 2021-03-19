@@ -41,12 +41,28 @@ namespace SCRCommon.Viewmodels
 
         public abstract string FileTypeName { get; }
 
+        /// <summary>
+        /// Loads a file
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public abstract bool Load(string path);
 
+        /// <summary>
+        /// Saves a file
+        /// </summary>
+        /// <param name="path"></param>
         public abstract void Save(string path);
 
+        /// <summary>
+        /// Confirm whether current data can be overwritten
+        /// </summary>
+        /// <returns></returns>
         public abstract bool ResetConfirmation();
 
+        /// <summary>
+        /// Resets the current data
+        /// </summary>
         public abstract void Reset();
 
         private void InternalLoad()

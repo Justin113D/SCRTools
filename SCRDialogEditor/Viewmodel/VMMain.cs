@@ -6,42 +6,61 @@ namespace SCRDialogEditor.Viewmodel
 {
     public class VmMain : FileBaseViewModel
     {
+        #region Commands
+
         /// <summary>
         /// Command for the "settings" button
         /// </summary>
-        public RelayCommand Cmd_Settings 
+        public RelayCommand Cmd_Settings
             => new(OpenSettings);
 
-        public RelayCommand Cmd_DialogOptions 
+        /// <summary>
+        /// Command for the "dialog options" button
+        /// </summary>
+        public RelayCommand Cmd_DialogOptions
             => new(OpenDialogOptions);
 
-        public VmGrid Grid { get; }
+        #endregion
 
-        public VmDialogOptions DialogOptions { get; private set; }
+        public VmGrid Grid { get; private set; }
 
+        /// <summary>
+        /// Dialog options
+        /// </summary>
+        public VmDialogOptions DialogOptions { get; }
+
+        /// <summary>
+        /// Settings
+        /// </summary>
         public VmSettings Settings { get; }
 
-        public override string FileFilter 
+        public override string FileFilter
             => "Json File (*.json)|*.json";
 
-        public override string FileTypeName 
+        public override string FileTypeName
             => "Json";
 
         public VmMain()
         {
-            Settings = new VmSettings(this);
-            DialogOptions = new VmDialogOptions();
-            Grid = new VmGrid(this);
+            Settings = new(this);
+            DialogOptions = new();
+            Grid = new(this, new());
         }
+
 
         /// <summary>
         /// Creates a settings dialog
         /// </summary>
-        private void OpenSettings() => new WndSettings(Settings).ShowDialog();
+        private void OpenSettings()
+            => new WndSettings(Settings).ShowDialog();
 
-        private void OpenDialogOptions() => new WndDialogOptions(DialogOptions).ShowDialog();
+        /// <summary>
+        /// Opens the dialog options dialog
+        /// </summary>
+        private void OpenDialogOptions()
+            => new WndDialogOptions(DialogOptions).ShowDialog();
 
-      
+
         public override bool Load(string path)
         {
             Dialog data;
@@ -54,7 +73,7 @@ namespace SCRDialogEditor.Viewmodel
                 return false;
             }
 
-            Grid.SetDialog(data);
+            Grid = new VmGrid(this, data);
             return true;
         }
 
@@ -68,7 +87,7 @@ namespace SCRDialogEditor.Viewmodel
 
         public override void Reset()
         {
-            Grid.SetDialog(new Dialog());
+            Grid = new(this, new());
         }
     }
 }

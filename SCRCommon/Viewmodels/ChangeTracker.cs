@@ -18,6 +18,7 @@ namespace SCRCommon.Viewmodels
     /// </summary>
     public class ChangeTracker
     {
+        public static ChangeTracker Global { get; private set; }
         private class TrackGroup : ITrackable
         {
             public readonly List<ITrackable> changes;
@@ -108,6 +109,9 @@ namespace SCRCommon.Viewmodels
             _trackedChanges = new List<ITrackable>();
             _currentChangeIndex = -1;
         }
+
+        public void Use()
+            => Global = this;
 
         /// <summary>
         /// Resets the tracked changes

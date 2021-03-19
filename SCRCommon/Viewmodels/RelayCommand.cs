@@ -91,4 +91,18 @@ namespace SCRCommon.Viewmodels
 
     }
 
+    public class EventCommand : ICommand
+    {
+        public event EventHandler<object> Executed;
+
+        public bool CanExecute(object parameter)
+         => true;
+
+        public void Execute(object parameter)
+            => Executed?.Invoke(this, parameter);
+
+        public event EventHandler CanExecuteChanged;
+    }
+
+
 }

@@ -22,27 +22,6 @@
     <SolidColorBrush x:Key="PressedBG" Color="{DynamicResource PressedCol}"/>
     <SolidColorBrush x:Key="DisabledBG" Color="{DynamicResource DisabledCol}"/>
 
-    <!-- Red Colors-->
-    <SolidColorBrush x:Key="Red" Color="{x:Static local:Colors.Red}"/>
-    <SolidColorBrush x:Key="Red.Disabled" Color="#813A43"/>
-    <SolidColorBrush x:Key="Red.Highlighted" Color="#FF3953"/>
-    <SolidColorBrush x:Key="Red.Selected" Color="#B00E25"/>
-    
-    <!-- Blue Colors-->
-    <SolidColorBrush x:Key="Blue" Color="{x:Static local:Colors.Blue}"/>
-    <SolidColorBrush x:Key="Blue.Disabled" Color="#456379"/>
-    <SolidColorBrush x:Key="Blue.Highlighted" Color="#4DA2E5"/>
-    <SolidColorBrush x:Key="Blue.Selected" Color="#1472BA"/>
-
-    <!-- Green Colors -->
-    <SolidColorBrush x:Key="Green" Color="{x:Static local:Colors.Green}"/>
-    <SolidColorBrush x:Key="Green.Disabled" Color="#677E5A"/>
-    <SolidColorBrush x:Key="Green.Highlighted" Color="#86C961"/>
-    <SolidColorBrush x:Key="Green.Selected" Color="#509826"/>
-
-    <!-- General Colors-->
-    <SolidColorBrush x:Key="Yellow" Color="{x:Static local:Colors.Yellow}"/>
-
     <!-- Window Styles-->
     <Style x:Key="ToolbarButton" TargetType="{x:Type Button}">
         <Setter Property="OverridesDefaultStyle" Value="False"/>
@@ -170,10 +149,10 @@
     <!-- Button Styles -->
     <Style TargetType="{x:Type Button}">
         <Style.Resources>
-            <SolidColorBrush x:Key="Default" Color="{Binding Source={StaticResource BG2}, Path=Color}"/>
-            <SolidColorBrush x:Key="Disabled" Color="{Binding Source={StaticResource DisabledBG}, Path=Color}"/>
-            <SolidColorBrush x:Key="Hover" Color="{Binding Source={StaticResource SelectedBG}, Path=Color}"/>
-            <SolidColorBrush x:Key="Clicked" Color="{Binding Source={StaticResource PressedBG}, Path=Color}"/>
+            <SolidColorBrush x:Key="Default" Color="{DynamicResource BGCol2}"/>
+            <SolidColorBrush x:Key="Disabled" Color="{DynamicResource DisabledCol}"/>
+            <SolidColorBrush x:Key="Hover" Color="{DynamicResource SelectedCol}"/>
+            <SolidColorBrush x:Key="Clicked" Color="{DynamicResource PressedCol}"/>
         </Style.Resources>
         <Setter Property="Foreground" Value="{DynamicResource FontBrush}"/>
         <Setter Property="Background" Value="{DynamicResource Default}"/>
@@ -209,37 +188,6 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="RedButton" 
-        TargetType="{x:Type Button}" 
-        BasedOn="{StaticResource {x:Type Button}}">
-        <Style.Resources>
-            <SolidColorBrush x:Key="Default" Color="{Binding Source={StaticResource Red}, Path=Color}"/>
-            <SolidColorBrush x:Key="Disabled" Color="{Binding Source={StaticResource Red.Disabled}, Path=Color}"/>
-            <SolidColorBrush x:Key="Hover" Color="{Binding Source={StaticResource Red.Highlighted}, Path=Color}"/>
-            <SolidColorBrush x:Key="Clicked" Color="{Binding Source={StaticResource Red.Selected}, Path=Color}"/>
-        </Style.Resources>
-    </Style>
-    <Style x:Key="GreenButton" 
-        TargetType="{x:Type Button}" 
-        BasedOn="{StaticResource {x:Type Button}}">
-        <Style.Resources>
-            <SolidColorBrush x:Key="Default" Color="{Binding Source={StaticResource Green}, Path=Color}"/>
-            <SolidColorBrush x:Key="Disabled" Color="{Binding Source={StaticResource Green.Disabled}, Path=Color}"/>
-            <SolidColorBrush x:Key="Hover" Color="{Binding Source={StaticResource Green.Highlighted}, Path=Color}"/>
-            <SolidColorBrush x:Key="Clicked" Color="{Binding Source={StaticResource Green.Selected}, Path=Color}"/>
-        </Style.Resources>
-    </Style>
-    <Style x:Key="BlueButton" 
-        TargetType="{x:Type Button}" 
-        BasedOn="{StaticResource {x:Type Button}}">
-        <Style.Resources>
-            <SolidColorBrush x:Key="Default" Color="{Binding Source={StaticResource Blue}, Path=Color}"/>
-            <SolidColorBrush x:Key="Disabled" Color="{Binding Source={StaticResource Blue.Disabled}, Path=Color}"/>
-            <SolidColorBrush x:Key="Hover" Color="{Binding Source={StaticResource Blue.Highlighted}, Path=Color}"/>
-            <SolidColorBrush x:Key="Clicked" Color="{Binding Source={StaticResource Blue.Selected}, Path=Color}"/>
-        </Style.Resources>
-    </Style>
-
     <Style TargetType="{x:Type Menu}">
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Padding" Value="2"/>
@@ -270,25 +218,6 @@
         <Setter Property="Foreground" Value="{DynamicResource FontBrush}"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="FontSize" Value="15"/>
-    </Style>
-
-    <ControlTemplate x:Key="BasicListControl">
-        <ItemsPresenter/>
-    </ControlTemplate>
-
-    <Style x:Key="ListBoxItemDisableSelect" 
-        TargetType="{x:Type ListBoxItem}">
-        <Setter Property="Focusable" Value="False"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                    <ContentPresenter 
-                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
-                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
-                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
     </Style>
 
     <!--Modified template for menu item menus-->

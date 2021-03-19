@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 
 namespace SCRDialogEditor.Data
@@ -9,6 +10,14 @@ namespace SCRDialogEditor.Data
     /// </summary>
     public class Dialog
     {
+        /// <summary>
+        /// Nodes list
+        /// </summary>
+        private readonly List<Node> _nodes;
+
+        /// <summary>
+        /// Starter node (unwrapped)
+        /// </summary>
         private Node _startNode;
 
         /// <summary>
@@ -32,18 +41,48 @@ namespace SCRDialogEditor.Data
         /// <summary>
         /// Node Contents
         /// </summary>
-        public List<Node> Nodes;
+        public ReadOnlyCollection<Node> Nodes;
 
-        public string Name;
+        /// <summary>
+        /// Name of the dialog
+        /// </summary>
+        public string Name { get; set; }
 
-        public string Description;
+        /// <summary>
+        /// Dialog description
+        /// </summary>
+        public string Description { get; set; }
 
-        public string Author;
+        /// <summary>
+        /// Author of the dialog
+        /// </summary>
+        public string Author { get; set; }
 
         public Dialog()
         {
-            Nodes = new List<Node>();
+            _nodes = new();
+            Nodes = _nodes.AsReadOnly();
         }
+
+        /// <summary>
+        /// Creates a new node
+        /// </summary>
+        public Node CreateNode()
+        {
+            Node n = new();
+            _nodes.Add(n);
+            return n;
+        }
+
+        /// <summary>
+        /// Removes a node from the network
+        /// </summary>
+        public void RemoveNode(Node node)
+        {
+            node.Disconnect();
+            _nodes.Remove(node);
+        }
+
 
         /// <summary>
         /// Saves the Dialog to a file
@@ -62,6 +101,9 @@ namespace SCRDialogEditor.Data
             File.WriteAllText(path, strWriter.ToString());
         }
 
+        /// <summary>
+        /// Writes the dialog to a Json stream
+        /// </summary>
         public void WriteJson(JsonWriter writer)
         {
             writer.WriteStartObject();
@@ -70,7 +112,7 @@ namespace SCRDialogEditor.Data
             writer.WriteStartArray();
 
             foreach(Node n in Nodes)
-                n.WriteJSON(writer);
+                n.WriteJSON(writer, this);
 
             writer.WriteEndArray();
 
@@ -80,14 +122,22 @@ namespace SCRDialogEditor.Data
         /// <summary>
         /// Loads the Dialog from a file
         /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
         public static Dialog LoadFromFile(string path)
         {
-            using JsonTextReader reader = new(new StringReader(File.ReadAllText(path)));
-            return ReadJson(reader);
+            try
+            {
+                using JsonTextReader reader = new(new StringReader(File.ReadAllText(path)));
+                return ReadJson(reader);
+            }
+            catch(JsonException)
+            {
+                throw new InvalidDataException("The loaded json file is not a valid format");
+            }
         }
 
+        /// <summary>
+        /// Loads a dialog from a Json strean
+        /// </summary>
         public static Dialog ReadJson(JsonReader reader)
         {
             Dialog result = new();
@@ -114,7 +164,7 @@ namespace SCRDialogEditor.Data
                         case "Nodes":
                             while(reader.Read() && reader.TokenType != JsonToken.EndArray)
                             {
-                                result.Nodes.Add(Node.ReadJson(reader, result, outputIndices));
+                                result._nodes.Add(Node.ReadJson(reader, outputIndices));
                             }
                             break;
                     }
@@ -126,5 +176,9 @@ namespace SCRDialogEditor.Data
 
             return result;
         }
+
+
+        public override string ToString()
+            => $"{Name} - {Description}";
     }
 }

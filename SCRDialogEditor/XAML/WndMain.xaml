@@ -70,6 +70,17 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
+                <MenuItem Header="Recenter View" InputGestureText="Shift+C" Command="{Binding Grid.Cmd_RecenterView}">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/AlignToGrid.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Recenter Contents" InputGestureText="Alt+C" Command="{Binding Grid.Cmd_RecenterContents}">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/AlignBoth.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
                 <MenuItem Header="Dialog Options" Command="{Binding Cmd_DialogOptions}"/>
             </MenuItem>
             <MenuItem Header="Settings" Command="{Binding Cmd_Settings}"/>
@@ -87,13 +98,23 @@
 
             <local:UcGridEditor
                 DataContext="{Binding Grid}"
-                Background="{DynamicResource BG4}"/>
+                Background="{DynamicResource BG4}">
+                <local:UcGridEditor.Resources>
+                    <Style TargetType="{x:Type local:UcGridNode}">
+                        <Setter Property="Outline" Value="{DynamicResource Outline}"/>
+                        <Setter Property="OutlineHg" Value="{DynamicResource OutlineHG}"/>
+                        <Setter Property="Background" Value="{DynamicResource BG1}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource FontBrush}"/>
+                    </Style>
+                </local:UcGridEditor.Resources>
+            </local:UcGridEditor>
 
             <GridSplitter 
                 Grid.Column="1" 
                 Width="2" 
                 HorizontalAlignment="Stretch" 
                 Background="{DynamicResource BG3}"/>
+
 
             <local:UcNodeEditor 
                 Grid.Column="2" 

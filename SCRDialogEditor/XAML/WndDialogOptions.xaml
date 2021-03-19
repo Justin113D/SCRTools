@@ -38,22 +38,22 @@
                     <Setter Property="Padding" Value="4"/>
                 </Style>
             </Menu.Resources>
-            <MenuItem ToolTip="New File (Ctrl + N)" Command="{Binding Handler.Cmd_Reset}">
+            <MenuItem ToolTip="New File (Ctrl + N)" Command="{Binding Cmd_Reset}">
                 <MenuItem.Header>
                     <Image Source="pack://application:,,,/SCRCommon;component/Icons/NewFile.png" Width="16"/>
                 </MenuItem.Header>
             </MenuItem>
-            <MenuItem ToolTip="Open File (Ctrl + O)" Command="{Binding Handler.Cmd_Load}">
+            <MenuItem ToolTip="Open File (Ctrl + O)" Command="{Binding Cmd_Load}">
                 <MenuItem.Header>
                     <Image Source="pack://application:,,,/SCRCommon;component/Icons/OpenFolder.png" Width="16"/>
                 </MenuItem.Header>
             </MenuItem>
-            <MenuItem ToolTip="Save File (Ctrl + S)" Command="{Binding Handler.Cmd_Save}">
+            <MenuItem ToolTip="Save File (Ctrl + S)" Command="{Binding Cmd_Save}">
                 <MenuItem.Header>
                     <Image Source="pack://application:,,,/SCRCommon;component/Icons/Save.png" Width="16"/>
                 </MenuItem.Header>
             </MenuItem>
-            <MenuItem ToolTip="Save File as... (Ctrl + Alt + S)" Command="{Binding Handler.Cmd_SaveAs}">
+            <MenuItem ToolTip="Save File as... (Ctrl + Alt + S)" Command="{Binding Cmd_SaveAs}">
                 <MenuItem.Header>
                     <Image Source="pack://application:,,,/SCRCommon;component/Icons/SaveAs.png" Width="16"/>
                 </MenuItem.Header>

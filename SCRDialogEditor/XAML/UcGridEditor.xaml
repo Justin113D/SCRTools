@@ -3,262 +3,101 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:local="clr-namespace:SCRDialogEditor.XAML"
              xmlns:vm="clr-namespace:SCRDialogEditor.Viewmodel"
-             xmlns:wpfBase="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
+             xmlns:vmBase="clr-namespace:SCRCommon.Viewmodels;assembly=SCRCommon"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=vm:VmGrid}"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             x:Name="Wrapper"
+             ClipToBounds="True"
+             Focusable="True">
 
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="MouseDown">
-            <i:InvokeCommandAction Command="{Binding Cmd_Focus}"/>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
+    <UserControl.InputBindings>
+        <KeyBinding Key="A" Modifiers="Ctrl">
+            <KeyBinding.Command>
+                <vmBase:EventCommand Executed="EventCommand_AddNode"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+        <KeyBinding Key="Delete" Command="{Binding Cmd_DeleteNode}"/>
+        <KeyBinding Key="X" Modifiers="Ctrl" Command="{Binding Cmd_DeleteNode}"/>
+        <KeyBinding Key="C" Modifiers="Shift" Command="{Binding Cmd_RecenterView}"/>
+        <KeyBinding Key="C" Modifiers="Alt" Command="{Binding Cmd_RecenterContents}"/>
+    </UserControl.InputBindings>
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <wpfBase:BaseWindowStyle/>
-
-                <ResourceDictionary>
-                    <Style TargetType="{x:Type ItemsControl}">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate>
-                                    <ItemsPresenter />
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                        <Setter Property="ItemsPanel">
-                            <Setter.Value>
-                                <ItemsPanelTemplate>
-                                    <Canvas />
-                                </ItemsPanelTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </ResourceDictionary>
-            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="{x:Type ItemsControl}">
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <Canvas />
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Border Background="{Binding Background}" ClipToBounds="true">
-        <Border>
-            <Border.Background>
+    <Border Background="{Binding Background}">
+        <Grid x:Name="GridBorder" 
+            MouseDown="GridBorder_MouseDown"
+            MouseUp="GridBorder_MouseUp"
+            MouseMove="GridBorder_MouseMove"
+            MouseLeave="GridBorder_MouseLeave">
+
+            <Grid.Background>
                 <RadialGradientBrush RadiusX="0.8" RadiusY="0.8" ColorInterpolationMode="SRgbLinearInterpolation">
                     <GradientStop Offset="0.5" Color="#0000"></GradientStop>
                     <GradientStop Offset="0.75" Color="#4000"></GradientStop>
                     <GradientStop Offset="1" Color="#C000"></GradientStop>
                 </RadialGradientBrush>
-            </Border.Background>
+            </Grid.Background>
 
-            <Grid x:Name="GridBorder" Background="Transparent" Focusable="True">
+            <!-- Used to display the connections between the nodes -->
+            <ItemsControl ItemsSource="{Binding Outputs}"
+                        RenderTransform="{Binding Position}"
+                        Focusable="False">
 
-                <i:Interaction.Triggers>
-                    <i:KeyTrigger Key="A" Modifiers="Ctrl">
-                        <i:InvokeCommandAction Command="{Binding Cmd_AddNode}" PassEventArgsToCommand="True"/>
-                    </i:KeyTrigger>
-                    <i:KeyTrigger Key="Delete">
-                        <i:InvokeCommandAction Command="{Binding Cmd_DeleteNode}"/>
-                    </i:KeyTrigger>
-                    <i:KeyTrigger Key="X" Modifiers="Ctrl">
-                        <i:InvokeCommandAction Command="{Binding Cmd_DeleteNode}"/>
-                    </i:KeyTrigger>
-                    <i:EventTrigger EventName="MouseLeave">
-                        <i:InvokeCommandAction Command="{Binding Cmd_MouseLeave}" PassEventArgsToCommand="True"/>
-                    </i:EventTrigger>
-                    <i:EventTrigger EventName="MouseMove">
-                        <i:InvokeCommandAction Command="{Binding Cmd_MouseMove}" PassEventArgsToCommand="True"/>
-                    </i:EventTrigger>
-                    <i:EventTrigger EventName="MouseUp">
-                        <i:InvokeCommandAction Command="{Binding Cmd_MouseUp}" PassEventArgsToCommand="True"/>
-                    </i:EventTrigger>
-                    <i:EventTrigger EventName="MouseDown">
-                        <i:InvokeCommandAction Command="{Binding Cmd_MouseDown}" PassEventArgsToCommand="True"/>
-                    </i:EventTrigger>
-                    <i:EventTrigger EventName="Loaded">
-                        <i:InvokeCommandAction Command="{Binding Cmd_ContainerLoaded}" CommandParameter="{Binding ElementName=GridBorder}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
+                <ItemsControl.Template>
+                    <ControlTemplate>
+                        <ItemsPresenter />
+                    </ControlTemplate>
+                </ItemsControl.Template>
 
-                <!-- Used to display the connections between the nodes -->
-                <ItemsControl ItemsSource="{Binding Outputs}"
-                    RenderTransform="{Binding Position}"
-                    Focusable="False">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type vm:VmNodeOutput}">
-                            <Path Stroke="White" StrokeThickness="4" Data="{Binding Line}"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:VmNodeOutput}">
+                        <Path Stroke="White" StrokeThickness="4" Data="{Binding Line}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
-                <ItemsControl ItemsSource="{Binding Nodes}" 
-                    RenderTransform="{Binding Position}"
-                    Focusable="False">
+            <ItemsControl ItemsSource="{Binding Nodes}" 
+                        RenderTransform="{Binding Position}"
+                        Focusable="False">
 
-                    <ItemsControl.Template>
-                        <ControlTemplate>
-                            <ItemsPresenter >
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="MouseMove">
-                                        <i:InvokeCommandAction Command="{Binding Cmd_MouseMove}" PassEventArgsToCommand="True"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </ItemsPresenter>
-                        </ControlTemplate>
-                    </ItemsControl.Template>
-        
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type vm:VmNode}">
-                            <Canvas x:Name="NodeCanvas">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="MouseUp">
-                                        <i:InvokeCommandAction Command="{Binding Cmd_MouseUp}"/>
-                                    </i:EventTrigger>
-                                    <i:EventTrigger EventName="Loaded">
-                                        <i:InvokeCommandAction Command="{Binding Cmd_LayoutLoaded}" CommandParameter="{Binding ElementName=NodeCanvas}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:VmNode}">
+                        <local:UcGridNode 
+                            DataContext="{Binding }"
+                            UpdateCounter="{Binding UpdatePositionCounter}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
 
-                                <Border 
-                                    Canvas.Left="-10"
-                                    Canvas.Top="33"
-                                    Width="20"
-                                    Height="20"
-                                    BorderThickness="3"
-                                    Background="{DynamicResource BG1}">
-                                    <Border.Style>
-                                        <Style TargetType="{x:Type Border}">
-                                            <Setter Property="BorderBrush" Value="{DynamicResource Outline}"/>
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="BorderBrush" Value="{DynamicResource OutlineHG}"/>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Border.Style>
-                                    
-                                </Border>                      
-                                <Border 
-                                    x:Name="NodeOutline"
-                                    CornerRadius="11" 
-                                    BorderThickness="3" 
-                                    BorderBrush="{DynamicResource Outline}" 
-                                    Background="{DynamicResource BG1}">
+                <ItemsControl.Template>
+                    <ControlTemplate>
+                        <ItemsPresenter MouseMove="GridBorder_MouseMove"/>
+                    </ControlTemplate>
+                </ItemsControl.Template>
 
-                                    <Grid MinWidth="120" MaxWidth="180">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="25"/>
-                                            <RowDefinition Height="Auto" MinHeight="120"/>
-                                        </Grid.RowDefinitions>
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="Canvas.Left" Value="{Binding Position.X}"/>
+                        <Setter Property="Canvas.Top" Value="{Binding Position.Y}"/>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
 
-                                        <Grid x:Name="GrabGrid" 
-                                              Cursor="Hand" >
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-
-                                            <i:Interaction.Triggers>
-                                                <i:EventTrigger EventName="MouseDown">
-                                                    <i:InvokeCommandAction Command="{Binding Cmd_MouseDown}" PassEventArgsToCommand="True"/>
-                                                </i:EventTrigger>
-                                            </i:Interaction.Triggers>
-
-                                            <Border 
-                                                CornerRadius="8 0 0 0" 
-                                                Background="{Binding ExpressionColor}"
-                                                SnapsToDevicePixels="True"/>
-                                            <Border 
-                                                Grid.Column="1" 
-                                                CornerRadius="0 8 0 0" 
-                                                Background="{Binding CharacterColor}"
-                                                SnapsToDevicePixels="True"/>
-                                        </Grid>
-
-                                        <ListBox 
-                                            Grid.Row="1"
-                                            ItemsSource="{Binding Outputs}" 
-                                            BorderThickness="0" 
-                                            Background="Transparent"
-                                            Template="{StaticResource BasicListControl}"
-                                            ItemContainerStyle="{DynamicResource ListBoxItemDisableSelect}"
-                                            HorizontalContentAlignment="Stretch">
-
-                                            <ListBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Grid Height="30">
-                                                        <TextBlock 
-                                                            Text="{Binding Text}"
-                                                            Foreground="{DynamicResource FontBrush}"
-                                                            TextTrimming="WordEllipsis"
-                                                            TextWrapping="NoWrap"
-                                                            VerticalAlignment="Center"
-                                                            Padding="5 5 10 5"/>
-                                                        <Canvas HorizontalAlignment="Right">
-                                                            <Border x:Name="OutputGrip"
-                                                                Width="18"
-                                                                Height="18"
-                                                                Canvas.Right="-9"
-                                                                Canvas.Top="9"
-                                                                Background="{Binding CharacterColor}" 
-                                                                BorderBrush="{DynamicResource Outline}" 
-                                                                BorderThickness="3">
-                                                                <Polygon Points="0,0 0,11 11,0" Fill="{Binding ExpressionColor}"/>
-                                                                <i:Interaction.Triggers>
-                                                                    <i:EventTrigger EventName="MouseLeave">
-                                                                        <i:InvokeCommandAction Command="{Binding Cmd_MouseLeave}" PassEventArgsToCommand="True"/>
-                                                                    </i:EventTrigger>
-                                                                    <i:EventTrigger EventName="Loaded">
-                                                                        <i:InvokeCommandAction Command="{Binding Cmd_SocketLoaded}" CommandParameter="{Binding ElementName=OutputGrip}"/>
-                                                                    </i:EventTrigger>
-                                                                </i:Interaction.Triggers>
-                                                            </Border>
-                                                        </Canvas>
-                                                    </Grid>
-                                                    <DataTemplate.Triggers>
-                                                        <Trigger SourceName="OutputGrip" Property="IsMouseOver" Value="True">
-                                                            <Setter TargetName="OutputGrip" Property="BorderBrush" Value="{DynamicResource OutlineHG}"/>
-                                                        </Trigger>
-                                                    </DataTemplate.Triggers>
-                                                </DataTemplate>
-                                            </ListBox.ItemTemplate>
-
-                                        </ListBox>
-                                    </Grid>
-                                </Border>
-
-                            </Canvas>
-                            <DataTemplate.Triggers>
-                                <Trigger SourceName="GrabGrid" Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="NodeOutline" Property="BorderBrush" Value="{DynamicResource OutlineHG}"/>
-                                </Trigger>
-                                <DataTrigger Binding="{Binding IsActive}" Value="True">
-                                    <Setter TargetName="NodeOutline" Property="BorderBrush" Value="{DynamicResource Green}"/>
-                                </DataTrigger>
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding IsActive}" Value="True"/>
-                                        <Condition Binding="{Binding ElementName=GrabGrid, Path=IsMouseOver}" Value="True"/>
-                                    </MultiDataTrigger.Conditions>
-                                    <MultiDataTrigger.Setters>
-                                        <Setter TargetName="NodeOutline" Property="BorderBrush" Value="{DynamicResource Green.Highlighted}"/>
-                                    </MultiDataTrigger.Setters>
-                                </MultiDataTrigger>
-                            </DataTemplate.Triggers>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-            
-                    <ItemsControl.ItemContainerStyle>
-                        <Style TargetType="ContentPresenter">
-                            <Setter Property="Canvas.Left" Value="{Binding PositionX}"/>
-                            <Setter Property="Canvas.Top" Value="{Binding PositionY}"/>
-                        </Style>
-                    </ItemsControl.ItemContainerStyle>
-
-                </ItemsControl>
-            </Grid>
-        </Border>
+            </ItemsControl>
+        </Grid>
     </Border>
 </UserControl>

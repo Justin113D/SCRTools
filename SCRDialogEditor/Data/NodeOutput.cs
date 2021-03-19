@@ -8,8 +8,6 @@ namespace SCRDialogEditor.Data
     /// </summary>
     public class NodeOutput
     {
-        private readonly Node _node;
-
         /// <summary>
         /// Expression of the character
         /// </summary>
@@ -19,6 +17,11 @@ namespace SCRDialogEditor.Data
         /// Character that says the text
         /// </summary>
         public string Character { get; set; }
+
+        /// <summary>
+        /// Selection icon for multiple choice nodes
+        /// </summary>
+        public string Icon { get; set; }
 
         /// <summary>
         /// Text for the output
@@ -38,17 +41,13 @@ namespace SCRDialogEditor.Data
         /// <summary>
         /// Event id to trigger
         /// </summary>
-        public int Event;
+        public int Event { get; set; }
 
         /// <summary>
         /// The followup node
         /// </summary>
         public Node Output { get; private set; }
 
-        public NodeOutput(Node node)
-        {
-            _node = node;
-        }
 
         /// <summary>
         /// Sets the condition
@@ -120,28 +119,37 @@ namespace SCRDialogEditor.Data
             return true;
         }
 
-        public bool SetOutput(Node newOutput)
+        /// <summary>
+        /// Sets the node output
+        /// </summary>
+        /// <param name="node">New output</param>
+        /// <returns></returns>
+        public bool SetOutput(Node node)
         {
-            if(newOutput == null)
-            {
-                if(Output != null)
-                    Output.Inputs.Remove(this);
-                Output = null;
-            }
-            else if(newOutput.Outputs.Contains(this))
+            if(node?.Outputs.Contains(this) == true)
                 return false;
 
-            if(Output != null)
-                Output.Inputs.Remove(this);
+            Output?.RemoveInput(this);
+            Output = node;
+            Output?.AddInput(this);
 
-            Output = newOutput;
-            Output?.Inputs.Add(this);
             return true;
         }
 
-        public void Delete() => _node.RemoveOutput(this);
+        /// <summary>
+        /// Disconnects the Output from the network
+        /// </summary>
+        public void Disconnect()
+        {
+            SetOutput(null);
+        }
 
-        public void WriteJson(JsonWriter writer)
+        /// <summary>
+        /// Writes the contents to a json stream
+        /// </summary>
+        /// <param name="writer">Output Stream</param>
+        /// <param name="dialog">Dialog that the output belongs to</param>
+        public void WriteJson(JsonWriter writer, Dialog dialog)
         {
             writer.WriteStartObject();
 
@@ -164,14 +172,20 @@ namespace SCRDialogEditor.Data
             writer.WriteValue(Event);
 
             writer.WritePropertyName("Output");
-            writer.WriteValue(Output?.Index);
+            writer.WriteValue(Output == null ? null : dialog.Nodes.IndexOf(Output));
 
             writer.WriteEndObject();
         }
 
-        public static NodeOutput ReadJson(JsonReader reader, Node node, Dictionary<NodeOutput, int> outputIndices)
+        /// <summary>
+        /// Reads a node output from a json stream
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="outputIndices"></param>
+        /// <returns></returns>
+        public static NodeOutput ReadJson(JsonReader reader, Dictionary<NodeOutput, int> outputIndices)
         {
-            NodeOutput result = new(node);
+            NodeOutput result = new();
 
             while(reader.Read() && reader.TokenType != JsonToken.EndObject)
             {
@@ -210,5 +224,9 @@ namespace SCRDialogEditor.Data
 
             return result;
         }
+
+
+        public override string ToString()
+            => $"{Expression} {Character} - {Icon}";
     }
 }
