@@ -30,13 +30,39 @@
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="2"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="2"/>
                 <ColumnDefinition Width="200"/>
             </Grid.ColumnDefinitions>
 
+            <local:UcDialogEditor
+                DataContext="{Binding Grid}"
+                Background="{StaticResource BG1}"
+                BorderBrush="{StaticResource BG3}"
+                Foreground="{DynamicResource FontBrush}">
+                <local:UcDialogEditor.Resources>
+                    <ResourceDictionary>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}"/>
+                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}"/>
+                        <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource {x:Type ListBox}}"/>
+                        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                            <Setter Property="Background" Value="{DynamicResource BG2}"/>
+                        </Style>
+                    </ResourceDictionary>
+                </local:UcDialogEditor.Resources>    
+            </local:UcDialogEditor>
+
+            <GridSplitter 
+                Grid.Column="1" 
+                Width="3" 
+                HorizontalAlignment="Stretch" 
+                Background="{DynamicResource BG3}"/>
+            
             <local:UcGridEditor
                 x:Name="Editor"
+                Grid.Column="2"
                 DataContext="{Binding Grid}"
                 Background="{DynamicResource BG4}"
                 GridTile="{DynamicResource BG2}"
@@ -52,21 +78,22 @@
             </local:UcGridEditor>
 
             <GridSplitter 
-                Grid.Column="1" 
-                Width="2" 
+                Grid.Column="3" 
+                Width="3" 
                 HorizontalAlignment="Stretch" 
                 Background="{DynamicResource BG3}"/>
 
 
             <local:UcNodeEditor 
-                Grid.Column="2" 
+                Grid.Column="4" 
                 Padding="3"
-                Background="{StaticResource BG1}" 
+                Background="{DynamicResource BG1}" 
+                Foreground="{DynamicResource FontBrush}"
                 DataContext="{Binding Grid.Active}" 
                 DialogOptions="{Binding ElementName=Window, Path=DataContext.DialogOptions}" />
         </Grid>
         
-          <Menu Grid.Row="0">
+        <Menu Grid.Row="0">
             <Menu.Resources>
                 <Style TargetType="{x:Type Image}">
                     <Setter Property="Height" Value="16"/>

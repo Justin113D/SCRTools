@@ -13,7 +13,7 @@ namespace SCRDialogEditor.Data
         /// <summary>
         /// Nodes list
         /// </summary>
-        private readonly List<Node> _nodes;
+        private List<Node> _nodes;
 
         /// <summary>
         /// Starter node (unwrapped)
@@ -41,7 +41,7 @@ namespace SCRDialogEditor.Data
         /// <summary>
         /// Node Contents
         /// </summary>
-        public ReadOnlyCollection<Node> Nodes;
+        public ReadOnlyCollection<Node> Nodes { get; private set; }
 
         /// <summary>
         /// Name of the dialog
@@ -83,6 +83,40 @@ namespace SCRDialogEditor.Data
             _nodes.Remove(node);
         }
 
+        public void Sort()
+        {
+            List<Node> before = new(_nodes.ToArray());
+
+            _nodes.Clear();
+
+            Queue<Node> nodeQueue = new();
+            while(_nodes.Count < before.Count)
+            {
+                Node next = before.Find(x => x.Inputs.Count == 0 && !_nodes.Contains(x));
+                if(next == null)
+                    next = before.Find(x => !_nodes.Contains(x));
+
+                while(nodeQueue.Count > 0 || next != null)
+                {
+                    Node q = next ?? nodeQueue.Dequeue();
+                    next = null;
+
+                    if(_nodes.Contains(q))
+                        continue;
+
+                    _nodes.Add(q);
+                    if(q.Outputs.Count == 1)
+                        next = q.Outputs[0].Output;
+                    else
+                    {
+                        foreach(var o in q.Outputs)
+                        {
+                            nodeQueue.Enqueue(o.Output);
+                        }
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Saves the Dialog to a file
@@ -107,6 +141,15 @@ namespace SCRDialogEditor.Data
         public void WriteJson(JsonWriter writer)
         {
             writer.WriteStartObject();
+
+            writer.WritePropertyName("Author");
+            writer.WriteValue(Author);
+
+            writer.WritePropertyName("Name");
+            writer.WriteValue(Name);
+
+            writer.WritePropertyName("Description");
+            writer.WriteValue(Description);
 
             writer.WritePropertyName("Nodes");
             writer.WriteStartArray();

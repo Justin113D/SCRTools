@@ -23,9 +23,14 @@ namespace SCRDialogEditor.Viewmodel
         public RelayCommand Cmd_RecenterContents
             => new(RecenterContents);
 
+        public RelayCommand Cmd_SortNodes
+            => new(Sort);
+
         #endregion
 
         #region Private Fields
+
+        private VmNode _active;
 
         private VmNode _grabbed;
 
@@ -33,6 +38,9 @@ namespace SCRDialogEditor.Viewmodel
 
         #endregion
 
+        #region Properties
+
+        #region Source Properties
         public VmMain Main { get; }
 
         /// <summary>
@@ -43,17 +51,54 @@ namespace SCRDialogEditor.Viewmodel
         /// <summary>
         /// Nodes to display
         /// </summary>
-        public ObservableCollection<VmNode> Nodes { get; }
+        public ObservableCollection<VmNode> Nodes { get; private set; }
 
         /// <summary>
         /// All note outputs
         /// </summary>
         public ObservableCollection<VmNodeOutput> Outputs { get; }
 
+        #endregion
+
+        #region Wrapper Properties
+
+        public string Name
+        {
+            get => Data.Name;
+            set => Data.Name = value;
+        }
+
+        public string Author
+        {
+            get => Data.Author;
+            set => Data.Author = value;
+        }
+
+        public string Description
+        {
+            get => Data.Description;
+            set => Data.Description = value;
+        }
+
+        #endregion
+
+        #region Interaction Properties
+
         /// <summary>
         /// Selected Node to edit
         /// </summary>
-        public VmNode Active { get; set; }
+        public VmNode Active
+        {
+            get => _active;
+            set
+            {
+                VmNode oldActive = _active;
+                _active = value;
+
+                oldActive?.RefreshActive();
+                _active?.RefreshActive();
+            }
+        }
 
         /// <summary>
         /// Grabbed Node
@@ -92,6 +137,9 @@ namespace SCRDialogEditor.Viewmodel
             }
         }
 
+        #endregion
+
+        #endregion
 
         public VmGrid(VmMain mainVM, Dialog dialog)
         {
@@ -192,6 +240,12 @@ namespace SCRDialogEditor.Viewmodel
                 n.Move(offset);
                 n.UpdateDataPosition();
             }
+        }
+
+        private void Sort()
+        {
+            Data.Sort();
+            Nodes = new ObservableCollection<VmNode>(Nodes.OrderBy(x => Data.Nodes.IndexOf(x.Data)));
         }
     }
 }

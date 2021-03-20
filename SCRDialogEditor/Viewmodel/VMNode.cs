@@ -49,6 +49,12 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         public ReadOnlyCollection<VmNodeOutput> Inputs { get; }
 
+        public bool RightPortrait
+        {
+            get => Data.RightPortrait;
+            set => Data.RightPortrait = value;
+        }
+
         /// <summary>
         /// Header Character Color
         /// </summary>
@@ -60,6 +66,11 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         public SolidColorBrush ExpressionColor
             => Outputs[0].ExpressionColor;
+
+        public string Name
+            => Outputs[0].Name;
+        public string InOutInfo
+            => $"[ {Inputs.Count} ; {Outputs.Count} ]";
 
         public Point Position { get; private set; }
 
@@ -134,6 +145,7 @@ namespace SCRDialogEditor.Viewmodel
             NodeOutput output = Data.CreateOutput();
             VmNodeOutput vmOutput = new(output, this);
             Outputs.Add(vmOutput);
+            OnPropertyChanged(nameof(InOutInfo));
         }
 
         /// <summary>
@@ -150,6 +162,7 @@ namespace SCRDialogEditor.Viewmodel
                 Data.RemoveOutput(vmOutput.Data);
             }
             RefreshColor();
+            OnPropertyChanged(nameof(InOutInfo));
         }
 
 
@@ -161,6 +174,7 @@ namespace SCRDialogEditor.Viewmodel
         {
             _inputs.Add(vmInput);
             UpdatePositionCounter++;
+            OnPropertyChanged(nameof(InOutInfo));
         }
 
         /// <summary>
@@ -171,6 +185,7 @@ namespace SCRDialogEditor.Viewmodel
         {
             _inputs.Remove(vmInput);
             UpdatePositionCounter--;
+            OnPropertyChanged(nameof(InOutInfo));
         }
 
 
@@ -209,7 +224,11 @@ namespace SCRDialogEditor.Viewmodel
         {
             OnPropertyChanged(nameof(CharacterColor));
             OnPropertyChanged(nameof(ExpressionColor));
+            OnPropertyChanged(nameof(Name));
         }
+
+        public void RefreshActive()
+            => OnPropertyChanged(nameof(IsActive));
 
         /// <summary>
         /// Ends the grab cycle
@@ -224,13 +243,7 @@ namespace SCRDialogEditor.Viewmodel
             int difY = (int)Math.Abs(start.Y - Position.Y);
 
             if(difX < 2 && difY < 2)
-            {
-                VmNode oldSelected = Grid.Active;
                 Grid.Active = this;
-
-                oldSelected?.OnPropertyChanged(nameof(IsActive));
-                OnPropertyChanged(nameof(IsActive));
-            }
             else
                 UpdateDataPosition();
         }

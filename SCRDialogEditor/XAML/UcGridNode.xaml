@@ -114,7 +114,7 @@
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <Image SnapsToDevicePixels="True" Source="{Binding NodeIconPath, TargetNullValue={x:Null}}" Width="24" Height="24"  IsHitTestVisible="False">
+                                        <Image Source="{Binding NodeIconPath, TargetNullValue={x:Null}}" Width="24" Height="24"  IsHitTestVisible="False">
                                             <Image.Style>
                                                 <Style TargetType="{x:Type Image}">
                                                     <Style.Triggers>
