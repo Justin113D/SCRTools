@@ -50,20 +50,42 @@
                                 <!-- Output Header -->
                                 <Grid>
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="20"/>
                                     </Grid.ColumnDefinitions>
 
                                     <!-- Output Expander -->
                                     <ToggleButton 
-                                        IsChecked="{Binding IsExpanded}" 
-                                        Content="{Binding Name}" 
+                                        HorizontalAlignment="Stretch"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="3"
+                                        IsChecked="{Binding IsExpanded}"/>
+
+                                    <Image Grid.Column="1" SnapsToDevicePixels="True" Source="{Binding NodeIconPath, TargetNullValue={x:Null}}" Width="24" Height="24"  IsHitTestVisible="False">
+                                        <Image.Style>
+                                            <Style TargetType="{x:Type Image}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding NodeIcon}" Value="{x:Null}">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>                                    
+                                    
+                                    <TextBlock 
+                                        Text="{Binding Name}"
                                         FontSize="15" 
-                                        VerticalAlignment="Center"/>
+                                        Foreground="{DynamicResource FontBrush}" 
+                                        VerticalAlignment="Center" 
+                                        Grid.Column="2" 
+                                        IsHitTestVisible="False"/>
 
                                     <!-- Output Delete Button -->
                                     <Button 
-                                        Grid.Column="1" 
+                                        Grid.Column="3" 
                                         Command="{Binding Cmd_Delete}"
                                         Content="✕" 
                                         Padding="2" 
@@ -117,15 +139,22 @@
 
                                         <!-- Expression Selection Combobox -->
                                         <ComboBox 
-                                            ItemsSource="{Binding ElementName=Top, Path=DialogOptions.VMExpressionOptions.RawOptions}"
+                                            ItemsSource="{Binding ElementName=Top, Path=DialogOptions.VMExpressionOptions.OptionsCombobox}"
                                             SelectedItem="{Binding Expression, Mode=TwoWay}" 
                                             Text="{Binding ExpressionText, Mode=OneWay}"/>
 
                                         <!-- Character Selection Combobox -->
                                         <ComboBox
-                                            ItemsSource="{Binding ElementName=Top, Path=DialogOptions.VMCharacterOptions.RawOptions}"
+                                            ItemsSource="{Binding ElementName=Top, Path=DialogOptions.VMCharacterOptions.OptionsCombobox}"
                                             SelectedItem="{Binding Character, Mode=TwoWay}" 
                                             Text="{Binding CharacterText, Mode=OneWay}"/>
+
+                                        <!-- Icon Combobox -->
+                                        <ComboBox
+                                            ItemsSource="{Binding ElementName=Top, Path=DialogOptions.VMNodeIcons.IconsCombobox}"
+                                            SelectedItem="{Binding NodeIcon, Mode=TwoWay}" 
+                                            Text="{Binding NodeIconText, Mode=OneWay}"/>
+
 
                                         <Border Height="2" Background="{DynamicResource BG3}" Margin="2 4"/>
 

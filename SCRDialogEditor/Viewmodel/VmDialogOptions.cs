@@ -2,6 +2,7 @@
 using SCRCommon.Viewmodels;
 using SCRDialogEditor.Data;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace SCRDialogEditor.Viewmodel
@@ -11,11 +12,13 @@ namespace SCRDialogEditor.Viewmodel
         public RelayCommand Cmd_SetDialogOptionsPath
             => new(SetDialogOptionsPath);
 
-        public DialogOptions DialogOptions { get; private set; }
+        public DialogOptions Data { get; private set; }
 
         public VmNodeOptions VMCharacterOptions { get; private set; }
 
         public VmNodeOptions VMExpressionOptions { get; private set; }
+
+        public VmNodeIcons VMNodeIcons { get; private set; }
 
         public string DialogOptionsPath
         {
@@ -31,13 +34,18 @@ namespace SCRDialogEditor.Viewmodel
 
         public VmDialogOptions()
         {
-            DialogOptions = new DialogOptions();
+            Data = new DialogOptions();
             if(!string.IsNullOrWhiteSpace(DialogOptionsPath))
+            { 
                 if(Load(DialogOptionsPath))
                     LoadedFilePath = DialogOptionsPath;
-
-            VMCharacterOptions = new VmNodeOptions(DialogOptions.CharacterOptions);
-            VMExpressionOptions = new VmNodeOptions(DialogOptions.ExpressionOptions);
+            }
+            else
+            {
+                VMCharacterOptions = new VmNodeOptions(Data.CharacterOptions);
+                VMExpressionOptions = new VmNodeOptions(Data.ExpressionOptions);
+                VMNodeIcons = new VmNodeIcons(Data.NodeIcons, this);
+            }
         }
 
         private void SetDialogOptionsPath()
@@ -58,30 +66,47 @@ namespace SCRDialogEditor.Viewmodel
         {
             try
             {
-                DialogOptions = DialogOptions.ReadFromFile(path);
+                Data = DialogOptions.ReadFromFile(path);
             }
             catch(Exception e)
             {
                 MessageBox.Show("An error occured while loading the dialog options: " + e.GetType().Name + "\n " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
-            VMCharacterOptions = new VmNodeOptions(DialogOptions.CharacterOptions);
-            VMExpressionOptions = new VmNodeOptions(DialogOptions.ExpressionOptions);
+            VMCharacterOptions = new VmNodeOptions(Data.CharacterOptions);
+            VMExpressionOptions = new VmNodeOptions(Data.ExpressionOptions);
+            VMNodeIcons = new VmNodeIcons(Data.NodeIcons, this);
             return true;
         }
 
         public override void Save(string path)
         {
-            DialogOptions.SaveToFile(path);
+            if(path != LoadedFilePath)
+            {
+                Dictionary<VmNodeIcon, string> fullPaths = new();
+                foreach(VmNodeIcon ni in VMNodeIcons.Icons)
+                {
+                    if(ni.FullFilePath != null)
+                        fullPaths.Add(ni, ni.FullFilePath);
+                }
+
+                LoadedFilePath = path;
+
+                foreach(var pair in fullPaths)
+                    pair.Key.FullFilePath = pair.Value;
+            }
+
+            Data.SaveToFile(path);
         }
 
         public override bool ResetConfirmation() => true;
 
         public override void Reset()
         {
-            DialogOptions = new DialogOptions();
-            VMCharacterOptions = new VmNodeOptions(DialogOptions.CharacterOptions);
-            VMExpressionOptions = new VmNodeOptions(DialogOptions.ExpressionOptions);
+            Data = new DialogOptions();
+            VMCharacterOptions = new VmNodeOptions(Data.CharacterOptions);
+            VMExpressionOptions = new VmNodeOptions(Data.ExpressionOptions);
+            VMNodeIcons = new VmNodeIcons(Data.NodeIcons, this);
         }
     }
 }

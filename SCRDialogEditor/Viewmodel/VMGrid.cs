@@ -12,20 +12,6 @@ namespace SCRDialogEditor.Viewmodel
 {
     public class VmGrid : BaseViewModel
     {
-        #region constants
-
-        /// <summary>
-        /// Grid background cell width
-        /// </summary>
-        public const int brushDim = 50;
-
-        /// <summary>
-        /// Half the width of a background cell
-        /// </summary>
-        public const int halfBrushDim = brushDim / 2;
-
-        #endregion
-
         #region Commands
 
         /// <summary>
@@ -36,9 +22,6 @@ namespace SCRDialogEditor.Viewmodel
 
         public RelayCommand Cmd_RecenterContents
             => new(RecenterContents);
-
-        public RelayCommand Cmd_RecenterView
-            => new(RecenterView);
 
         #endregion
 
@@ -67,19 +50,10 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         public ObservableCollection<VmNodeOutput> Outputs { get; }
 
-
         /// <summary>
-        /// Background grid brush
+        /// Selected Node to edit
         /// </summary>
-        public VisualBrush Background { get; private set; }
-
-        public MatrixTransform Transform { get; private set; }
-
-        public Color BackgroundColor
-        {
-            get => ((SolidColorBrush)((Path)Background.Visual).Fill).Color;
-            set => ((SolidColorBrush)((Path)Background.Visual).Fill).Color = value;
-        }
+        public VmNode Active { get; set; }
 
         /// <summary>
         /// Grabbed Node
@@ -96,11 +70,6 @@ namespace SCRDialogEditor.Viewmodel
                 _grabbed = value;
             }
         }
-
-        /// <summary>
-        /// Selected Node to edit
-        /// </summary>
-        public VmNode Active { get; set; }
 
         /// <summary>
         /// The nodeoutput that is currently being "dragged"
@@ -130,7 +99,6 @@ namespace SCRDialogEditor.Viewmodel
             Data = dialog;
 
             Outputs = new();
-            Transform = new();
             Nodes = new();
 
             Dictionary<Node, VmNode> viewmodelPairs = new();
@@ -148,30 +116,8 @@ namespace SCRDialogEditor.Viewmodel
                         vmout.VmOutput = viewmodelPairs[vmout.Data.Output];
                     }
 
-            Background = new()
-            {
-                TileMode = TileMode.Tile,
-                ViewportUnits = BrushMappingMode.Absolute,
-                ViewboxUnits = BrushMappingMode.Absolute,
-                Viewbox = new(0, 0, brushDim, brushDim),
-                Visual = new Path
-                {
-                    Fill = new SolidColorBrush((Color)BaseWindowStyle.currentTheme["BGCol2"]),
-                    Data = new RectangleGeometry(new(1, 1, brushDim - 2, brushDim - 2))
-                }
-            };
-
-            UpdateBackground();
         }
 
-        /// <summary>
-        /// Updates the background brush
-        /// </summary>
-        public void UpdateBackground()
-        {
-            double width = brushDim * Transform.Matrix.M11;
-            Background.Viewport = new Rect(Transform.Matrix.OffsetX, Transform.Matrix.OffsetY, width, width);
-        }
 
         /// <summary>
         /// Lets go of the grabbed connection/node
@@ -180,19 +126,6 @@ namespace SCRDialogEditor.Viewmodel
         {
             Grabbed = null;
             Connecting = null;
-        }
-
-        /// <summary>
-        /// Moves the grid by a difference
-        /// </summary>
-        /// <param name="dif"></param>
-        public void MoveGrid(Point dif)
-        {
-            Matrix m = Transform.Matrix;
-            m.Translate(dif.X, dif.Y);
-            Transform.Matrix = m;
-
-            UpdateBackground();
         }
 
         /// <summary>
@@ -259,18 +192,6 @@ namespace SCRDialogEditor.Viewmodel
                 n.Move(offset);
                 n.UpdateDataPosition();
             }
-        }
-
-        /// <summary>
-        /// Recenters the view
-        /// </summary>
-        private void RecenterView()
-        {
-            Matrix m = Transform.Matrix;
-            m.OffsetX = 0;
-            m.OffsetY = 0;
-            Transform.Matrix = m;
-            UpdateBackground();
         }
     }
 }

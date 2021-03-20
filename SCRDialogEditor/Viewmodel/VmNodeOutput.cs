@@ -40,9 +40,9 @@ namespace SCRDialogEditor.Viewmodel
             => string.IsNullOrWhiteSpace(Data.Character) ? "<Character>" : Data.Character;
 
         public SolidColorBrush CharacterColor
-            => new(Character?.Color ?? Colors.Gray);
+            => Character?.Color ?? new(Colors.Gray);
 
-        public NodeOption Character
+        public VmNodeOption Character
         {
             get
             {
@@ -73,9 +73,9 @@ namespace SCRDialogEditor.Viewmodel
             => string.IsNullOrWhiteSpace(Data.Expression) ? "<Expression>" : Data.Expression;
 
         public SolidColorBrush ExpressionColor
-            => new(Expression?.Color ?? Colors.Gray);
+            => Expression?.Color ?? new(Colors.Gray);
 
-        public NodeOption Expression
+        public VmNodeOption Expression
         {
             get
             {
@@ -99,6 +99,33 @@ namespace SCRDialogEditor.Viewmodel
         }
 
         #endregion
+
+        public string NodeIconText
+            => string.IsNullOrWhiteSpace(Data.Icon) ? "<No icon>" : Data.Icon;
+
+        public string NodeIconPath
+            => NodeIcon?.FullFilePath;
+
+        public VmNodeIcon NodeIcon
+        {
+            get
+            {
+                if(string.IsNullOrWhiteSpace(Data.Icon))
+                    return null;
+
+                try
+                {
+                    return _parent.Grid.Main.DialogOptions.VMNodeIcons.GetIcon(Data.Icon);
+                }
+                catch(Exception) { }
+                return null;
+            }
+            set
+            {
+                Data.Icon = value.Name;
+                OnPropertyChanged(nameof(NodeIconPath));
+            }
+        }
 
         /// <summary>
         /// Output Text

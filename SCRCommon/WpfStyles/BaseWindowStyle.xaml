@@ -148,14 +148,8 @@
 
     <!-- Button Styles -->
     <Style TargetType="{x:Type Button}">
-        <Style.Resources>
-            <SolidColorBrush x:Key="Default" Color="{DynamicResource BGCol2}"/>
-            <SolidColorBrush x:Key="Disabled" Color="{DynamicResource DisabledCol}"/>
-            <SolidColorBrush x:Key="Hover" Color="{DynamicResource SelectedCol}"/>
-            <SolidColorBrush x:Key="Clicked" Color="{DynamicResource PressedCol}"/>
-        </Style.Resources>
         <Setter Property="Foreground" Value="{DynamicResource FontBrush}"/>
-        <Setter Property="Background" Value="{DynamicResource Default}"/>
+        <Setter Property="Background" Value="{DynamicResource BG2}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="FontSize" Value="15"/>
         <Setter Property="Padding" Value="5"/>
@@ -176,14 +170,14 @@
 
         <Style.Triggers>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Background" Value="{DynamicResource Disabled}"/>
+                <Setter Property="Background" Value="{DynamicResource DisabledBG}"/>
                 <Setter Property="Foreground" Value="{DynamicResource HintFontBrush}"/>
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource Hover}"/>
+                <Setter Property="Background" Value="{DynamicResource SelectedBG}"/>
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" Value="{DynamicResource Clicked}"/>
+                <Setter Property="Background" Value="{DynamicResource PressedBG}"/>
             </Trigger>
         </Style.Triggers>
     </Style>

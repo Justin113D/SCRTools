@@ -7,20 +7,15 @@
         xmlns:wpfBase="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
         xmlns:vm="clr-namespace:SCRDialogEditor.Viewmodel"
         mc:Ignorable="d"
-        Title="Dialog Options" Height="600" Width="450"
+        Title="Dialog Options" Height="600" Width="800"
         d:DataContext="{d:DesignInstance Type=vm:VmDialogOptions}"
-        Style="{DynamicResource WindowStyle}">
+        Style="{DynamicResource WindowStyle}"
+        ResizeMode="CanResize">
 
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <wpfBase:BaseWindowStyle/>
-
-                <ResourceDictionary>
-                    <ControlTemplate x:Key="OptionsList">
-                        
-                    </ControlTemplate>
-                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -61,22 +56,51 @@
         </Menu>
 
         <Grid Grid.Row="1" Margin="10">
+            
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
-
+               
+            
             <TextBlock Text="Characters" TextAlignment="Center" Padding="0, 0, 0, 5"/>
-            <TextBlock Grid.Column="2" Text="Expressions" TextAlignment="Center"/>
+            <TextBlock Grid.Column="1" Text="Expressions" TextAlignment="Center"/>
+            <TextBlock Grid.Column="2" Text="Icons" TextAlignment="Center"/>
 
 
-            <local:UcNodeOptions Grid.Row="1" DataContext="{Binding VMCharacterOptions}" BorderThickness="2" BorderBrush="{DynamicResource BG3}" Background="{DynamicResource BG2}"/>
-            <local:UcNodeOptions Grid.Row="1" Grid.Column="2" DataContext="{Binding VMExpressionOptions}" BorderThickness="2" BorderBrush="{DynamicResource BG3}" Background="{DynamicResource BG2}"/>
+
+            <local:UcNodeOptions 
+                Grid.Row="1" 
+                DataContext="{Binding VMCharacterOptions}" 
+                BorderThickness="2" 
+                BorderBrush="{DynamicResource BG3}" 
+                Background="{DynamicResource BG2}"
+                Foreground="{DynamicResource FontBrush}"/>
+            
+            <local:UcNodeOptions 
+                Grid.Row="1" 
+                Grid.Column="1" 
+                DataContext="{Binding VMExpressionOptions}" 
+                BorderThickness="2" 
+                BorderBrush="{DynamicResource BG3}" 
+                Background="{DynamicResource BG2}"
+                Foreground="{DynamicResource FontBrush}"
+                Margin="5 0"/>
+
+            <local:UcNodeIcons
+                Grid.Row="1" 
+                Grid.Column="2" 
+                DataContext="{Binding VMNodeIcons}" 
+                BorderThickness="2" 
+                BorderBrush="{DynamicResource BG3}" 
+                Background="{DynamicResource BG2}"
+                Foreground="{DynamicResource FontBrush}"/>
         </Grid>
 
         <Grid Grid.Row="2" Margin="10, 0, 10, 0" VerticalAlignment="Center">

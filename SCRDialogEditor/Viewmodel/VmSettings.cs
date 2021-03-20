@@ -31,7 +31,6 @@ namespace SCRDialogEditor.Viewmodel
             {
                 Properties.Settings.Default.WindowTheme = value;
                 BaseWindowStyle.WindowTheme = value;
-                _mainViewModel.Grid.BackgroundColor = (Color)BaseWindowStyle.currentTheme["BGCol2"];
             }
         }
 

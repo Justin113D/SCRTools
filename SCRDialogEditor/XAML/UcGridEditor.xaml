@@ -21,7 +21,7 @@
         </KeyBinding>
         <KeyBinding Key="Delete" Command="{Binding Cmd_DeleteNode}"/>
         <KeyBinding Key="X" Modifiers="Ctrl" Command="{Binding Cmd_DeleteNode}"/>
-        <KeyBinding Key="C" Modifiers="Shift" Command="{Binding Cmd_RecenterView}"/>
+        <KeyBinding Key="C" Modifiers="Shift" Command="{Binding Cmd_RecenterView, ElementName=Wrapper}"/>
         <KeyBinding Key="C" Modifiers="Alt" Command="{Binding Cmd_RecenterContents}"/>
     </UserControl.InputBindings>
 
@@ -39,7 +39,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Border Background="{Binding Background}">
+    <Border Background="{Binding GridBackground, ElementName=Wrapper}">
         <Grid x:Name="GridBorder" 
             MouseDown="GridBorder_MouseDown"
             MouseUp="GridBorder_MouseUp"
@@ -57,7 +57,7 @@
 
             <!-- Used to display the connections between the nodes -->
             <ItemsControl ItemsSource="{Binding Outputs}"
-                        RenderTransform="{Binding Transform}"
+                        RenderTransform="{Binding GridTransform, ElementName=Wrapper}"
                         Focusable="False">
 
                 <ItemsControl.Template>
@@ -68,13 +68,13 @@
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type vm:VmNodeOutput}">
-                        <Path Stroke="White" StrokeThickness="4" Data="{Binding Line}"/>
+                        <Path Stroke="{Binding GridLine, ElementName=Wrapper}" StrokeThickness="4" Data="{Binding Line}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
             <ItemsControl ItemsSource="{Binding Nodes}" 
-                        RenderTransform="{Binding Transform}"
+                        RenderTransform="{Binding GridTransform, ElementName=Wrapper}"
                         Focusable="False">
 
                 <ItemsControl.ItemTemplate>

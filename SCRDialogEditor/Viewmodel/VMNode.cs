@@ -1,5 +1,6 @@
 ﻿using SCRCommon.Viewmodels;
 using SCRDialogEditor.Data;
+using SCRDialogEditor.XAML;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -52,13 +53,13 @@ namespace SCRDialogEditor.Viewmodel
         /// Header Character Color
         /// </summary>
         public SolidColorBrush CharacterColor
-            => new(Outputs[0].Character?.Color ?? Colors.Gray);
+            => Outputs[0].CharacterColor;
 
         /// <summary>
         /// Header Expression Color
         /// </summary>
         public SolidColorBrush ExpressionColor
-            => new(Outputs[0].Expression?.Color ?? Colors.Gray);
+            => Outputs[0].ExpressionColor;
 
         public Point Position { get; private set; }
 
@@ -99,10 +100,9 @@ namespace SCRDialogEditor.Viewmodel
             }
             else
             {
-                Position = new Point(
-                    Data.LocationX * VmGrid.brushDim + VmGrid.halfBrushDim,
-                    Data.LocationY * VmGrid.brushDim + VmGrid.halfBrushDim
-                    );
+                Position = UcGridEditor.FromGridSpace(
+                    new(Data.LocationX, Data.LocationY)
+                );
             }
         }
 
@@ -124,6 +124,7 @@ namespace SCRDialogEditor.Viewmodel
                 no.Disconnect();
         }
 
+        #region Collection methods
 
         /// <summary>
         /// Adds a new node output
@@ -172,6 +173,7 @@ namespace SCRDialogEditor.Viewmodel
             UpdatePositionCounter--;
         }
 
+
         /// <summary>
         /// Displays an output connection
         /// </summary>
@@ -198,6 +200,7 @@ namespace SCRDialogEditor.Viewmodel
             UpdatePositionCounter--;
         }
 
+        #endregion
 
         /// <summary>
         /// Refreshes the Color properties
@@ -213,10 +216,9 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         public void EndGrab()
         {
-            Point start = new(
-                Data.LocationX * VmGrid.brushDim + VmGrid.halfBrushDim,
-                Data.LocationY * VmGrid.brushDim + VmGrid.halfBrushDim
-                );
+            Point start = UcGridEditor.FromGridSpace(
+                new(Data.LocationX, Data.LocationY)
+            );
 
             int difX = (int)Math.Abs(start.X - Position.X);
             int difY = (int)Math.Abs(start.Y - Position.Y);
@@ -235,13 +237,11 @@ namespace SCRDialogEditor.Viewmodel
 
         public void UpdateDataPosition()
         {
-            Data.LocationX = ((int)Position.X - VmGrid.halfBrushDim * (Position.X < 0 ? 2 : 0)) / VmGrid.brushDim;
-            Data.LocationY = ((int)Position.Y - VmGrid.halfBrushDim * (Position.Y < 0 ? 2 : 0)) / VmGrid.brushDim;
+            Point dataLoc = UcGridEditor.ToGridSpace(Position);
+            Data.LocationX = (int)dataLoc.X;
+            Data.LocationY = (int)dataLoc.Y;
 
-            Position = new Point(
-                Data.LocationX * VmGrid.brushDim + VmGrid.halfBrushDim,
-                Data.LocationY * VmGrid.brushDim + VmGrid.halfBrushDim
-                );
+            Position = UcGridEditor.FromGridSpace(dataLoc);
         }
 
         #endregion

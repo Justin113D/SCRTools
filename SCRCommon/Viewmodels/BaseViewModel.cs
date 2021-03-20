@@ -97,13 +97,14 @@ namespace SCRCommon.Viewmodels
 
                 if(sfd.ShowDialog() == true)
                 {
+                    Save(sfd.FileName);
                     LoadedFilePath = sfd.FileName;
                 }
                 else
                     return;
             }
-
-            Save(LoadedFilePath);
+            else
+                Save(LoadedFilePath);
         }
 
         private void InternalReset()

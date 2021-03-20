@@ -84,7 +84,7 @@ namespace SCRDialogEditor.Data
         /// <param name="Path"></param>
         public void SaveToFile(string Path)
         {
-            string output = JsonConvert.SerializeObject(this);
+            string output = JsonConvert.SerializeObject(this, Formatting.Indented);
             File.WriteAllText(Path, output);
         }
 

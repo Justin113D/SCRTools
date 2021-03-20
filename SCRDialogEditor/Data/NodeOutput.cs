@@ -159,6 +159,9 @@ namespace SCRDialogEditor.Data
             writer.WritePropertyName("Character");
             writer.WriteValue(Character);
 
+            writer.WritePropertyName("Icon");
+            writer.WriteValue(Icon);
+
             writer.WritePropertyName("Text");
             writer.WriteValue(Text);
 
@@ -200,6 +203,9 @@ namespace SCRDialogEditor.Data
                             break;
                         case "Character":
                             result.Character = (string)reader.Value;
+                            break;
+                        case "Icon":
+                            result.Icon = (string)reader.Value;
                             break;
                         case "Text":
                             result.Text = (string)reader.Value;
