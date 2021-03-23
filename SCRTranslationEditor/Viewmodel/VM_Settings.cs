@@ -40,7 +40,7 @@ namespace SCRTranslationEditor.Viewmodel
             set
             {
                 Properties.Settings.Default.WindowTheme = value;
-                BaseWindowStyle.WindowTheme = value;
+                BaseStyle.WindowTheme = value;
             }
         }
 
@@ -140,7 +140,7 @@ namespace SCRTranslationEditor.Viewmodel
             GroupFontSize = FontSize + 3;
             Cmd_SetDefaultPath = new RelayCommand(SelectFormatPath);
             Cmd_Save = new RelayCommand<SettingsWindow>(Save);
-            BaseWindowStyle.WindowTheme = WindowTheme;
+            BaseStyle.WindowTheme = WindowTheme;
         }
 
         private void SelectFormatPath()

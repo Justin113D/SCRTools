@@ -3,7 +3,6 @@ using SCRCommon.WpfStyles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Media;
 
 #pragma warning disable CS1822
 
@@ -30,7 +29,7 @@ namespace SCRDialogEditor.Viewmodel
             set
             {
                 Properties.Settings.Default.WindowTheme = value;
-                BaseWindowStyle.WindowTheme = value;
+                BaseStyle.WindowTheme = value;
             }
         }
 
@@ -47,7 +46,7 @@ namespace SCRDialogEditor.Viewmodel
         {
             _mainViewModel = mainViewModel;
             Cmd_Save = new RelayCommand<WndSettings>(Save);
-            BaseWindowStyle.WindowTheme = WindowTheme;
+            BaseStyle.WindowTheme = WindowTheme;
         }
 
         /// <summary>

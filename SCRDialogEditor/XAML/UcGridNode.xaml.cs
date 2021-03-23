@@ -7,7 +7,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace SCRDialogEditor.XAML
 {
@@ -38,7 +37,10 @@ namespace SCRDialogEditor.XAML
                             return;
 
                         if((int)e.NewValue != 0)
+                        {
+                            g.updateSockets = true;
                             g.OnLayoutUpdated(null, null);
+                        }
 
                         if(e.NewValue == e.OldValue)
                             return;
@@ -56,43 +58,6 @@ namespace SCRDialogEditor.XAML
         {
             get => (int)GetValue(UpdateCounterProperty);
             set => SetValue(UpdateCounterProperty, value);
-        }
-
-
-        public static readonly DependencyProperty OutlineProperty =
-            DependencyProperty.Register(
-                "Outline",
-                typeof(Brush),
-                typeof(UcGridNode),
-                new FrameworkPropertyMetadata(
-                    null,
-                    FrameworkPropertyMetadataOptions.None,
-                    new PropertyChangedCallback((d, e) => { })
-                )
-            );
-
-        public static readonly DependencyProperty OutlineHgProperty =
-            DependencyProperty.Register(
-                "OutlineHg",
-                typeof(Brush),
-                typeof(UcGridNode),
-                new FrameworkPropertyMetadata(
-                    null,
-                    FrameworkPropertyMetadataOptions.None,
-                    new PropertyChangedCallback((d, e) => { })
-                )
-            );
-
-        public Brush Outline
-        {
-            get => (Brush)GetValue(OutlineProperty);
-            set => SetValue(OutlineProperty, value);
-        }
-
-        public Brush OutlineHg
-        {
-            get => (Brush)GetValue(OutlineHgProperty);
-            set => SetValue(OutlineHgProperty, value);
         }
 
         #endregion
@@ -138,7 +103,7 @@ namespace SCRDialogEditor.XAML
 
             Point newPos = TransformToAncestor(_container).Transform(default);
 
-            if(newPos == _lastPos && !updateSockets)
+            if(newPos == _lastPos && !updateSockets && !recalcSockets)
                 return;
 
             // recalculating the relative positions
@@ -190,11 +155,10 @@ namespace SCRDialogEditor.XAML
 
         private void Socket_MouseLeave(object sender, MouseEventArgs e)
         {
-            if(e.LeftButton != MouseButtonState.Pressed)
+            if(e.LeftButton != MouseButtonState.Pressed || Node.Grid.Connecting != null)
                 return;
 
             VmNodeOutput vmno = (VmNodeOutput)((FrameworkElement)sender).DataContext;
-            vmno.VmOutput = null;
             Node.Grid.Connecting = vmno;
         }
 
@@ -207,7 +171,6 @@ namespace SCRDialogEditor.XAML
             });
 
             recalcSockets = true;
-            updateSockets = true;
         }
 
         private void Socket_Unloaded(object sender, RoutedEventArgs e)
@@ -220,7 +183,6 @@ namespace SCRDialogEditor.XAML
         private void OutputsUpdated(object sender, NotifyCollectionChangedEventArgs e)
         {
             recalcSockets = true;
-            updateSockets = true;
         }
 
         private void OnMouseUp(object sender, MouseButtonEventArgs e)
@@ -231,7 +193,6 @@ namespace SCRDialogEditor.XAML
 
             grid.Connecting.VmOutput = Node;
             grid.Connecting = null;
-            updateSockets = true;
         }
     }
 }

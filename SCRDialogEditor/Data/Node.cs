@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SCRCommon.Viewmodels;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -9,30 +10,70 @@ namespace SCRDialogEditor.Data
     /// </summary>
     public class Node
     {
-        /// <summary>
-        /// Outputs list
-        /// </summary>
+        #region Private Fields
+
+        private int _locationX;
+
+        private int _locationY;
+
+        private bool _rightPortrait;
+
         private readonly List<NodeOutput> _outputs;
 
-        /// <summary>
-        /// Inputs list
-        /// </summary>
         private readonly List<NodeOutput> _inputs;
+
+        #endregion
 
         /// <summary>
         /// Grid location on the X Axis
         /// </summary>
-        public int LocationX { get; set; }
+        public int LocationX
+        {
+            get => _locationX;
+            set
+            {
+                int oldValue = _locationX;
+                ChangeTracker.Global.TrackChange(new ChangedValue<int>(
+                    (v) => _locationX = v,
+                    oldValue,
+                    value
+                ));
+            }
+        }
 
         /// <summary>
         /// Grid location on the Y Axis
         /// </summary>
-        public int LocationY { get; set; }
+        public int LocationY
+        {
+            get => _locationY;
+            set
+            {
+                int oldValue = _locationY;
+                ChangeTracker.Global.TrackChange(new ChangedValue<int>(
+                    (v) => _locationY = v,
+                    oldValue,
+                    value
+                ));
+            }
+        }
 
         /// <summary>
         /// If true, the portrait will be placed/focused on the right. Else on the left
         /// </summary>
-        public bool RightPortrait { get; set; }
+        public bool RightPortrait
+        {
+            get => _rightPortrait;
+            set
+            {
+                bool oldValue = _rightPortrait;
+                ChangeTracker.Global.TrackChange(new ChangedValue<bool>(
+                    (v) => _rightPortrait = v,
+                    oldValue,
+                    value
+                ));
+            }
+        }
 
         /// <summary>
         /// Input references
@@ -66,10 +107,12 @@ namespace SCRDialogEditor.Data
         /// </summary>
         public void Disconnect()
         {
+            ChangeTracker.Global.BeginGroup();
             foreach(NodeOutput no in _inputs)
                 no.Disconnect();
             foreach(NodeOutput no in _outputs)
                 no.Disconnect();
+            ChangeTracker.Global.EndGroup();
         }
 
         /// <summary>
@@ -83,7 +126,14 @@ namespace SCRDialogEditor.Data
                 Expression = Outputs[0].Expression,
                 Character = Outputs[0].Character
             };
-            _outputs.Add(result);
+
+            ChangeTracker.Global.TrackChange(new ChangedListSingleEntry<NodeOutput>(
+                _outputs,
+                result,
+                _outputs.Count,
+                null
+            ));
+
             return result;
         }
 
@@ -98,8 +148,18 @@ namespace SCRDialogEditor.Data
                || !_outputs.Contains(nodeOutput))
                 return false;
 
+            ChangeTracker.Global.BeginGroup();
+
             nodeOutput.Disconnect();
-            _outputs.Remove(nodeOutput);
+
+            ChangeTracker.Global.TrackChange(new ChangedListSingleEntry<NodeOutput>(
+                _outputs,
+                nodeOutput,
+                null,
+                null
+            ));
+
+            ChangeTracker.Global.EndGroup();
             return true;
         }
 
@@ -108,14 +168,26 @@ namespace SCRDialogEditor.Data
         /// </summary>
         /// <param name="nodeOutput"></param>
         public void AddInput(NodeOutput nodeOutput)
-            => _inputs.Add(nodeOutput);
+            => ChangeTracker.Global.TrackChange(new ChangedListSingleEntry<NodeOutput>(
+                    _inputs,
+                    nodeOutput,
+                    _inputs.Count,
+                    null
+                ));
 
         /// <summary>
         /// Deregisters a connected input
         /// </summary>
         /// <param name="nodeOutput"></param>
         public void RemoveInput(NodeOutput nodeOutput)
-            => _inputs.Remove(nodeOutput);
+            => ChangeTracker.Global.TrackChange(new ChangedListSingleEntry<NodeOutput>(
+                    _inputs,
+                    nodeOutput,
+                    null,
+                    null
+                ));
+
+        #region Json
 
         /// <summary>
         /// Writes the Node to a json stream
@@ -177,6 +249,8 @@ namespace SCRDialogEditor.Data
 
             return result;
         }
+
+        #endregion
 
         public override string ToString()
             => $"Loc ({LocationX}, {LocationY}); Out: {_outputs.Count}, In: {_inputs.Count}";

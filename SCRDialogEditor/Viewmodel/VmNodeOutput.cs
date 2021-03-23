@@ -31,6 +31,7 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         public NodeOutput Data { get; }
 
+        private ChangeTracker Tracker => _parent.Grid.Tracker;
 
         #region Wrapper Properties
 
@@ -58,10 +59,19 @@ namespace SCRDialogEditor.Viewmodel
             }
             set
             {
+                Tracker.BeginGroup();
                 Data.Character = value.Name;
-                OnPropertyChanged(nameof(CharacterColor));
-                OnPropertyChanged(nameof(Name));
-                _parent.RefreshColor();
+
+                Tracker.PostGroupAction(() =>
+                {
+                    OnPropertyChanged(nameof(Character));
+                    OnPropertyChanged(nameof(CharacterText));
+                    OnPropertyChanged(nameof(CharacterColor));
+                    OnPropertyChanged(nameof(Name));
+                    _parent.RefreshColor();
+                });
+
+                Tracker.EndGroup();
             }
         }
 
@@ -91,14 +101,25 @@ namespace SCRDialogEditor.Viewmodel
             }
             set
             {
+                Tracker.BeginGroup();
                 Data.Expression = value.Name;
-                OnPropertyChanged(nameof(ExpressionColor));
-                OnPropertyChanged(nameof(Name));
-                _parent.RefreshColor();
+
+                Tracker.PostGroupAction(() =>
+                {
+                    OnPropertyChanged(nameof(Expression));
+                    OnPropertyChanged(nameof(ExpressionText));
+                    OnPropertyChanged(nameof(ExpressionColor));
+                    OnPropertyChanged(nameof(Name));
+                    _parent.RefreshColor();
+                });
+
+                Tracker.EndGroup();
             }
         }
 
         #endregion
+
+        #region Node Icon
 
         public string NodeIconText
             => string.IsNullOrWhiteSpace(Data.Icon) ? "<No icon>" : Data.Icon;
@@ -122,10 +143,20 @@ namespace SCRDialogEditor.Viewmodel
             }
             set
             {
+                Tracker.BeginGroup();
                 Data.Icon = value.Name;
-                OnPropertyChanged(nameof(NodeIconPath));
+                Tracker.PostGroupAction(() =>
+                {
+                    OnPropertyChanged(nameof(NodeIcon));
+                    OnPropertyChanged(nameof(NodeIconPath));
+                    OnPropertyChanged(nameof(NodeIconText));
+                });
+                Tracker.EndGroup();
             }
         }
+
+        #endregion
+
 
         /// <summary>
         /// Output Text
@@ -133,19 +164,38 @@ namespace SCRDialogEditor.Viewmodel
         public string Text
         {
             get => Data.Text;
-            set => Data.Text = value;
+            set
+            {
+
+                Tracker.BeginGroup();
+                Data.Text = value;
+                Tracker.PostGroupAction(() => OnPropertyChanged(nameof(Text)));
+                Tracker.EndGroup();
+            }
         }
 
         public string Condition
         {
             get => Data.Condition;
-            set => Data.SetCondition(value);
+            set
+            {
+                Tracker.BeginGroup();
+                Data.SetCondition(value);
+                Tracker.PostGroupAction(() => OnPropertyChanged(nameof(Condition)));
+                Tracker.EndGroup();
+            }
         }
 
         public bool KeepEnabled
         {
             get => Data.KeepEnabled;
-            set => Data.KeepEnabled = value;
+            set
+            {
+                Tracker.BeginGroup();
+                Data.KeepEnabled = value;
+                Tracker.PostGroupAction(() => OnPropertyChanged(nameof(KeepEnabled)));
+                Tracker.EndGroup();
+            }
         }
 
         /// <summary>
@@ -163,14 +213,27 @@ namespace SCRDialogEditor.Viewmodel
             {
                 if(_vmOutput == value || _vmOutput == _parent)
                     return;
+                Tracker.BeginGroup();
+
                 if(Data.SetOutput(value?.Data))
                 {
                     _vmOutput?.RemoveInput(this);
-                    _vmOutput = value;
+
+                    var oldValue = _vmOutput;
+
+                    Tracker.TrackChange(new ChangedValue<VmNode>(
+                        (v) => _vmOutput = v,
+                        oldValue,
+                        value
+                    ));
+
+                    Tracker.PostGroupAction(() => OnPropertyChanged(nameof(VmOutput)));
 
                     Displaying = _vmOutput != null;
                     _vmOutput?.AddInput(this);
                 }
+
+                Tracker.EndGroup();
             }
         }
 

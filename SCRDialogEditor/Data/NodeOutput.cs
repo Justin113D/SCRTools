@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SCRCommon.Viewmodels;
 using System.Collections.Generic;
 
 namespace SCRDialogEditor.Data
@@ -8,45 +9,159 @@ namespace SCRDialogEditor.Data
     /// </summary>
     public class NodeOutput
     {
+        #region private fields
+        private string _expression;
+
+        private string _character;
+
+        private string _icon;
+
+        private string _text;
+
+        private bool _keepEnabled;
+
+        private string _condition;
+
+        private int _event;
+
+        private Node _output;
+        #endregion
+
         /// <summary>
         /// Expression of the character
         /// </summary>
-        public string Expression { get; set; }
+        public string Expression
+        {
+            get => _expression;
+            set
+            {
+                string oldValue = _expression;
+                ChangeTracker.Global.TrackChange(new ChangedValue<string>(
+                    (v) => _expression = v,
+                    oldValue,
+                    value
+                ));
+            }
+        }
 
         /// <summary>
         /// Character that says the text
         /// </summary>
-        public string Character { get; set; }
+        public string Character
+        {
+            get => _character;
+            set
+            {
+                string oldValue = _character;
+                ChangeTracker.Global.TrackChange(new ChangedValue<string>(
+                    (v) => _character = v,
+                    oldValue,
+                    value
+                ));
+            }
+        }
 
         /// <summary>
         /// Selection icon for multiple choice nodes
         /// </summary>
-        public string Icon { get; set; }
+        public string Icon
+        {
+            get => _icon;
+            set
+            {
+                string oldValue = _icon;
+                ChangeTracker.Global.TrackChange(new ChangedValue<string>(
+                    (v) => _icon = v,
+                    oldValue,
+                    value
+                ));
+            }
+        }
 
         /// <summary>
         /// Text for the output
         /// </summary>
-        public string Text { get; set; }
+        public string Text
+        {
+            get => _text;
+            set
+            {
+                string oldValue = _text;
+                ChangeTracker.Global.TrackChange(new ChangedValue<string>(
+                    (v) => _text = v,
+                    oldValue,
+                    value
+                ));
+            }
+        }
 
         /// <summary>
         /// Whether output should still be available after returning to the node
         /// </summary>
-        public bool KeepEnabled { get; set; }
+        public bool KeepEnabled
+        {
+            get => _keepEnabled;
+            set
+            {
+                bool oldValue = _keepEnabled;
+                ChangeTracker.Global.TrackChange(new ChangedValue<bool>(
+                    (v) => _keepEnabled = v,
+                    oldValue,
+                    value
+                ));
+            }
+        }
 
         /// <summary>
         /// Condition for the output to be visible
         /// </summary>
-        public string Condition { get; private set; }
+        public string Condition
+        {
+            get => _condition;
+            private set
+            {
+                string oldValue = _condition;
+                ChangeTracker.Global.TrackChange(new ChangedValue<string>(
+                    (v) => _condition = v,
+                    oldValue,
+                    value
+                ));
+            }
+        }
 
         /// <summary>
         /// Event id to trigger
         /// </summary>
-        public int Event { get; set; }
+        public int Event
+        {
+            get => _event;
+            set
+            {
+                int oldValue = _event;
+                ChangeTracker.Global.TrackChange(new ChangedValue<int>(
+                    (v) => _event = v,
+                    oldValue,
+                    value
+                ));
+            }
+        }
 
         /// <summary>
         /// The followup node
         /// </summary>
-        public Node Output { get; private set; }
+        public Node Output
+        {
+            get => _output;
+            private set
+            {
+                Node oldValue = _output;
+                ChangeTracker.Global.TrackChange(new ChangedValue<Node>(
+                    (v) => _output = v,
+                    oldValue,
+                    value
+                ));
+            }
+        }
 
 
         /// <summary>
@@ -129,9 +244,13 @@ namespace SCRDialogEditor.Data
             if(node?.Outputs.Contains(this) == true)
                 return false;
 
+            ChangeTracker.Global.BeginGroup();
+
             Output?.RemoveInput(this);
             Output = node;
             Output?.AddInput(this);
+
+            ChangeTracker.Global.EndGroup();
 
             return true;
         }

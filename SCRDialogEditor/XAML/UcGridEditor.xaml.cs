@@ -1,5 +1,4 @@
 ﻿using SCRCommon.Viewmodels;
-using SCRCommon.WpfStyles;
 using SCRDialogEditor.Viewmodel;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,13 +26,14 @@ namespace SCRDialogEditor.XAML
 
         public static readonly DependencyProperty GridTileProperty =
             DependencyProperty.Register(
-                "GridTile",
+                nameof(GridTile),
                 typeof(Brush),
                 typeof(UcGridEditor),
                 new FrameworkPropertyMetadata(
                     null,
                     FrameworkPropertyMetadataOptions.None,
-                    new PropertyChangedCallback((d, e) => {
+                    new PropertyChangedCallback((d, e) =>
+                    {
                         ((Path)((UcGridEditor)d).GridBackground.Visual).Fill = (Brush)e.NewValue;
                     })
                 )
@@ -44,24 +44,6 @@ namespace SCRDialogEditor.XAML
         {
             get => (Brush)GetValue(GridTileProperty);
             set => SetValue(GridTileProperty, value);
-        }
-
-        public static readonly DependencyProperty GridLineProperty =
-            DependencyProperty.Register(
-                "GridLine",
-                typeof(Brush),
-                typeof(UcGridEditor),
-                new FrameworkPropertyMetadata(
-                    null,
-                    FrameworkPropertyMetadataOptions.None,
-                    new PropertyChangedCallback((d, e) => { })
-                )
-            );
-
-        public Brush GridLine
-        {
-            get => (Brush)GetValue(GridLineProperty);
-            set => SetValue(GridLineProperty, value);
         }
 
         public RelayCommand Cmd_RecenterView
@@ -172,7 +154,7 @@ namespace SCRDialogEditor.XAML
 
         private void GridBorder_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-           double newScale = GridTransform.Matrix.M11 + e.Delta * 0.0005d;
+            double newScale = GridTransform.Matrix.M11 + e.Delta * 0.0005d;
 
             if(newScale < 0.1d)
                 newScale = 0.1d;
@@ -204,20 +186,20 @@ namespace SCRDialogEditor.XAML
             GridBackground.Viewport = new Rect(GridTransform.Matrix.OffsetX, GridTransform.Matrix.OffsetY, width, width);
         }
 
-        public static Point FromGridSpace(Point GridSpace)
+        public static Point FromGridSpace(int x, int y)
         {
-            return new (
-                GridSpace.X * brushDim + halfBrushDim,
-                GridSpace.Y * brushDim + halfBrushDim
+            return new(
+                x * brushDim + halfBrushDim,
+                y * brushDim + halfBrushDim
                 );
         }
 
         public static Point ToGridSpace(Point TransformSpace)
         {
-             return new(
-                ((int)TransformSpace.X - halfBrushDim * (TransformSpace.X < 0 ? 2 : 0)) / brushDim,
-                ((int)TransformSpace.Y - halfBrushDim * (TransformSpace.Y < 0 ? 2 : 0)) / brushDim
-            );
+            return new(
+               ((int)TransformSpace.X - halfBrushDim * (TransformSpace.X < 0 ? 2 : 0)) / brushDim,
+               ((int)TransformSpace.Y - halfBrushDim * (TransformSpace.Y < 0 ? 2 : 0)) / brushDim
+           );
         }
 
 

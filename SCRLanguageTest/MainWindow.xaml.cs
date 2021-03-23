@@ -7,7 +7,7 @@ namespace SCRLanguageTest
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow() : base()
         {
             DataContext = new MainViewModel();
             InitializeComponent();

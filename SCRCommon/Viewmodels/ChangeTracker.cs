@@ -19,6 +19,8 @@ namespace SCRCommon.Viewmodels
     public class ChangeTracker
     {
         public static ChangeTracker Global { get; private set; }
+
+        #region Private
         private class TrackGroup : ITrackable
         {
             public readonly List<ITrackable> changes;
@@ -60,6 +62,28 @@ namespace SCRCommon.Viewmodels
             }
         }
 
+        /// <summary>
+        /// Index of the current change
+        /// </summary>
+        private int _currentChangeIndex;
+
+        /// <summary>
+        /// Current tracking group
+        /// </summary>
+        private TrackGroup _currentGroup;
+
+        /// <summary>
+        /// Amount of grouping
+        /// </summary>
+        private int _groupings;
+
+        /// <summary>
+        /// The tracked changes that can be undone and redone
+        /// </summary>
+        private readonly List<ITrackable> _trackedChanges;
+
+        #endregion
+
         public struct Pin
         {
             private readonly ChangeTracker tracker;
@@ -83,23 +107,14 @@ namespace SCRCommon.Viewmodels
             }
         }
 
-        /// <summary>
-        /// Index of the current change
-        /// </summary>
-        private int _currentChangeIndex;
-
-        private TrackGroup _currentGroup;
-
-        private int _groupings;
-
         public bool ResetOnNextChange { get; set; }
 
-        /// <summary>
-        /// The tracked changes that can be undone and redone
-        /// </summary>
-        private readonly List<ITrackable> _trackedChanges;
-
         public bool HasChanges => _currentChangeIndex > -1;
+
+        static ChangeTracker()
+        {
+            Global = new ChangeTracker();
+        }
 
         /// <summary>
         /// Creates a new change tracker
@@ -165,25 +180,34 @@ namespace SCRCommon.Viewmodels
             _currentGroup = new TrackGroup();
         }
 
+        /// <summary>
+        /// Adds an actio to perform after a group undo/redo <br/>
+        /// Immidiately invokes, as a way to enact the change
+        /// </summary>
+        /// <param name="action"></param>
         public void PostGroupAction(Action action)
         {
             if(_currentGroup == null)
                 throw new InvalidOperationException("No grouping active!");
             _currentGroup.postGroupActions.Add(action);
+            action.Invoke();
         }
 
         /// <summary>
         /// Finishes the grouping
         /// </summary>
-        public void EndGroup()
+        public void EndGroup(bool discard = false)
         {
             _groupings--;
-            if(_groupings > 0)
+            if(_groupings > 0 || _currentGroup.changes.Count == 0)
                 return;
 
-
-            if(_currentGroup.changes.Count == 0)
+            if(discard)
+            {
+                _currentGroup.Undo();
+                _currentGroup = null;
                 return;
+            }
 
             ClearRedos();
 
@@ -196,11 +220,13 @@ namespace SCRCommon.Viewmodels
         }
 
         /// <summary>
-        /// Adds a change to undo/redo
+        /// Adds a change to undo/redo <br/>
+        /// Performs "redo" after tracking, as a way to enact the change
         /// </summary>
         /// <param name="change">The change</param>
         public void TrackChange(ITrackable change)
         {
+            change.Redo();
             if(_currentGroup != null)
             {
                 _currentGroup.changes.Add(change);
@@ -210,13 +236,6 @@ namespace SCRCommon.Viewmodels
             ClearRedos();
             _trackedChanges.Add(change);
         }
-
-        /// <summary>
-        /// Adds a <see cref="Change"/> to the tracker
-        /// </summary>
-        /// <param name="change"></param>
-        public void TrackChange(Action<bool> change)
-            => TrackChange(new Change(change));
 
         private void ClearRedos()
         {
@@ -297,12 +316,12 @@ namespace SCRCommon.Viewmodels
 
         private readonly T[] _newContents;
 
-        public ChangedList(ICollection<T> collection, T[] old, Action postChange)
+        public ChangedList(ICollection<T> collection, T[] newContents, Action postChange)
         {
             _collection = collection;
             _postChange = postChange;
-            _oldContents = old;
-            _newContents = collection.ToArray();
+            _oldContents = collection.ToArray();
+            _newContents = newContents;
         }
 
         public void Undo()

@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
+using SCRCommon.Viewmodels;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 
 namespace SCRDialogEditor.Data
 {
@@ -10,33 +12,24 @@ namespace SCRDialogEditor.Data
     /// </summary>
     public class Dialog
     {
+        #region Private field
         /// <summary>
         /// Nodes list
         /// </summary>
-        private List<Node> _nodes;
+        private readonly List<Node> _nodes;
 
-        /// <summary>
-        /// Starter node (unwrapped)
-        /// </summary>
-        private Node _startNode;
+        private string _name;
+
+        private string _description;
+
+        private string _author;
+
+        #endregion
 
         /// <summary>
         /// Starter Node
         /// </summary>
-        public Node StartNode
-        {
-            get
-            {
-                if(_startNode == null)
-                {
-                    foreach(Node n in Nodes)
-                        if(n.Inputs.Count == 0)
-                            return n;
-                }
-                return _startNode;
-            }
-            set => _startNode = value;
-        }
+        public Node StartNode => _nodes.First(x => x.Inputs.Count == 0);
 
         /// <summary>
         /// Node Contents
@@ -46,17 +39,53 @@ namespace SCRDialogEditor.Data
         /// <summary>
         /// Name of the dialog
         /// </summary>
-        public string Name { get; set; }
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                string oldValue = _name;
+                ChangeTracker.Global.TrackChange(new ChangedValue<string>(
+                    (v) => _name = v,
+                    oldValue,
+                    value
+                ));
+            }
+        }
 
         /// <summary>
         /// Dialog description
         /// </summary>
-        public string Description { get; set; }
+        public string Description
+        {
+            get => _description;
+            set
+            {
+                string oldValue = _description;
+                ChangeTracker.Global.TrackChange(new ChangedValue<string>(
+                    (v) => _description = v,
+                    oldValue,
+                    value
+                ));
+            }
+        }
 
         /// <summary>
         /// Author of the dialog
         /// </summary>
-        public string Author { get; set; }
+        public string Author
+        {
+            get => _author;
+            set
+            {
+                string oldValue = _author;
+                ChangeTracker.Global.TrackChange(new ChangedValue<string>(
+                    (v) => _author = v,
+                    oldValue,
+                    value
+                ));
+            }
+        }
 
         public Dialog()
         {
@@ -70,7 +99,14 @@ namespace SCRDialogEditor.Data
         public Node CreateNode()
         {
             Node n = new();
-            _nodes.Add(n);
+
+            ChangeTracker.Global.TrackChange(new ChangedListSingleEntry<Node>(
+                _nodes,
+                n,
+                _nodes.Count,
+                null
+            ));
+
             return n;
         }
 
@@ -79,32 +115,42 @@ namespace SCRDialogEditor.Data
         /// </summary>
         public void RemoveNode(Node node)
         {
+            ChangeTracker.Global.BeginGroup();
             node.Disconnect();
-            _nodes.Remove(node);
+
+            ChangeTracker.Global.TrackChange(new ChangedListSingleEntry<Node>(
+                _nodes,
+                node,
+                null,
+                null
+            ));
+
+            ChangeTracker.Global.EndGroup();
         }
 
+        /// <summary>
+        ///  (Somewhat) Sorts the nodes
+        /// </summary>
         public void Sort()
         {
-            List<Node> before = new(_nodes.ToArray());
-
-            _nodes.Clear();
+            List<Node> sorted = new();
 
             Queue<Node> nodeQueue = new();
-            while(_nodes.Count < before.Count)
+            while(sorted.Count < _nodes.Count)
             {
-                Node next = before.Find(x => x.Inputs.Count == 0 && !_nodes.Contains(x));
+                Node next = _nodes.Find(x => x.Inputs.Count == 0 && !sorted.Contains(x));
                 if(next == null)
-                    next = before.Find(x => !_nodes.Contains(x));
+                    next = _nodes.Find(x => !sorted.Contains(x));
 
                 while(nodeQueue.Count > 0 || next != null)
                 {
                     Node q = next ?? nodeQueue.Dequeue();
                     next = null;
 
-                    if(_nodes.Contains(q))
+                    if(sorted.Contains(q))
                         continue;
 
-                    _nodes.Add(q);
+                    sorted.Add(q);
                     if(q.Outputs.Count == 1)
                         next = q.Outputs[0].Output;
                     else
@@ -116,7 +162,15 @@ namespace SCRDialogEditor.Data
                     }
                 }
             }
+
+            ChangeTracker.Global.TrackChange(new ChangedList<Node>(
+                _nodes,
+                sorted.ToArray(),
+                null
+            ));
         }
+
+        #region Json
 
         /// <summary>
         /// Saves the Dialog to a file
@@ -167,13 +221,18 @@ namespace SCRDialogEditor.Data
         /// </summary>
         public static Dialog LoadFromFile(string path)
         {
+            ChangeTracker old = ChangeTracker.Global;
+            new ChangeTracker().Use();
             try
             {
                 using JsonTextReader reader = new(new StringReader(File.ReadAllText(path)));
-                return ReadJson(reader);
+                Dialog result = ReadJson(reader);
+                old.Use();
+                return result;
             }
             catch(JsonException)
             {
+                old.Use();
                 throw new InvalidDataException("The loaded json file is not a valid format");
             }
         }
@@ -184,8 +243,7 @@ namespace SCRDialogEditor.Data
         public static Dialog ReadJson(JsonReader reader)
         {
             Dialog result = new();
-
-            Dictionary<NodeOutput, int> outputIndices = new Dictionary<NodeOutput, int>();
+            Dictionary<NodeOutput, int> outputIndices = new();
 
             while(reader.Read() && reader.TokenType != JsonToken.EndObject)
             {
@@ -219,6 +277,8 @@ namespace SCRDialogEditor.Data
 
             return result;
         }
+
+        #endregion
 
 
         public override string ToString()

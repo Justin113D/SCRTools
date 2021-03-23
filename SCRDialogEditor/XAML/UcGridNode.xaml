@@ -4,34 +4,32 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    xmlns:wpfbase="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
     xmlns:local="clr-namespace:SCRDialogEditor.XAML"
     xmlns:vm="clr-namespace:SCRDialogEditor.Viewmodel"
     mc:Ignorable="d" 
     d:DataContext="{d:DesignInstance Type=vm:VmNode}"
+    d:Height="100"
+    d:Width="200"
     Loaded="OnLoaded"
     Unloaded="OnUnloaded"
     MouseUp="OnMouseUp"
     x:Name="Wrapper">
 
     <UserControl.Resources>
-        <wpfbase:StaticStyle/>
+        <Style TargetType="{x:Type Border}" x:Key="Socket">
+            <Setter Property="BorderBrush" Value="{DynamicResource Outline}"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource OutlineHg}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
-
+    
+    
     <UserControl.Template>
         <ControlTemplate TargetType="{x:Type local:UcGridNode}">
-            <ControlTemplate.Resources>
 
-                <Style TargetType="{x:Type Border}" x:Key="Socket">
-                    <Setter Property="BorderBrush" Value="{Binding Outline, ElementName=Wrapper}"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="BorderBrush" Value="{Binding OutlineHg, ElementName=Wrapper}"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </ControlTemplate.Resources>
-            
             <Canvas>
                 <Border 
                     Canvas.Left="-10"
@@ -39,7 +37,7 @@
                     Width="20"
                     Height="20"
                     BorderThickness="3"
-                    Background="{TemplateBinding Background}"
+                    Background="{DynamicResource BG1}"
                     Style="{StaticResource Socket}">
 
                 </Border>
@@ -47,8 +45,8 @@
                     x:Name="Outline"
                     CornerRadius="11" 
                     BorderThickness="3" 
-                    BorderBrush="{TemplateBinding local:UcGridNode.Outline}" 
-                    Background="{TemplateBinding local:UcGridNode.Background}">
+                    BorderBrush="{DynamicResource Outline}" 
+                    Background="{DynamicResource BG1}">
 
                     <Grid MinWidth="120" MaxWidth="180">
                         <Grid.RowDefinitions>
@@ -133,7 +131,7 @@
                                             TextWrapping="NoWrap"
                                             VerticalAlignment="Center"
                                             Padding="5 5 10 5"
-                                            Foreground="{Binding Foreground, ElementName=Wrapper}"
+                                            Foreground="{DynamicResource FontBrush}"
                                             FontSize="{Binding FontSize, ElementName=Wrapper}"/>
 
                                         <Border
@@ -167,7 +165,7 @@
 
             <ControlTemplate.Triggers>
                 <Trigger SourceName="GrabGrid" Property="IsMouseOver" Value="True">
-                    <Setter TargetName="Outline" Property="BorderBrush" Value="{Binding OutlineHg, ElementName=Wrapper}"/>
+                    <Setter TargetName="Outline" Property="BorderBrush" Value="{DynamicResource OutlineHg}"/>
                 </Trigger>
 
                 <DataTrigger Binding="{Binding IsActive}" Value="True">

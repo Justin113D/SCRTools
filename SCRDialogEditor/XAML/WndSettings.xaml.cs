@@ -1,5 +1,5 @@
-﻿using SCRDialogEditor.Viewmodel;
-using System.Windows;
+﻿using SCRCommon.WpfStyles;
+using SCRDialogEditor.Viewmodel;
 
 namespace SCRDialogEditor
 {

@@ -36,7 +36,7 @@ namespace SCRDialogEditor.Viewmodel
         {
             Data = new DialogOptions();
             if(!string.IsNullOrWhiteSpace(DialogOptionsPath))
-            { 
+            {
                 if(Load(DialogOptionsPath))
                     LoadedFilePath = DialogOptionsPath;
             }

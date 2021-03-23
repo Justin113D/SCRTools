@@ -1,20 +1,31 @@
-﻿<UserControl x:Class="SCRDialogEditor.XAML.UcDialogEditor"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:SCRDialogEditor.XAML"
-             xmlns:vm="clr-namespace:SCRDialogEditor.Viewmodel"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="200"
-             d:DataContext="{d:DesignData Type=vm:VmGrid}"
-             Name="Wrapper">
+﻿<UserControl 
+    x:Class="SCRDialogEditor.XAML.UcDialogEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:vm="clr-namespace:SCRDialogEditor.Viewmodel"
+    mc:Ignorable="d" 
+    d:DesignHeight="450" d:DesignWidth="200"
+    d:DataContext="{d:DesignData Type=vm:VmGrid}"
+    Background="{DynamicResource BG1}"
+    BorderBrush="{DynamicResource BG3}"
+    Foreground="{DynamicResource FontBrush}"
+    Name="Wrapper">
+
+    <UserControl.Resources>
+        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxUndo}">
+            <Setter Property="Background" Value="{DynamicResource BG2}"/>
+            <Setter Property="Margin" Value="4 2 4 5"/>
+            <Setter Property="Padding" Value="2"/>
+        </Style>
+    </UserControl.Resources>
 
     <ScrollViewer
         VerticalScrollBarVisibility="Auto"
         HorizontalScrollBarVisibility="Disabled">
 
-        <StackPanel>
+        <StackPanel Margin="4 0">
 
             <TextBlock
                 HorizontalAlignment="Center"
@@ -23,13 +34,13 @@
                 FontWeight="Bold"/>
 
             <TextBlock Text="Author:"/>
-            <TextBox Text="{Binding Author, Mode=TwoWay}" Margin="4 2 4 5"/>
+            <TextBox Text="{Binding Author, Mode=TwoWay}"/>
 
             <TextBlock Text="Name:"/>
-            <TextBox Text="{Binding Name, Mode=TwoWay}" Margin="4 2 4 5"/>
+            <TextBox Text="{Binding Name, Mode=TwoWay}"/>
 
             <TextBlock Text="Description:"/>
-            <TextBox Text="{Binding Description, Mode=TwoWay}" Margin="4 2 4 5"/>
+            <TextBox Text="{Binding Description, Mode=TwoWay}"/>
 
             <Border Height="2" Margin="2 4" Background="{Binding BorderBrush, ElementName=Wrapper}"/>
 

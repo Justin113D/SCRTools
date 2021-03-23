@@ -1,14 +1,14 @@
 ﻿using SCRDialogEditor.Viewmodel;
-using System.Windows;
 
 namespace SCRDialogEditor.XAML
 {
-    public partial class WndMain : Window
+    public partial class WndMain : SCRCommon.WpfStyles.Window
     {
         public WndMain()
         {
             DataContext = new VmMain();
             InitializeComponent();
+
         }
     }
 }

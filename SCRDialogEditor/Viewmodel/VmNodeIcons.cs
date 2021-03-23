@@ -1,14 +1,11 @@
-﻿using SCRCommon.Viewmodels;
+﻿using Microsoft.Win32;
+using PropertyChanged;
+using SCRCommon.Viewmodels;
 using SCRDialogEditor.Data;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using Microsoft.Win32;
-using PropertyChanged;
+using System.Linq;
 
 namespace SCRDialogEditor.Viewmodel
 {
@@ -67,12 +64,12 @@ namespace SCRDialogEditor.Viewmodel
             }
         }
 
-        public string FilePath 
+        public string FilePath
             => _data?.IconPath;
 
         [DoNotCheckEquality]
         public string FullFilePath
-        { 
+        {
             get => FilePath == null ? null : Path.GetFullPath(_data.IconPath, _parent.DialogOptions.LoadedFilePath);
             set
             {
@@ -85,7 +82,7 @@ namespace SCRDialogEditor.Viewmodel
                 OnPropertyChanged(nameof(FilePath));
             }
         }
-        
+
 
         public VmNodeIcon(VmNodeIcons icons, NodeIcon nodeIcon)
         {

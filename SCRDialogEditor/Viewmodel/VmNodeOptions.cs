@@ -3,8 +3,8 @@ using SCRCommon.Viewmodels;
 using SCRDialogEditor.Data;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Media;
 using System.Linq;
+using System.Windows.Media;
 
 namespace SCRDialogEditor.Viewmodel
 {
@@ -95,5 +95,5 @@ namespace SCRDialogEditor.Viewmodel
             => Name;
     }
 
-    
+
 }

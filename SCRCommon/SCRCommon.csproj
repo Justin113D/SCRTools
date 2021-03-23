@@ -11,6 +11,9 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
+    <Page Remove="WpfStyles\Window.xaml" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Fody">
       <Version>6.3.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -21,5 +24,8 @@
       <Version>3.3.1</Version>
     </PackageReference>
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WpfStyles\Window.xaml" />
   </ItemGroup>
 </Project>

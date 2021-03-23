@@ -22,6 +22,10 @@ namespace SCRDialogEditor.Viewmodel
 
         #endregion
 
+        #region private fields
+        private int _updateCounter;
+        #endregion
+
         /// <summary>
         /// Grid parent
         /// </summary>
@@ -31,6 +35,8 @@ namespace SCRDialogEditor.Viewmodel
         /// Data object
         /// </summary>
         public Node Data { get; }
+
+        private ChangeTracker Tracker => Grid.Tracker;
 
         #region Properties
 
@@ -52,7 +58,13 @@ namespace SCRDialogEditor.Viewmodel
         public bool RightPortrait
         {
             get => Data.RightPortrait;
-            set => Data.RightPortrait = value;
+            set
+            {
+                Tracker.BeginGroup();
+                Data.RightPortrait = value;
+                Tracker.PostGroupAction(() => OnPropertyChanged(nameof(RightPortrait)));
+                Tracker.EndGroup();
+            }
         }
 
         /// <summary>
@@ -69,6 +81,7 @@ namespace SCRDialogEditor.Viewmodel
 
         public string Name
             => Outputs[0].Name;
+
         public string InOutInfo
             => $"[ {Inputs.Count} ; {Outputs.Count} ]";
 
@@ -80,7 +93,25 @@ namespace SCRDialogEditor.Viewmodel
         public bool IsActive
             => Grid.Active == this;
 
-        public int UpdatePositionCounter { get; private set; }
+        public int UpdatePositionCounter
+        {
+            get => _updateCounter;
+            set
+            {
+                Tracker.BeginGroup();
+
+                int oldValue = _updateCounter;
+
+                Tracker.TrackChange(new ChangedValue<int>(
+                    (v) => _updateCounter = v,
+                    oldValue,
+                    value
+                ));
+
+                Tracker.PostGroupAction(() => OnPropertyChanged(nameof(UpdatePositionCounter)));
+                Tracker.EndGroup();
+            }
+        }
 
         #endregion
 
@@ -112,7 +143,8 @@ namespace SCRDialogEditor.Viewmodel
             else
             {
                 Position = UcGridEditor.FromGridSpace(
-                    new(Data.LocationX, Data.LocationY)
+                    Data.LocationX,
+                    Data.LocationY
                 );
             }
         }
@@ -128,11 +160,15 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         public void Disconnect()
         {
+            Tracker.BeginGroup();
+
             foreach(VmNodeOutput no in Outputs)
                 no.Disconnect();
 
             foreach(VmNodeOutput no in _inputs.ToArray())
                 no.Disconnect();
+
+            Tracker.EndGroup();
         }
 
         #region Collection methods
@@ -142,10 +178,21 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         public void AddOutput()
         {
+            Tracker.BeginGroup();
+
             NodeOutput output = Data.CreateOutput();
             VmNodeOutput vmOutput = new(output, this);
-            Outputs.Add(vmOutput);
-            OnPropertyChanged(nameof(InOutInfo));
+
+            Tracker.TrackChange(new ChangedListSingleEntry<VmNodeOutput>(
+                Outputs,
+                vmOutput,
+                Outputs.Count,
+                null
+            ));
+
+            Tracker.PostGroupAction(() => OnPropertyChanged(nameof(InOutInfo)));
+
+            Tracker.EndGroup();
         }
 
         /// <summary>
@@ -156,13 +203,27 @@ namespace SCRDialogEditor.Viewmodel
         {
             if(Outputs.Count < 2)
                 return;
-            if(Outputs.Remove(vmOutput))
+
+            Tracker.BeginGroup();
+
+            vmOutput.Disconnect();
+
+            Tracker.TrackChange(new ChangedListSingleEntry<VmNodeOutput>(
+                Outputs,
+                vmOutput,
+                null,
+                null
+            ));
+
+            Data.RemoveOutput(vmOutput.Data);
+
+            Tracker.PostGroupAction(() =>
             {
-                vmOutput.VmOutput = null;
-                Data.RemoveOutput(vmOutput.Data);
-            }
-            RefreshColor();
-            OnPropertyChanged(nameof(InOutInfo));
+                RefreshColor();
+                OnPropertyChanged(nameof(InOutInfo));
+            });
+
+            Tracker.EndGroup();
         }
 
 
@@ -172,9 +233,20 @@ namespace SCRDialogEditor.Viewmodel
         /// <param name="vmInput"></param>
         public void AddInput(VmNodeOutput vmInput)
         {
-            _inputs.Add(vmInput);
+            Tracker.BeginGroup();
+
+            Tracker.TrackChange(new ChangedListSingleEntry<VmNodeOutput>(
+                _inputs,
+                vmInput,
+                _inputs.Count,
+                null
+            ));
+
             UpdatePositionCounter++;
-            OnPropertyChanged(nameof(InOutInfo));
+
+            Tracker.PostGroupAction(() => OnPropertyChanged(nameof(InOutInfo)));
+
+            Tracker.EndGroup();
         }
 
         /// <summary>
@@ -183,9 +255,20 @@ namespace SCRDialogEditor.Viewmodel
         /// <param name="vmInput"></param>
         public void RemoveInput(VmNodeOutput vmInput)
         {
-            _inputs.Remove(vmInput);
+            Tracker.BeginGroup();
+
+            Tracker.TrackChange(new ChangedListSingleEntry<VmNodeOutput>(
+                _inputs,
+                vmInput,
+                null,
+                null
+            ));
+
             UpdatePositionCounter--;
-            OnPropertyChanged(nameof(InOutInfo));
+
+            Tracker.PostGroupAction(() => OnPropertyChanged(nameof(InOutInfo)));
+
+            Tracker.EndGroup();
         }
 
 
@@ -198,8 +281,12 @@ namespace SCRDialogEditor.Viewmodel
             if(!Outputs.Contains(vmOutput) || vmOutput.Displaying)
                 return;
 
-            Grid.Outputs.Add(vmOutput);
+            Tracker.BeginGroup();
+
+            Grid.RegisterOutput(vmOutput);
             UpdatePositionCounter++;
+
+            Tracker.EndGroup();
         }
 
         /// <summary>
@@ -211,8 +298,12 @@ namespace SCRDialogEditor.Viewmodel
             if(!Outputs.Contains(vmOutput) || !vmOutput.Displaying)
                 return;
 
-            Grid.Outputs.Remove(vmOutput);
+            Tracker.BeginGroup();
+
+            Grid.DeregisterOutput(vmOutput);
             UpdatePositionCounter--;
+
+            Tracker.EndGroup();
         }
 
         #endregion
@@ -236,7 +327,8 @@ namespace SCRDialogEditor.Viewmodel
         public void EndGrab()
         {
             Point start = UcGridEditor.FromGridSpace(
-                new(Data.LocationX, Data.LocationY)
+                Data.LocationX,
+                Data.LocationY
             );
 
             int difX = (int)Math.Abs(start.X - Position.X);
@@ -250,15 +342,21 @@ namespace SCRDialogEditor.Viewmodel
 
         public void UpdateDataPosition()
         {
+            Tracker.BeginGroup();
+
             Point dataLoc = UcGridEditor.ToGridSpace(Position);
             Data.LocationX = (int)dataLoc.X;
             Data.LocationY = (int)dataLoc.Y;
 
-            Position = UcGridEditor.FromGridSpace(dataLoc);
+            Tracker.PostGroupAction(() => Position = UcGridEditor.FromGridSpace(Data.LocationX, Data.LocationY));
+
+            Tracker.EndGroup();
         }
 
         #endregion
 
+        public override string ToString()
+            => $"{Name} - {InOutInfo}";
     }
 }
 

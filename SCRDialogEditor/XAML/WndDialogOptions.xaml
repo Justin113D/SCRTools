@@ -1,25 +1,17 @@
-﻿<Window x:Class="SCRDialogEditor.XAML.WndDialogOptions"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SCRDialogEditor.XAML"
-        xmlns:wpfBase="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
-        xmlns:vm="clr-namespace:SCRDialogEditor.Viewmodel"
-        mc:Ignorable="d"
-        Title="Dialog Options" Height="600" Width="800"
-        d:DataContext="{d:DesignInstance Type=vm:VmDialogOptions}"
-        Style="{DynamicResource WindowStyle}"
-        ResizeMode="CanResize">
+﻿<wpfBase:Window 
+    x:Class="SCRDialogEditor.XAML.WndDialogOptions"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:SCRDialogEditor.XAML"
+    xmlns:wpfBase="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
+    xmlns:vm="clr-namespace:SCRDialogEditor.Viewmodel"
+    mc:Ignorable="d"
+    Title="Dialog Options" Height="600" Width="800"
+    d:DataContext="{d:DesignInstance Type=vm:VmDialogOptions}"
+    Style="{DynamicResource WindowStyle}">
 
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <wpfBase:BaseWindowStyle/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
-    
     <Grid Background="{DynamicResource BG1}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -122,4 +114,4 @@
             </Button>
         </Grid>
     </Grid>
-</Window>
+</wpfBase:Window>

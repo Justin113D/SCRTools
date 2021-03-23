@@ -1,12 +1,9 @@
 ﻿using SCRCommon.Viewmodels;
-using SCRCommon.WpfStyles;
 using SCRDialogEditor.Data;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace SCRDialogEditor.Viewmodel
 {
@@ -26,6 +23,12 @@ namespace SCRDialogEditor.Viewmodel
         public RelayCommand Cmd_SortNodes
             => new(Sort);
 
+        public RelayCommand Cmd_Undo
+            => new(Undo);
+
+        public RelayCommand Cmd_Redo
+            => new(Redo);
+
         #endregion
 
         #region Private Fields
@@ -35,6 +38,10 @@ namespace SCRDialogEditor.Viewmodel
         private VmNode _grabbed;
 
         private VmNodeOutput _connecting;
+
+        private VmNode _wasConnected;
+
+        private readonly ChangeTracker _tracker;
 
         #endregion
 
@@ -58,6 +65,16 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         public ObservableCollection<VmNodeOutput> Outputs { get; }
 
+        public ChangeTracker Tracker
+        {
+            get
+            {
+                if(ChangeTracker.Global != _tracker)
+                    _tracker.Use();
+                return _tracker;
+            }
+        }
+
         #endregion
 
         #region Wrapper Properties
@@ -65,19 +82,37 @@ namespace SCRDialogEditor.Viewmodel
         public string Name
         {
             get => Data.Name;
-            set => Data.Name = value;
+            set
+            {
+                Tracker.BeginGroup();
+                Data.Name = value;
+                Tracker.PostGroupAction(() => OnPropertyChanged(nameof(Name)));
+                Tracker.EndGroup();
+            }
         }
 
         public string Author
         {
             get => Data.Author;
-            set => Data.Author = value;
+            set
+            {
+                Tracker.BeginGroup();
+                Data.Author = value;
+                Tracker.PostGroupAction(() => OnPropertyChanged(nameof(Author)));
+                Tracker.EndGroup();
+            }
         }
 
         public string Description
         {
             get => Data.Description;
-            set => Data.Description = value;
+            set
+            {
+                Tracker.BeginGroup();
+                Data.Description = value;
+                Tracker.PostGroupAction(() => OnPropertyChanged(nameof(Description)));
+                Tracker.EndGroup();
+            }
         }
 
         #endregion
@@ -93,10 +128,22 @@ namespace SCRDialogEditor.Viewmodel
             set
             {
                 VmNode oldActive = _active;
-                _active = value;
 
-                oldActive?.RefreshActive();
-                _active?.RefreshActive();
+                Tracker.BeginGroup();
+
+                Tracker.TrackChange(new ChangedValue<VmNode>(
+                    (v) => _active = v,
+                    oldActive,
+                    value
+                ));
+
+                Tracker.PostGroupAction(() =>
+                {
+                    oldActive?.RefreshActive();
+                    value?.RefreshActive();
+                });
+
+                Tracker.EndGroup();
             }
         }
 
@@ -127,11 +174,24 @@ namespace SCRDialogEditor.Viewmodel
                 if(value == _connecting)
                     return;
 
-                if(value != null)
-                    value.Displaying = true;
 
-                if(_connecting != null && _connecting.VmOutput == null)
-                    _connecting.Displaying = false;
+                if(value != null)
+                {
+                    Tracker.BeginGroup();
+                    _wasConnected = value.VmOutput;
+                    value.VmOutput = null;
+                    value.Displaying = true;
+                }
+                else
+                {
+                    if(_wasConnected != null && _connecting.VmOutput == null)
+                    {
+                        _connecting.Displaying = false;
+                    }
+
+                    // discard only if it was and still is null
+                    Tracker.EndGroup(_wasConnected == null && _connecting.VmOutput == null);
+                }
 
                 _connecting = value;
             }
@@ -143,6 +203,7 @@ namespace SCRDialogEditor.Viewmodel
 
         public VmGrid(VmMain mainVM, Dialog dialog)
         {
+            _tracker = new();
             Main = mainVM;
             Data = dialog;
 
@@ -184,7 +245,7 @@ namespace SCRDialogEditor.Viewmodel
         /// <param name="absolute"></param>
         public void MoveGrabbed(Point dif, Point absolute)
         {
-            Grabbed?.Move( dif );
+            Grabbed?.Move(dif);
             Connecting?.UpdateEndPosition(absolute);
         }
 
@@ -193,11 +254,21 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         public void CreateNode(Point position)
         {
+            if(Grabbed != null || Connecting != null)
+                return;
+
+            Tracker.BeginGroup();
+
             Node node = Data.CreateNode();
 
-            VmNode vmnode = new(this, node, position);
+            Tracker.TrackChange(new ChangedListSingleEntry<VmNode>(
+                Nodes,
+                new(this, node, position),
+                Nodes.Count,
+                null
+            ));
 
-            Nodes.Add(vmnode);
+            Tracker.EndGroup();
         }
 
         /// <summary>
@@ -206,9 +277,20 @@ namespace SCRDialogEditor.Viewmodel
         /// <param name="node"></param>
         public void DeleteNode(VmNode node)
         {
+            Tracker.BeginGroup();
+
             node.Disconnect();
-            Nodes.Remove(node);
+
+            Tracker.TrackChange(new ChangedListSingleEntry<VmNode>(
+                Nodes,
+                node,
+                null,
+                null
+            ));
+
             Data.RemoveNode(node.Data);
+
+            Tracker.EndGroup();
         }
 
         /// <summary>
@@ -216,11 +298,39 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         private void DeleteActiveNode()
         {
+            if(Grabbed != null || Connecting != null)
+                return;
+
             if(Active == null)
                 return;
 
+            Tracker.BeginGroup();
+
             DeleteNode(Active);
             Active = null;
+
+            Tracker.EndGroup();
+        }
+
+
+        public void RegisterOutput(VmNodeOutput vmOutput)
+        {
+            Tracker.TrackChange(new ChangedListSingleEntry<VmNodeOutput>(
+                Outputs,
+                vmOutput,
+                Outputs.Count,
+                null
+            ));
+        }
+
+        public void DeregisterOutput(VmNodeOutput vmOutput)
+        {
+            Tracker.TrackChange(new ChangedListSingleEntry<VmNodeOutput>(
+                Outputs,
+                vmOutput,
+                null,
+                null
+            ));
         }
 
         /// <summary>
@@ -235,17 +345,55 @@ namespace SCRDialogEditor.Viewmodel
             VmNode start = Nodes.First(x => x.Data == Data.StartNode);
             Point offset = new(-start.Position.X, -start.Position.Y);
 
+            Tracker.BeginGroup();
+
             foreach(var n in Nodes)
             {
                 n.Move(offset);
                 n.UpdateDataPosition();
             }
+
+            Tracker.EndGroup();
         }
 
+        /// <summary>
+        /// Sorts the nodes
+        /// </summary>
         private void Sort()
         {
+            Tracker.BeginGroup();
+
             Data.Sort();
-            Nodes = new ObservableCollection<VmNode>(Nodes.OrderBy(x => Data.Nodes.IndexOf(x.Data)));
+
+            var oldValue = Nodes;
+
+            Tracker.TrackChange(new ChangedValue<ObservableCollection<VmNode>>(
+                (v) => Nodes = v,
+                oldValue,
+                new ObservableCollection<VmNode>(Nodes.OrderBy(x => Data.Nodes.IndexOf(x.Data)))
+            ));
+
+            Tracker.EndGroup();
+        }
+
+        public void Undo()
+        {
+            if(Grabbed != null || Connecting != null)
+                return;
+            if(Tracker.Undo())
+            {
+                // TODO Notify that the undo was successfull
+            }
+        }
+
+        public void Redo()
+        {
+            if(Grabbed != null || Connecting != null)
+                return;
+            if(Tracker.Redo())
+            {
+                // TODO Notify that the redo was successfull
+            }
         }
     }
 }

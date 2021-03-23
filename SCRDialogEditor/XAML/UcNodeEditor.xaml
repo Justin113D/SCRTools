@@ -9,30 +9,22 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance Type=vm:VmNode}"
-             x:Name="Top">
+             x:Name="Top"
+             Background="{DynamicResource BG1}">
 
     <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <wpfBase:BaseWindowStyle/>
-                <wpfBase:StaticStyle/>
-
-                <ResourceDictionary>
-                    <Style x:Key="Seperator" TargetType="{x:Type Border}">
-                        <Setter Property="Height" Value="2"/>
-                        <Setter Property="Background" Value="{DynamicResource BG3}"/>
-                        <Setter Property="Margin" Value="2 4"/>
-                    </Style>
-                </ResourceDictionary>
-                
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+        <Style x:Key="Seperator" TargetType="{x:Type Border}">
+            <Setter Property="Height" Value="2"/>
+            <Setter Property="Background" Value="{DynamicResource BG3}"/>
+            <Setter Property="Margin" Value="2 4"/>
+        </Style>
     </UserControl.Resources>
 
     <ScrollViewer 
         HorizontalScrollBarVisibility="Disabled" 
         VerticalScrollBarVisibility="Auto" 
         Background="Transparent">
+
         <StackPanel>
             <TextBlock 
                 FontWeight="Bold"
@@ -108,7 +100,6 @@
                                 <TextBlock 
                                         Text="{Binding Name}"
                                         FontSize="15" 
-                                        Foreground="{DynamicResource FontBrush}" 
                                         VerticalAlignment="Center" 
                                         Grid.Column="2" 
                                         IsHitTestVisible="False"/>
@@ -190,7 +181,7 @@
 
                                     <!-- Output Dialog/Text -->
                                     <TextBlock Text="Dialog:"/>
-                                    <TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBox Text="{Binding Text}" AcceptsReturn="True"/>
 
                                     <Border Height="2" Background="{DynamicResource BG3}" Margin="2 4"/>
 
