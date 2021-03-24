@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Resources;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Interop;
 using System.Windows.Markup;
-using System.Windows.Media.Effects;
 using System.Windows.Shell;
 
 namespace SCRCommon.WpfStyles
@@ -37,6 +32,14 @@ namespace SCRCommon.WpfStyles
                 typeof(Visibility),
                 typeof(Window));
 
+        public static DependencyProperty ShadowPaddingProperty
+            = DependencyProperty.Register(
+                nameof(ShadowPadding),
+                typeof(Thickness),
+                typeof(Window),
+                new PropertyMetadata(
+                    new Thickness(7)
+                ));
 
         public Visibility MinimizeButton
         {
@@ -54,6 +57,12 @@ namespace SCRCommon.WpfStyles
         {
             get => (Visibility)GetValue(CloseButtonProperty);
             set => SetValue(CloseButtonProperty, value);
+        }
+
+        public Thickness ShadowPadding
+        {
+            get => (Thickness)GetValue(ShadowPaddingProperty);
+            set => SetValue(ShadowPaddingProperty, value);
         }
 
         /// <summary>
@@ -81,7 +90,7 @@ namespace SCRCommon.WpfStyles
             Loaded += OnLoaded;
             Closed += OnClosed;
 
-            Padding = new(7);
+            Padding = new(4);
 
             WindowChrome chrome = new()
             {
@@ -92,9 +101,9 @@ namespace SCRCommon.WpfStyles
             };
 
             BindingOperations.SetBinding(
-                chrome, 
-                WindowChrome.ResizeBorderThicknessProperty, 
-                new Binding("Padding") { Source = this }
+                chrome,
+                WindowChrome.ResizeBorderThicknessProperty,
+                new Binding("ShadowPadding") { Source = this }
             );
 
             WindowChrome.SetWindowChrome(this, chrome);

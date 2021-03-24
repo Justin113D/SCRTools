@@ -4,11 +4,11 @@
     xmlns:local="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
     TargetType="{x:Type local:Window}">
     <Border
-        Padding="{TemplateBinding local:Window.Padding}">
+        Padding="{TemplateBinding local:Window.ShadowPadding}">
         <Border 
             BorderThickness="0" 
             Background="{DynamicResource BG2}" 
-            Padding="4">
+            Padding="{TemplateBinding local:Window.Padding}">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="0" BlurRadius="10" RenderingBias="Performance" Opacity="0.5"/>
             </Border.Effect>

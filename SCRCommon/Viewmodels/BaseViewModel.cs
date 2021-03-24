@@ -20,19 +20,26 @@ namespace SCRCommon.Viewmodels
 
     public abstract class FileBaseViewModel : BaseViewModel
     {
-        public RelayCommand Cmd_Save 
+        public RelayCommand Cmd_Save
             => new(() => InternalSave(false));
-        public RelayCommand Cmd_SaveAs 
+        public RelayCommand Cmd_SaveAs
             => new(() => InternalSave(true));
-        public RelayCommand Cmd_Load 
+        public RelayCommand Cmd_Load
             => new(InternalLoad);
-        public RelayCommand Cmd_Reset 
+        public RelayCommand Cmd_Reset
             => new(InternalReset);
 
         /// <summary>
         /// Dialog File filter to use
         /// </summary>
         public abstract string FileFilter { get; }
+
+        /// <summary>
+        /// Change tracker to set a pin in on save
+        /// </summary>
+        public abstract ChangeTracker PinTracker { get; }
+
+        private ChangeTracker.Pin? _savePin;
 
         /// <summary>
         /// Loaded file path
@@ -65,6 +72,29 @@ namespace SCRCommon.Viewmodels
         /// </summary>
         public abstract void Reset();
 
+        private bool InternalResetConfirmation()
+        {
+            if(_savePin?.CheckValid() != false || ResetConfirmation())
+            {
+                MessageBoxResult r = MessageBox.Show("Unsaved changes will be reset!\nDo you want to save before?", "Warning!", MessageBoxButton.YesNoCancel, MessageBoxImage.Exclamation);
+                switch(r)
+                {
+                    case MessageBoxResult.Yes:
+                        if(!InternalSave(false))
+                            return false;
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                    case MessageBoxResult.None:
+                    case MessageBoxResult.Cancel:
+                    default:
+                        return false;
+                }
+                return true;
+            }
+            return true;
+        }
+
         private void InternalLoad()
         {
             if(!ResetConfirmation())
@@ -82,14 +112,18 @@ namespace SCRCommon.Viewmodels
             }
 
             if(Load(ofd.FileName))
+            {
                 LoadedFilePath = ofd.FileName;
+                _savePin = PinTracker?.PinCurrent();
+            }
+
         }
 
-        private void InternalSave(bool newPath)
+        private bool InternalSave(bool newPath)
         {
             if(string.IsNullOrWhiteSpace(LoadedFilePath) || newPath)
             {
-                SaveFileDialog sfd = new SaveFileDialog()
+                SaveFileDialog sfd = new()
                 {
                     Filter = FileFilter,
                     Title = $"Save {FileTypeName} to File"
@@ -101,17 +135,20 @@ namespace SCRCommon.Viewmodels
                     LoadedFilePath = sfd.FileName;
                 }
                 else
-                    return;
+                    return false;
             }
             else
                 Save(LoadedFilePath);
+            _savePin = PinTracker?.PinCurrent();
+            return true;
         }
 
         private void InternalReset()
         {
-            if(!ResetConfirmation())
+            if(!InternalResetConfirmation())
                 return;
             Reset();
+            _savePin = PinTracker?.PinCurrent();
         }
     }
 }

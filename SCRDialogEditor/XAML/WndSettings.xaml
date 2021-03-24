@@ -9,12 +9,13 @@
     xmlns:vmbase="clr-namespace:SCRCommon.Viewmodels;assembly=SCRCommon"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance {x:Type local:VmSettings}}"
-    Title="Settings" Height="120" Width="500"
+    Title="Settings" Height="150" Width="500"
     x:Name="window"
     ResizeMode="NoResize"
     Style="{DynamicResource WindowStyle}"
     MinimizeButton="Collapsed"
-    MaximizeButton="Collapsed">
+    MaximizeButton="Collapsed"
+    Padding="2">
 
     <wpfBase:Window.Resources>
         <vmbase:InverseBooleanConverter x:Key="BoolInvert"/>

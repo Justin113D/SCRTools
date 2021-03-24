@@ -32,6 +32,9 @@ namespace SCRDialogEditor.Viewmodel
         public override string FileTypeName
             => "Dialog Options";
 
+        public override ChangeTracker PinTracker
+            => null;
+
         public VmDialogOptions()
         {
             Data = new DialogOptions();
