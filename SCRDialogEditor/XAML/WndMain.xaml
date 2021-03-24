@@ -12,6 +12,7 @@
     MinHeight="200" MinWidth="350"
     d:DataContext="{d:DesignInstance Type=vm:VmMain}"
     Style="{DynamicResource WindowStyle}"
+    Icon="pack://application:,,,/Icon.ico"
     x:Name="Window">
 
     <wpfBase:Window.InputBindings>
