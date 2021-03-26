@@ -93,6 +93,9 @@ namespace SCRDialogEditor.Viewmodel
         public bool IsActive
             => Grid.Active == this;
 
+        public bool IsSelected
+            => Grid.Selected.Contains(this);
+
         public int UpdatePositionCounter
         {
             get => _updateCounter;
@@ -321,24 +324,8 @@ namespace SCRDialogEditor.Viewmodel
         public void RefreshActive()
             => OnPropertyChanged(nameof(IsActive));
 
-        /// <summary>
-        /// Ends the grab cycle
-        /// </summary>
-        public void EndGrab()
-        {
-            Point start = UcGridEditor.FromGridSpace(
-                Data.LocationX,
-                Data.LocationY
-            );
-
-            int difX = (int)Math.Abs(start.X - Position.X);
-            int difY = (int)Math.Abs(start.Y - Position.Y);
-
-            if(difX < 2 && difY < 2)
-                Grid.Active = this;
-            else
-                UpdateDataPosition();
-        }
+        public void RefreshSelected()
+            => OnPropertyChanged(nameof(IsSelected));
 
         public void UpdateDataPosition()
         {

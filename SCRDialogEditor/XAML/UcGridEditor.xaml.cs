@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System;
 
 namespace SCRDialogEditor.XAML
 {
@@ -63,6 +64,10 @@ namespace SCRDialogEditor.XAML
 
         private Point? _gridMousePos;
 
+        private Point? _dragDif;
+
+        private bool _dragging = false;
+
         public UcGridEditor()
         {
 
@@ -105,6 +110,8 @@ namespace SCRDialogEditor.XAML
                     Mouse.OverrideCursor = null;
                     break;
                 case MouseButton.Left:
+                    _dragDif = null;
+                    _dragging = false;
                     Grid.LetGo();
                     break;
             }
@@ -114,6 +121,8 @@ namespace SCRDialogEditor.XAML
         {
             _mousePos = null;
             _gridMousePos = null;
+            _dragDif = null;
+            _dragging = false;
             Mouse.OverrideCursor = null;
             Grid.LetGo();
         }
@@ -141,11 +150,26 @@ namespace SCRDialogEditor.XAML
                 UpdateBackground();
             }
 
-
             if(e.LeftButton == MouseButtonState.Pressed)
             {
-                Point gdif = new((gt.X - _gridMousePos?.X) ?? 0, (gt.Y - _gridMousePos?.Y) ?? 0);
-                Grid.MoveGrabbed(gdif, gt);
+                if(Grid.Connecting != null)
+                    Grid.MoveConnection(gt);
+                else if(Grid.Grabbed != null)
+                {
+                    Point gdif = new((gt.X - _gridMousePos?.X) ?? 0, (gt.Y - _gridMousePos?.Y) ?? 0);
+
+                    if(_dragging)
+                        Grid.MoveGrabbed(gdif);
+                    else
+                    {
+                        _dragDif = _dragDif == null ? gdif : new(_dragDif.Value.X + gdif.X, _dragDif.Value.Y + gdif.Y);
+                        if(Length(_dragDif.Value) > 5)
+                        {
+                            Grid.MoveGrabbed(_dragDif.Value);
+                            _dragging = true;
+                        }
+                    }
+                }
             }
 
             _mousePos = t;
@@ -202,6 +226,9 @@ namespace SCRDialogEditor.XAML
            );
         }
 
-
+        private static float Length(Point point)
+        {
+            return (float)Math.Sqrt(point.X * point.X + point.Y * point.Y);
+        }
     }
 }

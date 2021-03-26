@@ -150,7 +150,17 @@ namespace SCRDialogEditor.XAML
         public void Grab_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if(e.ChangedButton == MouseButton.Left)
-                Node.Grid.Grabbed = Node;
+            {
+                Node.Grid.Grab(Node, Keyboard.Modifiers == ModifierKeys.Shift);
+            }
+        }
+
+        public void Grab_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if(e.ChangedButton == MouseButton.Left)
+            {
+                Node.Grid.Grab(null, default);
+            }
         }
 
         private void Socket_MouseLeave(object sender, MouseEventArgs e)

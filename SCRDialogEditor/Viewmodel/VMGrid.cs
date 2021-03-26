@@ -1,5 +1,6 @@
 ﻿using SCRCommon.Viewmodels;
 using SCRDialogEditor.Data;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -36,6 +37,8 @@ namespace SCRDialogEditor.Viewmodel
         private VmNode _active;
 
         private VmNode _grabbed;
+
+        private bool _moved;
 
         private VmNodeOutput _connecting;
 
@@ -127,6 +130,9 @@ namespace SCRDialogEditor.Viewmodel
             get => _active;
             set
             {
+                if(_active == value)
+                    return;
+
                 VmNode oldActive = _active;
 
                 Tracker.BeginGroup();
@@ -147,18 +153,35 @@ namespace SCRDialogEditor.Viewmodel
             }
         }
 
+        public ObservableCollection<VmNode> Selected { get; }
+
         /// <summary>
         /// Grabbed Node
         /// </summary>
         public VmNode Grabbed
         {
             get => _grabbed;
-            set
+            private set
             {
-                if(_grabbed == value)
+                if(value == _grabbed)
                     return;
 
-                _grabbed?.EndGrab();
+                if(value != null)
+                    Tracker.BeginGroup();
+                else
+                {
+                    if(_moved)
+                    {
+                        foreach(VmNode s in Selected)
+                            s.UpdateDataPosition();
+                        _moved = false;
+                    }
+                    else if(Selected.Count > 1)
+                        Select(_grabbed, false);
+                    
+                    Tracker.EndGroup();
+                }
+
                 _grabbed = value;
             }
         }
@@ -209,6 +232,7 @@ namespace SCRDialogEditor.Viewmodel
 
             Outputs = new();
             Nodes = new();
+            Selected = new();
 
             Dictionary<Node, VmNode> viewmodelPairs = new();
             foreach(Node node in dialog.Nodes)
@@ -221,19 +245,106 @@ namespace SCRDialogEditor.Viewmodel
             foreach(VmNode vmnode in Nodes)
                 foreach(VmNodeOutput vmout in vmnode.Outputs)
                     if(vmout.Data.Output != null)
-                    {
                         vmout.VmOutput = viewmodelPairs[vmout.Data.Output];
-                    }
-
         }
 
+        public void Grab(VmNode select, bool multiModifier)
+        {
+            if(select != null)
+            {
+                if(!multiModifier)
+                    Grabbed = select;
+
+                if(!select.IsSelected || multiModifier)
+                    Select(select, multiModifier);
+            }
+            else
+            {
+                Grabbed = null;
+            }
+        }
+
+        private void Select(VmNode select, bool multiModifier)
+        {
+            Tracker.BeginGroup();
+
+            if(multiModifier)
+            {
+                if(!select.IsSelected)
+                    Active = select;
+
+                Tracker.TrackChange(new ChangedListSingleEntry<VmNode>(
+                    Selected,
+                    select,
+                    select.IsSelected ? null : Selected.Count,
+                    () => select.RefreshSelected()));
+            }
+            else
+            {
+                Active = select;
+
+                VmNode[] OldContents = Selected.ToArray();
+
+                Tracker.TrackChange(new ChangedList<VmNode>(
+                    Selected,
+                    new VmNode[] { select },
+                    () => select.RefreshSelected()));
+
+                Tracker.PostGroupAction(() =>
+                {
+                    foreach(var o in OldContents)
+                        o.RefreshSelected();
+                });
+
+            }
+            Tracker.EndGroup();
+        }
+
+        public void SelectMultiple(VmNode[] select, bool multiModifier)
+        {
+            if(!multiModifier)
+            {
+                VmNode[] AllContents = select.Concat(Selected)
+                    .GroupBy(x => x)
+                    .Where(x => !x.Skip(1).Any())
+                    .Select(x => x.Key)
+                    .ToArray();
+
+                Tracker.TrackChange(new ChangedList<VmNode>(
+                    Selected,
+                    select,
+                    () =>
+                    {
+                        foreach(var c in AllContents)
+                            c.RefreshSelected();
+                    }
+                ));
+            }
+            else
+            {
+                VmNode[] newContents = select
+                    .Where(x => Selected.Contains(x))
+                    .ToArray();
+
+                VmNode[] concated = Selected.Concat(newContents).ToArray();
+
+                Tracker.TrackChange(new ChangedList<VmNode>(
+                    Selected,
+                    concated,
+                    () =>
+                    {
+                        foreach(var c in newContents)
+                            c.RefreshSelected();
+                    }
+                ));
+            }
+        }
 
         /// <summary>
         /// Lets go of the grabbed connection/node
         /// </summary>
         public void LetGo()
         {
-            Grabbed = null;
             Connecting = null;
         }
 
@@ -243,11 +354,15 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         /// <param name="dif"></param>
         /// <param name="absolute"></param>
-        public void MoveGrabbed(Point dif, Point absolute)
+        public void MoveGrabbed(Point dif)
         {
-            Grabbed?.Move(dif);
-            Connecting?.UpdateEndPosition(absolute);
+            _moved = true;
+            foreach(VmNode s in Selected)
+                s.Move(dif);
         }
+
+        public void MoveConnection(Point absolute)
+            => Connecting?.UpdateEndPosition(absolute);
 
         /// <summary>
         /// Adds a new node at Mouse position
@@ -298,10 +413,7 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         private void DeleteActiveNode()
         {
-            if(Grabbed != null || Connecting != null)
-                return;
-
-            if(Active == null)
+            if(Grabbed != null || Connecting != null || Active == null)
                 return;
 
             Tracker.BeginGroup();
@@ -312,7 +424,10 @@ namespace SCRDialogEditor.Viewmodel
             Tracker.EndGroup();
         }
 
-
+        /// <summary>
+        /// Registers an Output to display the line of
+        /// </summary>
+        /// <param name="vmOutput"></param>
         public void RegisterOutput(VmNodeOutput vmOutput)
         {
             Tracker.TrackChange(new ChangedListSingleEntry<VmNodeOutput>(
@@ -323,6 +438,10 @@ namespace SCRDialogEditor.Viewmodel
             ));
         }
 
+        /// <summary>
+        /// Deregisters an Output of which the line is being displayed
+        /// </summary>
+        /// <param name="vmOutput"></param>
         public void DeregisterOutput(VmNodeOutput vmOutput)
         {
             Tracker.TrackChange(new ChangedListSingleEntry<VmNodeOutput>(
@@ -376,20 +495,28 @@ namespace SCRDialogEditor.Viewmodel
             Tracker.EndGroup();
         }
 
+        /// <summary>
+        /// Performs an Undo
+        /// </summary>
         public void Undo()
         {
             if(Grabbed != null || Connecting != null)
                 return;
+
             if(Tracker.Undo())
             {
                 // TODO Notify that the undo was successfull
             }
         }
 
+        /// <summary>
+        /// Performs a Redo
+        /// </summary>
         public void Redo()
         {
             if(Grabbed != null || Connecting != null)
                 return;
+
             if(Tracker.Redo())
             {
                 // TODO Notify that the redo was successfull

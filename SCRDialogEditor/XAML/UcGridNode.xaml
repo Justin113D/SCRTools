@@ -56,7 +56,8 @@
 
                         <Grid x:Name="GrabGrid" 
                             Cursor="Hand"
-                            MouseDown="Grab_MouseDown">
+                            MouseDown="Grab_MouseDown"
+                            MouseUp="Grab_MouseUp">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -168,11 +169,21 @@
                     <Setter TargetName="Outline" Property="BorderBrush" Value="{DynamicResource OutlineHg}"/>
                 </Trigger>
 
-                <DataTrigger Binding="{Binding IsActive}" Value="True">
-                    <Setter TargetName="Outline" Property="BorderBrush" Value="{DynamicResource Green}"/>
+                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                    <Setter TargetName="Outline" Property="BorderBrush" Value="{DynamicResource FontBrush}"/>
                 </DataTrigger>
 
                 <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsActive}" Value="True"/>
+                        <Condition Binding="{Binding IsSelected}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <MultiDataTrigger.Setters>
+                        <Setter TargetName="Outline" Property="BorderBrush" Value="{DynamicResource Green}"/>
+                    </MultiDataTrigger.Setters>
+                </MultiDataTrigger>
+
+                <!--<MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
                         <Condition Binding="{Binding IsActive}" Value="True"/>
                         <Condition Binding="{Binding IsMouseOver, ElementName=GrabGrid}" Value="True"/>
@@ -180,7 +191,7 @@
                     <MultiDataTrigger.Setters>
                         <Setter TargetName="Outline" Property="BorderBrush" Value="{DynamicResource Green.Highlighted}"/>
                     </MultiDataTrigger.Setters>
-                </MultiDataTrigger>
+                </MultiDataTrigger>-->
             </ControlTemplate.Triggers>
         </ControlTemplate>
     </UserControl.Template>
