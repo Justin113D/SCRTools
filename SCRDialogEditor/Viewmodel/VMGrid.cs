@@ -346,6 +346,7 @@ namespace SCRDialogEditor.Viewmodel
         public void LetGo()
         {
             Connecting = null;
+            Grab(null, default);
         }
 
         /// <summary>
