@@ -12,11 +12,8 @@ namespace SCRDialogEditor.Viewmodel
     {
         #region Commands
 
-        /// <summary>
-        /// Deletes the active node from the grid
-        /// </summary>
         public RelayCommand Cmd_DeleteNode
-            => new(DeleteActiveNode);
+            => new(DeleteSelectedNodes);
 
         public RelayCommand Cmd_RecenterContents
             => new(RecenterContents);
@@ -147,12 +144,31 @@ namespace SCRDialogEditor.Viewmodel
                 {
                     oldActive?.RefreshActive();
                     value?.RefreshActive();
+                    OnPropertyChanged(nameof(ListActive));
                 });
 
                 Tracker.EndGroup();
             }
         }
 
+        /// <summary>
+        /// Selected-element for the node list
+        /// </summary>
+        public VmNode ListActive
+        {
+            get => _active;
+            set
+            {
+                if(_active == value)
+                    return;
+
+                Select(value, false);
+            }
+        }
+
+        /// <summary>
+        /// The selected nodes
+        /// </summary>
         public ObservableCollection<VmNode> Selected { get; }
 
         /// <summary>
@@ -178,7 +194,7 @@ namespace SCRDialogEditor.Viewmodel
                     }
                     else if(Selected.Count > 1)
                         Select(_grabbed, false);
-                    
+
                     Tracker.EndGroup();
                 }
 
@@ -248,6 +264,13 @@ namespace SCRDialogEditor.Viewmodel
                         vmout.VmOutput = viewmodelPairs[vmout.Data.Output];
         }
 
+        #region Moving nodes
+
+        /// <summary>
+        /// Grabs/Ungrabs a node
+        /// </summary>
+        /// <param name="select">The node to select</param>
+        /// <param name="multiModifier">Whether the shift/multi key was pressed</param>
         public void Grab(VmNode select, bool multiModifier)
         {
             if(select != null)
@@ -264,6 +287,11 @@ namespace SCRDialogEditor.Viewmodel
             }
         }
 
+        /// <summary>
+        /// Selects a single node
+        /// </summary>
+        /// <param name="select">The node to select</param>
+        /// <param name="multiModifier">Whether the shift/multi key was pressed</param>
         private void Select(VmNode select, bool multiModifier)
         {
             Tracker.BeginGroup();
@@ -300,11 +328,16 @@ namespace SCRDialogEditor.Viewmodel
             Tracker.EndGroup();
         }
 
+        /// <summary>
+        /// Performs select on multiple nodes (unused rn)
+        /// </summary>
+        /// <param name="select"></param>
+        /// <param name="multiModifier"></param>
         public void SelectMultiple(VmNode[] select, bool multiModifier)
         {
             if(!multiModifier)
             {
-                VmNode[] AllContents = select.Concat(Selected)
+                VmNode[] changedContents = select.Concat(Selected)
                     .GroupBy(x => x)
                     .Where(x => !x.Skip(1).Any())
                     .Select(x => x.Key)
@@ -315,7 +348,7 @@ namespace SCRDialogEditor.Viewmodel
                     select,
                     () =>
                     {
-                        foreach(var c in AllContents)
+                        foreach(var c in changedContents)
                             c.RefreshSelected();
                     }
                 ));
@@ -362,8 +395,16 @@ namespace SCRDialogEditor.Viewmodel
                 s.Move(dif);
         }
 
+        /// <summary>
+        /// Moves a connection
+        /// </summary>
+        /// <param name="absolute"></param>
         public void MoveConnection(Point absolute)
             => Connecting?.UpdateEndPosition(absolute);
+
+        #endregion
+
+        #region Handling node data
 
         /// <summary>
         /// Adds a new node at Mouse position
@@ -388,39 +429,47 @@ namespace SCRDialogEditor.Viewmodel
         }
 
         /// <summary>
-        /// Deletes a node from the grid
+        /// Deletes all selected nodes
         /// </summary>
-        /// <param name="node"></param>
-        public void DeleteNode(VmNode node)
+        private void DeleteSelectedNodes()
         {
-            Tracker.BeginGroup();
-
-            node.Disconnect();
-
-            Tracker.TrackChange(new ChangedListSingleEntry<VmNode>(
-                Nodes,
-                node,
-                null,
-                null
-            ));
-
-            Data.RemoveNode(node.Data);
-
-            Tracker.EndGroup();
-        }
-
-        /// <summary>
-        /// Deletes the active noe
-        /// </summary>
-        private void DeleteActiveNode()
-        {
-            if(Grabbed != null || Connecting != null || Active == null)
+            if(Grabbed != null || Connecting != null || Selected.Count == 0)
                 return;
 
             Tracker.BeginGroup();
 
-            DeleteNode(Active);
-            Active = null;
+            if(Active.IsSelected)
+                Active = null;
+
+            VmNode[] newContents = Selected.Concat(Nodes)
+                .GroupBy(x => x)
+                .Where(x => !x.Skip(1).Any())
+                .Select(x => x.Key)
+                .ToArray();
+
+            foreach(VmNode n in Selected)
+            {
+                n.Disconnect();
+                Data.RemoveNode(n.Data);
+            }
+
+            VmNode[] toRemove = Selected.ToArray();
+
+            Tracker.TrackChange(new ChangedList<VmNode>(
+                Selected,
+                Array.Empty<VmNode>(),
+                () =>
+                {
+                    foreach(var c in toRemove)
+                        c.RefreshSelected();
+                }
+            ));
+
+            Tracker.TrackChange(new ChangedList<VmNode>(
+                Nodes,
+                newContents,
+                null
+            ));
 
             Tracker.EndGroup();
         }
@@ -496,6 +545,8 @@ namespace SCRDialogEditor.Viewmodel
             Tracker.EndGroup();
         }
 
+        #endregion
+
         /// <summary>
         /// Performs an Undo
         /// </summary>
@@ -525,4 +576,3 @@ namespace SCRDialogEditor.Viewmodel
         }
     }
 }
-

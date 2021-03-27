@@ -1,11 +1,11 @@
 ﻿using SCRCommon.Viewmodels;
 using SCRDialogEditor.Viewmodel;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System;
 
 namespace SCRDialogEditor.XAML
 {
@@ -50,6 +50,8 @@ namespace SCRDialogEditor.XAML
         public RelayCommand Cmd_RecenterView
             => new(RecenterView);
 
+        public RelayCommand Cmd_AddNode
+            => new(AddNodeCenter);
 
         private VmGrid Grid => (VmGrid)DataContext;
 
@@ -202,6 +204,15 @@ namespace SCRDialogEditor.XAML
             if(_gridMousePos == null)
                 return;
             Grid.CreateNode(_gridMousePos.Value);
+        }
+
+        private void AddNodeCenter()
+        {
+            double posX = ActualWidth / 2;
+            double posY = ActualHeight / 2;
+            Point p = GridTransform.Inverse.Transform(new Point(posX, posY));
+            Grid.CreateNode(p);
+
         }
 
         private void UpdateBackground()

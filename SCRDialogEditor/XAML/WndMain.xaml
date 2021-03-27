@@ -101,6 +101,17 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="Edit">
+                <MenuItem Header="Add Node" InputGestureText="Ctrl+A" Command="{Binding Cmd_AddNode, ElementName=Editor}">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/AddRelationship.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Delete Nodes" InputGestureText="Ctrl+X" Command="{Binding Grid.Cmd_DeleteNode}">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/DeleteRelationship.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
                 <MenuItem Header="Undo" InputGestureText="Ctrl+Z" Command="{Binding Grid.Cmd_Undo}">
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/SCRCommon;component/Icons/Undo.png"/>
@@ -123,7 +134,11 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="Dialog Options" Command="{Binding Cmd_DialogOptions}"/>
+                <MenuItem Header="Dialog Options" Command="{Binding Cmd_DialogOptions}">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/Settings.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="Settings" Command="{Binding Cmd_Settings}"/>
             <MenuItem Header="Help">

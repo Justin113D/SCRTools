@@ -1,7 +1,6 @@
 ﻿using SCRCommon.Viewmodels;
 using SCRDialogEditor.Data;
 using SCRDialogEditor.XAML;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;

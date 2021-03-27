@@ -26,6 +26,8 @@ namespace SCRCommon.WpfStyles
 
         private static readonly Dictionary<Theme, BaseStyle> _loadedStyles;
 
+        private static readonly List<Application> initiated;
+
 
         /// <summary>
         /// Gets, sets and updates the window theme accordingly
@@ -62,6 +64,7 @@ namespace SCRCommon.WpfStyles
 
         static BaseStyle()
         {
+            initiated = new();
             _loadedStyles = new();
 
             foreach(Theme theme in Enum.GetValues<Theme>())
@@ -70,6 +73,10 @@ namespace SCRCommon.WpfStyles
 
         public static void Init()
         {
+            if(initiated.Contains(Application.Current))
+                return;
+
+            initiated.Add(Application.Current);
             var r = Application.Current.Resources;
 
             if(r.GetType() == typeof(BaseStyle))
@@ -84,7 +91,7 @@ namespace SCRCommon.WpfStyles
                 if(m.GetType() == typeof(BaseStyle))
                 {
                     r.MergedDictionaries[i] = _loadedStyles[_windowTheme];
-                    break;
+                    return;
                 }
             }
 

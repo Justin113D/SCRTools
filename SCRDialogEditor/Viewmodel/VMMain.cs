@@ -40,7 +40,7 @@ namespace SCRDialogEditor.Viewmodel
         public override string FileTypeName
             => "Json";
 
-        public override ChangeTracker PinTracker 
+        public override ChangeTracker PinTracker
             => Grid.Tracker;
 
         public VmMain()

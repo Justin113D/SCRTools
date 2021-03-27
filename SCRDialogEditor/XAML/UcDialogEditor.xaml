@@ -49,22 +49,37 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                
-                <TextBlock
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    HorizontalAlignment="Center"
-                    Margin="0 5"
-                    Text="Nodes"/>
 
+                <Grid Grid.Column="0" HorizontalAlignment="Center" Margin="0 5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        Grid.Column="0"
+                        HorizontalAlignment="Right"
+                        Text="Nodes ["/>
+
+                    <TextBlock
+                        Grid.Column="1"
+                        Margin="5 0"
+                        Text="{Binding Nodes.Count}"/>
+
+                    <TextBlock
+                        Grid.Column="2"
+                        HorizontalAlignment="Left"
+                        Text="]"/>
+
+                </Grid>
+                
                 <Button Grid.Column="1" Command="{Binding Cmd_SortNodes}" SnapsToDevicePixels="True">
                     <Image Source="pack://application:,,,/SCRCommon;component/Icons/SortLines.png" SnapsToDevicePixels="True" Width="16" Height="16"/>
                 </Button>
             </Grid>
             
-
-            
-            <ListBox ItemsSource="{Binding Nodes}" SelectedItem="{Binding Active}" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch">
+            <ListBox ItemsSource="{Binding Nodes}" SelectedItem="{Binding ListActive}" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type vm:VmNode}">
                         <Grid>
