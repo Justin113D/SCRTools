@@ -26,7 +26,7 @@ namespace SCRCommon.WpfStyles
 
         private static readonly Dictionary<Theme, BaseStyle> _loadedStyles;
 
-        private static readonly List<Application> initiated;
+        private static readonly List<int> initiated;
 
 
         /// <summary>
@@ -73,10 +73,10 @@ namespace SCRCommon.WpfStyles
 
         public static void Init()
         {
-            if(initiated.Contains(Application.Current))
+            if(initiated.Contains(Application.Current.GetHashCode()))
                 return;
 
-            initiated.Add(Application.Current);
+            initiated.Add(Application.Current.GetHashCode());
             var r = Application.Current.Resources;
 
             if(r.GetType() == typeof(BaseStyle))

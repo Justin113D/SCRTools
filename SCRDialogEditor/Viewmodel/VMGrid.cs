@@ -356,7 +356,7 @@ namespace SCRDialogEditor.Viewmodel
             else
             {
                 VmNode[] newContents = select
-                    .Where(x => Selected.Contains(x))
+                    .Where(x => !Selected.Contains(x))
                     .ToArray();
 
                 VmNode[] concated = Selected.Concat(newContents).ToArray();
@@ -426,6 +426,8 @@ namespace SCRDialogEditor.Viewmodel
             ));
 
             Tracker.EndGroup();
+
+            Main.SetFeedback("Added node", true);
         }
 
         /// <summary>
@@ -472,6 +474,11 @@ namespace SCRDialogEditor.Viewmodel
             ));
 
             Tracker.EndGroup();
+
+            if(toRemove.Length > 1)
+                Main.SetFeedback($"Deleted {toRemove.Length} nodes", true);
+            else
+                Main.SetFeedback("Deleted node", true);
         }
 
         /// <summary>
@@ -523,6 +530,8 @@ namespace SCRDialogEditor.Viewmodel
             }
 
             Tracker.EndGroup();
+
+            Main.SetFeedback("Recentered node tree", true);
         }
 
         /// <summary>
@@ -543,6 +552,8 @@ namespace SCRDialogEditor.Viewmodel
             ));
 
             Tracker.EndGroup();
+
+            Main.SetFeedback("Sorted nodes", true);
         }
 
         #endregion
@@ -556,9 +567,7 @@ namespace SCRDialogEditor.Viewmodel
                 return;
 
             if(Tracker.Undo())
-            {
-                // TODO Notify that the undo was successfull
-            }
+                Main.SetFeedback("Performed Undo", true);
         }
 
         /// <summary>
@@ -570,9 +579,7 @@ namespace SCRDialogEditor.Viewmodel
                 return;
 
             if(Tracker.Redo())
-            {
-                // TODO Notify that the redo was successfull
-            }
+                Main.SetFeedback("Performed Redo", true);
         }
     }
 }

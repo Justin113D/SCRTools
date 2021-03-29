@@ -29,6 +29,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
 
 
@@ -145,6 +146,16 @@
                 <MenuItem Header="Wiki"/>
             </MenuItem>
         </Menu>
-      
+
+        <Border x:Name="FeedbackBackground" Grid.Row="2" >
+            <TextBlock 
+                x:Name="Feedback" 
+                Padding="2" 
+                Text="{Binding FeedbackText}" 
+                FontWeight="Bold" 
+                VerticalAlignment="Center" 
+                HorizontalAlignment="Right"/>
+            
+        </Border>
     </Grid>
 </wpfBase:Window>

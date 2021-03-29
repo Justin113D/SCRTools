@@ -1,6 +1,7 @@
 ﻿using SCRCommon.Viewmodels;
 using SCRDialogEditor.Viewmodel;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -55,6 +56,9 @@ namespace SCRDialogEditor.XAML
 
         private VmGrid Grid => (VmGrid)DataContext;
 
+        /// <summary>
+        /// Grid matrix transform
+        /// </summary>
         public MatrixTransform GridTransform { get; private set; }
 
         /// <summary>
@@ -62,12 +66,29 @@ namespace SCRDialogEditor.XAML
         /// </summary>
         public VisualBrush GridBackground { get; private set; }
 
+        /// <summary>
+        /// Last mouse position
+        /// </summary>
         private Point? _mousePos;
 
+        /// <summary>
+        /// Last grid mouse position
+        /// </summary>
         private Point? _gridMousePos;
 
+        /// <summary>
+        /// Dragging difference (drag initialized)
+        /// </summary>
         private Point? _dragDif;
 
+        /// <summary>
+        /// where a select box was started
+        /// </summary>
+        private Point _SelectBoxStart;
+
+        /// <summary>
+        /// Whether the dragging process is running
+        /// </summary>
         private bool _dragging = false;
 
         public UcGridEditor()
@@ -104,7 +125,7 @@ namespace SCRDialogEditor.XAML
             UpdateBackground();
         }
 
-        private void GridBorder_MouseUp(object sender, MouseButtonEventArgs e)
+        private void GridMouseUp(object sender, MouseButtonEventArgs e)
         {
             switch(e.ChangedButton)
             {
@@ -114,29 +135,33 @@ namespace SCRDialogEditor.XAML
                 case MouseButton.Left:
                     _dragDif = null;
                     _dragging = false;
-                    Grid.LetGo();
+                    if(SelectBlock.Visibility == Visibility.Visible)
+                        SelectBoxFinish();
+                    else
+                        Grid.LetGo();
                     break;
             }
         }
 
-        private void GridBorder_MouseLeave(object sender, MouseEventArgs e)
+        private void GridMouseLeave(object sender, MouseEventArgs e)
         {
             _mousePos = null;
             _gridMousePos = null;
             _dragDif = null;
             _dragging = false;
+            SelectBlock.Visibility = Visibility.Collapsed;
             Mouse.OverrideCursor = null;
             Grid.LetGo();
         }
 
-        private void GridBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        private void GridMouseDown(object sender, MouseButtonEventArgs e)
         {
             Focus();
             if(e.ChangedButton == MouseButton.Middle)
                 Mouse.OverrideCursor = Cursors.SizeAll;
         }
 
-        private void GridBorder_MouseMove(object sender, MouseEventArgs e)
+        private void GridMouseMove(object sender, MouseEventArgs e)
         {
             Point t = e.GetPosition(this);
             Point gt = GridTransform.Inverse.Transform(t);
@@ -156,20 +181,36 @@ namespace SCRDialogEditor.XAML
             {
                 if(Grid.Connecting != null)
                     Grid.MoveConnection(gt);
-                else if(Grid.Grabbed != null)
+                else
                 {
                     Point gdif = new((gt.X - _gridMousePos?.X) ?? 0, (gt.Y - _gridMousePos?.Y) ?? 0);
 
-                    if(_dragging)
-                        Grid.MoveGrabbed(gdif);
-                    else
+                    if(!_dragging)
                     {
                         _dragDif = _dragDif == null ? gdif : new(_dragDif.Value.X + gdif.X, _dragDif.Value.Y + gdif.Y);
                         if(Length(_dragDif.Value) > 5)
                         {
-                            Grid.MoveGrabbed(_dragDif.Value);
+                            if(Grid.Grabbed != null)
+                                Grid.MoveGrabbed(_dragDif.Value);
+                            else if(!NodesDisplay.IsMouseOver)
+                            {
+                                SelectBlock.Visibility = Visibility.Visible;
+                                _SelectBoxStart = new Point(
+                                    gt.X - _dragDif.Value.X,
+                                    gt.Y - _dragDif.Value.Y
+                                    );
+                                SetSelectBox(gt);
+                            }
+
                             _dragging = true;
                         }
+                    }
+                    else
+                    {
+                        if(Grid.Grabbed != null)
+                            Grid.MoveGrabbed(gdif);
+                        else if(SelectBlock.Visibility == Visibility.Visible)
+                            SetSelectBox(gt);
                     }
                 }
             }
@@ -178,7 +219,7 @@ namespace SCRDialogEditor.XAML
             _gridMousePos = gt;
         }
 
-        private void GridBorder_MouseWheel(object sender, MouseWheelEventArgs e)
+        private void GridMouseWheel(object sender, MouseWheelEventArgs e)
         {
             double newScale = GridTransform.Matrix.M11 + e.Delta * 0.0005d;
 
@@ -240,6 +281,42 @@ namespace SCRDialogEditor.XAML
         private static float Length(Point point)
         {
             return (float)Math.Sqrt(point.X * point.X + point.Y * point.Y);
+        }
+
+        private void SetSelectBox(Point end)
+        {
+            double x = end.X < _SelectBoxStart.X ? end.X : _SelectBoxStart.X;
+            double y = end.Y < _SelectBoxStart.Y ? end.Y : _SelectBoxStart.Y;
+            double width = Math.Abs(end.X - _SelectBoxStart.X);
+            double height = Math.Abs(end.Y - _SelectBoxStart.Y);
+
+            Canvas.SetLeft(SelectBlock, x);
+            Canvas.SetTop(SelectBlock, y);
+
+            SelectBlock.Width = width;
+            SelectBlock.Height = height;
+        }
+
+        private void SelectBoxFinish()
+        {
+            Rect selectRect = new(
+                Canvas.GetLeft(SelectBlock), 
+                Canvas.GetTop(SelectBlock), 
+                SelectBlock.Width, 
+                SelectBlock.Height);
+
+            List<VmNode> selected = new();
+
+            for(int i = 0; i < NodesDisplay.Items.Count; i++)
+            {
+                UcGridNode ucgn = (UcGridNode)VisualTreeHelper.GetChild(NodesDisplay.ItemContainerGenerator.ContainerFromIndex(i), 0);
+                if(selectRect.IntersectsWith(ucgn.SelectRect))
+                    selected.Add(ucgn.Node);
+            }
+
+            Grid.SelectMultiple(selected.ToArray(), Keyboard.Modifiers == ModifierKeys.Shift);
+
+            SelectBlock.Visibility = Visibility.Collapsed;
         }
     }
 }

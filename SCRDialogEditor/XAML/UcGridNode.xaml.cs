@@ -20,6 +20,9 @@ namespace SCRDialogEditor.XAML
 
         #region DependencyProperties
 
+        /// <summary>
+        /// The amount of connections attached to the node; a change forces a position update
+        /// </summary>
         public static readonly DependencyProperty UpdateCounterProperty =
             DependencyProperty.Register(
                 "UpdateCounter",
@@ -38,7 +41,7 @@ namespace SCRDialogEditor.XAML
 
                         if((int)e.NewValue != 0)
                         {
-                            g.updateSockets = true;
+                            g._updateSockets = true;
                             g.OnLayoutUpdated(null, null);
                         }
 
@@ -54,6 +57,9 @@ namespace SCRDialogEditor.XAML
                 )
             );
 
+        /// <summary>
+        /// Wrapper property for <see cref="UpdateCounterProperty"/>
+        /// </summary>
         public int UpdateCounter
         {
             get => (int)GetValue(UpdateCounterProperty);
@@ -62,18 +68,53 @@ namespace SCRDialogEditor.XAML
 
         #endregion
 
+        /// <summary>
+        /// Node datacontext
+        /// </summary>
+        public VmNode Node => (VmNode)DataContext;
 
-        private VmNode Node => (VmNode)DataContext;
-
+        /// <summary>
+        /// List container parent of this control
+        /// </summary>
         private FrameworkElement _container;
 
+        /// <summary>
+        /// Last grid position
+        /// </summary>
         private Point _lastPos;
 
+        /// <summary>
+        /// Output viewmodel to socket elements
+        /// </summary>
         private readonly Dictionary<VmNodeOutput, OutputSocket> outputSockets;
 
-        private bool recalcSockets;
+        /// <summary>
+        /// Recalcuate the socket offsets to the node on the next layout update
+        /// </summary>
+        private bool _recalcSockets;
 
-        private bool updateSockets;
+        /// <summary>
+        /// Update the socket connection positions
+        /// </summary>
+        private bool _updateSockets;
+
+        /// <summary>
+        /// Indicates whether the socket was pressed (and thus a connection can start
+        /// </summary>
+        private bool _startConnection;
+
+        public Rect SelectRect
+        {
+            get
+            {
+                return new(
+                    Node.Position.X + 5,
+                    Node.Position.Y + 5,
+                    RenderSize.Width - 10,
+                    RenderSize.Height - 10
+                    );
+            }
+        }
 
         public UcGridNode()
         {
@@ -85,7 +126,7 @@ namespace SCRDialogEditor.XAML
         {
             _container = WPFExtensions.FindParent<ItemsControl>(this);
             Node.Outputs.CollectionChanged += OutputsUpdated;
-            recalcSockets = true;
+            _recalcSockets = true;
             if(Node.UpdatePositionCounter > 0)
                 LayoutUpdated += OnLayoutUpdated;
         }
@@ -103,11 +144,11 @@ namespace SCRDialogEditor.XAML
 
             Point newPos = TransformToAncestor(_container).Transform(default);
 
-            if(newPos == _lastPos && !updateSockets && !recalcSockets)
+            if(newPos == _lastPos && !_updateSockets && !_recalcSockets)
                 return;
 
             // recalculating the relative positions
-            if(recalcSockets)
+            if(_recalcSockets)
             {
                 foreach(var no in Node.Outputs)
                 {
@@ -118,7 +159,7 @@ namespace SCRDialogEditor.XAML
                     socket.relativePosition.X += centerOffset;
                     socket.relativePosition.Y += centerOffset;
                 }
-                recalcSockets = false;
+                _recalcSockets = false;
             }
 
             _lastPos = newPos;
@@ -143,7 +184,7 @@ namespace SCRDialogEditor.XAML
             foreach(var no in Node.Inputs)
                 no.UpdateEndPosition(newPos);
 
-            updateSockets = false;
+            _updateSockets = false;
         }
 
 
@@ -159,12 +200,24 @@ namespace SCRDialogEditor.XAML
                 Node.Grid.Grab(null, default);
         }
 
+        private void Socket_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if(e.ChangedButton == MouseButton.Left)
+                _startConnection = false;
+        }
+
+        private void Socket_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if(e.ChangedButton == MouseButton.Left)
+                _startConnection = true;
+        }
 
         private void Socket_MouseLeave(object sender, MouseEventArgs e)
         {
-            if(e.LeftButton != MouseButtonState.Pressed || Node.Grid.Connecting != null)
+            if(e.LeftButton != MouseButtonState.Pressed || !_startConnection || Node.Grid.Connecting != null)
                 return;
 
+            _startConnection = false;
             VmNodeOutput vmno = (VmNodeOutput)((FrameworkElement)sender).DataContext;
             Node.Grid.Connecting = vmno;
         }
@@ -177,7 +230,7 @@ namespace SCRDialogEditor.XAML
                 element = s
             });
 
-            recalcSockets = true;
+            _recalcSockets = true;
         }
 
         private void Socket_Unloaded(object sender, RoutedEventArgs e)
@@ -189,7 +242,7 @@ namespace SCRDialogEditor.XAML
 
         private void OutputsUpdated(object sender, NotifyCollectionChangedEventArgs e)
         {
-            recalcSockets = true;
+            _recalcSockets = true;
         }
 
         private void OnMouseUp(object sender, MouseButtonEventArgs e)

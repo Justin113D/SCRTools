@@ -41,65 +41,71 @@
     </UserControl.Resources>
 
     <Border Background="{Binding GridBackground, ElementName=Wrapper}">
-        <Grid x:Name="GridBorder" 
-            MouseDown="GridBorder_MouseDown"
-            MouseUp="GridBorder_MouseUp"
-            MouseMove="GridBorder_MouseMove"
-            MouseLeave="GridBorder_MouseLeave"
-            MouseWheel="GridBorder_MouseWheel">
+        <Border x:Name="GridCanvas" 
+            MouseDown="GridMouseDown"
+            MouseUp="GridMouseUp"
+            MouseMove="GridMouseMove"
+            MouseLeave="GridMouseLeave"
+            MouseWheel="GridMouseWheel">
 
-            <Grid.Background>
+            <Border.Background>
                 <RadialGradientBrush RadiusX="0.8" RadiusY="0.8" ColorInterpolationMode="SRgbLinearInterpolation">
                     <GradientStop Offset="0.5" Color="#0000"></GradientStop>
                     <GradientStop Offset="0.75" Color="#4000"></GradientStop>
                     <GradientStop Offset="1" Color="#C000"></GradientStop>
                 </RadialGradientBrush>
-            </Grid.Background>
+            </Border.Background>
 
-            <!-- Used to display the connections between the nodes -->
-            <ItemsControl ItemsSource="{Binding Outputs}"
-                        RenderTransform="{Binding GridTransform, ElementName=Wrapper}"
-                        Focusable="False">
+            <Canvas RenderTransform="{Binding GridTransform, ElementName=Wrapper}">
 
-                <ItemsControl.Template>
-                    <ControlTemplate>
-                        <ItemsPresenter />
-                    </ControlTemplate>
-                </ItemsControl.Template>
+                <!-- Used to display the connections between the nodes -->
+                <ItemsControl ItemsSource="{Binding Outputs}"
+                            Focusable="False">
 
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type vm:VmNodeOutput}">
-                        <Path Stroke="{DynamicResource FontBrush}" StrokeThickness="4" Data="{Binding Line}"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                    <ItemsControl.Template>
+                        <ControlTemplate>
+                            <ItemsPresenter />
+                        </ControlTemplate>
+                    </ItemsControl.Template>
 
-            <ItemsControl ItemsSource="{Binding Nodes}" 
-                        RenderTransform="{Binding GridTransform, ElementName=Wrapper}"
-                        Focusable="False">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:VmNodeOutput}">
+                            <Path Stroke="{DynamicResource FontBrush}" StrokeThickness="4" Data="{Binding Line}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type vm:VmNode}">
-                        <local:UcGridNode 
-                            DataContext="{Binding }"
-                            UpdateCounter="{Binding UpdatePositionCounter}"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
+                <ItemsControl 
+                    x:Name="NodesDisplay"
+                    ItemsSource="{Binding Nodes}" 
+                    Focusable="False">
 
-                <ItemsControl.Template>
-                    <ControlTemplate>
-                        <ItemsPresenter/>
-                    </ControlTemplate>
-                </ItemsControl.Template>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:VmNode}">
+                            <local:UcGridNode 
+                                DataContext="{Binding }"
+                                UpdateCounter="{Binding UpdatePositionCounter}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
 
-                <ItemsControl.ItemContainerStyle>
-                    <Style TargetType="ContentPresenter">
-                        <Setter Property="Canvas.Left" Value="{Binding Position.X}"/>
-                        <Setter Property="Canvas.Top" Value="{Binding Position.Y}"/>
-                    </Style>
-                </ItemsControl.ItemContainerStyle>
+                    <ItemsControl.Template>
+                        <ControlTemplate>
+                            <ItemsPresenter/>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
 
-            </ItemsControl>
-        </Grid>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Canvas.Left" Value="{Binding Position.X}"/>
+                            <Setter Property="Canvas.Top" Value="{Binding Position.Y}"/>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+
+                </ItemsControl>
+
+                <Border IsHitTestVisible="False" x:Name="SelectBlock" BorderThickness="2" BorderBrush="#0078D7" Background="#3B0078D7" Visibility="Collapsed"/>
+
+            </Canvas>
+        </Border>
     </Border>
 </UserControl>
