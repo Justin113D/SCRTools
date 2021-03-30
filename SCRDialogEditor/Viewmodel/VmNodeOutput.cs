@@ -3,6 +3,7 @@ using SCRDialogEditor.Data;
 using System;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace SCRDialogEditor.Viewmodel
 {
@@ -270,12 +271,26 @@ namespace SCRDialogEditor.Viewmodel
             }
         }
 
-        private readonly PathFigure _figure;
-
         /// <summary>
         /// Connection Curve
         /// </summary>
-        public PathGeometry Line { get; }
+        public PathGeometry Line { get; private set; }
+        public readonly PathGeometry _line;
+
+        /// <summary>
+        /// Whether the line is backwards
+        /// </summary>
+        public bool IsLineBackwards { get; private set; }
+
+        /// <summary>
+        /// Global Line Start location
+        /// </summary>
+        public Point LineFrom { get; private set; }
+
+        /// <summary>
+        /// Global Line Target Location
+        /// </summary>
+        private Point _lineTo;
 
         #endregion
 
@@ -284,20 +299,18 @@ namespace SCRDialogEditor.Viewmodel
             Data = nodeOutput;
             _parent = parent;
 
-            _figure = new()
-            {
-                StartPoint = default,
-                Segments = new()
-                {
-                    new BezierSegment(default, default, default, true)
-                }
-            };
-
-            Line = new()
+            _line = new()
             {
                 Figures = new()
                 {
-                    _figure
+                    new PathFigure()
+                    {
+                        StartPoint = default,
+                        Segments = new()
+                        {
+                            new BezierSegment(default, default, default, true)
+                        }
+                    }
                 }
             };
         }
@@ -307,7 +320,8 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         public void UpdateStartPosition(Point newStartPosition)
         {
-            SetLinePosition(newStartPosition, ((BezierSegment)_figure.Segments[0]).Point3);
+            LineFrom = newStartPosition;
+            UpdateLine();
         }
 
         /// <summary>
@@ -316,23 +330,42 @@ namespace SCRDialogEditor.Viewmodel
         /// <param name="Endposition"></param>
         public void UpdateEndPosition(Point Endposition)
         {
-            SetLinePosition(_figure.StartPoint, Endposition);
+            _lineTo = Endposition;
+            UpdateLine();
         }
 
-        private void SetLinePosition(Point start, Point end)
+        private void UpdateLine()
         {
-            int bt = (int)((end.X - start.X) / 3f);
+            Point to = new(_lineTo.X - LineFrom.X, _lineTo.Y - LineFrom.Y);
+            if(VmOutput != null)
+            {
+                if(IsLineBackwards != to.X < Math.Abs(to.Y * 0.2d))
+                {
+                    IsLineBackwards = !IsLineBackwards;
+                    VmOutput.RefreshBackwardsConnection();
+                }
+            }
+            else
+            {
+                IsLineBackwards = false;
+            }
 
-            Point b1 = new(start.X + bt, start.Y);
-            Point b2 = new(end.X - bt, end.Y);
+            if(!IsLineBackwards)
+            {
+                int bt = (int)(to.X / 3d);
+                Point b1 = new(bt, 0);
+                Point b2 = new(bt * 2, to.Y);
 
-            _figure.StartPoint = start;
-            BezierSegment bs = (BezierSegment)_figure.Segments[0];
-            bs.Point1 = b1;
-            bs.Point2 = b2;
-            bs.Point3 = end;
-            OnPropertyChanged(nameof(Line));
+                BezierSegment bs = (BezierSegment)_line.Figures[0].Segments[0];
+                bs.Point1 = b1;
+                bs.Point2 = b2;
+                bs.Point3 = to;
+                Line = _line;
+            }
+            else
+                Line = null;
         }
+
 
         /// <summary>
         /// Disconnects the output from the node that its connected to

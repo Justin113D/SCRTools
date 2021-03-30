@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Media;
+using System.Linq;
 
 namespace SCRDialogEditor.Viewmodel
 {
@@ -115,6 +116,8 @@ namespace SCRDialogEditor.Viewmodel
             }
         }
 
+        public bool HasBackwardsInput
+            => _inputs.Any(x => x.IsLineBackwards);
         #endregion
 
         /// <summary>
@@ -246,7 +249,11 @@ namespace SCRDialogEditor.Viewmodel
 
             UpdatePositionCounter++;
 
-            Tracker.PostGroupAction(() => OnPropertyChanged(nameof(InOutInfo)));
+            Tracker.PostGroupAction(() =>
+            { 
+                OnPropertyChanged(nameof(InOutInfo));
+                RefreshBackwardsConnection();
+            });
 
             Tracker.EndGroup();
         }
@@ -268,7 +275,11 @@ namespace SCRDialogEditor.Viewmodel
 
             UpdatePositionCounter--;
 
-            Tracker.PostGroupAction(() => OnPropertyChanged(nameof(InOutInfo)));
+            Tracker.PostGroupAction(() =>
+            {
+                OnPropertyChanged(nameof(InOutInfo));
+                RefreshBackwardsConnection();
+            });
 
             Tracker.EndGroup();
         }
@@ -325,6 +336,9 @@ namespace SCRDialogEditor.Viewmodel
 
         public void RefreshSelected()
             => OnPropertyChanged(nameof(IsSelected));
+
+        public void RefreshBackwardsConnection()
+            => OnPropertyChanged(nameof(HasBackwardsInput));
 
         public void UpdateDataPosition()
         {

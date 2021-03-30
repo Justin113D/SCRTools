@@ -36,7 +36,7 @@
                 BorderBrush="{DynamicResource Outline}" 
                 Background="{DynamicResource BG1}">
 
-                <Grid MinWidth="120" MaxWidth="180">
+                <Grid MinWidth="120" MaxWidth="180" ClipToBounds="False">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="25"/>
                         <RowDefinition Height="Auto" MinHeight="120"/>
@@ -63,6 +63,7 @@
                             SnapsToDevicePixels="True"/>
                     </Grid>
 
+                    
                     <Border
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
@@ -74,6 +75,17 @@
                         <Border.RenderTransform>
                             <TranslateTransform X="-13" Y="30"/>
                         </Border.RenderTransform>
+                        <Path Grid.Row="1" Data="m -3 5 v 4 h -10 v -4 h -4 v 4 h -8 v -4 h -6 v 4 h -4 v -4 z" Fill="{DynamicResource FontBrush}">
+                            <Path.Style>
+                                <Style TargetType="{x:Type Path}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HasBackwardsInput}" Value="false">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Path.Style>
+                        </Path>
                     </Border>
 
                     <ListBox 
@@ -114,7 +126,11 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <Image Source="{Binding NodeIconPath, TargetNullValue={x:Null}}" Width="24" Height="24"  IsHitTestVisible="False">
+                                    <!--Dialog Choice Icon-->
+                                    <Image Source="{Binding NodeIconPath, TargetNullValue={x:Null}}" 
+                                           Width="24" 
+                                           Height="24"  
+                                           IsHitTestVisible="False">
                                         <Image.Style>
                                             <Style TargetType="{x:Type Image}">
                                                 <Style.Triggers>
@@ -126,9 +142,9 @@
                                         </Image.Style>
                                     </Image>
 
-                                    <TextBlock 
+                                    <!--Text Preview-->
+                                    <TextBlock Text="{Binding Text}"
                                         Grid.Column="1"
-                                        Text="{Binding Text}"
                                         TextTrimming="WordEllipsis"
                                         TextWrapping="NoWrap"
                                         VerticalAlignment="Center"
@@ -136,22 +152,22 @@
                                         Foreground="{DynamicResource FontBrush}"
                                         FontSize="{Binding FontSize, ElementName=Wrapper}"/>
 
+                                    <!--Connection Socket-->
                                     <Border
                                         Grid.Column="1"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Center"
+                                        Style="{StaticResource Socket}"
+                                        BorderThickness="3"
+                                        Background="{Binding CharacterColor}" 
                                         Width="18"
                                         Height="18"
-                                        Background="{Binding CharacterColor}" 
-                                        BorderThickness="3"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
                                             
                                         Loaded="Socket_Loaded"
                                         Unloaded="Socket_Unloaded"
                                         MouseLeave="Socket_MouseLeave"
                                         MouseUp="Socket_MouseUp"
-                                        MouseDown="Socket_MouseDown"
-                                            
-                                        Style="{StaticResource Socket}">
+                                        MouseDown="Socket_MouseDown">
                                         <Border.RenderTransform>
                                             <TranslateTransform X="9"/>
                                         </Border.RenderTransform>
@@ -185,16 +201,6 @@
                         <Setter TargetName="Outline" Property="BorderBrush" Value="{DynamicResource Green}"/>
                     </MultiDataTrigger.Setters>
                 </MultiDataTrigger>
-
-                <!--<MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding IsActive}" Value="True"/>
-                        <Condition Binding="{Binding IsMouseOver, ElementName=GrabGrid}" Value="True"/>
-                    </MultiDataTrigger.Conditions>
-                    <MultiDataTrigger.Setters>
-                        <Setter TargetName="Outline" Property="BorderBrush" Value="{DynamicResource Green.Highlighted}"/>
-                    </MultiDataTrigger.Setters>
-                </MultiDataTrigger>-->
             </ControlTemplate.Triggers>
         </ControlTemplate>
     </UserControl.Template>

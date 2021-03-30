@@ -70,9 +70,29 @@
 
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type vm:VmNodeOutput}">
-                            <Path Stroke="{DynamicResource FontBrush}" StrokeThickness="4" Data="{Binding Line}"/>
+                            <Path Stroke="{DynamicResource FontBrush}"
+                                    Data="{Binding Line, TargetNullValue=m 0 0 v 2 h 20 v -4 h 4 v 4 h 8 v -4 h 6 v 4 h 6 v -4 h -44 z}">
+                                <Path.Style>
+                                    <Style TargetType="{x:Type Path}">
+                                        <Setter Property="StrokeThickness" Value="4"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Line}" Value="{x:Null}">
+                                                <Setter Property="StrokeThickness" Value="0"/>
+                                                <Setter Property="Fill" Value="{DynamicResource FontBrush}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Path.Style>
+                            </Path>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
+
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Canvas.Left" Value="{Binding LineFrom.X}"/>
+                            <Setter Property="Canvas.Top" Value="{Binding LineFrom.Y}"/>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
                 </ItemsControl>
 
                 <ItemsControl 

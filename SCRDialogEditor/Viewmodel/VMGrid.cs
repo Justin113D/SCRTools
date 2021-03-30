@@ -262,6 +262,8 @@ namespace SCRDialogEditor.Viewmodel
                 foreach(VmNodeOutput vmout in vmnode.Outputs)
                     if(vmout.Data.Output != null)
                         vmout.VmOutput = viewmodelPairs[vmout.Data.Output];
+
+            _tracker = new();
         }
 
         #region Moving nodes
