@@ -58,8 +58,20 @@ namespace SCRCommon.Viewmodels
     [ValueConversion(typeof(bool), typeof(Visibility))]
     public class VisibilityConverter : IValueConverter
     {
+        public Visibility InvisibleType { get; set; } = Visibility.Collapsed;
+
+        public bool Invert { get; set; }
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-            => (bool)value ? Visibility.Visible : Visibility.Collapsed;
+        {
+            if(value == null)
+                return Invert ? Visibility.Visible : InvisibleType;
+
+            if(value.GetType() != typeof(bool))
+                return Invert ? InvisibleType : Visibility.Visible;
+
+            return (bool)value != Invert ? Visibility.Visible : InvisibleType;
+        }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
             => throw new NotSupportedException();

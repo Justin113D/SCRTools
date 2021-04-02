@@ -4,15 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:SCRDialogEditor.Viewmodel"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:wpfBase="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
+             xmlns:local="clr-namespace:SCRDialogEditor.XAML"
+             xmlns:vmBase="clr-namespace:SCRCommon.Viewmodels;assembly=SCRCommon"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance Type=vm:VmNode}"
-             x:Name="Top"
+             d:DesignHeight="600" d:DesignWidth="300"
+             d:DataContext="{x:Static local:DesignDataFactory.Node}"
+             x:Name="NodeEditor"
              Background="{DynamicResource BG1}">
 
     <UserControl.Resources>
+        <vmBase:VisibilityConverter x:Key="VisibilityConverter" InvisibleType="Collapsed"/>
+
         <Style x:Key="Seperator" TargetType="{x:Type Border}">
             <Setter Property="Height" Value="2"/>
             <Setter Property="Background" Value="{DynamicResource BG3}"/>
@@ -35,196 +37,244 @@
                 Margin="0 3"
                 Padding="4"
                 Content="Focus Right Portrait" 
-                IsChecked="{Binding RightPortrait, Mode=TwoWay}">
-                <CheckBox.Style>
-                    <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource {x:Type CheckBox}}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding }" Value="{x:Null}">
-                                <Setter Property="IsEnabled" Value="False"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </CheckBox.Style>
-            </CheckBox>
+                IsChecked="{Binding RightPortrait, Mode=TwoWay}"
+                Visibility="{Binding Converter={StaticResource VisibilityConverter}}"/>
+
+            <Border Style="{StaticResource Seperator}"/>
+
+            <TextBlock 
+                Text="Inputs" 
+                HorizontalAlignment="Center"/>
+
+            <ListBox
+                ItemsSource="{Binding Inputs}"
+                Template="{DynamicResource BasicListControl}"
+                ItemContainerStyle="{DynamicResource ListBoxItemDisableSelect}">
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:VmNodeOutput}">
+                        <!-- Output Header -->
+                        <Grid Margin="20 0 0 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="20"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Image 
+                                SnapsToDevicePixels="True" 
+                                Source="{Binding NodeIconPath, TargetNullValue={x:Null}}" 
+                                Width="24" 
+                                Height="24"  
+                                IsHitTestVisible="False"
+                                Visibility="{Binding NodeIcon, Converter={StaticResource VisibilityConverter}}"/>
+
+                            <Button
+                                Grid.Column="1"
+                                Padding="2"
+                                Content="{Binding Name}"
+                                HorizontalContentAlignment="Left"
+                                VerticalContentAlignment="Center"
+                                Command="{Binding ElementName=NodeEditor, Path=CmdFocusNode}"
+                                CommandParameter="{Binding Parent}"
+                                VerticalAlignment="Center"
+                                Style="{DynamicResource TransparentButton}"/>
+
+                            <!-- Input disconnect Button -->
+                            <Button 
+                                Grid.Column="2" 
+                                Command="{Binding Cmd_RemoveOutput}"
+                                Padding="2" 
+                                Margin="0 6"
+                                Style="{DynamicResource TransparentButton}">
+                                <Button.Content>
+                                    <Image Source="pack://application:,,,/SCRCommon;component/Icons/ConnectUnplugged.png"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
 
             <Border Style="{StaticResource Seperator}"/>
             
             <TextBlock 
                 Text="Outputs" 
-                HorizontalAlignment="Center"/>         
+                HorizontalAlignment="Center"/>
 
-            <StackPanel>
-                <StackPanel.Style>
-                    <Style TargetType="{x:Type StackPanel}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding }" Value="{x:Null}">
-                                <Setter Property="Visibility" Value="Collapsed"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </StackPanel.Style>
+            <ListBox 
+                    ItemsSource="{Binding Outputs}" 
+                    Template="{DynamicResource BasicListControl}"
+                    ItemContainerStyle="{DynamicResource ListBoxItemDisableSelect}">
 
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:VmNodeOutput}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
 
-
-                <ListBox 
-                        ItemsSource="{Binding Outputs}" 
-                        BorderThickness="0" 
-                        Background="Transparent" 
-                        HorizontalContentAlignment="Stretch"
-                        Template="{DynamicResource BasicListControl}"
-                        ItemContainerStyle="{DynamicResource ListBoxItemDisableSelect}">
-
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type vm:VmNodeOutput}">
+                            <!-- Output Header -->
                             <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="20"/>
+                                </Grid.ColumnDefinitions>
 
-                                <!-- Output Header -->
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="20"/>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="20"/>
-                                    </Grid.ColumnDefinitions>
+                                <!-- Output Expander -->
+                                <ToggleButton 
+                                        HorizontalAlignment="Stretch"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="3"
+                                        IsChecked="{Binding IsExpanded}"/>
 
-                                    <!-- Output Expander -->
-                                    <ToggleButton 
-                                            HorizontalAlignment="Stretch"
-                                            Grid.Column="0"
-                                            Grid.ColumnSpan="3"
-                                            IsChecked="{Binding IsExpanded}"/>
+                                <Image 
+                                    Grid.Column="1" 
+                                    SnapsToDevicePixels="True" 
+                                    Source="{Binding NodeIconPath, TargetNullValue={x:Null}}" Width="24" Height="24"  IsHitTestVisible="False" 
+                                    Visibility="{Binding NodeIcon, Converter={StaticResource VisibilityConverter}}"/>
 
-                                    <Image Grid.Column="1" SnapsToDevicePixels="True" Source="{Binding NodeIconPath, TargetNullValue={x:Null}}" Width="24" Height="24"  IsHitTestVisible="False">
-                                        <Image.Style>
-                                            <Style TargetType="{x:Type Image}">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding NodeIcon}" Value="{x:Null}">
-                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Image.Style>
-                                    </Image>
+                                <TextBlock 
+                                    Text="{Binding Name}"
+                                    VerticalAlignment="Center" 
+                                    Grid.Column="2" 
+                                    IsHitTestVisible="False"/>
 
-                                    <TextBlock 
-                                            Text="{Binding Name}"
-                                            FontSize="15" 
-                                            VerticalAlignment="Center" 
-                                            Grid.Column="2" 
-                                            IsHitTestVisible="False"/>
-
-                                    <!-- Output Delete Button -->
-                                    <Button 
-                                            Grid.Column="3" 
-                                            Command="{Binding Cmd_Delete}"
-                                            Content="✕" 
-                                            Padding="2" 
-                                            Margin="0 6">
-                                        <Button.Style>
-                                            <Style 
-                                                    TargetType="{x:Type Button}" 
-                                                    BasedOn="{StaticResource RedButton}">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding ElementName=Top, Path=DataContext.Outputs.Count}" Value="1">
-                                                        <Setter Property="IsEnabled" Value="False"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Button.Style>
-                                    </Button>
-                                </Grid>
-
-                                <!-- Expandable Area -->
-                                <Border 
-                                        Grid.Row="1" 
-                                        Margin="4" 
-                                        Padding="0 0 0 5">
-                                    <Border.Style>
-                                        <Style TargetType="{x:Type Border}">
+                                <!-- Output Delete Button -->
+                                <Button 
+                                    Grid.Column="3" 
+                                    Command="{Binding Cmd_Delete}"
+                                    Padding="2" 
+                                    Margin="0 6">
+                                    <Button.Style>
+                                        <Style 
+                                            TargetType="{x:Type Button}" 
+                                            BasedOn="{StaticResource RedButton}">
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsExpanded}" Value="false">
-                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                <DataTrigger Binding="{Binding ElementName=NodeEditor, Path=DataContext.Outputs.Count}" Value="1">
+                                                    <Setter Property="IsEnabled" Value="False"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
-                                    </Border.Style>
-
-                                    <StackPanel>
-                                        <StackPanel.Resources>
-                                            <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
-                                                <Setter Property="Margin" Value="0 0 0 5"/>
-                                                <Setter Property="Padding" Value="4"/>
-                                                <Setter Property="IsEditable" Value="True"/>
-                                                <Setter Property="IsReadOnly" Value="True"/>
-                                            </Style>
-                                            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
-                                                <Setter Property="Background" Value="{DynamicResource BG2}"/>
-                                                <Setter Property="TextWrapping" Value="Wrap"/>
-                                                <Setter Property="Padding" Value="4"/>
-                                            </Style>
-                                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
-                                                <Setter Property="Margin" Value="0 0 0 5"/>
-                                            </Style>
-                                        </StackPanel.Resources>
-
-                                        <!-- Expression Selection Combobox -->
-                                        <ComboBox 
-                                                ItemsSource="{Binding ElementName=Top, Path=DialogOptions.VMExpressionOptions.OptionsCombobox}"
-                                                SelectedItem="{Binding Expression, Mode=TwoWay}" 
-                                                Text="{Binding ExpressionText, Mode=OneWay}"/>
-
-                                        <!-- Character Selection Combobox -->
-                                        <ComboBox
-                                                ItemsSource="{Binding ElementName=Top, Path=DialogOptions.VMCharacterOptions.OptionsCombobox}"
-                                                SelectedItem="{Binding Character, Mode=TwoWay}" 
-                                                Text="{Binding CharacterText, Mode=OneWay}"/>
-
-                                        <!-- Icon Combobox -->
-                                        <ComboBox
-                                                ItemsSource="{Binding ElementName=Top, Path=DialogOptions.VMNodeIcons.IconsCombobox}"
-                                                SelectedItem="{Binding NodeIcon, Mode=TwoWay}" 
-                                                Text="{Binding NodeIconText, Mode=OneWay}"/>
-
-
-                                        <Border Height="2" Background="{DynamicResource BG3}" Margin="2 4"/>
-
-                                        <!-- Output Dialog/Text -->
-                                        <TextBlock Text="Dialog:"/>
-                                        <TextBox Text="{Binding Text}" AcceptsReturn="True"/>
-
-                                        <Border Height="2" Background="{DynamicResource BG3}" Margin="2 4"/>
-
-                                        <CheckBox 
-                                            Margin="0 3"
-                                            Padding="4"
-                                            Content="Keep Enabled on Return" 
-                                            IsChecked="{Binding KeepEnabled, Mode=TwoWay}"/>
-
-
-                                        <TextBlock Text="Flag Condition:"/>
-                                        <TextBox Text="{Binding Condition, Mode=TwoWay}"/>
-
-                                    </StackPanel>
-                                </Border>
-
+                                    </Button.Style>
+                                    <Button.Content>
+                                        <Image Source="pack://application:,,,/SCRCommon;component/Icons/Trash.png"/>
+                                    </Button.Content>
+                                </Button>
                             </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
 
-                <!-- Add Output Button -->
-                <Button 
-                    Style="{DynamicResource BlueButton}"
-                    Content="Add Output" 
-                    Command="{Binding Cmd_AddOutput}" 
-                    HorizontalAlignment="Stretch" 
-                    Margin="4 0"/>
+                            <!-- Expandable Area -->
+                            <Border 
+                                Grid.Row="1" 
+                                Margin="4" 
+                                Padding="2 2 2 5"
+                                Background="{DynamicResource HighlightedBG}"
+                                Visibility="{Binding IsExpanded, Converter={StaticResource VisibilityConverter}}">
 
-            </StackPanel>
+                                <StackPanel>
+                                    <StackPanel.Resources>
+                                        <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                            <Setter Property="Margin" Value="0 0 0 5"/>
+                                            <Setter Property="Padding" Value="4"/>
+                                            <Setter Property="IsEditable" Value="True"/>
+                                            <Setter Property="IsReadOnly" Value="True"/>
+                                        </Style>
+                                        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                                            <Setter Property="Background" Value="{DynamicResource BG2}"/>
+                                            <Setter Property="TextWrapping" Value="Wrap"/>
+                                            <Setter Property="Padding" Value="4"/>
+                                        </Style>
+                                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                            <Setter Property="Margin" Value="0 0 0 5"/>
+                                        </Style>
+                                        <Style TargetType="{x:Type Border}">
+                                            <Setter Property="Background" Value="{DynamicResource BG3}"/>
+                                            <Setter Property="Height" Value="2"/>
+                                            <Setter Property="Margin" Value="2 4"/>
+                                        </Style>
+                                    </StackPanel.Resources>
+
+                                    <!-- Expression Selection Combobox -->
+                                    <ComboBox 
+                                            ItemsSource="{Binding ElementName=NodeEditor, Path=DialogOptions.VMExpressionOptions.OptionsCombobox}"
+                                            SelectedItem="{Binding Expression, Mode=TwoWay}" 
+                                            Text="{Binding ExpressionText, Mode=OneWay}"/>
+
+                                    <!-- Character Selection Combobox -->
+                                    <ComboBox
+                                            ItemsSource="{Binding ElementName=NodeEditor, Path=DialogOptions.VMCharacterOptions.OptionsCombobox}"
+                                            SelectedItem="{Binding Character, Mode=TwoWay}" 
+                                            Text="{Binding CharacterText, Mode=OneWay}"/>
+
+                                    <!-- Icon Combobox -->
+                                    <ComboBox
+                                            ItemsSource="{Binding ElementName=NodeEditor, Path=DialogOptions.VMNodeIcons.IconsCombobox}"
+                                            SelectedItem="{Binding NodeIcon, Mode=TwoWay}" 
+                                            Text="{Binding NodeIconText, Mode=OneWay}"/>
+
+                                    <Border/>
+
+                                    <!-- Output Dialog/Text -->
+                                    <TextBlock Text="Dialog:" Margin="5 0"/>
+                                    <TextBox Text="{Binding Text}" AcceptsReturn="True" Margin="0 2"/>
+
+                                    <Border/>
+
+                                    <CheckBox 
+                                        Margin="0 3"
+                                        Padding="4"
+                                        Content="Keep Enabled on Return" 
+                                        IsChecked="{Binding KeepEnabled, Mode=TwoWay}"/>
+
+                                    <TextBlock Text="Flag Condition:" Margin="5 0"/>
+                                    <TextBox Text="{Binding Condition, Mode=TwoWay}" Margin="0 2"/>
+
+                                    <Border/>
+
+                                    <TextBlock Margin="5 0">
+                                        <TextBlock.Style>
+                                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                                <Setter Property="Text" Value="Output:"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding VmOutput}" Value="{x:Null}">
+                                                        <Setter Property="Text" Value="No Output"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    
+                                    <Button
+                                        Grid.Column="1"
+                                        Padding="2"
+                                        Content="{Binding Name}"
+                                        HorizontalContentAlignment="Left"
+                                        VerticalContentAlignment="Center"
+                                        Command="{Binding ElementName=NodeEditor, Path=CmdFocusNode}"
+                                        CommandParameter="{Binding VmOutput}"
+                                        VerticalAlignment="Center"
+                                        Style="{DynamicResource TransparentButton}"
+                                        Visibility="{Binding VmOutput, Converter={StaticResource VisibilityConverter}}"/>
+                                </StackPanel>
+                            </Border>
+
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <!-- Add Output Button -->
+            <Button 
+                Visibility="{Binding Converter={StaticResource VisibilityConverter}}"
+                Style="{DynamicResource BlueButton}"
+                Content="Add Output" 
+                Command="{Binding Cmd_AddOutput}" 
+                HorizontalAlignment="Stretch" 
+                Margin="4 0"/>
+
         </StackPanel>
     </ScrollViewer>
 </UserControl>

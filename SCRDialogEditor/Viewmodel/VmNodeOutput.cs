@@ -3,7 +3,6 @@ using SCRDialogEditor.Data;
 using System;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace SCRDialogEditor.Viewmodel
 {
@@ -18,21 +17,23 @@ namespace SCRDialogEditor.Viewmodel
         /// Command for deleting this node output
         /// </summary>
         public RelayCommand Cmd_Delete
-            => new(() => _parent.DeleteOutput(this));
+            => new(() => Parent.DeleteOutput(this));
 
+        public RelayCommand Cmd_RemoveOutput
+            => new(() => VmOutput = null);
         #endregion
 
         /// <summary>
         /// Parent Node Viewmodel
         /// </summary>
-        private readonly VmNode _parent;
+        public VmNode Parent { get; }
 
         /// <summary>
         /// Data model
         /// </summary>
         public NodeOutput Data { get; }
 
-        private ChangeTracker Tracker => _parent.Grid.Tracker;
+        private ChangeTracker Tracker => Parent.Grid.Tracker;
 
         #region Wrapper Properties
 
@@ -53,7 +54,7 @@ namespace SCRDialogEditor.Viewmodel
 
                 try
                 {
-                    return _parent.Grid.Main.DialogOptions.VMCharacterOptions.GetOption(Data.Character);
+                    return Parent.Grid.Main.DialogOptions.VMCharacterOptions.GetOption(Data.Character);
                 }
                 catch(Exception) { }
                 return null;
@@ -69,7 +70,7 @@ namespace SCRDialogEditor.Viewmodel
                     OnPropertyChanged(nameof(CharacterText));
                     OnPropertyChanged(nameof(CharacterColor));
                     OnPropertyChanged(nameof(Name));
-                    _parent.RefreshColor();
+                    Parent.RefreshColor();
                 });
 
                 Tracker.EndGroup();
@@ -95,7 +96,7 @@ namespace SCRDialogEditor.Viewmodel
 
                 try
                 {
-                    return _parent.Grid.Main.DialogOptions.VMExpressionOptions.GetOption(Data.Expression);
+                    return Parent.Grid.Main.DialogOptions.VMExpressionOptions.GetOption(Data.Expression);
                 }
                 catch(Exception) { }
                 return null;
@@ -111,7 +112,7 @@ namespace SCRDialogEditor.Viewmodel
                     OnPropertyChanged(nameof(ExpressionText));
                     OnPropertyChanged(nameof(ExpressionColor));
                     OnPropertyChanged(nameof(Name));
-                    _parent.RefreshColor();
+                    Parent.RefreshColor();
                 });
 
                 Tracker.EndGroup();
@@ -137,7 +138,7 @@ namespace SCRDialogEditor.Viewmodel
 
                 try
                 {
-                    return _parent.Grid.Main.DialogOptions.VMNodeIcons.GetIcon(Data.Icon);
+                    return Parent.Grid.Main.DialogOptions.VMNodeIcons.GetIcon(Data.Icon);
                 }
                 catch(Exception) { }
                 return null;
@@ -212,7 +213,7 @@ namespace SCRDialogEditor.Viewmodel
             get => _vmOutput;
             set
             {
-                if(_vmOutput == value || _vmOutput == _parent)
+                if(_vmOutput == value || _vmOutput == Parent)
                     return;
                 Tracker.BeginGroup();
 
@@ -258,16 +259,16 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         public bool Displaying
         {
-            get => _parent.Grid.Outputs.Contains(this);
+            get => Parent.Grid.Outputs.Contains(this);
             set
             {
                 if(value == Displaying)
                     return;
 
                 if(value)
-                    _parent.DisplayOutput(this);
+                    Parent.DisplayOutput(this);
                 else
-                    _parent.HideOutput(this);
+                    Parent.HideOutput(this);
             }
         }
 
@@ -297,7 +298,7 @@ namespace SCRDialogEditor.Viewmodel
         public VmNodeOutput(NodeOutput nodeOutput, VmNode parent)
         {
             Data = nodeOutput;
-            _parent = parent;
+            Parent = parent;
 
             _line = new()
             {

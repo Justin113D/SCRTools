@@ -7,6 +7,12 @@ namespace SCRDialogEditor
 {
     public partial class App : Application
     {
+        public double AppFontSize
+        {
+            get => (double)Resources["BaseFontSize"];
+            set => Resources["BaseFontSize"] = value;
+        }
+
         private TextBox _focused;
 
         private void OnRedo(object sender, object e)
@@ -34,6 +40,11 @@ namespace SCRDialogEditor
                     break;
                 }
             }
+        }
+
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            AppFontSize = SCRDialogEditor.Properties.Settings.Default.Fontsize;
         }
     }
 }

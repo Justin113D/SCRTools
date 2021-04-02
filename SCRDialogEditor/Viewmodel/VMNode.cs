@@ -1,11 +1,9 @@
 ﻿using SCRCommon.Viewmodels;
 using SCRDialogEditor.Data;
-using SCRDialogEditor.XAML;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
-using System.Linq;
 
 namespace SCRDialogEditor.Viewmodel
 {
@@ -36,24 +34,23 @@ namespace SCRDialogEditor.Viewmodel
         /// </summary>
         public Node Data { get; }
 
-        private ChangeTracker Tracker => Grid.Tracker;
+        private ChangeTracker Tracker => Grid?.Tracker;
 
         #region Properties
+
+        private readonly ObservableCollection<VmNodeOutput> _outputs;
 
         /// <summary>
         /// Viewmodel objects for the outputs
         /// </summary>
-        public ObservableCollection<VmNodeOutput> Outputs { get; }
+        public ReadOnlyObservableCollection<VmNodeOutput> Outputs { get; }
 
-        /// <summary>
-        /// Attached inputs (only for updating the lines)
-        /// </summary>
-        private readonly List<VmNodeOutput> _inputs;
+        private readonly ObservableCollection<VmNodeOutput> _inputs;
 
         /// <summary>
         /// Outputs attached to this node
         /// </summary>
-        public ReadOnlyCollection<VmNodeOutput> Inputs { get; }
+        public ReadOnlyObservableCollection<VmNodeOutput> Inputs { get; }
 
         public bool RightPortrait
         {
@@ -71,19 +68,19 @@ namespace SCRDialogEditor.Viewmodel
         /// Header Character Color
         /// </summary>
         public SolidColorBrush CharacterColor
-            => Outputs[0].CharacterColor;
+            => _outputs[0].CharacterColor;
 
         /// <summary>
         /// Header Expression Color
         /// </summary>
         public SolidColorBrush ExpressionColor
-            => Outputs[0].ExpressionColor;
+            => _outputs[0].ExpressionColor;
 
         public string Name
-            => Outputs[0].Name;
+            => _outputs[0].Name;
 
         public string InOutInfo
-            => $"[ {Inputs.Count} ; {Outputs.Count} ]";
+            => $"[ {_inputs.Count} ; {_outputs.Count} ]";
 
         public Point Position { get; private set; }
 
@@ -91,10 +88,10 @@ namespace SCRDialogEditor.Viewmodel
         /// Whether this Node is selected
         /// </summary>
         public bool IsActive
-            => Grid.Active == this;
+            => Grid?.Active == this;
 
         public bool IsSelected
-            => Grid.Selected.Contains(this);
+            => Grid?.Selected.Contains(this) == true;
 
         public int UpdatePositionCounter
         {
@@ -131,14 +128,16 @@ namespace SCRDialogEditor.Viewmodel
             Data = node;
 
             _inputs = new();
-            Inputs = new ReadOnlyCollection<VmNodeOutput>(_inputs);
+            Inputs = new(_inputs);
 
-            Outputs = new();
+            
+            _outputs = new();
             foreach(NodeOutput no in node.Outputs)
             {
                 VmNodeOutput VmOutput = new(no, this);
-                Outputs.Add(VmOutput);
+                _outputs.Add(VmOutput);
             }
+            Outputs = new(_outputs);
 
             if(position != default)
             {
@@ -147,7 +146,7 @@ namespace SCRDialogEditor.Viewmodel
             }
             else
             {
-                Position = UcGridEditor.FromGridSpace(
+                Position = VmGrid.FromGridSpace(
                     Data.LocationX,
                     Data.LocationY
                 );
@@ -167,7 +166,7 @@ namespace SCRDialogEditor.Viewmodel
         {
             Tracker.BeginGroup();
 
-            foreach(VmNodeOutput no in Outputs)
+            foreach(VmNodeOutput no in _outputs)
                 no.Disconnect();
 
             foreach(VmNodeOutput no in _inputs.ToArray())
@@ -189,9 +188,9 @@ namespace SCRDialogEditor.Viewmodel
             VmNodeOutput vmOutput = new(output, this);
 
             Tracker.TrackChange(new ChangedListSingleEntry<VmNodeOutput>(
-                Outputs,
+                _outputs,
                 vmOutput,
-                Outputs.Count,
+                _outputs.Count,
                 null
             ));
 
@@ -206,7 +205,7 @@ namespace SCRDialogEditor.Viewmodel
         /// <param name="vmOutput"></param>
         public void DeleteOutput(VmNodeOutput vmOutput)
         {
-            if(Outputs.Count < 2)
+            if(_outputs.Count < 2)
                 return;
 
             Tracker.BeginGroup();
@@ -214,7 +213,7 @@ namespace SCRDialogEditor.Viewmodel
             vmOutput.Disconnect();
 
             Tracker.TrackChange(new ChangedListSingleEntry<VmNodeOutput>(
-                Outputs,
+                _outputs,
                 vmOutput,
                 null,
                 null
@@ -250,7 +249,7 @@ namespace SCRDialogEditor.Viewmodel
             UpdatePositionCounter++;
 
             Tracker.PostGroupAction(() =>
-            { 
+            {
                 OnPropertyChanged(nameof(InOutInfo));
                 RefreshBackwardsConnection();
             });
@@ -291,12 +290,12 @@ namespace SCRDialogEditor.Viewmodel
         /// <param name="vmOutput"></param>
         public void DisplayOutput(VmNodeOutput vmOutput)
         {
-            if(!Outputs.Contains(vmOutput) || vmOutput.Displaying)
+            if(!_outputs.Contains(vmOutput) || vmOutput.Displaying)
                 return;
 
             Tracker.BeginGroup();
 
-            Grid.RegisterOutput(vmOutput);
+            Grid?.RegisterOutput(vmOutput);
             UpdatePositionCounter++;
 
             Tracker.EndGroup();
@@ -308,12 +307,12 @@ namespace SCRDialogEditor.Viewmodel
         /// <param name="vmOutput"></param>
         public void HideOutput(VmNodeOutput vmOutput)
         {
-            if(!Outputs.Contains(vmOutput) || !vmOutput.Displaying)
+            if(!_outputs.Contains(vmOutput) || !vmOutput.Displaying)
                 return;
 
             Tracker.BeginGroup();
 
-            Grid.DeregisterOutput(vmOutput);
+            Grid?.DeregisterOutput(vmOutput);
             UpdatePositionCounter--;
 
             Tracker.EndGroup();
@@ -344,11 +343,11 @@ namespace SCRDialogEditor.Viewmodel
         {
             Tracker.BeginGroup();
 
-            Point dataLoc = UcGridEditor.ToGridSpace(Position);
+            Point dataLoc = VmGrid.ToGridSpace(Position);
             Data.LocationX = (int)dataLoc.X;
             Data.LocationY = (int)dataLoc.Y;
 
-            Tracker.PostGroupAction(() => Position = UcGridEditor.FromGridSpace(Data.LocationX, Data.LocationY));
+            Tracker.PostGroupAction(() => Position = VmGrid.FromGridSpace(Data.LocationX, Data.LocationY));
 
             Tracker.EndGroup();
         }

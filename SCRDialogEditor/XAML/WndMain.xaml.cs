@@ -1,7 +1,6 @@
 ﻿using SCRDialogEditor.Viewmodel;
 using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
@@ -69,6 +68,16 @@ namespace SCRDialogEditor.XAML
             Feedback.BeginAnimation(OpacityProperty, null);
             Feedback.Opacity = 1;
             Feedback.BeginAnimation(OpacityProperty, _opacityAnim);
+        }
+
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            new WndSettings().ShowDialog();
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            new WndDialogOptions(((VmMain)DataContext).DialogOptions).ShowDialog();
         }
     }
 }

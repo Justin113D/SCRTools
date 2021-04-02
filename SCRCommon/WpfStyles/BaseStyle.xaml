@@ -42,15 +42,13 @@
     <!-- General Colors-->
     <SolidColorBrush x:Key="Yellow" Color="{x:Static local:Colors.Yellow}"/>
 
-
     <!-- Button Styles -->
-    <Style x:Key="RedButton"
-           TargetType="{x:Type Button}">
+    <Style TargetType="{x:Type Button}">
         <Style.Resources>
-            <SolidColorBrush x:Key="Default"  Color="{Binding Color, Source={StaticResource Red}}"/>
-            <SolidColorBrush x:Key="Disabled" Color="{Binding Color, Source={StaticResource Red.Disabled}}"/>
-            <SolidColorBrush x:Key="Hover"    Color="{Binding Color, Source={StaticResource Red.Highlighted}}"/>
-            <SolidColorBrush x:Key="Clicked"  Color="{Binding Color, Source={StaticResource Red.Selected}}"/>
+            <SolidColorBrush x:Key="Default"  Color="{Binding Color, Source={StaticResource BG2}}"/>
+            <SolidColorBrush x:Key="Disabled" Color="{Binding Color, Source={StaticResource DisabledBG}}"/>
+            <SolidColorBrush x:Key="Hover"    Color="{Binding Color, Source={StaticResource SelectedBG}}"/>
+            <SolidColorBrush x:Key="Clicked"  Color="{Binding Color, Source={StaticResource PressedBG}}"/>
         </Style.Resources>
         <Setter Property="Foreground" Value="#EEFFFFFF"/>
         <Setter Property="Background" Value="{DynamicResource Default}"/>
@@ -65,8 +63,8 @@
                             Padding="{TemplateBinding Padding}" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
                         <ContentPresenter x:Name="MyContentPresenter" 
                                           Content="{TemplateBinding Content}"
-                                          HorizontalAlignment="Center" 
-                                          VerticalAlignment="Center" />
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -86,9 +84,28 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="TransparentButton"
+           TargetType="{x:Type Button}"
+           BasedOn="{StaticResource {x:Type Button}}">
+        <Style.Resources>
+            <SolidColorBrush x:Key="Default"  Color="Transparent"/>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="RedButton"
+           TargetType="{x:Type Button}"
+           BasedOn="{StaticResource {x:Type Button}}">
+        <Style.Resources>
+            <SolidColorBrush x:Key="Default"  Color="{Binding Color, Source={StaticResource Red}}"/>
+            <SolidColorBrush x:Key="Disabled" Color="{Binding Color, Source={StaticResource Red.Disabled}}"/>
+            <SolidColorBrush x:Key="Hover"    Color="{Binding Color, Source={StaticResource Red.Highlighted}}"/>
+            <SolidColorBrush x:Key="Clicked"  Color="{Binding Color, Source={StaticResource Red.Selected}}"/>
+        </Style.Resources>
+    </Style>
+
     <Style x:Key="GreenButton" 
         TargetType="{x:Type Button}" 
-        BasedOn="{StaticResource RedButton}">
+        BasedOn="{StaticResource {x:Type Button}}">
         <Style.Resources>
             <SolidColorBrush x:Key="Default"  Color="{Binding Color, Source={StaticResource Green} }"/>
             <SolidColorBrush x:Key="Disabled" Color="{Binding Color, Source={StaticResource Green.Disabled} }"/>
@@ -99,7 +116,7 @@
 
     <Style x:Key="BlueButton" 
         TargetType="{x:Type Button}" 
-        BasedOn="{StaticResource RedButton}">
+        BasedOn="{StaticResource {x:Type Button}}">
         <Style.Resources>
             <SolidColorBrush x:Key="Default"  Color="{Binding Color, Source={StaticResource Blue} }"/>
             <SolidColorBrush x:Key="Disabled" Color="{Binding Color, Source={StaticResource Blue.Disabled} }"/>
@@ -125,42 +142,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
-
-    <!-- Button Styles -->
-    <Style TargetType="{x:Type Button}">
-        <Setter Property="Foreground" Value="{DynamicResource FontBrush}"/>
-        <Setter Property="Background" Value="{DynamicResource BG2}"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="FontSize" Value="15"/>
-        <Setter Property="Padding" Value="5"/>
-
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" 
-                            Padding="{TemplateBinding Padding}" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
-                        <ContentPresenter x:Name="MyContentPresenter" 
-                                          Content="{TemplateBinding Content}"
-                                          HorizontalAlignment="Center" 
-                                          VerticalAlignment="Center" />
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-
-        <Style.Triggers>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Background" Value="{DynamicResource DisabledBG}"/>
-                <Setter Property="Foreground" Value="{DynamicResource HintFontBrush}"/>
-            </Trigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource SelectedBG}"/>
-            </Trigger>
-            <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" Value="{DynamicResource PressedBG}"/>
-            </Trigger>
-        </Style.Triggers>
     </Style>
 
     <Style TargetType="{x:Type Menu}">
@@ -843,5 +824,13 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+    
+    <!-- List Style -->
+    <Style TargetType="{x:Type ListBox}">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BG3}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
     </Style>
 </ResourceDictionary>

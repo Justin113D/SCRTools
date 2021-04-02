@@ -5,13 +5,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:vm="clr-namespace:SCRDialogEditor.Viewmodel"
+    xmlns:local="clr-namespace:SCRDialogEditor.XAML"
     mc:Ignorable="d" 
     d:DesignHeight="450" d:DesignWidth="200"
-    d:DataContext="{d:DesignData Type=vm:VmGrid}"
+    d:DataContext="{x:Static local:DesignDataFactory.Grid}"
     Background="{DynamicResource BG1}"
     BorderBrush="{DynamicResource BG3}"
     Foreground="{DynamicResource FontBrush}"
-    Name="Wrapper">
+    Name="DialogEditor">
 
     <UserControl.Resources>
         <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxUndo}">
@@ -42,7 +43,7 @@
             <TextBlock Text="Description:"/>
             <TextBox Text="{Binding Description, Mode=TwoWay}"/>
 
-            <Border Height="2" Margin="2 4" Background="{Binding BorderBrush, ElementName=Wrapper}"/>
+            <Border Height="2" Margin="2 4" Background="{Binding BorderBrush, ElementName=DialogEditor}"/>
 
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -78,8 +79,18 @@
                     <Image Source="pack://application:,,,/SCRCommon;component/Icons/SortLines.png" SnapsToDevicePixels="True" Width="16" Height="16"/>
                 </Button>
             </Grid>
-            
-            <ListBox ItemsSource="{Binding Nodes}" SelectedItem="{Binding ListActive}" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch">
+
+            <ListBox 
+                ItemsSource="{Binding Nodes}" 
+                SelectedItem="{Binding ListActive}"
+                SelectionChanged="ListBox_SelectionChanged" 
+                Background="Transparent" 
+                BorderThickness="0" 
+                HorizontalContentAlignment="Stretch"
+                ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                Template="{DynamicResource BasicListControl}">
+                
+                
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type vm:VmNode}">
                         <Grid>
@@ -88,9 +99,9 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
-                            
-                            <TextBlock Grid.Column="0" Text="{Binding Name}" Foreground="{Binding Foreground, ElementName=Wrapper}"/>
-                            <TextBlock Grid.Column="2" Text="{Binding InOutInfo}" Foreground="{Binding Foreground, ElementName=Wrapper}" HorizontalAlignment="Right"/>
+
+                            <TextBlock Grid.Column="0" Text="{Binding Name}" Foreground="{Binding Foreground, ElementName=DialogEditor}"/>
+                            <TextBlock Grid.Column="2" Text="{Binding InOutInfo}" Foreground="{Binding Foreground, ElementName=DialogEditor}" HorizontalAlignment="Right"/>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -99,6 +110,7 @@
                         <Setter Property="BorderThickness" Value="0"/>
                     </Style>
                 </ListBox.ItemContainerStyle>
+
             </ListBox>
 
         </StackPanel>

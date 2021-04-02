@@ -14,25 +14,25 @@ namespace SCRCommon.WpfStyles
     /// </summary>
     public class Window : System.Windows.Window
     {
-        public static DependencyProperty MinimizeButtonProperty
+        public static readonly DependencyProperty MinimizeButtonProperty
             = DependencyProperty.Register(
                 nameof(MinimizeButton),
                 typeof(Visibility),
                 typeof(Window));
 
-        public static DependencyProperty MaximizeButtonProperty
+        public static readonly DependencyProperty MaximizeButtonProperty
             = DependencyProperty.Register(
                 nameof(MaximizeButton),
                 typeof(Visibility),
                 typeof(Window));
 
-        public static DependencyProperty CloseButtonProperty
+        public static readonly DependencyProperty CloseButtonProperty
             = DependencyProperty.Register(
                 nameof(CloseButton),
                 typeof(Visibility),
                 typeof(Window));
 
-        public static DependencyProperty ShadowPaddingProperty
+        public static readonly DependencyProperty ShadowPaddingProperty
             = DependencyProperty.Register(
                 nameof(ShadowPadding),
                 typeof(Thickness),

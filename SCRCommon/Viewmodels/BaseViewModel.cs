@@ -6,7 +6,7 @@ namespace SCRCommon.Viewmodels
 {
     public abstract class BaseViewModel : INotifyPropertyChanged
     {
-        private static readonly DependencyObject _dummyDependencyObject = new DependencyObject();
+        private static readonly DependencyObject _dummyDependencyObject = new();
 
         protected static bool IsDesignMode => !DesignerProperties.GetIsInDesignMode(_dummyDependencyObject);
 

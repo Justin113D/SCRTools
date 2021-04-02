@@ -15,16 +15,8 @@ namespace SCRDialogEditor.XAML
     /// </summary>
     public partial class UcGridEditor : UserControl
     {
-        /// <summary>
-        /// Grid background cell width
-        /// </summary>
-        public const int brushDim = 50;
-
-        /// <summary>
-        /// Half the width of a background cell
-        /// </summary>
-        public const int halfBrushDim = brushDim / 2;
-
+        private const int brushDim = VmGrid.brushDim;
+        private const int halfBrushDim = VmGrid.halfBrushDim;
 
         public static readonly DependencyProperty GridTileProperty =
             DependencyProperty.Register(
@@ -53,6 +45,9 @@ namespace SCRDialogEditor.XAML
 
         public RelayCommand Cmd_AddNode
             => new(AddNodeCenter);
+
+        public RelayCommand<VmNode> Cmd_FocusNode
+            => new(FocusNode);
 
         private VmGrid Grid => (VmGrid)DataContext;
 
@@ -93,7 +88,6 @@ namespace SCRDialogEditor.XAML
 
         public UcGridEditor()
         {
-
             GridBackground = new()
             {
                 TileMode = TileMode.Tile,
@@ -262,22 +256,6 @@ namespace SCRDialogEditor.XAML
             GridBackground.Viewport = new Rect(GridTransform.Matrix.OffsetX, GridTransform.Matrix.OffsetY, width, width);
         }
 
-        public static Point FromGridSpace(int x, int y)
-        {
-            return new(
-                x * brushDim + halfBrushDim,
-                y * brushDim + halfBrushDim
-                );
-        }
-
-        public static Point ToGridSpace(Point TransformSpace)
-        {
-            return new(
-               ((int)TransformSpace.X - halfBrushDim * (TransformSpace.X < 0 ? 2 : 0)) / brushDim,
-               ((int)TransformSpace.Y - halfBrushDim * (TransformSpace.Y < 0 ? 2 : 0)) / brushDim
-           );
-        }
-
         private static float Length(Point point)
         {
             return (float)Math.Sqrt(point.X * point.X + point.Y * point.Y);
@@ -300,9 +278,9 @@ namespace SCRDialogEditor.XAML
         private void SelectBoxFinish()
         {
             Rect selectRect = new(
-                Canvas.GetLeft(SelectBlock), 
-                Canvas.GetTop(SelectBlock), 
-                SelectBlock.Width, 
+                Canvas.GetLeft(SelectBlock),
+                Canvas.GetTop(SelectBlock),
+                SelectBlock.Width,
                 SelectBlock.Height);
 
             List<VmNode> selected = new();
@@ -317,6 +295,23 @@ namespace SCRDialogEditor.XAML
             Grid.SelectMultiple(selected.ToArray(), Keyboard.Modifiers == ModifierKeys.Shift);
 
             SelectBlock.Visibility = Visibility.Collapsed;
+        }
+
+        private void FocusNode(VmNode node)
+        {
+            UIElement obj = (UIElement)NodesDisplay.ItemContainerGenerator.ContainerFromItem(node);
+
+            Point GridLoc = new(
+                Canvas.GetLeft(obj) + ((FrameworkElement)obj).ActualWidth / 2,
+                Canvas.GetTop(obj) + ((FrameworkElement)obj).ActualHeight / 2);
+
+            Matrix m = GridTransform.Matrix;
+            Point p = GridTransform.Inverse.Transform(
+                new(ActualWidth / 2, ActualHeight / 2));
+            m.TranslatePrepend(p.X - GridLoc.X, p.Y - GridLoc.Y);
+            GridTransform.Matrix = m;
+
+            UpdateBackground();
         }
     }
 }

@@ -56,5 +56,20 @@ namespace SCRDialogEditor.Properties
                 this["DialogOptionsPath"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public double Fontsize
+        {
+            get
+            {
+                return ((double)(this["Fontsize"]));
+            }
+            set
+            {
+                this["Fontsize"] = value;
+            }
+        }
     }
 }

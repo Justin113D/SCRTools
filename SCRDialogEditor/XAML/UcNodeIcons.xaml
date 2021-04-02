@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=vm:VmNodeIcons}"
-             x:Name="Wrapper">
+             x:Name="NodeIcons">
 
     <DataGrid 
         ItemsSource="{Binding Icons}" 
@@ -58,8 +58,7 @@
                     <DataTemplate>
                         <TextBox 
                             Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                            Foreground="{Binding Foreground, ElementName=Wrapper}"
-                            FontSize="{Binding FontSize, ElementName=Wrapper}"
+                            Foreground="{Binding Foreground, ElementName=NodeIcons}"
                             KeyDown="TextBox_KeyDown"/>
                     </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>
@@ -70,8 +69,7 @@
                     <DataTemplate>
                         <TextBlock 
                             Text="{Binding FilePath}" 
-                            Foreground="{Binding Foreground, ElementName=Wrapper}"
-                            FontSize="{Binding FontSize, ElementName=Wrapper}"
+                            Foreground="{Binding Foreground, ElementName=NodeIcons}"
                             TextTrimming="CharacterEllipsis"
                             Margin="5 0"/>
                     </DataTemplate>

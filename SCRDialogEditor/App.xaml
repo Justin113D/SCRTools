@@ -3,14 +3,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:wpfbase="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
              xmlns:vmBase="clr-namespace:SCRCommon.Viewmodels;assembly=SCRCommon"
-             StartupUri="XAML/WndMain.xaml">
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             StartupUri="XAML/WndMain.xaml"
+             Startup="Application_Startup">
 
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <wpfbase:BaseStyle/>
                 
-                <ResourceDictionary>
+                <ResourceDictionary >
+                    <sys:Double x:Key="BaseFontSize">15</sys:Double>
+
+                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                        <Setter Property="FontSize" Value="{DynamicResource BaseFontSize}"/>
+                    </Style>
+
+                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                        <Setter Property="FontSize" Value="{DynamicResource BaseFontSize}"/>
+                    </Style>
+
                     <InputBindingCollection x:Key="TextboxInputs">
                         <KeyBinding Modifiers="Ctrl" Key="Z">
                             <KeyBinding.Command>

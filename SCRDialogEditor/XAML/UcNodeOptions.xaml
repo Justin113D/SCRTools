@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=vm:VmNodeOptions}"
-             x:Name="Wrapper">
+             x:Name="NodeOptions">
     
     <ListBox ItemsSource="{Binding Options}" 
              HorizontalContentAlignment="Stretch" 
@@ -22,8 +22,7 @@
                     </Grid.ColumnDefinitions>
                     <TextBox 
                         Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                        Foreground="{Binding Foreground, ElementName=Wrapper}"
-                        FontSize="{Binding FontSize, ElementName=Wrapper}"
+                        Foreground="{Binding Foreground, ElementName=NodeOptions}"
                         KeyDown="TextBox_KeyDown"/>
                     <Button Grid.Column="1" Background="{Binding Color}" Command="{Binding Cmd_ChangeColor}"/>
                 </Grid>

@@ -4,22 +4,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:local="clr-namespace:SCRDialogEditor.Viewmodel"
     xmlns:wpfBase="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
-    xmlns:vmbase="clr-namespace:SCRCommon.Viewmodels;assembly=SCRCommon"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance {x:Type local:VmSettings}}"
-    Title="Settings" Height="150" Width="500"
+    Title="Settings" Height="auto" Width="auto" MinWidth="350" MinHeight="150"
     x:Name="window"
     ResizeMode="NoResize"
     Style="{DynamicResource WindowStyle}"
     MinimizeButton="Collapsed"
     MaximizeButton="Collapsed"
-    Padding="2">
-
-    <wpfBase:Window.Resources>
-        <vmbase:InverseBooleanConverter x:Key="BoolInvert"/>
-    </wpfBase:Window.Resources>
+    CloseButton="Collapsed"
+    Padding="2"
+    SizeToContent="WidthAndHeight">
 
     <Border Background="{DynamicResource BG1}">
         <Grid Margin="20 5 20 20">
@@ -37,27 +32,44 @@
                     <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
                         <Setter Property="VerticalAlignment" Value="Center"/>
                     </Style>
-                    <Style TargetType="{x:Type CheckBox}">
-                        <Setter Property="VerticalAlignment" Value="Center"/>
-                    </Style>
                 </StackPanel.Resources>
                 
                 <!--Theme setting-->
                 <StackPanel>
                     <TextBlock Text="Theme" Width="140"/>
-                    <ComboBox Width="100" HorizontalAlignment="Left" Foreground="Black"
-                            ItemsSource="{Binding Themes}" SelectedValue="{Binding WindowTheme, Mode=TwoWay}"/>
+                    <ComboBox 
+                        x:Name="ThemeCombobox" 
+                        MinWidth="100" 
+                        HorizontalAlignment="Left" 
+                        Foreground="Black" 
+                        SelectionChanged="ThemeCombobox_SelectionChanged"/>
                 </StackPanel>
 
-                <!--<StackPanel>
-                    <TextBlock Text="Fontsize" Width="140"/>
-                    <TextBox Background="{DynamicResource BG2}" Width="40" PreviewTextInput="TextBox_PreviewTextInput" Text="{Binding FontSize}" TextAlignment="Right"/>
-                </StackPanel>-->
+                <StackPanel>
+                    <TextBlock Text="Fontsize" MinWidth="140"/>
+                    <TextBox x:Name="FontSizeField" Style="{DynamicResource TextBoxUndo}" Background="{DynamicResource BG2}" MinWidth="40" PreviewTextInput="TextBox_PreviewTextInput" TextAlignment="Right"/>
+                </StackPanel>
 
             </StackPanel>
             
-            <Label Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Content="Made by @Justin113D" Margin="-15" FontSize="11" Foreground="{DynamicResource FontBrush}"/>
-            <Button Grid.Row="1" HorizontalAlignment="Right" Content="Ok" Width="100" Margin="0,0,10,0" Command="{Binding Cmd_Save}" CommandParameter="{x:Reference window}"/>
+            <Label 
+                Grid.Row="1" 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Bottom" 
+                Content="Made by @Justin113D" 
+                Margin="-15" 
+                FontSize="11" 
+                Foreground="{DynamicResource FontBrush}"/>
+            
+            <Button 
+                Grid.Row="1" 
+                HorizontalAlignment="Right" 
+                Content="Ok" 
+                Width="100" 
+                Margin="0,0,10,0" 
+                Command="{Binding Cmd_Save}" 
+                CommandParameter="{x:Reference window}"
+                Click="Button_Click"/>
         </Grid>
     </Border>
 </wpfBase:Window>

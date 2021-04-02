@@ -125,7 +125,7 @@ namespace SCRDialogEditor.XAML
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             _container = WPFExtensions.FindParent<ItemsControl>(this);
-            Node.Outputs.CollectionChanged += OutputsUpdated;
+            ((INotifyCollectionChanged)Node.Outputs).CollectionChanged += OutputsUpdated;
             _recalcSockets = true;
             if(Node.UpdatePositionCounter > 0)
                 LayoutUpdated += OnLayoutUpdated;

@@ -10,6 +10,16 @@ namespace SCRDialogEditor.Viewmodel
 {
     public class VmGrid : BaseViewModel
     {
+        /// <summary>
+        /// Grid background cell width
+        /// </summary>
+        public const int brushDim = 50;
+
+        /// <summary>
+        /// Half the width of a background cell
+        /// </summary>
+        public const int halfBrushDim = brushDim / 2;
+
         #region Commands
 
         public RelayCommand Cmd_DeleteNode
@@ -583,5 +593,23 @@ namespace SCRDialogEditor.Viewmodel
             if(Tracker.Redo())
                 Main.SetFeedback("Performed Redo", true);
         }
+
+
+        public static Point FromGridSpace(int x, int y)
+        {
+            return new(
+                x * brushDim + halfBrushDim,
+                y * brushDim + halfBrushDim
+                );
+        }
+
+        public static Point ToGridSpace(Point TransformSpace)
+        {
+            return new(
+               ((int)TransformSpace.X - halfBrushDim * (TransformSpace.X < 0 ? 2 : 0)) / brushDim,
+               ((int)TransformSpace.Y - halfBrushDim * (TransformSpace.Y < 0 ? 2 : 0)) / brushDim
+           );
+        }
+
     }
 }

@@ -7,13 +7,13 @@
     xmlns:local="clr-namespace:SCRDialogEditor.XAML"
     xmlns:vm="clr-namespace:SCRDialogEditor.Viewmodel"
     mc:Ignorable="d" 
-    d:DataContext="{d:DesignInstance Type=vm:VmNode}"
+    d:DataContext="{x:Static local:DesignDataFactory.Node}"
     d:Height="100"
     d:Width="200"
     Loaded="OnLoaded"
     Unloaded="OnUnloaded"
     MouseUp="OnMouseUp"
-    x:Name="Wrapper">
+    x:Name="GridNode">
 
     <UserControl.Resources>
         <Style TargetType="{x:Type Border}" x:Key="Socket">
@@ -149,8 +149,7 @@
                                         TextWrapping="NoWrap"
                                         VerticalAlignment="Center"
                                         Padding="5 5 10 5"
-                                        Foreground="{DynamicResource FontBrush}"
-                                        FontSize="{Binding FontSize, ElementName=Wrapper}"/>
+                                        Foreground="{DynamicResource FontBrush}"/>
 
                                     <!--Connection Socket-->
                                     <Border
