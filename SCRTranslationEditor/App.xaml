@@ -1,6 +1,6 @@
 ﻿<Application x:Class="SCRLanguageEditor.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:base="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
+             xmlns:base="clr-namespace:SCRCommon.Wpf;assembly=SCRCommon"
              StartupUri="MainWindow.xaml">
 </Application>

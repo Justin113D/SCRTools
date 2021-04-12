@@ -14,16 +14,16 @@ namespace SCRTranslationEditor.Viewmodel
             switch((int)value)
             {
                 case 0: // not yet translated, Red
-                    result = SCRCommon.WpfStyles.Colors.Red;
+                    result = SCRCommon.Wpf.Colors.Red;
                     break;
                 case 1: // received update, yellow
-                    result = SCRCommon.WpfStyles.Colors.Yellow;
+                    result = SCRCommon.Wpf.Colors.Yellow;
                     break;
                 case 2: // translated after update, blue
-                    result = SCRCommon.WpfStyles.Colors.Blue;
+                    result = SCRCommon.Wpf.Colors.Blue;
                     break;
                 case 3: // translated, green
-                    result = SCRCommon.WpfStyles.Colors.Green;
+                    result = SCRCommon.Wpf.Colors.Green;
                     break;
 
             }

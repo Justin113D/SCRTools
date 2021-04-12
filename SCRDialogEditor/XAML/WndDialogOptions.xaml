@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:SCRDialogEditor.XAML"
-    xmlns:wpfBase="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
+    xmlns:wpfBase="clr-namespace:SCRCommon.Wpf;assembly=SCRCommon"
     xmlns:vm="clr-namespace:SCRDialogEditor.Viewmodel"
     mc:Ignorable="d"
     Title="Dialog Options" Height="600" Width="800"

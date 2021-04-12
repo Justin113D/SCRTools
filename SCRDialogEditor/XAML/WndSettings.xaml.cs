@@ -1,4 +1,4 @@
-﻿using SCRCommon.WpfStyles;
+﻿using SCRCommon.Wpf;
 using SCRDialogEditor.Viewmodel;
 using System;
 using System.Text.RegularExpressions;
@@ -10,14 +10,14 @@ namespace SCRDialogEditor
     /// <summary>
     /// Interaction logic for Settings.xaml
     /// </summary>
-    public partial class WndSettings : SCRCommon.WpfStyles.Window
+    public partial class WndSettings : SCRCommon.Wpf.Window
     {
         public WndSettings()
         {
             InitializeComponent();
             FontSizeField.Text = Properties.Settings.Default.Fontsize.ToString();
             ThemeCombobox.ItemsSource = Enum.GetValues(typeof(Theme));
-            ThemeCombobox.SelectedItem = Properties.Settings.Default.WindowTheme;
+            ThemeCombobox.SelectedItem = BaseStyle.Theme;
         }
 
         private void TextBox_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
@@ -40,11 +40,8 @@ namespace SCRDialogEditor
 
         private void ThemeCombobox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if(BaseStyle.WindowTheme != (Theme)e.AddedItems[0])
-            {
-                BaseStyle.WindowTheme = (Theme)e.AddedItems[0];
-                Properties.Settings.Default.WindowTheme = BaseStyle.WindowTheme;
-            }
+            if(BaseStyle.Theme != (Theme)e.AddedItems[0])
+                BaseStyle.Theme = (Theme)e.AddedItems[0];
         }
     }
 }

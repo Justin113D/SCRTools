@@ -6,7 +6,7 @@ using System.Windows.Media.Animation;
 
 namespace SCRDialogEditor.XAML
 {
-    public partial class WndMain : SCRCommon.WpfStyles.Window
+    public partial class WndMain : SCRCommon.Wpf.Window
     {
         public static readonly DependencyProperty FeedbackColorProperty =
             DependencyProperty.Register(

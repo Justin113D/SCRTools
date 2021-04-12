@@ -290,12 +290,12 @@ namespace SCRTranslationEditor.Viewmodel
             if(warning)
             {
                 // red
-                MessageColor = new SolidColorBrush(SCRCommon.WpfStyles.Colors.Red);
+                MessageColor = new SolidColorBrush(SCRCommon.Wpf.Colors.Red);
             }
             else
             {
                 // green
-                MessageColor = new SolidColorBrush(SCRCommon.WpfStyles.Colors.Green);
+                MessageColor = new SolidColorBrush(SCRCommon.Wpf.Colors.Green);
             }
 
             OnPropertyChanged(nameof(ShowMessage));

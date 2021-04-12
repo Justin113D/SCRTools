@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-namespace SCRCommon.WpfStyles
+namespace SCRCommon.Wpf
 {
     public static class Colors
     {

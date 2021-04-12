@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
+using System.Linq;
 
-namespace SCRCommon.WpfStyles
+namespace SCRCommon.Wpf
 {
     /// <summary>
     /// The different window themes to choose from
@@ -13,89 +14,93 @@ namespace SCRCommon.WpfStyles
         Dark,
         Light
     }
+    public static class ThemeExentions
+    {
+        public static ResourceDictionary GetResourceDictionary(this Theme theme)
+            => new() { Source = theme.GetUri() };
+
+        public static Uri GetUri(this Theme theme)
+            => new($"/SCRCommon;component/WpfStyles/{theme}.xaml", UriKind.RelativeOrAbsolute);
+    }
 
     /// <summary>
     /// Base class for a darkmode window frame that sets all necessary events for the window frame to function
     /// </summary>
     public partial class BaseStyle : ResourceDictionary
     {
-        /// <summary>
-        /// The current active window theme. Default is dark
-        /// </summary>
-        private static Theme _windowTheme = Theme.Dark;
+        private static ResourceDictionary _themeRd;
 
-        private static readonly Dictionary<Theme, BaseStyle> _loadedStyles;
+        private static BaseStyle _themeBaseStyle;
 
-        private static readonly List<int> initiated;
-
+        private static readonly HashSet<Application> _initiatedApps;
 
         /// <summary>
         /// Gets, sets and updates the window theme accordingly
         /// </summary>
-        public static Theme WindowTheme
+        public static Theme Theme
         {
-            get => _windowTheme;
+            get => Properties.Settings.Default.Theme;
             set
             {
-                if(_windowTheme == value)
-                    return;
-                _windowTheme = value;
+                Properties.Settings.Default.Theme = value;
+                _themeRd = value.GetResourceDictionary();
+                _themeBaseStyle = new();
 
-                var r = Application.Current.Resources;
-
-                if(r.GetType() == typeof(BaseStyle))
+                foreach(var app in _initiatedApps)
                 {
-                    Application.Current.Resources = _loadedStyles[value];
-                    return;
-                }
-
-                for(int i = 0; i < r.MergedDictionaries.Count; i++)
-                {
-                    var m = r.MergedDictionaries[i];
-                    if(m.GetType() == typeof(BaseStyle))
+                    var rd = FindBaseStyle(app.Resources).MergedDictionaries;
+                    if(rd == null)
                     {
-                        r.MergedDictionaries[i] = _loadedStyles[value];
-                        break;
+                        app.Resources.MergedDictionaries.Add(_themeBaseStyle);
+                    }
+                    else
+                    {
+                        int index = rd.IndexOf(
+                            rd.First(x => x.GetType() == typeof(BaseStyle))
+                        );
+                        rd[index] = _themeBaseStyle;    
                     }
                 }
 
+                Properties.Settings.Default.Save();
             }
         }
 
         static BaseStyle()
         {
-            initiated = new();
-            _loadedStyles = new();
-
-            foreach(Theme theme in Enum.GetValues<Theme>())
-                _loadedStyles.Add(theme, new BaseStyle(theme));
+            _initiatedApps = new();
+            _themeRd = Properties.Settings.Default.Theme.GetResourceDictionary();
+            _themeBaseStyle = new();
         }
 
-        public static void Init()
+        private static ResourceDictionary FindBaseStyle(ResourceDictionary resources)
         {
-            if(initiated.Contains(Application.Current.GetHashCode()))
+            foreach(ResourceDictionary rd in resources.MergedDictionaries)
+            {
+                if(rd.GetType() == typeof(BaseStyle))
+                    return resources;
+                
+                ResourceDictionary bs = FindBaseStyle(rd);
+                if(bs != null)
+                    return bs;
+            }
+            return null;
+        }
+
+        public static void Init(Application app)
+        {
+            if(_initiatedApps.Contains(app))
                 return;
 
-            initiated.Add(Application.Current.GetHashCode());
-            var r = Application.Current.Resources;
-
-            if(r.GetType() == typeof(BaseStyle))
+            ResourceDictionary rd = FindBaseStyle(app.Resources);
+            if(rd == null)
             {
-                Application.Current.Resources = _loadedStyles[_windowTheme];
-                return;
+                rd = app.Resources;
+                rd.MergedDictionaries.Add(_themeBaseStyle);
             }
 
-            for(int i = 0; i < r.MergedDictionaries.Count; i++)
-            {
-                var m = r.MergedDictionaries[i];
-                if(m.GetType() == typeof(BaseStyle))
-                {
-                    r.MergedDictionaries[i] = _loadedStyles[_windowTheme];
-                    return;
-                }
-            }
-
-            r.MergedDictionaries.Add(new BaseStyle());
+            _initiatedApps.Add(app);
+            app.Exit += (o, e) => _initiatedApps.Remove(app);
         }
 
         /// <summary>
@@ -103,13 +108,7 @@ namespace SCRCommon.WpfStyles
         /// </summary>
         public BaseStyle()
         {
-            MergedDictionaries.Add(_loadedStyles[_windowTheme].MergedDictionaries[0]);
-            InitializeComponent();
-        }
-
-        private BaseStyle(Theme theme)
-        {
-            MergedDictionaries.Add(new() { Source = new($"/SCRCommon;component/WpfStyles/{theme}.xaml", UriKind.RelativeOrAbsolute) });
+            MergedDictionaries.Add(_themeRd);
             InitializeComponent();
         }
     }

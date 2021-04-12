@@ -6,7 +6,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:SCRTranslationEditor.Viewmodel"
         xmlns:vmBase="clr-namespace:SCRCommon.Viewmodels;assembly=SCRCommon"
-        xmlns:base="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
+        xmlns:base="clr-namespace:SCRCommon.Wpf;assembly=SCRCommon"
         xmlns:data="clr-namespace:SCRTranslationEditor.Data"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=local:VM_Main}"

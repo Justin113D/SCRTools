@@ -38,10 +38,10 @@ namespace SCRTranslationEditor.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Dark")]
-        public SCRCommon.WpfStyles.Theme WindowTheme
+        public SCRCommon.Wpf.Theme WindowTheme
         {
             get {
-                return ((SCRCommon.WpfStyles.Theme)(this["WindowTheme"]));
+                return ((SCRCommon.Wpf.Theme)(this["WindowTheme"]));
             }
             set {
                 this["WindowTheme"] = value;

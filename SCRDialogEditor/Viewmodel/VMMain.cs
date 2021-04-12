@@ -77,8 +77,8 @@ namespace SCRDialogEditor.Viewmodel
                 return;
             }
 
-            FeedbackColor = success ? SCRCommon.WpfStyles.Colors.Green
-                                    : SCRCommon.WpfStyles.Colors.Red;
+            FeedbackColor = success ? SCRCommon.Wpf.Colors.Green
+                                    : SCRCommon.Wpf.Colors.Red;
             FeedbackText = message;
         }
     }

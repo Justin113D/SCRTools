@@ -1,4 +1,4 @@
-﻿using SCRCommon.WpfStyles;
+﻿using SCRCommon.Wpf;
 using SCRDialogEditor.Viewmodel;
 
 namespace SCRDialogEditor.XAML

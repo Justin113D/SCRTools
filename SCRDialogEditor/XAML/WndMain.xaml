@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:SCRDialogEditor.XAML"
     xmlns:vm="clr-namespace:SCRDialogEditor.Viewmodel"
-    xmlns:wpfBase="clr-namespace:SCRCommon.WpfStyles;assembly=SCRCommon"
+    xmlns:wpfBase="clr-namespace:SCRCommon.Wpf;assembly=SCRCommon"
     mc:Ignorable="d"
     Title="Dialog Editor" Height="500" Width="950"
     MinHeight="200" MinWidth="350"

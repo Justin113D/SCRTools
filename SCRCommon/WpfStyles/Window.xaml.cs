@@ -7,7 +7,7 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Shell;
 
-namespace SCRCommon.WpfStyles
+namespace SCRCommon.Wpf
 {
     /// <summary>
     /// Interaction logic for Window.xaml
@@ -65,30 +65,22 @@ namespace SCRCommon.WpfStyles
             set => SetValue(ShadowPaddingProperty, value);
         }
 
-        /// <summary>
-        /// The windows which use this resource dictionary
-        /// </summary>
-        private static readonly List<Window> _activeWindows;
-
         private static readonly ControlTemplate _template;
 
         private Button _maximizeButton;
 
         static Window()
         {
-            _activeWindows = new List<Window>();
-
             var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SCRCommon.WpfStyles.Window.xaml");
             _template = (ControlTemplate)XamlReader.Load(stream);
         }
 
         public Window()
         {
-            BaseStyle.Init();
+            BaseStyle.Init(Application.Current);
 
             StateChanged += OnStateChanged;
             Loaded += OnLoaded;
-            Closed += OnClosed;
 
             Padding = new(4);
 
@@ -155,7 +147,6 @@ namespace SCRCommon.WpfStyles
             _maximizeButton.Content = WindowState == WindowState.Maximized ? "◱" : "☐";
         }
 
-
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             _maximizeButton = (Button)Template.FindName("MaximizeButton", this);
@@ -164,12 +155,6 @@ namespace SCRCommon.WpfStyles
             _maximizeButton.Click += Maximize;
             ((Button)Template.FindName("CloseButton", this)).Click += Close;
 
-            _activeWindows.Add(this);
-        }
-
-        private void OnClosed(object sender, EventArgs e)
-        {
-            _activeWindows.Remove(this);
         }
     }
 

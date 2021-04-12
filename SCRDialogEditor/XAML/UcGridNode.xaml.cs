@@ -1,4 +1,4 @@
-﻿using SCRCommon.WpfStyles;
+﻿using SCRCommon.Wpf;
 using SCRDialogEditor.Viewmodel;
 using System;
 using System.Collections.Generic;
