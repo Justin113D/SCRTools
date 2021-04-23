@@ -202,6 +202,9 @@ namespace SCRDialogEditor.Data
             writer.WritePropertyName("LocationY");
             writer.WriteValue(LocationY);
 
+            writer.WritePropertyName("RightPortrait");
+            writer.WriteValue(RightPortrait);
+
             writer.WritePropertyName("Outputs");
             writer.WriteStartArray();
 
@@ -236,6 +239,9 @@ namespace SCRDialogEditor.Data
                             break;
                         case "LocationY":
                             result.LocationY = (int)(long)reader.Value;
+                            break;
+                        case "RightPortrait":
+                            result.RightPortrait = (bool)reader.Value;
                             break;
                         case "Outputs":
                             while(reader.Read() && reader.TokenType != JsonToken.EndArray)
