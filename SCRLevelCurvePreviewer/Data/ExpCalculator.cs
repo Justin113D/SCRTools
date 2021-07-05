@@ -36,8 +36,8 @@ namespace SCRLevelCurvePreviewer.Data
             xShift = Math.Max(Math.Min(xShift, 1d), 0d);
             yShift = Math.Max(Math.Min(yShift, 1d), 0d);
 
-            _xValues = new double[] { 2, xShift * 100, 100, 100 };
-            _yValues = new double[] { minExp, minExp, yShift * maxExp, maxExp };
+            _xValues = new double[] { 2, 2 + xShift * 98, 100, 100 };
+            _yValues = new double[] { minExp, minExp, minExp + yShift * (maxExp - minExp), maxExp };
 
             // clamping in both directions, to ensure that no "hills" are created
             ClampBezier(_xValues, _yValues);
