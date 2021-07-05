@@ -5,6 +5,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
+	  <DebugType>embedded</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Icon.ico" />

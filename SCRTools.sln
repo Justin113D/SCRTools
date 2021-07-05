@@ -11,6 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCRCommon", "SCRCommon\SCRC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCRLanguageTest", "SCRLanguageTest\SCRLanguageTest.csproj", "{0BC8ABCB-A381-47DC-A57E-099BBF1282CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCRLevelCurvePreviewer", "SCRLevelCurvePreviewer\SCRLevelCurvePreviewer.csproj", "{B1651F73-D4D9-4A1C-A2E8-6D053BDDEA91}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F0EE3117-EF36-42FD-8BC2-9341246C49E0} = {F0EE3117-EF36-42FD-8BC2-9341246C49E0}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +38,10 @@ Global
 		{0BC8ABCB-A381-47DC-A57E-099BBF1282CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BC8ABCB-A381-47DC-A57E-099BBF1282CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BC8ABCB-A381-47DC-A57E-099BBF1282CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1651F73-D4D9-4A1C-A2E8-6D053BDDEA91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1651F73-D4D9-4A1C-A2E8-6D053BDDEA91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1651F73-D4D9-4A1C-A2E8-6D053BDDEA91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1651F73-D4D9-4A1C-A2E8-6D053BDDEA91}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

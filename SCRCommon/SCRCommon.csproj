@@ -4,6 +4,7 @@
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWPF>true</UseWPF>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <Resource Include="Icons\**">
