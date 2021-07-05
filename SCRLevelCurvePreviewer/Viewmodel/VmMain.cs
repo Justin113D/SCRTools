@@ -69,21 +69,29 @@ namespace SCRLevelCurvePreviewer.Viewmodel
 
         private ExpCalculator _expCalculator;
 
-        private LineSeries _series;
+        private LineSeries _absolute;
+
+        private LineSeries _relative;
 
         public VmMain()
         {
-            _series = new LineSeries()
+            _absolute = new LineSeries()
             {
-                Title = "Experience per level"
+                Title = "Absolute Exp per Level",
+                YAxisKey = "Abs"
+            };
+
+            _relative = new LineSeries()
+            {
+                Title = "Relative Exp per Level",
+                YAxisKey = "Rel"
             };
 
             UpdatePlot();
             
             ExperienceModel = new PlotModel()
             {
-                Title = "Exp growth graph",
-                
+                Title = "Exp growth graph"
             };
 
             ExperienceModel.Axes.Add(new LinearAxis()
@@ -97,12 +105,23 @@ namespace SCRLevelCurvePreviewer.Viewmodel
             ExperienceModel.Axes.Add(new LinearAxis()
             {
                 Position = AxisPosition.Left,
-                Title = "Experience",
+                Title = "Absolute Exp",
                 IsZoomEnabled = false,
-                IsPanEnabled = false
+                IsPanEnabled = false,
+                Key = "Abs"
             });
 
-            ExperienceModel.Series.Add(_series);
+            ExperienceModel.Axes.Add(new LinearAxis()
+            {
+                Position = AxisPosition.Right,
+                Title = "Relative Exp",
+                IsZoomEnabled = false,
+                IsPanEnabled = false,
+                Key = "Rel"
+            });
+
+            ExperienceModel.Series.Add(_absolute);
+            ExperienceModel.Series.Add(_relative);
 
         }
 
@@ -115,9 +134,16 @@ namespace SCRLevelCurvePreviewer.Viewmodel
         {
             _expCalculator = new ExpCalculator(_expMin, _expMax, _expXShift, _expYShift);
 
-            _series.Points.Clear();
+            _absolute.Points.Clear();
+            _relative.Points.Clear();
+            double oldVal = 0;
             for(uint x = 1; x <= 100; x++)
-                _series.Points.Add(new DataPoint(x, _expCalculator.GetExperience(x)));
+            {
+                double newVal = _expCalculator.GetExperience(x);
+                _absolute.Points.Add(new DataPoint(x, _expCalculator.GetExperience(x)));
+                _relative.Points.Add(new DataPoint(x, newVal - oldVal));
+                oldVal = newVal;
+            }
 
             if(ExperienceModel != null)
             {
