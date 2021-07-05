@@ -122,7 +122,6 @@ namespace SCRLevelCurvePreviewer.Viewmodel
 
             ExperienceModel.Series.Add(_absolute);
             ExperienceModel.Series.Add(_relative);
-
         }
 
         private double f(double x)

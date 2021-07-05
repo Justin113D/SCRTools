@@ -11,7 +11,6 @@
 
         <Grid.Resources>
             <Style TargetType="{x:Type TextBox}">
-                <Setter Property="IsReadOnly" Value="{Binding ElementName=ValueSlider, Path=IsFloat}"/>
                 <EventSetter Event="PreviewTextInput" Handler="Text_PreviewTextInput"/>
                 <Setter Property="TextAlignment" Value="Right"/>
             </Style>
@@ -43,7 +42,7 @@
                 Value="{Binding ElementName=ValueSlider, Path=SliderValue}"
                 Maximum="{Binding ElementName=ValueSlider, Path=SliderMax}"/>
 
-        <TextBox x:Name="MaxValue" Grid.Column="3">
+        <TextBox x:Name="MaxValue" Grid.Column="3" IsReadOnly="{Binding ElementName=ValueSlider, Path=IsFloat}">
             <TextBox.Style>
                 <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
                     <Setter Property="Text" Value="{Binding ElementName=ValueSlider, Path=SliderMax, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:0}}"/>

@@ -1,9 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
+	  <TargetFramework>net5.0-windows</TargetFramework>
+	  <OutputType>WinExe</OutputType>
+	  <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	  <UseWPF>true</UseWPF>
+	  <DebugType>embedded</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
