@@ -34,8 +34,8 @@ namespace SCR.Expression.Internal
                 // Common post-operator //
                 new("(", 0, true),
                 new("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 2, true),
-                new("0123456789", 3, true),
-                new("!-", 6, true),
+                new("0123456789", 7, true),
+                new("!-#", 6, true),
 
                 new(null, -1, "Expected value expression")
             },
@@ -77,8 +77,8 @@ namespace SCR.Expression.Internal
                 // Common post-operator //
                 new("(", 0, true),
                 new("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 2, true),
-                new("0123456789", 3, true),
-                new("!-", 6, true),
+                new("0123456789", 7, true),
+                new("!-#", 6, true),
                 //////////////////////////
                 
                 new("=", 0, null),
@@ -90,13 +90,43 @@ namespace SCR.Expression.Internal
                 new("=", 0, null),
                 new(null, -1, "Expected \"=\"")
             },
-            new State[] // 6: Inverted "-", "!"
+            new State[] // 6: Inverted "-", "!", "#"
             {
                 new("(", 0, null),
                 new("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 2, null),
-                new("0123456789", 3, null),
+                new("0123456789", 7, null),
 
                 new(null, -1, "Expected value expression")
+            },
+            new State[] // 7: (floating point) Number, pre point
+            {
+                new("0123456789", 7, null),
+                new(".", 8, null),
+
+                // Common pre-operator //
+                new("=+-*/%^|&", 0, false),
+                new(")", 1, false),
+                new("<>", 4, false),
+                new("!", 5, false),
+
+                new(null, -1, "Expected value or operator expression")
+            },
+            new State[] // 8: (floating point) Number, present point
+            {
+                new("0123456789", 9, null),
+                new(null, -1, "Expected a digit")
+            },
+            new State[] // 9: (floating point) Number, post point
+            {
+                new("0123456789", 9, null),
+
+                // Common pre-operator //
+                new("=+-*/%^|&", 0, false),
+                new(")", 1, false),
+                new("<>", 4, false),
+                new("!", 5, false),
+
+                new(null, -1, "Expected value or operator expression")
             }
         };
 
@@ -136,7 +166,7 @@ namespace SCR.Expression.Internal
         /// </summary>
         /// <returns></returns>
         public bool IsExitState()
-            => _currentState is >= 1 and <= 3;
+            => _currentState is >= 1 and <= 3 or 7 or 9;
 
         public string GetCurrentErrorMessage()
             => (string)_states[_currentState][^1].operation;

@@ -24,7 +24,12 @@ namespace SCR.Expression.Internal
         /// <summary>
         /// ID of the key
         /// </summary>
-        public long? ID { get; }
+        public double? ID { get; }
+
+        /// <summary>
+        /// Whether the result should be inverted/negated/summed up
+        /// </summary>
+        public bool Invert { get; }
 
         /// <summary>
         /// Source string index
@@ -37,20 +42,24 @@ namespace SCR.Expression.Internal
         public KeyType Type 
             => ID == null ? Key.NoIDType : Key.IDType;
 
+        public KeyType RealType 
+            => Type == KeyType.NumberList && Invert ? KeyType.Number : Type;
+
         public ValueBlock(string value, IDataAccess<T> da, int index)
         {
             Index = index;
 
-            string pre = null;
-            if(value[0] is '!' or '-')
+            char pre = default;
+            if(value[0] is '!' or '-' or '#')
             {
-                pre = value[0].ToString();
+                pre = value[0];
                 value = value.Remove(0, 1);
             }
+            Invert = pre != default;
 
             // Get the key
             Handle = "";
-            while(value.Length > 0 && !char.IsDigit(value[0]))
+            while(value.Length > 0 && char.IsLetter(value[0]))
             {
                 Handle += value[0];
                 value = value.Remove(0, 1);
@@ -74,9 +83,7 @@ namespace SCR.Expression.Internal
             KeyType type;
             if(value.Length > 0)
             {
-                ID = int.Parse(value);
-                if(pre != null)
-                    ID = -ID;
+                ID = double.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
                 type = Key.IDType;
                 if(type == KeyType.None)
                     throw new DynamicDataExpressionException($"Key \"{Handle}\"does not support usage without Index!", index);
@@ -89,100 +96,22 @@ namespace SCR.Expression.Internal
                     throw new DynamicDataExpressionException($"Key \"{Handle}\" does not support usage with Index!", index);
             }
 
-            if(type == KeyType.Number && pre == "!")
-                throw new DynamicDataExpressionException($"Invalid value operator \"!\"! Number values only allow \"-\".", index);
-            else if(type == KeyType.Boolean && pre == "-")
-                throw new DynamicDataExpressionException($"Invalid value operator \"-\"! Boolean values only allow \"!\".", index);
-            else if(type == KeyType.NumberList && pre != null)
-                throw new DynamicDataExpressionException($"Invalid value operator! Number lists don't support value operators.", index);
-        }
-
-        public object Evaluate(T data)
-        {
-            object value = Key.GetValue(ID, data);
-
-            if(value == null)
+            if(Invert)
             {
-                throw new DynamicDataExpressionException($"Value {this} returns null!", Index);
+                if(type == KeyType.Number && pre != '-')
+                    throw new DynamicDataExpressionException($"Invalid value operator {pre}! Number values only allow \"-\".", index);
+                else if(type == KeyType.Boolean && pre != '!')
+                    throw new DynamicDataExpressionException($"Invalid value operator {pre}! Boolean values only allow \"!\".", index);
+                else if(type == KeyType.NumberList && pre != '#')
+                    throw new DynamicDataExpressionException($"Invalid value operator {pre}! Number lists only allow \"#\".", index);
             }
 
-            // check if the value is correct
-            string expected = "";
-            switch(Type)
-            {
-                case KeyType.Boolean:
-                    if(value is not bool)
-                    {
-                        expected = "boolean";
-                        goto default;
-                    }
-                    break;
-                case KeyType.Number:
-                    try
-                    {
-                        value = Convert.ToInt64(value);
-                    }
-                    catch
-                    {
-                        expected = "number";
-                        goto default;
-                    }
-                    break;
-                case KeyType.NumberList:
-                    if(value.GetType() == typeof(long[]))
-                        break;
-
-                    expected = "number array/enumerable";
-                    if(value is ICollection c)
-                    {
-                        long[] result = new long[c.Count];
-
-                        int i = 0;
-                        try
-                        {
-                            foreach(object o in c)
-                            {
-                                result[i] = Convert.ToInt64(o);
-                                i++;
-                            }
-                        }
-                        catch
-                        {
-                            goto default;
-                        }
-
-                        value = result;
-                    }
-                    else if(value is IEnumerable e)
-                    {
-                        List<long> result = new();
-                        try
-                        {
-                            foreach(object o in e)
-                                result.Add(Convert.ToInt64(o));
-                        }
-                        catch
-                        {
-                            goto default;
-                        }
-
-                        value = result.ToArray();
-                    }
-                    else
-                        goto default;
-
-                    break;
-                default:
-                    throw new DynamicDataExpressionException($"Value {this} does not return according type!\n Expected: {expected}\n Received: {value.GetType()}", Index);
-            }
-
-            return value;
         }
-
+        
         public override string ToString()
         {
-            string result = $"{Handle}{(ID < 0 ? -ID : ID)}";
-            if(ID < 0)
+            string result = $"{Handle}{ID}";
+            if(Invert)
             {
                 switch(Type)
                 {
@@ -191,6 +120,9 @@ namespace SCR.Expression.Internal
                         break;
                     case KeyType.Number:
                         result = "-" + result;
+                        break;
+                    case KeyType.NumberList:
+                        result = "#" + result;
                         break;
                 }
             }
@@ -252,6 +184,8 @@ namespace SCR.Expression.Internal
                 Invert = null;
             else
             {
+                if(invert == '#')
+                    throw new DynamicDataExpressionException("Sum operator can only directly be used with Number List Keys", index);
                 Invert = new(invert == '!' ? CheckOperator.Invert : CheckOperator.Negate, index);
             }
         }

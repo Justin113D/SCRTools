@@ -57,9 +57,9 @@ namespace SCR.Expression
         /// <summary>
         /// Takes an ID and source object and returns the according value
         /// </summary>
-        public Func<long?, T, object> GetValue { get; }
+        public Func<double?, T, object> GetValue { get; }
 
-        public DataKey(string name, KeyType iDType, KeyType noIDType, Func<long?, T, object> getValue)
+        public DataKey(string name, KeyType iDType, KeyType noIDType, Func<double?, T, object> getValue)
         {
             Name = name;
             IDType = iDType;

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace SCRDynamicDataCheckTester.Data
 {
@@ -25,10 +26,10 @@ namespace SCRDynamicDataCheckTester.Data
                 { "I",  new("Item",         KeyType.Number,     KeyType.Number,     GetItem) },
                 { "T",  new("Team Member",  KeyType.Number,     KeyType.Boolean,    GetTeamMember) },
                 { "P",  new("Party Member", KeyType.Number,     KeyType.Boolean,    GetPartyMember) },
-                { "E",  new("Equipped",     KeyType.NumberList, KeyType.NumberList, GetEquipped) },
-                { "EC", new("Equipped Count", KeyType.Number,   KeyType.Number,     GetEquippedCount) },
+                { "E",  new("Equipped",     KeyType.NumberList, KeyType.NumberList, GetEquipped) }, // idless returns party equipment
+                { "EC", new("Equipped Count", KeyType.Number,   KeyType.Number,     GetEquippedCount) }, // idless returns party equipment count
                 { "L",  new("Level",        KeyType.Number,     KeyType.None,       GetLevel)},
-                { "HP", new("Health Points", KeyType.Number,    KeyType.Number,     GetHealthPoints)}
+                { "HP", new("Health Percent", KeyType.Number,    KeyType.Number,     GetHealthPoints)}
             };
             #pragma warning restore IDE0055
 
@@ -36,35 +37,35 @@ namespace SCRDynamicDataCheckTester.Data
             DataKeys = new(dataKeys);
         }
 
-        private object GetFlag(long? id, MockSCRData data)
+        private object GetFlag(double? id, MockSCRData data)
         {
             return data.Flags.TryGetValue((int)id.Value, out bool result) && result;
         }
 
-        private object GetDynamicFlag(long? id, MockSCRData data)
+        private object GetDynamicFlag(double? id, MockSCRData data)
         {
             return false;
         }
 
-        private object GetRings(long? id, MockSCRData data)
+        private object GetRings(double? id, MockSCRData data)
         {
             return data.Rings;
         }
 
-        private object GetChao(long? id, MockSCRData data)
+        private object GetChao(double? id, MockSCRData data)
         {
             if(id.HasValue)
-                return data.Chao.TryGetValue((int)id.Value, out var t) ? t.count : 0;
+                return data.Chao.TryGetValue((int)id.Value, out var t) ? t.Count : 0;
             else
                 return data.Chao.Count;
         }
 
-        private object GetChaoLevel(long? id, MockSCRData data)
+        private object GetChaoLevel(double? id, MockSCRData data)
         {
-            return data.Chao.TryGetValue((int)id.Value, out var t) ? t.level : 0;
+            return data.Chao.TryGetValue((int)id.Value, out var t) ? t.Level : 0;
         }
 
-        private object GetCard(long? id, MockSCRData data)
+        private object GetCard(double? id, MockSCRData data)
         {
             if(id.HasValue)
                 return data.Cards.Contains((int)id.Value);
@@ -72,7 +73,7 @@ namespace SCRDynamicDataCheckTester.Data
                 return data.Cards.Count;
         }
 
-        private object GetItem(long? id, MockSCRData data)
+        private object GetItem(double? id, MockSCRData data)
         {
             if(id.HasValue)
                 return data.Items.TryGetValue((int)id.Value, out int result) ? result : 0;
@@ -80,7 +81,7 @@ namespace SCRDynamicDataCheckTester.Data
                 return data.Items.Count;
         }
 
-        private object GetTeamMember(long? id, MockSCRData data)
+        private object GetTeamMember(double? id, MockSCRData data)
         {
             if(id.HasValue)
                 return data.TeamMembers.ContainsKey((int)id.Value);
@@ -88,31 +89,49 @@ namespace SCRDynamicDataCheckTester.Data
                 return data.TeamMembers.Count;
         }
 
-        private object GetPartyMember(long? id, MockSCRData data)
+        private object GetPartyMember(double? id, MockSCRData data)
         {
             if(id.HasValue)
                 return data.PartyMembers.Contains((int)id.Value);
             else
                 return data.PartyMembers.Count;
         }
-        private object GetEquipped(long? id, MockSCRData data)
+        private object GetEquipped(double? id, MockSCRData data)
         {
-            return Array.Empty<int>(); // TODO
+            if(id.HasValue)
+                return data.TeamMembers.TryGetValue((int)id.Value, out TeamSlot ts) ? ts.Equipment : Array.Empty<int>();
+            else
+                return data.PartyMembers.SelectMany(x => data.TeamMembers.TryGetValue(x, out TeamSlot ts) ? ts.Equipment : Array.Empty<int>()).ToArray();
         }
 
-        private object GetEquippedCount(long? id, MockSCRData data)
+        private object GetEquippedCount(double? id, MockSCRData data)
         {
-            return 0; // TODO
+            return ((int[])GetEquipped(id, data)).Length;
         }
 
-        private object GetLevel(long? id, MockSCRData data)
+        private object GetLevel(double? id, MockSCRData data)
         {
-            return data.TeamMembers.TryGetValue((int)id.Value, out TeamSlot t) ? t.level : 0;
+            return data.TeamMembers.TryGetValue((int)id.Value, out TeamSlot t) ? t.Level : 0;
         }
 
-        private object GetHealthPoints(long? id, MockSCRData data)
+        private object GetHealthPoints(double? id, MockSCRData data)
         {
-            return 0; // TODO
+            if(id.HasValue)
+                return data.TeamMembers.TryGetValue((int)id.Value, out TeamSlot ts) ? (long)((ts.Health / (double)ts.MaxHealth) * 100) : 0;
+            else
+            {
+                long maxHealth = 0;
+                long health = 0;
+                foreach(var t in data.PartyMembers)
+                {
+                    if(data.TeamMembers.TryGetValue((int)id.Value, out TeamSlot ts))
+                    {
+                        maxHealth += ts.MaxHealth;
+                        health += ts.Health;
+                    }
+                }
+                return (long)((health / (double)maxHealth) * 100);
+            }
         }
 
     }

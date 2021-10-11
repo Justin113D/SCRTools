@@ -13,18 +13,22 @@ namespace SCR.Expression.Internal
     {
         private readonly string key;
 
-        private readonly long? id;
+        private readonly double? id;
 
-        public StackValueBlock(string key, long? id)
+        private readonly bool inverted;
+
+        public StackValueBlock(string key, double? id, bool inverted)
         {
             this.key = key;
             this.id = id;
+            this.inverted = inverted;
         }
 
         public int Evaluate(T data, IDataAccess<T> accessor, object[] stack, int stackPointer)
         {
             DataKey<T> dk = string.IsNullOrWhiteSpace(key) ? DataKey<T>.NumberDataKey : accessor.DataKeys[key];
             KeyType type = id == null ? dk.NoIDType : dk.IDType;
+
             object value = dk.GetValue(id, data);
 
             // check if the value is correct
@@ -39,9 +43,12 @@ namespace SCR.Expression.Internal
                     }
                     break;
                 case KeyType.Number:
+                    if(value is double)
+                        break;
+
                     try
                     {
-                        value = Convert.ToInt64(value);
+                        value = Convert.ToDouble(value);
                     }
                     catch
                     {
@@ -50,20 +57,20 @@ namespace SCR.Expression.Internal
                     }
                     break;
                 case KeyType.NumberList:
-                    if(value.GetType() == typeof(long[]))
+                    if(value.GetType() == typeof(double[]))
                         break;
 
                     expected = "number array/enumerable";
                     if(value is ICollection c)
                     {
-                        long[] result = new long[c.Count];
+                        double[] result = new double[c.Count];
 
                         int i = 0;
                         try
                         {
                             foreach(object o in c)
                             {
-                                result[i] = Convert.ToInt64(o);
+                                result[i] = Convert.ToDouble(o);
                                 i++;
                             }
                         }
@@ -76,11 +83,11 @@ namespace SCR.Expression.Internal
                     }
                     else if(value is IEnumerable e)
                     {
-                        List<long> result = new();
+                        List<double> result = new();
                         try
                         {
                             foreach(object o in e)
-                                result.Add(Convert.ToInt64(o));
+                                result.Add(Convert.ToDouble(o));
                         }
                         catch
                         {
@@ -97,12 +104,32 @@ namespace SCR.Expression.Internal
                     throw new InvalidOperationException($"{key}{id}: Expected {expected}, got {value.GetType()}");
             }
 
+            if(inverted)
+            {
+                switch(type)
+                {
+                    case KeyType.Boolean:
+                        value = !(bool)value;
+                        break;
+                    case KeyType.Number:
+                        value = -(double)value;
+                        break;
+                    case KeyType.NumberList:
+                        double sum = 0;
+                        double[] a = (double[])value;
+                        for(int i = 0; i < a.Length; i++)
+                            sum += a[i];
+                        value = sum;
+                        break;
+                }
+            }
+
             stack[stackPointer] = value;
             stackPointer++;
             return stackPointer;
         }
 
-        public override string ToString() 
+        public override string ToString()
             => $"{(id < 0 ? "~" : "")}{key}{(id < 0 ? -id : id)}";
     }
 
@@ -110,7 +137,7 @@ namespace SCR.Expression.Internal
     {
         private readonly CheckOperator op;
 
-        public StackOperatorBlock(CheckOperator op) 
+        public StackOperatorBlock(CheckOperator op)
             => this.op = op;
 
         public int Evaluate(T data, IDataAccess<T> accessor, object[] stack, int stackPointer)
@@ -119,7 +146,7 @@ namespace SCR.Expression.Internal
             {
                 stackPointer--;
                 object left = stack[stackPointer];
-                object right = stack[stackPointer-1];
+                object right = stack[stackPointer - 1];
                 object result = null;
 
                 if(left is bool bl && right is bool br)
@@ -140,7 +167,7 @@ namespace SCR.Expression.Internal
                             break;
                     }
                 }
-                else if(left is long nl && right is long nr)
+                else if(left is double nl && right is double nr)
                 {
                     switch(op)
                     {
@@ -178,13 +205,34 @@ namespace SCR.Expression.Internal
                             result = nl % nr;
                             break;
                         case CheckOperator.Exponent:
-                            result = (long)Math.Pow(nl, nr);
+                            result = Math.Pow(nl, nr);
                             break;
                     }
                 }
-                else if(left is long[] a && right is long n)
+                else if(left is double[] a && right is double n)
                 {
+                    Func<double, double, bool> check = op switch
+                    {
+                        CheckOperator.Equals        => (l, r) => l == r,
+                        CheckOperator.Unequals      => (l, r) => l == r,
+                        CheckOperator.Greater       => (l, r) => l > r,
+                        CheckOperator.GreaterEquals => (l, r) => l >= r,
+                        CheckOperator.Smaller       => (l, r) => l < r,
+                        CheckOperator.SmallerEquals => (l, r) => l <= r,
+                        _ => throw new DynamicDataExpressionException("How did you even come across this? Contact the dev asap", -2),
+                    };
 
+                    bool contains = false;
+                    for(int i = 0; i < a.Length; i++)
+                    {
+                        if(check(a[i], n))
+                        {
+                            contains = true;
+                            break;
+                        }
+                    }
+
+                    result = op == CheckOperator.Unequals ? !contains : contains;
                 }
 
                 stack[stackPointer - 1] = result;
@@ -200,7 +248,7 @@ namespace SCR.Expression.Internal
                 }
                 else // must be negate
                 {
-                    stack[outp] = -(long)value;
+                    stack[outp] = -(double)value;
                 }
             }
 

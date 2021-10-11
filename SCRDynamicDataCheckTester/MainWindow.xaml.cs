@@ -42,7 +42,7 @@ namespace SCRDynamicDataCheckTester
             Cards = new() { 1, 2, 3 },
             Items = new() { { 1, 5 }, { 4, 6 }, { 3, 5 }, { 22, 1 } },
             Chao = new() { { 50, new(1, 2) }, { 51, new(2, 50) } },
-            TeamMembers = new() { { 1, new(2, new int[] { 3, 5, 18 }) }, { 2, new(5, new int[] { 4 }) } },
+            TeamMembers = new() { { 1, new(2, 20, 10, new int[] { 3, 5, 18 }) }, { 2, new(5, 45, 2, new int[] { 4 }) } },
             PartyMembers = new() { 1, 2, 4 }
         };
 

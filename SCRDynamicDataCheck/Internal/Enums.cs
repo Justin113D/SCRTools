@@ -20,7 +20,7 @@ namespace SCR.Expression.Internal
         Modulo,     // %
         Exponent,   // ^
         Invert,     // !
-        Negate      // -
+        Negate,     // -
     }
     internal static class EnumExtensions
     {
@@ -83,7 +83,7 @@ namespace SCR.Expression.Internal
                 CheckOperator.Modulo => "%",
                 CheckOperator.Exponent => "^",
                 CheckOperator.Invert => "!",
-                CheckOperator.Negate => "_",
+                CheckOperator.Negate => "-",
                 _ => throw new InvalidCastException($"Invalid operator: {op}"),
             };
         }

@@ -1,33 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace SCRDynamicDataCheckTester.Data
 {
     [Serializable]
     public struct ChaoSlot
     {
-        public int count { get; set; }
-        public int level { get; set; }
+        public int Count { get; set; }
+        public int Level { get; set; }
 
 
         public ChaoSlot(int count, int level)
         {
-            this.count = count;
-            this.level = level;
+            Count = count;
+            Level = level;
         }
     }
 
     [Serializable]
     public struct TeamSlot
     {
-        public int level { get; set; }
-        public int[] equipment { get; set; }
+        public int Level { get; set; }
 
-        public TeamSlot(int level, int[] equipment)
+        public int Health { get; set; }
+
+        public int MaxHealth { get; set; }
+
+        public int[] Equipment { get; set; }
+
+        public TeamSlot(int level, int maxhealth, int health, int[] equipment)
         {
-            this.level = level;
-            this.equipment = equipment;
+            Level = level;
+            Health = health;
+            MaxHealth = maxhealth;
+            Equipment = equipment;
         }
     }
 

@@ -9,8 +9,16 @@ namespace SCR.Expression
     {
         #region Regular Expressions
 
-        private static readonly Regex _illegalCheck = new("^[A-Za-z0-9+\\-\\/*%^><=!&| ()]*$");
-        private static readonly Regex _illegalReplace = new("[A-Za-z0-9+\\-\\/*%^><=!&| ()]*");
+        private const string _legalChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789. -!#|&<>=+-*/%^()";
+
+        private static readonly HashSet<char> _legalCharsMap;
+
+        static DataExpression()
+        {
+            _legalCharsMap = new HashSet<char>();
+            for(int i = 0; i < _legalChars.Length; i++)
+                _legalCharsMap.Add(_legalChars[i]);
+        }
 
         #endregion
 
@@ -46,11 +54,12 @@ namespace SCR.Expression
             if(accessor == null)
                 throw new ArgumentNullException(nameof(accessor), "Accessor cannot be null!");
 
-            // Check for illegal characters
-            if(!_illegalCheck.IsMatch(expression))
+            for(int i = 0; i < expression.Length; i++)
             {
-                string illegal = _illegalReplace.Replace(expression, "");
-                throw new DynamicDataExpressionException($"Illegal characters found: {illegal}", 0);
+                if(!_legalCharsMap.Contains(expression[i]))
+                {
+                    throw new DynamicDataExpressionException($"Illegal character \"{expression[i]}\"", i);
+                }
             }
 
             List<ISplitBlock> blocks = new();
@@ -216,7 +225,7 @@ namespace SCR.Expression
             {
                 if(b is ValueBlock<T> v)
                 {
-                    valueStack.Push(v.Type);
+                    valueStack.Push(v.RealType);
                     if(valueStack.Count > stackMax)
                         stackMax = valueStack.Count;
                 }
@@ -273,7 +282,7 @@ namespace SCR.Expression
                 }
                 else if(block is ValueBlock<T> v)
                 {
-                    result[i] = new StackValueBlock<T>(v.Handle, v.ID);
+                    result[i] = new StackValueBlock<T>(v.Handle, v.ID, v.Invert);
                 }
             }
 
