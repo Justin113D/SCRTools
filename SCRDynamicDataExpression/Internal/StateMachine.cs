@@ -46,6 +46,8 @@ namespace SCR.Expression.Internal
                 new(")", 1, false),
                 new("<>", 4, false),
                 new("!", 5, false),
+
+                new(null, -1, "Expected operator expression")
             },
             new State[] // 2: Value expression (Key)
             {
