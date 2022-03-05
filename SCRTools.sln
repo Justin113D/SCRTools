@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28729.10
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCRDialogEditor", "SCRDialogEditor\SCRDialogEditor.csproj", "{31C68FA6-A020-466D-A58D-49BEC711227A}"
 EndProject
@@ -19,6 +19,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCRDynamicDataExpression", "SCRDynamicDataExpression\SCRDynamicDataExpression.csproj", "{630B81B1-9292-4403-9E89-E250F8C5886E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCRDDXTester", "SCRDDXTester\SCRDDXTester.csproj", "{E9A9E114-6C67-448B-972D-9360C88B762F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{630B81B1-9292-4403-9E89-E250F8C5886E} = {630B81B1-9292-4403-9E89-E250F8C5886E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

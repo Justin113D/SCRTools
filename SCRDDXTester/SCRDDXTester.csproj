@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SCRCommon\SCRCommon.csproj" />
-    <ProjectReference Include="..\SCRDynamicDataCheck\SCRDynamicDataExpression.csproj" />
+    <ProjectReference Include="..\SCRDynamicDataExpression\SCRDynamicDataExpression.csproj" />
   </ItemGroup>
 
 </Project>
