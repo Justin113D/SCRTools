@@ -1,0 +1,68 @@
+﻿<Window x:Class="SCR.Tools.DynamicDataExpressionTester.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SCR.Tools.DynamicDataExpressionTester"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Json data container" TextAlignment="Center" FontWeight="Bold"/>
+
+            <TextBox Name="jsonBox" Grid.Row="1" Text="test" Margin="0 5" TextWrapping="Wrap" AcceptsReturn="True" 
+                     AcceptsTab="True" VerticalScrollBarVisibility="Auto" PreviewKeyDown="jsonBox_KeyDown" />
+
+            <StackPanel Grid.Row="2" Orientation="Horizontal" FlowDirection="RightToLeft">
+                <Button Content="Update" Width="50" Click="Update"/>
+                <Button Content="Reset" Width="50" Margin="10 0" Click="Reset"/>
+            </StackPanel>
+            
+        </Grid>
+
+        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+
+        <Grid Grid.Column="2" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Data expressions" TextAlignment="Center" FontWeight="Bold"/>
+
+            <ScrollViewer Grid.Row="1" Margin="0 5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="1" Name="expressions" Text="test" FontFamily="Consolas" VerticalScrollBarVisibility="Disabled"
+                             HorizontalScrollBarVisibility="Auto" AcceptsReturn="True" Background="Transparent" ToolTipService.IsEnabled="false" MouseMove="expressions_MouseMove"/>
+
+                    <TextBlock Grid.Column="1"  Name="syntaxHighlighting" FontFamily="Consolas" Text="~~~" Foreground="Red" Padding="3, 6" IsHitTestVisible="False"/>
+
+                    <TextBox Padding="5, 0" Name="results" IsReadOnly="True" VerticalScrollBarVisibility="Disabled" FontFamily="Consolas"/>
+                </Grid>
+            </ScrollViewer>
+            
+            <StackPanel Grid.Row="2" Orientation="Horizontal" FlowDirection="RightToLeft">
+                <Button Content="Evaluate" Width="50" Click="Evaluate"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,43 @@
+﻿<Window 
+    x:Class="SCR.Tools.TranslationEditor.Test.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:SCR.Tools.TranslationEditor.Test"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
+    Title="{Binding Texts.Title}" Height="250" Width="470">
+
+    
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+            </Style>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Margin="5">
+            <TextBlock Text="{Binding Texts.List}" Margin="0,0,0,10"/>
+            <ListView ItemsSource="{Binding Languages}" SelectedItem="{Binding CurrentLanguage, Mode=TwoWay}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding ListName}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <TextBlock Text="{Binding Texts.Loaded}" Margin="0,0,0,10"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Margin="5">
+            <TextBlock Text="{Binding Texts.Status}" />
+            <TextBlock Text="{Binding Texts.Info}" Margin="0,5,0,5"/>
+            <TextBlock Text="{Binding Texts.Thanks}"/>
+        </StackPanel>
+
+    </Grid>
+</Window>

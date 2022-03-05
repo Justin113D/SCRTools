@@ -3,22 +3,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCRDialogEditor", "SCRDialogEditor\SCRDialogEditor.csproj", "{31C68FA6-A020-466D-A58D-49BEC711227A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DialogEditor", "DialogEditor\DialogEditor.csproj", "{31C68FA6-A020-466D-A58D-49BEC711227A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCRTranslationEditor", "SCRTranslationEditor\SCRTranslationEditor.csproj", "{D0D4E997-FDC3-4718-A50D-1D84A35EA2E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TranslationEditor", "TranslationEditor\TranslationEditor.csproj", "{D0D4E997-FDC3-4718-A50D-1D84A35EA2E4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCRCommon", "SCRCommon\SCRCommon.csproj", "{F0EE3117-EF36-42FD-8BC2-9341246C49E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{F0EE3117-EF36-42FD-8BC2-9341246C49E0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCRLanguageTest", "SCRLanguageTest\SCRLanguageTest.csproj", "{0BC8ABCB-A381-47DC-A57E-099BBF1282CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TranslationTest", "TranslationTest\TranslationTest.csproj", "{0BC8ABCB-A381-47DC-A57E-099BBF1282CE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCRLevelCurvePreviewer", "SCRLevelCurvePreviewer\SCRLevelCurvePreviewer.csproj", "{B1651F73-D4D9-4A1C-A2E8-6D053BDDEA91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LevelCurvePreviewer", "LevelCurvePreviewer\LevelCurvePreviewer.csproj", "{B1651F73-D4D9-4A1C-A2E8-6D053BDDEA91}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F0EE3117-EF36-42FD-8BC2-9341246C49E0} = {F0EE3117-EF36-42FD-8BC2-9341246C49E0}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCRDynamicDataExpression", "SCRDynamicDataExpression\SCRDynamicDataExpression.csproj", "{630B81B1-9292-4403-9E89-E250F8C5886E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicDataExpression", "DynamicDataExpression\DynamicDataExpression.csproj", "{630B81B1-9292-4403-9E89-E250F8C5886E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCRDDXTester", "SCRDDXTester\SCRDDXTester.csproj", "{E9A9E114-6C67-448B-972D-9360C88B762F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicDataExpressionTester", "DynamicDataExpressionTester\DynamicDataExpressionTester.csproj", "{E9A9E114-6C67-448B-972D-9360C88B762F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{630B81B1-9292-4403-9E89-E250F8C5886E} = {630B81B1-9292-4403-9E89-E250F8C5886E}
 	EndProjectSection

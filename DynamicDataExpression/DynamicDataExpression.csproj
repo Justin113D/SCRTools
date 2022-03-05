@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0-windows</TargetFramework>
+		<UseWPF>true</UseWPF>
+		<RootNamespace>SCR.Tools.DynamicDataExpression</RootNamespace>
+		<Authors>SonicChroniclesReimagined</Authors>
+		<RootNamespace>SCR.Tools.DynamicDataExpression</RootNamespace>
+		<AssemblyName>SCR.Tools.DynamicDataExpression</AssemblyName>
+	</PropertyGroup>
+
+</Project>

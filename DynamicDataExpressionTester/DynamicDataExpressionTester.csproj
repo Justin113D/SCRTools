@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net5.0-windows</TargetFramework>
+		<UseWPF>true</UseWPF>
+		<ApplicationIcon />
+		<StartupObject>SCR.Tools.DynamicDataExpressionTester.Program</StartupObject>
+		<RootNamespace>SCR.Tools.DynamicDataExpressionTester</RootNamespace>
+		<AssemblyName>SCR.Tools.DynamicDataExpressionTester</AssemblyName>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\SCRCommon\Common.csproj" />
+		<ProjectReference Include="..\SCRDynamicDataExpression\DynamicDataExpression.csproj" />
+	</ItemGroup>
+
+</Project>
