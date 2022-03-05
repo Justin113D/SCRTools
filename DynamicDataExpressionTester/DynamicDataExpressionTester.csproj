@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>net5.0-windows</TargetFramework>
+		<TargetFramework>net6.0-windows</TargetFramework>
 		<UseWPF>true</UseWPF>
 		<ApplicationIcon />
 		<StartupObject>SCR.Tools.DynamicDataExpressionTester.Program</StartupObject>
@@ -11,6 +11,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Common\Common.csproj" />
+		<ProjectReference Include="..\DynamicDataExpression\DynamicDataExpression.csproj" />
 		<ProjectReference Include="..\SCRCommon\Common.csproj" />
 		<ProjectReference Include="..\SCRDynamicDataExpression\DynamicDataExpression.csproj" />
 	</ItemGroup>

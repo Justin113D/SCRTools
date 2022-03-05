@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net5.0-windows</TargetFramework>
+		<TargetFramework>net6.0-windows</TargetFramework>
 		<OutputType>Library</OutputType>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<UseWPF>true</UseWPF>
@@ -10,14 +10,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Fody" Version="6.3.0"/>
+		<PackageReference Include="Fody" Version="6.3.0" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-		<PackageReference Include="PropertyChanged.Fody" Version="3.3.1"/>
+		<PackageReference Include="PropertyChanged.Fody" Version="3.3.1" />
 		<PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Resource Include="Icons\**" CopyToOutputDirectory="PreserveNewest"/>
+		<Resource Include="Icons\**" CopyToOutputDirectory="PreserveNewest" />
 		<Page Remove="WPF\Styling\Window.xaml" />
 		<EmbeddedResource Include="WPF\Styling\Window.xaml" />
 	</ItemGroup>
