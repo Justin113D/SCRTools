@@ -4,13 +4,12 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <RootNamespace>SCR.Tools.TranslationEditor.Test</RootNamespace>
-	<AssemblyName>SCR.Tools.TranslationTest</AssemblyName>
+    <RootNamespace>SCR.Tools.TranslationEditor.Demo</RootNamespace>
+	<AssemblyName>SCR.Tools.TranslationEditor.Demo</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\SCRCommon\Common.csproj" />
   </ItemGroup>
 
     <ItemGroup>

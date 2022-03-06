@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TranslationEditor", "Transl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{F0EE3117-EF36-42FD-8BC2-9341246C49E0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TranslationTest", "TranslationTest\TranslationTest.csproj", "{0BC8ABCB-A381-47DC-A57E-099BBF1282CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TranslationDemo", "TranslationDemo\TranslationDemo.csproj", "{0BC8ABCB-A381-47DC-A57E-099BBF1282CE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LevelCurvePreviewer", "LevelCurvePreviewer\LevelCurvePreviewer.csproj", "{B1651F73-D4D9-4A1C-A2E8-6D053BDDEA91}"
 	ProjectSection(ProjectDependencies) = postProject

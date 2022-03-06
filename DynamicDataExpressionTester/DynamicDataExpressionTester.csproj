@@ -13,8 +13,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Common\Common.csproj" />
 		<ProjectReference Include="..\DynamicDataExpression\DynamicDataExpression.csproj" />
-		<ProjectReference Include="..\SCRCommon\Common.csproj" />
-		<ProjectReference Include="..\SCRDynamicDataExpression\DynamicDataExpression.csproj" />
 	</ItemGroup>
 
 </Project>
