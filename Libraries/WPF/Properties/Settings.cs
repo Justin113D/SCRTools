@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Configuration;
 
-namespace SCR.Tools.Properties
+namespace SCR.Tools.WPF.Properties
 {
     internal sealed partial class Settings : ApplicationSettingsBase
     {

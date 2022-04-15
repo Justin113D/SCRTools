@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SCR.Tools.UndoRedo
+﻿namespace SCR.Tools.UndoRedo
 {
     /// <summary>
     /// Undo-Redo Change system
@@ -14,46 +8,6 @@ namespace SCR.Tools.UndoRedo
         public static ChangeTracker Global { get; private set; }
 
         #region Private
-        private class TrackGroup : ITrackable
-        {
-            public readonly List<ITrackable> changes;
-
-            public readonly List<Action> postGroupActions;
-
-            public TrackGroup()
-            {
-                changes = new List<ITrackable>();
-                postGroupActions = new List<Action>();
-            }
-
-            public override bool Equals(object obj)
-            {
-                return obj is TrackGroup group &&
-                       EqualityComparer<List<ITrackable>>.Default.Equals(changes, group.changes) &&
-                       EqualityComparer<List<Action>>.Default.Equals(postGroupActions, group.postGroupActions);
-            }
-
-            public override int GetHashCode()
-            {
-                return HashCode.Combine(changes, postGroupActions);
-            }
-
-            public void Redo()
-            {
-                for (int i = 0; i < changes.Count; i++)
-                    changes[i].Redo();
-                foreach (Action a in postGroupActions)
-                    a.Invoke();
-            }
-
-            public void Undo()
-            {
-                for (int i = changes.Count - 1; i >= 0; i--)
-                    changes[i].Undo();
-                foreach (Action a in postGroupActions)
-                    a.Invoke();
-            }
-        }
 
         /// <summary>
         /// Index of the current change
@@ -63,7 +17,7 @@ namespace SCR.Tools.UndoRedo
         /// <summary>
         /// Current tracking group
         /// </summary>
-        private TrackGroup _currentGroup;
+        private TrackGroup? _currentGroup;
 
         /// <summary>
         /// Amount of grouping
@@ -106,7 +60,7 @@ namespace SCR.Tools.UndoRedo
 
         static ChangeTracker()
         {
-            Global = new ChangeTracker();
+            Global = new();
         }
 
         /// <summary>
@@ -182,8 +136,17 @@ namespace SCR.Tools.UndoRedo
         {
             if (_currentGroup == null)
                 throw new InvalidOperationException("No grouping active!");
-            _currentGroup.postGroupActions.Add(action);
+            _currentGroup.PostGroupActions.Add(action);
             action.Invoke();
+        }
+
+        public void GroupNotifyPropertyChanged(Action<string> action, string name)
+        {
+            if (_currentGroup == null)
+                throw new InvalidOperationException("No grouping active!");
+
+            _currentGroup.NotifyProperties.Add((action, name));
+            action.Invoke(name);
         }
 
         /// <summary>
@@ -192,7 +155,7 @@ namespace SCR.Tools.UndoRedo
         public void EndGroup(bool discard = false)
         {
             _groupings--;
-            if (_groupings > 0 || _currentGroup.changes.Count == 0)
+            if (_currentGroup == null || _groupings > 0 || _currentGroup.Changes.Count == 0)
                 return;
 
             if (discard)
@@ -204,8 +167,8 @@ namespace SCR.Tools.UndoRedo
 
             ClearRedos();
 
-            if (_currentGroup.changes.Count == 1 && _currentGroup.postGroupActions.Count == 0)
-                _trackedChanges.Add(_currentGroup.changes[0]);
+            if (_currentGroup.Changes.Count == 1 && _currentGroup.PostGroupActions.Count == 0)
+                _trackedChanges.Add(_currentGroup.Changes[0]);
             else
                 _trackedChanges.Add(_currentGroup);
 
@@ -214,7 +177,7 @@ namespace SCR.Tools.UndoRedo
 
         /// <summary>
         /// Adds a change to undo/redo <br/>
-        /// Performs "redo" after tracking, as a way to enact the change
+        /// Performs "redo" after tracking, performing the change
         /// </summary>
         /// <param name="change">The change</param>
         public void TrackChange(ITrackable change)
@@ -222,13 +185,16 @@ namespace SCR.Tools.UndoRedo
             change.Redo();
             if (_currentGroup != null)
             {
-                _currentGroup.changes.Add(change);
+                _currentGroup.Changes.Add(change);
                 return;
             }
 
             ClearRedos();
             _trackedChanges.Add(change);
         }
+
+        public void BlankChange()
+            => TrackChange(new BlankChange());
 
         private void ClearRedos()
         {
@@ -240,8 +206,9 @@ namespace SCR.Tools.UndoRedo
             else
                 _currentChangeIndex++;
 
-            if (_currentChangeIndex < _trackedChanges.Count - 1)
-                _trackedChanges.RemoveRange(_currentChangeIndex, _trackedChanges.Count - _currentChangeIndex);
+            int removeCount = _trackedChanges.Count - _currentChangeIndex;
+            if (removeCount > 0)
+                _trackedChanges.RemoveRange(_currentChangeIndex, removeCount);
         }
 
         public Pin PinCurrent()
