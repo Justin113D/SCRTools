@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UndoRedo", "Libraries\UndoR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPF", "Libraries\WPF\WPF.csproj", "{68546D13-C066-4BA1-8BBF-069DFF65E982}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Libraries\Common\Common.csproj", "{6562BC8C-3866-428B-A636-D880F7EFFF64}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TranslationEditorTests", "TranslationEditor\TranslationEditorTests\TranslationEditorTests.csproj", "{C7D4585B-F20B-4268-B2BC-2496C75C42F9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TranslationEditor.Data", "TranslationEditor\TranslationEditor.Data\TranslationEditor.Data.csproj", "{AB1AB0BB-3BDD-4E4A-979A-4595162E919A}"
@@ -18,9 +20,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicDataExpression", "Utilities\DynamicDataExpression\DynamicDataExpression.csproj", "{630B81B1-9292-4403-9E89-E250F8C5886E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicDataExpressionTester", "Utilities\DynamicDataExpressionTester\DynamicDataExpressionTester.csproj", "{E9A9E114-6C67-448B-972D-9360C88B762F}"
-	ProjectSection(ProjectDependencies) = postProject
-		{630B81B1-9292-4403-9E89-E250F8C5886E} = {630B81B1-9292-4403-9E89-E250F8C5886E}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OldTranslationEditor", "OldTranslationEditor\OldTranslationEditor.csproj", "{FBC57C43-4120-48F5-BCE4-D9784116AD55}"
 EndProject
@@ -31,8 +30,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TranslationEditor", "TranslationEditor", "{66918D1F-8361-4ACD-AEC9-BEBF48433D73}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{DC839CAB-96F8-4966-8660-6A0B3969B7AA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{6562BC8C-3866-428B-A636-D880F7EFFF64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
