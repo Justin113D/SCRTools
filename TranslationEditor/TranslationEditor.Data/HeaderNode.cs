@@ -15,7 +15,7 @@ namespace SCR.Tools.TranslationEditor.Data
         private string _author;
         private string _language;
         private readonly SortedList<string, StringNode> _stringNodes;
-        private List<Version> _versions;
+        private readonly List<Version> _versions;
 
         #endregion
 

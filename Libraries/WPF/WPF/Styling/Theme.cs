@@ -28,6 +28,6 @@ namespace SCR.Tools.WPF.Styling
         /// <param name="theme"></param>
         /// <returns></returns>
         public static Uri GetUri(this Theme theme)
-            => new($"/SCR.Tools.Common;component/WPF/Styling/Themes/{theme}.xaml", UriKind.RelativeOrAbsolute);
+            => new($"/SCR.Tools.WPF;component/WPF/Styling/Themes/{theme}.xaml", UriKind.RelativeOrAbsolute);
     }
 }

@@ -9,15 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Page Remove="WPF\Styling\Window.xaml" />
+	  <PackageReference Include="PropertyChanged.Fody" Version="3.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="PropertyChanged.Fody" Version="3.4.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Icons\*.png">
+	  <Page Remove="WPF\Styling\Window.xaml" />
+	  <EmbeddedResource Include="WPF\Styling\Window.xaml" />
+	  <Resource Include="Icons\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

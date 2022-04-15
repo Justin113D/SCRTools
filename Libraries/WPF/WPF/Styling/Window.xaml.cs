@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Interop;
 using System.Windows.Markup;
 using System.Windows.Shell;
 
@@ -64,7 +65,7 @@ namespace SCR.Tools.WPF.Styling
 
         private static readonly ControlTemplate _template;
 
-        private Button _maximizeButton;
+        private Button? _maximizeButton;
 
         static Window()
         {
@@ -99,9 +100,6 @@ namespace SCR.Tools.WPF.Styling
 
             AllowsTransparency = true;
             WindowStyle = WindowStyle.None;
-
-            MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
-            MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth;
 
             Template = _template;
         }
@@ -139,9 +137,23 @@ namespace SCR.Tools.WPF.Styling
             Close();
         }
 
-        private void OnStateChanged(object sender, EventArgs e)
+        private void OnStateChanged(object? sender, EventArgs e)
         {
-            _maximizeButton.Content = WindowState == WindowState.Maximized ? "◱" : "☐";
+            if(WindowState == WindowState.Maximized)
+            {
+                ScreenBounds.GetScreenWorkWidthHeight(this, out double width, out double height);
+                MaxWidth = width + ShadowPadding.Left + ShadowPadding.Right;
+                MaxHeight = height + ShadowPadding.Top + ShadowPadding.Bottom;
+                if (_maximizeButton != null)
+                    _maximizeButton.Content =  "◱";
+            }
+            else
+            {
+                MaxWidth = double.PositiveInfinity;
+                MaxHeight = double.PositiveInfinity;
+                if (_maximizeButton != null)
+                    _maximizeButton.Content = "☐";
+            }
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
