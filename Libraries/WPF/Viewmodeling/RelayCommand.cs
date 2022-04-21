@@ -13,10 +13,11 @@ namespace SCR.Tools.Viewmodeling
         /// </summary>
         private readonly Action<ParameterType> _action;
 
+#pragma warning disable 0067
         /// <summary>
         /// The event thats fired when the <see cref="CanExecute(object)"/> value has changed
         /// </summary>
-        public event EventHandler CanExecuteChanged = (sender, e) => { };
+        public event EventHandler? CanExecuteChanged = (sender, e) => { };
 
         /// <summary>
         /// Default constructor
@@ -31,18 +32,18 @@ namespace SCR.Tools.Viewmodeling
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        public bool CanExecute(object parameter) => true;
+        public bool CanExecute(object? parameter) => true;
 
         /// <summary>
         /// Executes the commands Action
         /// </summary>
         /// <param name="parameter"></param>
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
-            if(typeof(ParameterType) == null || parameter.GetType() == typeof(ParameterType))
-                _action((ParameterType)parameter);
+            if(parameter is ParameterType p)
+                _action(p);
             else
-                throw new ArgumentException("Parameter of type " + parameter.GetType() + ", but it should be " + typeof(ParameterType), "parameter");
+                throw new ArgumentException("Parameter of type " + parameter?.GetType() + ", but it should be " + typeof(ParameterType), nameof(parameter));
         }
     }
 
@@ -59,7 +60,7 @@ namespace SCR.Tools.Viewmodeling
         /// <summary>
         /// The event thats fired when the <see cref="CanExecute(object)"/> value has changed
         /// </summary>
-        public event EventHandler CanExecuteChanged = (sender, e) => { };
+        public event EventHandler? CanExecuteChanged = (sender, e) => { };
 
         /// <summary>
         /// Constructor
@@ -75,16 +76,13 @@ namespace SCR.Tools.Viewmodeling
         /// </summary>
         /// <param name="parameter">Input parameter (unused)</param>
         /// <returns></returns>
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
+        public bool CanExecute(object? parameter) => true;
 
         /// <summary>
         /// Executes the commands Action
         /// </summary>
         /// <param name="parameter">Input parameter (unused)</param>
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
             _action();
         }

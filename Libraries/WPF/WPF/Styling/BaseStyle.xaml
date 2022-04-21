@@ -24,24 +24,28 @@
 
     <!-- Red Colors-->
     <SolidColorBrush x:Key="Red" Color="{x:Static local:Colors.Red}"/>
+    <SolidColorBrush x:Key="RedTransparent" Color="#00dd2e44"/>
     <SolidColorBrush x:Key="Red.Disabled" Color="#813A43"/>
     <SolidColorBrush x:Key="Red.Highlighted" Color="#FF3953"/>
     <SolidColorBrush x:Key="Red.Selected" Color="#B00E25"/>
 
     <!-- Blue Colors-->
     <SolidColorBrush x:Key="Blue" Color="{x:Static local:Colors.Blue}"/>
+    <SolidColorBrush x:Key="BlueTransparent" Color="#0055acee"/>
     <SolidColorBrush x:Key="Blue.Disabled" Color="#456379"/>
     <SolidColorBrush x:Key="Blue.Highlighted" Color="#4DA2E5"/>
     <SolidColorBrush x:Key="Blue.Selected" Color="#1472BA"/>
 
     <!-- Green Colors -->
     <SolidColorBrush x:Key="Green" Color="{x:Static local:Colors.Green}"/>
+    <SolidColorBrush x:Key="GreenTransparent" Color="#0078b14e"/>
     <SolidColorBrush x:Key="Green.Disabled" Color="#677E5A"/>
     <SolidColorBrush x:Key="Green.Highlighted" Color="#86C961"/>
     <SolidColorBrush x:Key="Green.Selected" Color="#509826"/>
 
     <!-- General Colors-->
     <SolidColorBrush x:Key="Yellow" Color="{x:Static local:Colors.Yellow}"/>
+    <SolidColorBrush x:Key="YellowTransparent" Color="#00f4900c"/>
 
     <!-- Button Styles -->
     <Style TargetType="{x:Type Button}">
@@ -174,8 +178,55 @@
     </Style>
     <Style TargetType="{x:Type CheckBox}">
         <Setter Property="Foreground" Value="{DynamicResource FontBrush}"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="Background" Value="{DynamicResource BG2}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BG3}"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CheckBox}">
+                    <BulletDecorator Background="Transparent" VerticalAlignment="{TemplateBinding VerticalAlignment}">
+                        <BulletDecorator.Bullet>
+                            <Border x:Name="Border"
+                                MinWidth="{TemplateBinding Width}" 
+                                MinHeight="{TemplateBinding Height}" 
+                                CornerRadius="0" 
+                                Background="{TemplateBinding Background}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush="{TemplateBinding BorderBrush}">
+                                <TextBlock 
+                                    x:Name="CheckMark"
+                                    Text="✔"
+                                    FontSize="{TemplateBinding FontSize}"
+                                    Foreground="{TemplateBinding Foreground}"/>
+                            </Border>
+                        </BulletDecorator.Bullet>
+                        <ContentPresenter Margin="4,0,0,0"
+                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                          RecognizesAccessKey="True"/>
+                    </BulletDecorator>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="false">
+                            <Setter TargetName="CheckMark" Property="Visibility" Value="Hidden"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource HighlightedBG}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource PressedBG}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource OutlineHG}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource DisabledBG}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource DisabledBG}" />
+                            <Setter Property="Foreground" Value="#888888"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!--Modified template for menu item menus-->
@@ -456,6 +507,13 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
+    <DataTemplate x:Key="MenuItemHeader">
+        <TextBlock DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type MenuItem}}}"
+            Text="{Binding Header}" 
+            Foreground="{Binding Foreground}"
+            FontSize="{Binding FontSize}"
+            FontWeight="{Binding FontWeight}"/>
+    </DataTemplate>
     <Style TargetType="{x:Type MenuItem}">
         <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
         <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
@@ -464,7 +522,11 @@
         <Setter Property="FontSize" Value="15px"/>
         <Setter Property="Foreground" Value="{DynamicResource FontBrush}"/>
         <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HeaderTemplate" Value="{DynamicResource MenuItemHeader}"/>
         <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource HintFontBrush}"/>
+            </Trigger>
             <Trigger Property="Role" Value="TopLevelHeader">
                 <Setter Property="Padding" Value="7,2,8,3"/>
                 <Setter Property="Template" Value="{DynamicResource {ComponentResourceKey ResourceId=TopLevelHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}"/>

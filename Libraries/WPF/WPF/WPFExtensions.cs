@@ -6,7 +6,7 @@ namespace SCR.Tools.WPF
 {
     public static class WPFExtensions
     {
-        public static T FindParent<T>(DependencyObject child) where T : DependencyObject
+        public static T? FindParent<T>(DependencyObject child) where T : DependencyObject
         {
             //get parent item
             DependencyObject parentObject = VisualTreeHelper.GetParent(child);
@@ -29,8 +29,8 @@ namespace SCR.Tools.WPF
         /// <returns></returns>
         public static int GetDepth(this TreeViewItem item)
         {
-            TreeViewItem parent;
-            while ((parent = GetParent(item)) != null)
+            TreeViewItem? parent = GetParent(item);
+            if(parent != null)
             {
                 return GetDepth(parent) + 1;
             }
@@ -42,7 +42,7 @@ namespace SCR.Tools.WPF
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        private static TreeViewItem GetParent(TreeViewItem item)
+        private static TreeViewItem? GetParent(TreeViewItem item)
         {
             var parent = VisualTreeHelper.GetParent(item);
             while (!(parent is TreeViewItem || parent is TreeView))

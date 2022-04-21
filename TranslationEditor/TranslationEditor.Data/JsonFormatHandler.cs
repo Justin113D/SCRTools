@@ -7,7 +7,7 @@ namespace SCR.Tools.TranslationEditor.Data
 {
     public static class JsonFormatHandler
     {
-        private const string formatField = "format";
+        private const string _defaultLanguage = "DefaultLanguage";
 
         #region To Json
 
@@ -17,8 +17,8 @@ namespace SCR.Tools.TranslationEditor.Data
             using Utf8JsonWriter jsonWriter = new(stream);
 
             jsonWriter.WriteStartObject();
-            jsonWriter.WriteString(formatField, header.Name);
-            jsonWriter.WriteString(nameof(HeaderNode.Language), header.Language);
+            jsonWriter.WriteString(nameof(HeaderNode.Name), header.Name);
+            jsonWriter.WriteString(_defaultLanguage, header.Language);
             jsonWriter.WriteString(nameof(HeaderNode.Author), header.Author);
 
             jsonWriter.WriteStartArray(nameof(HeaderNode.Versions));
@@ -81,9 +81,7 @@ namespace SCR.Tools.TranslationEditor.Data
 
         public static HeaderNode ReadFormat(string text)
         {
-            ChangeTracker before = ChangeTracker.Global;
-            ChangeTracker fileReadTracker = new();
-            fileReadTracker.Use();
+            ChangeTracker.Global.BeginGroup();
 
             HeaderNode result = new();
 
@@ -96,12 +94,12 @@ namespace SCR.Tools.TranslationEditor.Data
                 }
 
                 // reading format, language and author
-                JsonNode? formatName = json[formatField];
+                JsonNode? formatName = json[nameof(HeaderNode.Name)];
                 if (formatName == null)
                     throw new InvalidDataException("Format cant be null");
 
                 result.Name = formatName.GetValue<string>();
-                result.Language = json[nameof(HeaderNode.Language)]?.GetValue<string>() ?? "";
+                result.Language = json[_defaultLanguage]?.GetValue<string>() ?? "";
                 result.Author = json[nameof(HeaderNode.Author)]?.GetValue<string>() ?? "";
 
                 // reading versions
@@ -129,11 +127,11 @@ namespace SCR.Tools.TranslationEditor.Data
             }
             catch
             {
-                before.Use();
+                ChangeTracker.Global.EndGroup(true);
                 throw;
             }
 
-            before.Use();
+            ChangeTracker.Global.EndGroup();
             return result;
         }
 

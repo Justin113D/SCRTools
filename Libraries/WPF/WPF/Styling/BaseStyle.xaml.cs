@@ -31,7 +31,7 @@ namespace SCR.Tools.WPF.Styling
 
                 foreach (var app in _initiatedApps)
                 {
-                    var rd = FindBaseStyle(app.Resources, out BaseStyle bs).MergedDictionaries;
+                    var rd = FindBaseStyle(app.Resources, out BaseStyle? bs)?.MergedDictionaries;
                     if (rd == null)
                     {
                         app.Resources.MergedDictionaries.Add(_themeBaseStyle);
@@ -60,7 +60,7 @@ namespace SCR.Tools.WPF.Styling
         /// <param name="resources">Resource dictionary containing the base style</param>
         /// <param name="style">Base style inside the resources</param>
         /// <returns></returns>
-        private static ResourceDictionary FindBaseStyle(ResourceDictionary resources, out BaseStyle style)
+        private static ResourceDictionary? FindBaseStyle(ResourceDictionary resources, out BaseStyle? style)
         {
             foreach (ResourceDictionary rd in resources.MergedDictionaries)
             {
@@ -70,7 +70,7 @@ namespace SCR.Tools.WPF.Styling
                     return resources;
                 }
 
-                ResourceDictionary bs = FindBaseStyle(rd, out style);
+                ResourceDictionary? bs = FindBaseStyle(rd, out style);
                 if (bs != null)
                     return bs;
             }
@@ -91,7 +91,7 @@ namespace SCR.Tools.WPF.Styling
 
             // Find out if the app was instantiated with a base style already.
             // if none is found, create and add one
-            ResourceDictionary rd = FindBaseStyle(app.Resources, out _);
+            ResourceDictionary? rd = FindBaseStyle(app.Resources, out _);
             if (rd == null)
             {
                 rd = app.Resources;

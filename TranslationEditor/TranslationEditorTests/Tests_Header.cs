@@ -315,7 +315,7 @@ namespace SCR.Tools.TranslationEditor.Tests
             string project = header.CompileProject();
 
             HeaderNode loadHeader = TestFormat();
-            loadHeader.LoadProject(project, out _);
+            loadHeader.LoadProject(project);
 
             Assert.AreEqual(loadHeader[node1.Name].NodeValue, node1.NodeValue);
             Assert.AreEqual(loadHeader[node2.Name].NodeValue, node2.NodeValue);

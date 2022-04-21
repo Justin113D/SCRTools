@@ -198,9 +198,13 @@ namespace SCR.Tools.TranslationEditor.Data
 
         internal void ImportValue(string value, int changedVersionIndex, bool keepDefault)
         {
+            ChangeTracker.Global.BeginGroup();
+
             SetTrackNodeValue(value);
             SetTrackKeepDefault(keepDefault);
             ChangedVersionIndex = changedVersionIndex;
+
+            ChangeTracker.Global.EndGroup();
         }
 
         /// <summary>

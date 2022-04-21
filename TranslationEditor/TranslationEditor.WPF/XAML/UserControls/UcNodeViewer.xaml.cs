@@ -16,12 +16,13 @@ using System.Windows.Shapes;
 namespace SCR.Tools.TranslationEditor.WPF.XAML.UserControls
 {
     /// <summary>
-    /// Interaction logic for UcMenuBar.xaml
+    /// Interaction logic for UcNodeViewer.xaml
     /// </summary>
-    public partial class UcMenuBar : UserControl
+    public partial class UcNodeViewer : UserControl
     {
-        public UcMenuBar()
+        public UcNodeViewer()
         {
+            
             InitializeComponent();
         }
     }

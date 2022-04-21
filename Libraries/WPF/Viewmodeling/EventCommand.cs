@@ -5,14 +5,15 @@ namespace SCR.Tools.Viewmodeling
 {
     public class EventCommand : ICommand
     {
-        public event EventHandler<object> Executed;
+        public event EventHandler<object?>? Executed;
 
-        public event EventHandler CanExecuteChanged;
+        #pragma warning disable 0067
+        public event EventHandler? CanExecuteChanged;
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
             => true;
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
             => Executed?.Invoke(this, parameter);
     }
 }

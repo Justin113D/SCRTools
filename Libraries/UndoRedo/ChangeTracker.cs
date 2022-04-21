@@ -34,10 +34,10 @@
         public struct Pin
         {
             private readonly ChangeTracker tracker;
-            private readonly ITrackable tracking;
+            private readonly ITrackable? tracking;
             private readonly int index;
 
-            public Pin(ChangeTracker tracker, ITrackable tracking, int index)
+            public Pin(ChangeTracker tracker, ITrackable? tracking, int index)
             {
                 this.tracker = tracker;
                 this.tracking = tracking;
@@ -150,8 +150,9 @@
         }
 
         /// <summary>
-        /// Finishes the grouping
+        /// Finishes the grouping 
         /// </summary>
+        /// <param name="discard">Undoes any changes and does not add the final grouping. Also resets <see cref="ResetOnNextChange"/></param>
         public void EndGroup(bool discard = false)
         {
             _groupings--;
@@ -162,12 +163,15 @@
             {
                 _currentGroup.Undo();
                 _currentGroup = null;
+                ResetOnNextChange = false;
                 return;
             }
 
             ClearRedos();
 
-            if (_currentGroup.Changes.Count == 1 && _currentGroup.PostGroupActions.Count == 0)
+            if (_currentGroup.Changes.Count == 1 
+                && _currentGroup.PostGroupActions.Count == 0
+                && _currentGroup.NotifyProperties.Count == 0)
                 _trackedChanges.Add(_currentGroup.Changes[0]);
             else
                 _trackedChanges.Add(_currentGroup);

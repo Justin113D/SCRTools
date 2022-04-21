@@ -73,7 +73,8 @@ namespace SCR.Tools.TranslationEditor.Data
         public Version Version
         {
             get => _versions[^1];
-            set {
+            set
+            {
                 if (value <= _versions[^1])
                 {
                     ChangeTracker.Global.BlankChange();
@@ -137,14 +138,14 @@ namespace SCR.Tools.TranslationEditor.Data
             ChangeTracker.Global.BeginGroup();
 
             bool finished = false;
-            while(!finished)
+            while (!finished)
             {
                 int currentIndex = _versions.Count - 1;
 
                 if (currentIndex == -1)
                     break;
 
-                foreach(StringNode s in _stringNodes.Values)
+                foreach (StringNode s in _stringNodes.Values)
                 {
                     if (s.VersionIndex == currentIndex)
                     {
@@ -251,7 +252,7 @@ namespace SCR.Tools.TranslationEditor.Data
                     () => _stringNodes.Remove(key)
                 ));
 
-                if(updateVersionIndex)
+                if (updateVersionIndex)
                     stringNode.VersionIndex = currentVersionIndex;
             }
 
@@ -274,7 +275,7 @@ namespace SCR.Tools.TranslationEditor.Data
 
             _stringNodes.Add(node.Name.ToLower(), node);
         }
-    
+
         /// <summary>
         /// Used for adding versions when reading from a format
         /// </summary>
@@ -364,21 +365,19 @@ namespace SCR.Tools.TranslationEditor.Data
 
         public string CompileProject()
         {
-            RemoveUnusedVersions();
-
             StringBuilder builder = new($"{Name}\n{Version}\n{Language}\n{Author}\n");
 
             foreach (KeyValuePair<string, StringNode> pair in _stringNodes)
             {
                 StringNode node = pair.Value;
-                if(node.ChangedVersionIndex == -1)
+                if (node.ChangedVersionIndex == -1)
                 {
                     // nodes that have not received any attention by
                     // the user should just not be added
                     continue;
                 }
 
-                if(node.KeepDefault || node.ChangedVersionIndex < node.VersionIndex)
+                if (node.KeepDefault || node.ChangedVersionIndex < node.VersionIndex)
                 {
                     builder.Append(' ');
                     if (node.KeepDefault)
@@ -400,87 +399,78 @@ namespace SCR.Tools.TranslationEditor.Data
             return builder.ToString();
         }
 
-        public void LoadProject(string project, out string[] missingKeys)
+        public void LoadProject(string project)
         {
-            using StringReader reader = new(project);
-
             ChangeTracker.Global.BeginGroup();
-            int versionIndex;
             try
             {
-                versionIndex = ReadMetaData(reader);
+                using StringReader reader = new(project);
+                int versionIndex = ReadMetaData(reader);
+
+                // working through the strings
+                HashSet<string> remainingKeys = _stringNodes.Keys.ToHashSet();
+                HashSet<string> missingKeysInFormat = new();
+
+                string? line = reader.ReadLine();
+                int lineNumber = 4;
+                while (line != null)
+                {
+                    bool keepDefault = false;
+                    int changedVersionIndex = versionIndex;
+
+                    int startIndex = 0;
+                    if (line[0] == ' ')
+                    {
+                        startIndex++; // skipping first space
+
+                        // checking whether it is set to keepDefault
+                        if (line[startIndex] == '#')
+                        {
+                            keepDefault = true;
+                            startIndex++;
+                        }
+
+                        // if the next symbol isnt a space, then there must be a changed-version index
+                        if (line[startIndex] != ' ')
+                        {
+                            // the changedversionindex ends with a space
+                            int keyStart = line.IndexOf(' ', startIndex);
+                            string number = line[startIndex..keyStart];
+                            if (!int.TryParse(number, out changedVersionIndex))
+                            {
+                                throw new InvalidDataException($"Version index one line {lineNumber} couldn't be parsed");
+                            }
+                            startIndex = keyStart;
+                        }
+                        // skip the last space
+                        startIndex++;
+                    }
+                    int valueStart = line.IndexOf(' ', startIndex);
+
+                    string key = line[startIndex..valueStart];
+                    string value = line[++valueStart..].Unescape();
+
+                    if (remainingKeys.Remove(key))
+                    {
+                        _stringNodes[key].ImportValue(value, changedVersionIndex, keepDefault);
+                    }
+
+                    line = reader.ReadLine();
+                    lineNumber++;
+                }
+
+                // resetting the remaining keys
+                foreach (string key in remainingKeys)
+                {
+                    _stringNodes[key].ResetValue();
+                }
+
             }
             catch
             {
-                ChangeTracker.Global.EndGroup();
+                ChangeTracker.Global.EndGroup(true);
                 throw;
             }
-
-            // working through the strings
-            HashSet<string> remainingKeys = _stringNodes.Keys.ToHashSet();
-            HashSet<string> missingKeysInFormat = new();
-
-            string? line = reader.ReadLine();
-            int lineNumber = 4;
-            while(line != null)
-            {
-                bool keepDefault = false;
-                int changedVersionIndex = versionIndex;
-
-                int startIndex = 0;
-                if(line[0] == ' ')
-                {
-                    startIndex++; // skipping first space
-
-                    // checking whether it is set to keepDefault
-                    if(line[startIndex] == '#')
-                    {
-                        keepDefault = true;
-                        startIndex++; 
-                    }
-
-                    // if the next symbol isnt a space, then there must be a changed-version index
-                    if(line[startIndex] != ' ')
-                    {
-                        // the changedversionindex ends with a space
-                        int keyStart = line.IndexOf(' ', startIndex);
-                        string number = line[startIndex..keyStart];
-                        if(!int.TryParse(number, out changedVersionIndex))
-                        {
-                            ChangeTracker.Global.EndGroup();
-                            throw new InvalidDataException($"Version index one line {lineNumber} couldn't be parsed");
-                        }
-                        startIndex = keyStart;
-                    }
-                    // skip the last space
-                    startIndex++;
-                }
-                int valueStart = line.IndexOf(' ', startIndex);
-
-                string key = line[startIndex..valueStart];
-                string value = line[++valueStart..].Unescape();
-
-                if(remainingKeys.Remove(key))
-                {
-                    _stringNodes[key].ImportValue(value, changedVersionIndex, keepDefault);
-                }
-                else if(!missingKeysInFormat.Add(key))
-                {
-                    ChangeTracker.Global.EndGroup();
-                    throw new InvalidDataException($"Key {key} found twice!");
-                }
-
-                line = reader.ReadLine();
-                lineNumber++;
-            }
-
-            // resetting the remaining keys
-            foreach(string key in remainingKeys)
-            {
-                _stringNodes[key].ResetValue();
-            }
-
-            missingKeys = missingKeysInFormat.ToArray();
 
             ChangeTracker.Global.EndGroup();
         }
@@ -491,53 +481,52 @@ namespace SCR.Tools.TranslationEditor.Data
             string keys = string.Join('\n', _stringNodes.Keys);
 
             StringBuilder sb = new($"{Name}\n{Version}\n{Language}\n{Author}\n");
-            foreach(var n in _stringNodes.Values)
+            foreach (var n in _stringNodes.Values)
             {
                 sb.AppendLine(n.NodeValue.Escape());
             }
-            
+
             return (keys, sb.ToString());
         }
 
         public void ImportLanguageData(string keys, string values)
         {
-            using StringReader valueReader = new(values);
-            using StringReader keyReader = new(keys);
-
             ChangeTracker.Global.BeginGroup();
-            int versionIndex;
+
             try
             {
-                versionIndex = ReadMetaData(valueReader);
+                using StringReader valueReader = new(values);
+                using StringReader keyReader = new(keys);
+
+                int versionIndex = ReadMetaData(valueReader);
+
+                ResetAllStrings();
+                HashSet<string> remainingKeys = _stringNodes.Keys.ToHashSet();
+
+                string? key = keyReader.ReadLine();
+                while (key != null)
+                {
+                    string? value = valueReader.ReadLine();
+                    if (value == null)
+                    {
+                        throw new InvalidDataException("Key and Value files dont match");
+                    }
+
+                    if (remainingKeys.Remove(key))
+                    {
+                        StringNode node = _stringNodes[key];
+                        node.NodeValue = value.Unescape();
+                        if (node.ChangedVersionIndex > -1)
+                            _stringNodes[key].ChangedVersionIndex = versionIndex;
+                    }
+
+                    key = keyReader.ReadLine();
+                }
             }
             catch
             {
-                ChangeTracker.Global.EndGroup();
+                ChangeTracker.Global.EndGroup(true);
                 throw;
-            }
-
-            ResetAllStrings();
-            HashSet<string> remainingKeys = _stringNodes.Keys.ToHashSet();
-
-            string? key = keyReader.ReadLine();
-            while(key != null)
-            {
-                string? value = valueReader.ReadLine();
-                if (value == null)
-                {
-                    ChangeTracker.Global.EndGroup();
-                    throw new InvalidDataException("Key and Value files dont match");
-                }
-
-                if(remainingKeys.Remove(key))
-                {
-                    StringNode node = _stringNodes[key];
-                    node.NodeValue = value.Unescape();
-                    if(node.ChangedVersionIndex > -1)
-                        _stringNodes[key].ChangedVersionIndex = versionIndex;
-                }
-
-                key = keyReader.ReadLine();
             }
 
             ChangeTracker.Global.EndGroup();

@@ -12,17 +12,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="Icon.ico" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\Libraries\UndoRedo\UndoRedo.csproj" />
-		<ProjectReference Include="..\Libraries\WPF\WPF.csproj" />
-		<ProjectReference Include="..\TranslationEditor\TranslationEditor.Data\TranslationEditor.Data.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Resource Include="Icon.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Libraries\UndoRedo\UndoRedo.csproj" />
+	  <ProjectReference Include="..\..\Libraries\WPF\WPF.csproj" />
+	  <ProjectReference Include="..\TranslationEditor.Data\TranslationEditor.Data.csproj" />
 	</ItemGroup>
 
 </Project>

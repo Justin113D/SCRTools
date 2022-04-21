@@ -31,7 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TranslationEditor", "Transl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{DC839CAB-96F8-4966-8660-6A0B3969B7AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranslationEditor.WPF", "TranslationEditor.WPF\TranslationEditor.WPF.csproj", "{E9A7434D-6473-4BEA-B69B-65BBCDBCA2A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TranslationEditor.WPF", "TranslationEditor\TranslationEditor.WPF\TranslationEditor.WPF.csproj", "{E9A7434D-6473-4BEA-B69B-65BBCDBCA2A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

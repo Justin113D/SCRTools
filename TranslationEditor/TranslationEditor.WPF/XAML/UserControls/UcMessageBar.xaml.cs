@@ -10,17 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Window = SCR.Tools.WPF.Styling.Window;
 
-namespace SCR.Tools.TranslationEditor.WPF.XAML.Windows
+namespace SCR.Tools.TranslationEditor.WPF.XAML.UserControls
 {
     /// <summary>
-    /// Interaction logic for WndMain.xaml
+    /// Interaction logic for UcMessageBar.xaml
     /// </summary>
-    public partial class WndMain : Window
+    public partial class UcMessageBar : UserControl
     {
-        public WndMain()
+        public UcMessageBar()
         {
             InitializeComponent();
         }
