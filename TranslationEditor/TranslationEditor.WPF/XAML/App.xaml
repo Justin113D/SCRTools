@@ -4,7 +4,9 @@
              xmlns:styling="clr-namespace:SCR.Tools.WPF.Styling;assembly=SCR.Tools.WPF"
              xmlns:vmBase="clr-namespace:SCR.Tools.Viewmodeling;assembly=SCR.Tools.WPF"
              xmlns:scrWPF="clr-namespace:SCR.Tools.WPF;assembly=SCR.Tools.WPF"
-             StartupUri="Windows/WndMain.xaml">
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             StartupUri="Windows/WndMain.xaml"
+             Startup="Application_Startup">
 
     <Application.Resources>
         <ResourceDictionary>
@@ -12,6 +14,8 @@
                 <styling:BaseStyle/>
 
                 <ResourceDictionary>
+                    <sys:Double x:Key="AppFontSize">15</sys:Double>
+
                     <InputBindingCollection x:Key="TextboxInputs">
                         <KeyBinding Modifiers="Ctrl" Key="Z">
                             <KeyBinding.Command>
@@ -25,7 +29,15 @@
                         </KeyBinding>
                     </InputBindingCollection>
 
-                    <Style x:Key="TextBoxUndo" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                    <Style x:Key="AppTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                        <Setter Property="FontSize" Value="{DynamicResource AppFontSize}"/>
+                    </Style>
+
+                    <Style x:Key="AppTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                        <Setter Property="FontSize" Value="{DynamicResource AppFontSize}"/>
+                    </Style>
+
+                    <Style x:Key="TextBoxUndo" TargetType="{x:Type TextBox}" BasedOn="{StaticResource AppTextBox}">
                         <EventSetter Event="GotFocus" Handler="GotFocus"/>
                         <Setter Property="scrWPF:InputBindingAttach.InputBindings" Value="{StaticResource TextboxInputs}"/>
                     </Style>
@@ -34,5 +46,6 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
+    
 </Application>
 

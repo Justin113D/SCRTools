@@ -21,51 +21,64 @@
                     <Setter Property="Width" Value="16"/>
                     <Setter Property="SnapsToDevicePixels" Value="True"/>
                 </Style>
-                
-                
+                <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                    <Setter Property="FontSize" Value="{DynamicResource AppFontSize}"/>
+                </Style>
             </Menu.Resources>
 
             <MenuItem Header="File">
-                <MenuItem Header="Load Format" Click="LoadFormat">
+                <MenuItem Header="Load Format" Click="LoadFormat" InputGestureText="Ctrl+Shift+O">
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/OpenFile.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="New Project" Click="NewProject" IsEnabled="{Binding FormatLoaded}">
+                <MenuItem Header="New Project" Click="NewProject" InputGestureText="Ctrl+N" IsEnabled="{Binding FormatLoaded}">
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/NewFile.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Open Project" Click="OpenProject" IsEnabled="{Binding FormatLoaded}">
+                <MenuItem Header="Open Project" Click="OpenProject" InputGestureText="Ctrl+O" IsEnabled="{Binding FormatLoaded}">
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/OpenFile.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Save Project" Click="SaveProject" IsEnabled="{Binding FormatLoaded}">
+                <MenuItem Header="Save Project" Click="SaveProject" InputGestureText="Ctrl+S" IsEnabled="{Binding FormatLoaded}">
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/Save.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Save Project As" Click="SaveProjectAs" IsEnabled="{Binding FormatLoaded}">
+                <MenuItem Header="Save Project As" Click="SaveProjectAs" InputGestureText="Ctrl+Shift+S" IsEnabled="{Binding FormatLoaded}">
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/SaveAs.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="Export Language Files" Click="ExportLanguageFiles" IsEnabled="{Binding FormatLoaded}">
+                <MenuItem Header="Export Language Files" Click="ExportLanguageFiles" InputGestureText="Ctrl+Shift+E" IsEnabled="{Binding FormatLoaded}">
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/ExportFile.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Import Language Files" Click="ImportLanguageFiles" IsEnabled="{Binding FormatLoaded}">
+                <MenuItem Header="Import Language Files" Click="ImportLanguageFiles" InputGestureText="Ctrl+Shift+I" IsEnabled="{Binding FormatLoaded}">
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/ImportFile.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="Edit"/>
-            <MenuItem Header="Settings"/>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Expand All" Click="ExpandAll" IsEnabled="{Binding FormatLoaded}">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/ExpandAll.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Collapse All" Click="CollapseAll" IsEnabled="{Binding FormatLoaded}">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/ExpandAll.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Settings" Click="SettingsOpen"/>
+            <MenuItem Header="Help" Click="OpenHelp"/>
         </Menu>
 
         <StackPanel 
@@ -81,7 +94,7 @@
                     <Setter Property="Fill" Value="{DynamicResource SelectedBG}"/>
                     <Setter Property="SnapsToDevicePixels" Value="True"/>
                 </Style>
-                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource AppTextBlock}">
                     <Setter Property="Margin" Value="10, 0, 5, 0"/>
                 </Style>
                 <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxUndo}">

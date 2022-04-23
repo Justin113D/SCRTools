@@ -3,7 +3,7 @@ using System.Configuration;
 
 namespace SCR.Tools.WPF.Properties
 {
-    internal sealed partial class Settings : ApplicationSettingsBase
+    internal sealed class Settings : ApplicationSettingsBase
     {
 
         private static readonly Settings defaultInstance 
@@ -14,15 +14,15 @@ namespace SCR.Tools.WPF.Properties
         [UserScopedSetting()]
         [DebuggerNonUserCode()]
         [DefaultSettingValue("Dark")]
-        public WPF.Styling.Theme Theme
+        public Styling.Theme Theme
         {
-            get => (WPF.Styling.Theme)this[nameof(Theme)];
+            get => (Styling.Theme)this[nameof(Theme)];
             set
             {
                 if(value == Theme)
                     return;
                 this[nameof(Theme)] = value;
-                WPF.Styling.BaseStyle.Theme = value;
+                Styling.BaseStyle.Theme = value;
             }
         }
     }

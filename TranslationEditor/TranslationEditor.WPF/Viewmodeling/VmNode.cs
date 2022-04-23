@@ -28,6 +28,9 @@ namespace SCR.Tools.TranslationEditor.WPF.Viewmodeling
 
         public virtual bool Expanded { get; set; }
 
+        public virtual string DefaultValue
+            => "";
+
         protected VmNode(VmProject project, Node node)
         {
             _node = node;

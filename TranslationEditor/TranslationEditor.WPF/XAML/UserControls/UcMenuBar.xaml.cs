@@ -11,6 +11,8 @@ namespace SCR.Tools.TranslationEditor.WPF.XAML.UserControls
     /// </summary>
     public partial class UcMenuBar : UserControl
     {
+        private readonly Windows.WndHelp _helpWindow;
+
         private TextFileHandler? _formatFileHandler;
         private TextFileHandler? _projectFileHandler;
         private FileHandler? _importExportHandler;
@@ -18,6 +20,7 @@ namespace SCR.Tools.TranslationEditor.WPF.XAML.UserControls
 
         public UcMenuBar()
         {
+            _helpWindow = new();
             DataContextChanged += OnDataContextChanged;
             InitializeComponent();
         }
@@ -113,6 +116,36 @@ namespace SCR.Tools.TranslationEditor.WPF.XAML.UserControls
             _importExportHandler.Open();
             _projectFileHandler?.CopyPin(_importExportHandler);
             _formatFileHandler?.CopyPin(_importExportHandler);
+        }
+
+        private void ExpandAll(object sender, RoutedEventArgs e)
+        {
+            var t = MessageBox.Show("Depending on how big the format is, this operation could take a while if not crash the application.\nProceed?", "Expand All?", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+
+            if (t != MessageBoxResult.OK)
+                return;
+
+            _viewModel?.ExpandAll();
+        }
+
+        private void CollapseAll(object sender, RoutedEventArgs e)
+        {
+            _viewModel?.CollapseAll();
+        }
+
+        private void SettingsOpen(object sender, RoutedEventArgs e)
+        {
+            new Windows.WndSettings().ShowDialog();
+        }
+
+        private void OpenHelp(object sender, RoutedEventArgs e)
+        {
+            _helpWindow.Open();
+        }
+
+        public void Close()
+        {
+            _helpWindow.Close();
         }
     }
 }

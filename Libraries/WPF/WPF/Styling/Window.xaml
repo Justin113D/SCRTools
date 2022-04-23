@@ -7,6 +7,7 @@
     <ControlTemplate.Resources>
         <Style x:Key="ToolbarButton" TargetType="{x:Type Button}">
             <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource OutlineHG}"/>
             <Setter Property="Foreground" Value="{DynamicResource FontBrush}"/>
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="Background" Value="Transparent"/>
@@ -17,7 +18,10 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}">
+                        <Border 
+                            Background="{TemplateBinding Background}" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}">
                             <ContentPresenter 
                                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
                                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
@@ -28,6 +32,7 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="{DynamicResource HighlightedBG}"/>
+                    <Setter Property="BorderThickness" Value="1"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -100,8 +105,18 @@
                     Grid.Column="4" 
                     x:Name="CloseButton"    
                     Content="✕" 
-                    Style="{DynamicResource ToolbarButton}" 
-                    Visibility="{TemplateBinding local:Window.CloseButton}"/>
+                    Visibility="{TemplateBinding local:Window.CloseButton}"
+                    BorderBrush="{DynamicResource Red.Selected}">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ToolbarButton}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource Red}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
 
                 <ContentPresenter 
                     Grid.Row="1" 

@@ -49,10 +49,15 @@
                 </Style>
             </Border.Style>
 
-            <TextBlock Padding="15, 3" Background="Transparent" Foreground="#FFF" FontWeight="Bold" Text="{Binding Message, NotifyOnTargetUpdated=True}" FontSize="15">
+            <TextBlock 
+                Padding="15, 3" 
+                Background="Transparent" 
+                Foreground="#FFF" 
+                FontWeight="Bold" 
+                Text="{Binding Message, NotifyOnTargetUpdated=True}">
 
                 <TextBlock.Style>
-                    <Style TargetType="{x:Type TextBlock}">
+                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource AppTextBlock}">
                         <Style.Triggers>
                             <EventTrigger RoutedEvent="Binding.TargetUpdated">
                                 <BeginStoryboard>
@@ -69,6 +74,10 @@
         </Border>
 
         <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="10, 3, 3, 3" DataContext="{Binding Format}">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource AppTextBlock}"/>
+            </StackPanel.Resources>
+            
             <TextBlock Text="{Binding UntranslatedNodes}" Foreground="{DynamicResource Red}"/>
             <TextBlock Text=" / " />
             <TextBlock Text="{Binding OutdatedNodes}" Foreground="{DynamicResource Yellow}"/>

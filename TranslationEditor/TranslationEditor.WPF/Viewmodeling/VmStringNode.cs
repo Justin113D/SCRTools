@@ -15,7 +15,7 @@ namespace SCR.Tools.TranslationEditor.WPF.Viewmodeling
             => (StringNode)_node;
 
 
-        public string DefaultValue
+        public override string DefaultValue
             => StringNode.DefaultValue;
         
         public string NodeValue

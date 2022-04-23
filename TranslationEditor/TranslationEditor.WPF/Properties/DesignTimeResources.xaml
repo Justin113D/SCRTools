@@ -1,13 +1,26 @@
 ﻿<ResourceDictionary 
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:styling="clr-namespace:SCR.Tools.WPF.Styling;assembly=SCR.Tools.WPF">
+
     <ResourceDictionary.MergedDictionaries>
         <styling:BaseStyle/>
+        <ResourceDictionary>
+
+            <sys:Double x:Key="AppFontSize">15</sys:Double>
+
+            <Style x:Key="AppTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Setter Property="FontSize" Value="{DynamicResource AppFontSize}"/>
+            </Style>
+
+            <Style x:Key="AppTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                <Setter Property="FontSize" Value="{DynamicResource AppFontSize}"/>
+            </Style>
+
+            <Style x:Key="TextBoxUndo" TargetType="{x:Type TextBox}" BasedOn="{StaticResource AppTextBox}">
+            </Style>
+
+        </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
-    
-    <!--Only used to recognize that the style exists-->
-    <Style x:Key="TextBoxUndo" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
-        <Setter Property="Cursor" Value="Help"/>
-    </Style>
 </ResourceDictionary>

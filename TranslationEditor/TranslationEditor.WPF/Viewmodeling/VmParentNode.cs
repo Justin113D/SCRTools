@@ -76,5 +76,29 @@ namespace SCR.Tools.TranslationEditor.WPF.Viewmodeling
                 node.RefreshNodeValues();
             }
         }
+
+        public void ExpandAll()
+        {
+            Expanded = true;
+            foreach (VmNode node in ChildNodes)
+            {
+                if (node is VmParentNode parent)
+                {
+                    parent.ExpandAll();
+                }
+            }
+        }
+
+        public void CollapseAll()
+        {
+            Expanded = false;
+            foreach (VmNode node in ChildNodes)
+            {
+                if (node is VmParentNode parent)
+                {
+                    parent.CollapseAll();
+                }
+            }
+        }
     }
 }

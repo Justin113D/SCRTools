@@ -1,17 +1,8 @@
 ﻿using SCR.Tools.TranslationEditor.WPF.Viewmodeling;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Window = SCR.Tools.WPF.Styling.Window;
 
 namespace SCR.Tools.TranslationEditor.WPF.XAML.Windows
@@ -23,8 +14,34 @@ namespace SCR.Tools.TranslationEditor.WPF.XAML.Windows
     {
         public WndMain()
         {
-            DataContext = new VmMain();
+            InitDataContext();
             InitializeComponent();
+        }
+
+        private void InitDataContext()
+        {
+            VmMain vm = new();
+            DataContext = vm;
+
+            string formatPath = Properties.Settings.Default.DefaultFormatPath;
+            if (string.IsNullOrWhiteSpace(formatPath))
+                return;
+
+            if (!File.Exists(formatPath))
+            {
+                MessageBox.Show("Default format path does not resolve to a file", "Default format not found", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                string data = File.ReadAllText(formatPath);
+                vm.LoadFormat(data);
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show("Default format is not valid!\n " + e.Message, "Error loading default format", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void IB_New(object sender, object e)
@@ -50,6 +67,12 @@ namespace SCR.Tools.TranslationEditor.WPF.XAML.Windows
         private void IB_SaveAs(object sender, object e)
         {
             MenuBar.SaveProjectAs(sender, new());
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            MenuBar.Close();
+            base.OnClosing(e);
         }
     }
 }

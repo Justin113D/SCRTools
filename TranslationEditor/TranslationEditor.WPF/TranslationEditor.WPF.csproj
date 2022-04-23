@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<RootNamespace>SCR.Tools.TranslationEditor.WPF</RootNamespace>
-		<AssemblyName>SCR.Tools.TranslationEditor.WPF</AssemblyName>
+		<AssemblyName>Translation Editor</AssemblyName>
 		<StartupObject>SCR.Tools.TranslationEditor.WPF.XAML.App</StartupObject>
 		<ApplicationIcon>Icon.ico</ApplicationIcon>
 	</PropertyGroup>

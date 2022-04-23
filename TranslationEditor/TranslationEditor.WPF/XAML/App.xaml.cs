@@ -15,6 +15,12 @@ namespace SCR.Tools.TranslationEditor.WPF.XAML
     /// </summary>
     public partial class App : Application
     {
+        public double AppFontSize
+        {
+            get => (double)Resources[nameof(AppFontSize)];
+            set => Resources[nameof(AppFontSize)] = value;
+        }
+
         private TextBox? _focused;
 
         public App()
@@ -27,6 +33,11 @@ namespace SCR.Tools.TranslationEditor.WPF.XAML
         {
             App app = new();
             app.Run();
+        }
+
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            AppFontSize = WPF.Properties.Settings.Default.Fontsize;
         }
 
         private void OnRedo(object sender, object e)

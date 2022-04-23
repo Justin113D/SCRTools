@@ -40,7 +40,7 @@
             <TreeView.Resources>
                 <!--Used for calculating the offset of the left margin-->
                 <converters:LeftMarginMultiplierConverter x:Key="LeftMarginMultiplierConverter" Length="20"/>
-               
+
                 <!--Picks the color based on the nodes state-->
                 <xaml:NodeStateConverter x:Key="NodeStateConverter"/>
 
@@ -56,7 +56,7 @@
                             <Border.Resources>
                                 <xaml:OffsetWidthConverter x:Key="OffsetWidthConverter" Padding="{Binding ElementName=NodeContainer, Path=Padding}"/>
                             </Border.Resources>
-                            
+
                             <!-- Adding highlight color when hovering above the node -->
                             <Border.Style>
                                 <Style TargetType="{x:Type Border}">
@@ -97,17 +97,18 @@
                                     <ToggleButton.Template>
                                         <ControlTemplate TargetType="ToggleButton">
                                             <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" MinWidth="20">
-                                                <Path x:Name="ExpandPath"
-                                                HorizontalAlignment="Center" 
-                                                VerticalAlignment="Center" 
-                                                Margin="1,1,1,1"
-                                                Fill="{DynamicResource FontBrush}"
-                                                Data="M 4 0 L 8 4 L 4 8 Z"/>
+                                                <TextBlock
+                                                    Style="{DynamicResource AppTextBlock}"
+                                                    x:Name="ExpandSymbol"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Margin="1"
+                                                    Text="▸"/>
                                             </Grid>
 
                                             <ControlTemplate.Triggers>
                                                 <Trigger Property="IsChecked" Value="True">
-                                                    <Setter Property="Data" TargetName="ExpandPath" Value="M 0 4 L 8 4 L 4 8 Z"/>
+                                                    <Setter Property="Text" TargetName="ExpandSymbol" Value="▾"/>
                                                 </Trigger>
                                             </ControlTemplate.Triggers>
                                         </ControlTemplate>
@@ -117,6 +118,7 @@
 
                                 <!-- Node Name -->
                                 <TextBlock
+                                    Style="{DynamicResource AppTextBlock}"
                                     Grid.Column="2"
                                     Margin="4"
                                     Text="{Binding Name}"
@@ -128,23 +130,40 @@
                                     MinHeight="19" 
                                     HorizontalAlignment="Stretch" 
                                     ContentSource="Header"/>
-                                
+
                                 <!-- Node Description -->
-                                <TextBlock 
-                                    Grid.Column="4" 
-                                    Text="{Binding Description}"
-                                    Foreground="{DynamicResource HintFontBrush}"
-                                    VerticalAlignment="Center"
-                                    Margin="4"/>
-                                
+                                <Grid Grid.Column="4">
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+                                    
+                                    <TextBlock 
+                                        Style="{DynamicResource AppTextBlock}"
+                                        Grid.Column="4" 
+                                        Text="{Binding Description}"
+                                        Foreground="{DynamicResource HintFontBrush}"
+                                        VerticalAlignment="Center"
+                                        Margin="6"/>
+
+                                    <Border x:Name="DefaultValueDisplay" Grid.Row="1" Margin="10, 3" BorderThickness="0, 2, 0, 0" BorderBrush="{DynamicResource HintFontBrush}">
+                                        <TextBlock
+                                            Text="{Binding DefaultValue}"
+                                            Margin="-6, 3"
+                                            VerticalAlignment="Center"
+                                            />
+                                    </Border>
+                                </Grid>
+
                             </Grid>
                         </Border>
-                        
+
                         <!-- Node Children -->
                         <Border x:Name="ItemsHost">
                             <ItemsPresenter/>
                         </Border>
-                        
+
                     </StackPanel>
 
                     <ControlTemplate.Triggers>
@@ -154,11 +173,14 @@
                         <DataTrigger Binding="{Binding CanExpand}" Value="False">
                             <Setter TargetName="Expander" Property="Visibility" Value="Collapsed"/>
                         </DataTrigger>
+                        <DataTrigger Binding="{Binding DefaultValue}" Value="">
+                            <Setter TargetName="DefaultValueDisplay" Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
                     </ControlTemplate.Triggers>
-                </ControlTemplate>  
+                </ControlTemplate>
             </TreeView.Resources>
 
-            
+
             <!-- Using the teomplate from the resources -->
             <TreeView.ItemContainerStyle>
                 <Style TargetType="{x:Type TreeViewItem}">
@@ -168,11 +190,11 @@
                 </Style>
             </TreeView.ItemContainerStyle>
 
-            
+
             <!-- Templates for both node types-->
             <TreeView.ItemTemplateSelector>
                 <xaml:NodeTemplateSelector>
-                    
+
                     <!-- Parent Node-->
                     <xaml:NodeTemplateSelector.ParentTemplate>
                         <HierarchicalDataTemplate DataType="{x:Type vm:VmParentNode}" ItemsSource="{Binding ChildNodes}"/>
@@ -186,7 +208,7 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
-                                
+
                                 <TextBox 
                                     Text="{Binding NodeValue, Mode=TwoWay}" 
                                     AcceptsReturn="True" 
@@ -205,7 +227,7 @@
                                             </Style.Triggers>
                                         </Style>
                                     </TextBox.Style>
-                                    
+
                                     <TextBox.InputBindings>
                                         <KeyBinding Modifiers="Ctrl" Key="R" Command="{Binding Cmd_Reset}"/>
                                     </TextBox.InputBindings>
@@ -214,6 +236,7 @@
                                 <CheckBox 
                                     Grid.Column="1"
                                     Margin="5, 0"
+                                    FontSize="{DynamicResource AppFontSize}"
                                     IsChecked="{Binding KeepDefault}">
                                     <CheckBox.Style>
                                         <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource {x:Type CheckBox}}">
@@ -233,9 +256,9 @@
                         </HierarchicalDataTemplate>
                     </xaml:NodeTemplateSelector.StringTemplate>
                 </xaml:NodeTemplateSelector>
-                
+
             </TreeView.ItemTemplateSelector>
         </TreeView>
-        
+
     </Grid>
 </UserControl>
