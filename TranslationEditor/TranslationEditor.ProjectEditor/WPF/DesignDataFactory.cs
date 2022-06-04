@@ -10,8 +10,11 @@ namespace SCR.Tools.TranslationEditor.Project.WPF
         {
             Main = new VmMain();
             Main.LoadFormat(_format);
+            Project = Main.Format;
         }
 
         public static VmMain Main { get; }
+
+        public static VmProject? Project { get; }
     }
 }

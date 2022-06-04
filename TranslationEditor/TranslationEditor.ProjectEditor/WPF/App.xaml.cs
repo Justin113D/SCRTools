@@ -33,7 +33,7 @@ namespace SCR.Tools.TranslationEditor.Project.WPF
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            AppFontSize = WPF.Properties.Settings.Default.Fontsize;
+            AppFontSize = Project.Properties.Settings.Default.Fontsize;
         }
 
         private void OnRedo(object sender, object e)

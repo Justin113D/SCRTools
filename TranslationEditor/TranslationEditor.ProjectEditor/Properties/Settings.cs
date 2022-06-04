@@ -1,7 +1,7 @@
 ﻿using System.Configuration;
 using System.Diagnostics;
 
-namespace SCR.Tools.TranslationEditor.Project.WPF.Properties
+namespace SCR.Tools.TranslationEditor.Project.Properties
 {
     internal class Settings : ApplicationSettingsBase
     {
