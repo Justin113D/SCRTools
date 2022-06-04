@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<OutputType>WinExe</OutputType>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<RootNamespace>SCR.Tools.TranslationEditor.FormatEditor</RootNamespace>
+		<AssemblyName>Translation Format Editor</AssemblyName>
+		<StartupObject>SCR.Tools.TranslationEditor.Format.WPF.App</StartupObject>
+		<ApplicationIcon>Icon.ico</ApplicationIcon>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Resource Include="Icon.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Libraries\UndoRedo\UndoRedo.csproj" />
+		<ProjectReference Include="..\..\Libraries\WPF\WPF.csproj" />
+		<ProjectReference Include="..\TranslationEditor.Data\TranslationEditor.Data.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Viewmodeling\" />
+	</ItemGroup>
+
+</Project>
