@@ -2,7 +2,7 @@
 using SCR.Tools.TranslationEditor.Data.Events;
 using SCR.Tools.Viewmodeling;
 
-namespace SCR.Tools.TranslationEditor.Project.Viewmodeling
+namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
 {
     public class VmStringNode : VmNode
     {

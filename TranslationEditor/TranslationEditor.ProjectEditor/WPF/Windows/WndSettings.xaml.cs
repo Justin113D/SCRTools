@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Window = SCR.Tools.WPF.Styling.Window;
 
-namespace SCR.Tools.TranslationEditor.Project.WPF.Windows
+namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.Windows
 {
     /// <summary>
     /// Interaction logic for WndSettings.xaml

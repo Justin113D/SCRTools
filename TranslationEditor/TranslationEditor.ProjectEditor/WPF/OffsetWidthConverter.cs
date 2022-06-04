@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace SCR.Tools.TranslationEditor.Project.WPF
+namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF
 {
     [ValueConversion(typeof(double), typeof(GridLength))]
     internal class OffsetWidthConverter : Freezable, IValueConverter

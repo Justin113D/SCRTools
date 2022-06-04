@@ -1,7 +1,7 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
 using System.Collections.ObjectModel;
 
-namespace SCR.Tools.TranslationEditor.Project.Viewmodeling
+namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
 {
     internal class VmParentNode : VmNode
     {

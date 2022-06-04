@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace SCR.Tools.TranslationEditor.Project.WPF.UserControls
+namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.UserControls
 {
     /// <summary>
     /// Interaction logic for UcNodeViewer.xaml

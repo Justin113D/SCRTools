@@ -4,7 +4,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using Colors = SCR.Tools.WPF.Styling.Colors;
 
-namespace SCR.Tools.TranslationEditor.Project.WPF
+namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF
 {
     [ValueConversion(typeof(int), typeof(SolidColorBrush))]
     class NodeStateConverter : IValueConverter

@@ -1,6 +1,6 @@
-﻿using SCR.Tools.TranslationEditor.Project.Viewmodeling;
+﻿using SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling;
 
-namespace SCR.Tools.TranslationEditor.Project.WPF
+namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF
 {
     internal static class DesignDataFactory
     {

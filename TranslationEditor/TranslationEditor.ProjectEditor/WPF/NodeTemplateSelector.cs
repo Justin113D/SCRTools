@@ -1,8 +1,8 @@
-﻿using SCR.Tools.TranslationEditor.Project.Viewmodeling;
+﻿using SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace SCR.Tools.TranslationEditor.Project.WPF
+namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF
 {
     /// <summary>
     /// Returns according HierarchyDataTemplate based on the given node type

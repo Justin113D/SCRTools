@@ -4,7 +4,7 @@ using SCR.Tools.Viewmodeling;
 using System.Collections.ObjectModel;
 using System.IO;
 
-namespace SCR.Tools.TranslationEditor.Project.Viewmodeling
+namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
 {
     /// <summary>
     /// Project viewmodel handling the format and data surrounding it

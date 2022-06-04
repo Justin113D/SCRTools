@@ -1,11 +1,11 @@
-﻿using SCR.Tools.TranslationEditor.Project.Viewmodeling;
+﻿using SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling;
 using System;
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using Window = SCR.Tools.WPF.Styling.Window;
 
-namespace SCR.Tools.TranslationEditor.Project.WPF.Windows
+namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.Windows
 {
     /// <summary>
     /// Interaction logic for WndMain.xaml

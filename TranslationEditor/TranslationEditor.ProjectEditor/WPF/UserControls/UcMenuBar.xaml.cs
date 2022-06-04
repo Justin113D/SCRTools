@@ -1,9 +1,9 @@
-﻿using SCR.Tools.TranslationEditor.Project.Viewmodeling;
+﻿using SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling;
 using SCR.Tools.WPF.IO;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace SCR.Tools.TranslationEditor.Project.WPF.UserControls
+namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.UserControls
 {
     /// <summary>
     /// Interaction logic for UcMenuBar.xaml

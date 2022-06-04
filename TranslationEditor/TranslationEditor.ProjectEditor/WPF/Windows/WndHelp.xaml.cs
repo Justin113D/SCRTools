@@ -1,10 +1,10 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
-using SCR.Tools.TranslationEditor.Project.Viewmodeling;
+using SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling;
 using SCR.Tools.UndoRedo;
 using System.Windows;
 using Window = SCR.Tools.WPF.Styling.Window;
 
-namespace SCR.Tools.TranslationEditor.Project.WPF.Windows
+namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.Windows
 {
     /// <summary>
     /// Interaction logic for WndHelp.xaml
