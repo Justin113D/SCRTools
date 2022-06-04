@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SCR.Tools.TranslationEditor.WPF.Properties
+namespace SCR.Tools.TranslationEditor.Project.WPF.Properties
 {
     internal class Settings : ApplicationSettingsBase
     {

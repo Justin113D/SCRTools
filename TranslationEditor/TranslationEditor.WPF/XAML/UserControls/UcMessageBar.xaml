@@ -1,10 +1,10 @@
-﻿<UserControl x:Class="SCR.Tools.TranslationEditor.WPF.XAML.UserControls.UcMessageBar"
+﻿<UserControl x:Class="SCR.Tools.TranslationEditor.Project.WPF.UserControls.UcMessageBar"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:SCR.Tools.TranslationEditor.WPF.XAML.UserControls"
-             xmlns:xaml="clr-namespace:SCR.Tools.TranslationEditor.WPF.XAML"
+             xmlns:local="clr-namespace:SCR.Tools.TranslationEditor.Project.WPF.UserControls"
+             xmlns:xaml="clr-namespace:SCR.Tools.TranslationEditor.Project.WPF"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{x:Static xaml:DesignDataFactory.Main}">

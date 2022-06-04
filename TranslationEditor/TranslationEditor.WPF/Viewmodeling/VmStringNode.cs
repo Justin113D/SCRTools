@@ -1,13 +1,8 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.TranslationEditor.Data.Events;
 using SCR.Tools.Viewmodeling;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SCR.Tools.TranslationEditor.WPF.Viewmodeling
+namespace SCR.Tools.TranslationEditor.Project.Viewmodeling
 {
     public class VmStringNode : VmNode
     {
@@ -17,7 +12,7 @@ namespace SCR.Tools.TranslationEditor.WPF.Viewmodeling
 
         public override string DefaultValue
             => StringNode.DefaultValue;
-        
+
         public string NodeValue
         {
             get => StringNode.NodeValue;

@@ -1,11 +1,11 @@
-﻿using SCR.Tools.TranslationEditor.WPF.Viewmodeling;
+﻿using SCR.Tools.TranslationEditor.Project.Viewmodeling;
 using System;
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using Window = SCR.Tools.WPF.Styling.Window;
 
-namespace SCR.Tools.TranslationEditor.WPF.XAML.Windows
+namespace SCR.Tools.TranslationEditor.Project.WPF.Windows
 {
     /// <summary>
     /// Interaction logic for WndMain.xaml
@@ -38,7 +38,7 @@ namespace SCR.Tools.TranslationEditor.WPF.XAML.Windows
                 string data = File.ReadAllText(formatPath);
                 vm.LoadFormat(data);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MessageBox.Show("Default format is not valid!\n " + e.Message, "Error loading default format", MessageBoxButton.OK, MessageBoxImage.Error);
             }

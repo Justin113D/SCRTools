@@ -1,11 +1,6 @@
-﻿using SCR.Tools.TranslationEditor.WPF.Viewmodeling;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SCR.Tools.TranslationEditor.Project.Viewmodeling;
 
-namespace SCR.Tools.TranslationEditor.WPF.XAML
+namespace SCR.Tools.TranslationEditor.Project.WPF
 {
     internal static class DesignDataFactory
     {

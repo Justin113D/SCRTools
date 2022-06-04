@@ -2,7 +2,7 @@
 using SCR.Tools.UndoRedo;
 using SCR.Tools.Viewmodeling;
 
-namespace SCR.Tools.TranslationEditor.WPF.Viewmodeling
+namespace SCR.Tools.TranslationEditor.Project.Viewmodeling
 {
     public class VmMain : BaseViewModel
     {
@@ -19,7 +19,7 @@ namespace SCR.Tools.TranslationEditor.WPF.Viewmodeling
         /// <summary>
         /// Whether a format is loaded
         /// </summary>
-        public bool FormatLoaded 
+        public bool FormatLoaded
             => Format != null;
 
 
@@ -189,7 +189,7 @@ namespace SCR.Tools.TranslationEditor.WPF.Viewmodeling
 
         public void ImportLanguage(string filepath)
         {
-            if(Format == null)
+            if (Format == null)
             {
                 SetMessage("No Format Loaded!", true);
                 return;

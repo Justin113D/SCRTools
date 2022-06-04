@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace SCR.Tools.TranslationEditor.WPF.XAML
+namespace SCR.Tools.TranslationEditor.Project.WPF
 {
     /// <summary>
     /// Interaction logic for App.xaml
@@ -58,7 +54,7 @@ namespace SCR.Tools.TranslationEditor.WPF.XAML
 
             Window? wnd = Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);
 
-            if(wnd == null)
+            if (wnd == null)
             {
                 throw new InvalidOperationException("No active window found!");
             }

@@ -4,7 +4,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using Colors = SCR.Tools.WPF.Styling.Colors;
 
-namespace SCR.Tools.TranslationEditor.WPF.XAML
+namespace SCR.Tools.TranslationEditor.Project.WPF
 {
     [ValueConversion(typeof(int), typeof(SolidColorBrush))]
     class NodeStateConverter : IValueConverter
@@ -12,7 +12,7 @@ namespace SCR.Tools.TranslationEditor.WPF.XAML
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             Color result = Color.FromArgb(0, 1, 1, 1);
-            switch((int)value)
+            switch ((int)value)
             {
                 case 1: // translated, green
                     result = Colors.Green;

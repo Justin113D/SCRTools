@@ -1,12 +1,7 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SCR.Tools.TranslationEditor.WPF.Viewmodeling
+namespace SCR.Tools.TranslationEditor.Project.Viewmodeling
 {
     internal class VmParentNode : VmNode
     {
@@ -33,7 +28,7 @@ namespace SCR.Tools.TranslationEditor.WPF.Viewmodeling
 
                 _expanded = value;
 
-                if(_expanded && _childNodes.Count != ParentNode.ChildNodes.Count)
+                if (_expanded && _childNodes.Count != ParentNode.ChildNodes.Count)
                 {
                     CreateChildViewModels();
                 }
@@ -56,13 +51,13 @@ namespace SCR.Tools.TranslationEditor.WPF.Viewmodeling
 
         private void CreateChildViewModels()
         {
-            foreach(Node node in ParentNode.ChildNodes)
+            foreach (Node node in ParentNode.ChildNodes)
             {
-                if(node is ParentNode p)
+                if (node is ParentNode p)
                 {
                     _childNodes.Add(new VmParentNode(_project, p));
                 }
-                else if(node is StringNode s)
+                else if (node is StringNode s)
                 {
                     _childNodes.Add(new VmStringNode(_project, s));
                 }
@@ -71,7 +66,7 @@ namespace SCR.Tools.TranslationEditor.WPF.Viewmodeling
 
         public override void RefreshNodeValues()
         {
-            foreach(VmNode node in _childNodes)
+            foreach (VmNode node in _childNodes)
             {
                 node.RefreshNodeValues();
             }

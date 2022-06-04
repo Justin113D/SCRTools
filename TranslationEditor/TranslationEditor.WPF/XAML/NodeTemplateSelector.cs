@@ -1,8 +1,8 @@
-﻿using SCR.Tools.TranslationEditor.WPF.Viewmodeling;
+﻿using SCR.Tools.TranslationEditor.Project.Viewmodeling;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace SCR.Tools.TranslationEditor.WPF.XAML
+namespace SCR.Tools.TranslationEditor.Project.WPF
 {
     /// <summary>
     /// Returns according HierarchyDataTemplate based on the given node type
@@ -21,11 +21,11 @@ namespace SCR.Tools.TranslationEditor.WPF.XAML
 
         public override DataTemplate? SelectTemplate(object item, DependencyObject container)
         {
-            if(item is VmParentNode)
+            if (item is VmParentNode)
             {
                 return ParentTemplate;
             }
-            else if(item is VmStringNode)
+            else if (item is VmStringNode)
             {
                 return StringTemplate;
             }

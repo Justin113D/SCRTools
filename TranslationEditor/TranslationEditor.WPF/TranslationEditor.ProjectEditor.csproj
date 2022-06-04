@@ -5,9 +5,9 @@
 		<OutputType>WinExe</OutputType>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
-		<RootNamespace>SCR.Tools.TranslationEditor.WPF</RootNamespace>
+		<RootNamespace>SCR.Tools.TranslationEditor.ProjectEditor</RootNamespace>
 		<AssemblyName>Translation Editor</AssemblyName>
-		<StartupObject>SCR.Tools.TranslationEditor.WPF.XAML.App</StartupObject>
+		<StartupObject>SCR.Tools.TranslationEditor.Project.WPF.App</StartupObject>
 		<ApplicationIcon>Icon.ico</ApplicationIcon>
 	</PropertyGroup>
 

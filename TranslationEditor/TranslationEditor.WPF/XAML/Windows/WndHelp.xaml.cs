@@ -1,11 +1,10 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
-using SCR.Tools.TranslationEditor.WPF.Viewmodeling;
+using SCR.Tools.TranslationEditor.Project.Viewmodeling;
 using SCR.Tools.UndoRedo;
-using System.ComponentModel;
 using System.Windows;
 using Window = SCR.Tools.WPF.Styling.Window;
 
-namespace SCR.Tools.TranslationEditor.WPF.XAML.Windows
+namespace SCR.Tools.TranslationEditor.Project.WPF.Windows
 {
     /// <summary>
     /// Interaction logic for WndHelp.xaml
@@ -45,7 +44,7 @@ namespace SCR.Tools.TranslationEditor.WPF.XAML.Windows
 
         public void Open()
         {
-            if(_opened)
+            if (_opened)
             {
                 Focus();
             }
