@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  <PackageReference Include="PropertyChanged.Fody" Version="3.4.0" PrivateAssets="none" />
+	  <PackageReference Include="PropertyChanged.Fody" Version="3.4.1" PrivateAssets="none" />
   </ItemGroup>
 
   <ItemGroup>
