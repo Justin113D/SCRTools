@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SCR.Tools.TranslationEditor.ProjectEditor.WPF.UserControls"
              xmlns:converters="clr-namespace:SCR.Tools.WPF.Converters;assembly=SCR.Tools.WPF"
              xmlns:xaml="clr-namespace:SCR.Tools.TranslationEditor.ProjectEditor.WPF"
              xmlns:vm="clr-namespace:SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling"
@@ -42,123 +43,27 @@
                 <!--Used for calculating the offset of the left margin-->
                 <converters:LeftMarginMultiplierConverter x:Key="LeftMarginMultiplierConverter" Length="20"/>
 
-                <!--Picks the color based on the nodes state-->
-                <xaml:NodeStateConverter x:Key="NodeStateConverter"/>
-
                 <!--Base node template for all nodes-->
                 <ControlTemplate x:Key="TreeViewItemTemplate" TargetType="{x:Type TreeViewItem}">
                     <StackPanel MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}">
 
-                        <!-- The nodes container -->
-                        <Border x:Name="NodeContainer" IsHitTestVisible="True"
-                            Padding="{Binding Converter={StaticResource LeftMarginMultiplierConverter},
-                                RelativeSource={RelativeSource TemplatedParent}}">
+                        <local:UcNode 
+                            x:Name="NodeDisplay"
+                            DataContext="{Binding}" 
+                            TreePadding="{Binding 
+                                Converter={StaticResource LeftMarginMultiplierConverter},
+                                RelativeSource={RelativeSource TemplatedParent}}"
+                            NameWidth="{Binding ElementName=NameWidth, Path=ActualWidth}"
+                            DescriptionWidth="{Binding ElementName=DescriptionWidth, Path=ActualWidth}"
+                            IsExpanded="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}">
 
-                            <Border.Resources>
-                                <xaml:OffsetWidthConverter x:Key="OffsetWidthConverter" Padding="{Binding ElementName=NodeContainer, Path=Padding}"/>
-                            </Border.Resources>
+                            <ContentPresenter
+                                Margin="3 0 0 0" 
+                                MinHeight="19" 
+                                HorizontalAlignment="Stretch" 
+                                ContentSource="Header"/>
 
-                            <!-- Adding highlight color when hovering above the node -->
-                            <Border.Style>
-                                <Style TargetType="{x:Type Border}">
-                                    <Setter Property="Background" Value="Transparent"/>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="{DynamicResource HighlightedBG}"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Border.Style>
-
-                            <Grid Margin="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="15" />
-                                    <ColumnDefinition Width="auto" />
-                                    <ColumnDefinition Width="{Binding ElementName=NameWidth, Path=ActualWidth, 
-                                        Converter={StaticResource OffsetWidthConverter}}"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="{Binding ElementName=DescriptionWidth, Path=ActualWidth}"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Color display for the node state -->
-                                <Border 
-                                    CornerRadius="3" 
-                                    Background="{Binding State, Converter={StaticResource NodeStateConverter}}" 
-                                    Margin="2,5,2,5"/>
-
-                                <!-- Button for Expanding and collapsing the children of a node -->
-                                <ToggleButton 
-                                    x:Name="Expander" 
-                                    Grid.Column="1"
-                                    Style="{DynamicResource ExpandCollapseToggleStyle}"
-                                    IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
-                                    ClickMode="Press"
-                                    Focusable="False">
-
-                                    <ToggleButton.Template>
-                                        <ControlTemplate TargetType="ToggleButton">
-                                            <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" MinWidth="20">
-                                                <TextBlock
-                                                    Style="{DynamicResource AppTextBlock}"
-                                                    x:Name="ExpandSymbol"
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    Margin="1"
-                                                    Text="▸"/>
-                                            </Grid>
-
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsChecked" Value="True">
-                                                    <Setter Property="Text" TargetName="ExpandSymbol" Value="▾"/>
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </ToggleButton.Template>
-
-                                </ToggleButton>
-
-                                <!-- Node Name -->
-                                <TextBlock
-                                    Style="{DynamicResource AppTextBlock}"
-                                    Grid.Column="2"
-                                    Margin="4"
-                                    Text="{Binding Name}"
-                                    VerticalAlignment="Center"/>
-
-                                <ContentPresenter 
-                                    Grid.Column="3" 
-                                    Margin="3 0 0 0" 
-                                    MinHeight="19" 
-                                    HorizontalAlignment="Stretch" 
-                                    ContentSource="Header"/>
-
-                                <!-- Node Description -->
-                                <Grid Grid.Column="4">
-
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*"/>
-                                        <RowDefinition Height="auto"/>
-                                    </Grid.RowDefinitions>
-
-                                    <TextBlock 
-                                        Style="{DynamicResource AppTextBlock}"
-                                        Grid.Column="4" 
-                                        Text="{Binding Description}"
-                                        Foreground="{DynamicResource HintFontBrush}"
-                                        VerticalAlignment="Center"
-                                        Margin="6"/>
-
-                                    <Border x:Name="DefaultValueDisplay" Grid.Row="1" Margin="10, 3" BorderThickness="0, 2, 0, 0" BorderBrush="{DynamicResource HintFontBrush}">
-                                        <TextBlock
-                                            Style="{DynamicResource AppTextBlock}"
-                                            Text="{Binding DefaultValue}"
-                                            Margin="-6, 3"
-                                            VerticalAlignment="Center"/>
-                                    </Border>
-                                </Grid>
-
-                            </Grid>
-                        </Border>
+                        </local:UcNode>
 
                         <!-- Node Children -->
                         <Border x:Name="ItemsHost">
@@ -171,12 +76,6 @@
                         <Trigger Property="IsExpanded" Value="false">
                             <Setter TargetName="ItemsHost" Property="Visibility" Value="Collapsed"/>
                         </Trigger>
-                        <DataTrigger Binding="{Binding CanExpand}" Value="False">
-                            <Setter TargetName="Expander" Property="Visibility" Value="Collapsed"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding DefaultValue}" Value="">
-                            <Setter TargetName="DefaultValueDisplay" Property="Visibility" Value="Collapsed"/>
-                        </DataTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </TreeView.Resources>

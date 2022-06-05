@@ -1,40 +1,25 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 
 namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF
 {
     [ValueConversion(typeof(double), typeof(GridLength))]
-    internal class OffsetWidthConverter : Freezable, IValueConverter
+    internal class OffsetWidthConverter : IMultiValueConverter
     {
-        protected override Freezable CreateInstanceCore()
-            => new OffsetWidthConverter();
-
-
-        public static readonly DependencyProperty PaddingProperty
-            = DependencyProperty.Register(
-                nameof(Padding),
-                typeof(Thickness),
-                typeof(OffsetWidthConverter));
-
-        public Thickness Padding
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            get => (Thickness)GetValue(PaddingProperty);
-            set => SetValue(PaddingProperty, value);
+            double width = (double)values[0];
+            Thickness padding = (Thickness)values[1];
+            bool canExpand = (bool)values[2];
+
+            // we know of the 15 pixels that the node state border takes
+            return new GridLength(width - (padding.Left + 15 + (canExpand ? 20 : 0)));
         }
 
-
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is not double width)
-                return 0.0;
-
-            return new GridLength(width - Padding.Left);
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

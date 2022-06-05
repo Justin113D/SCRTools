@@ -1,0 +1,159 @@
+﻿<UserControl x:Class="SCR.Tools.TranslationEditor.ProjectEditor.WPF.UserControls.UcNode"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:wpf="clr-namespace:SCR.Tools.TranslationEditor.ProjectEditor.WPF"
+             mc:Ignorable="d" 
+             d:DesignHeight="60" d:DesignWidth="800"
+             d:DataContext="{x:Static wpf:DesignDataFactory.Node}"
+             x:Name="Container">
+
+    <UserControl.Resources>
+        <wpf:NodeStateConverter x:Key="NodeStateConverter"/>
+        <wpf:OffsetWidthConverter x:Key="OffsetWidthConverter"/>
+    </UserControl.Resources>
+    
+    <Border x:Name="NodeContainer" IsHitTestVisible="True"
+        Padding="{Binding ElementName=Container, Path=TreePadding}">
+
+        <!-- Adding highlight color when hovering above the node -->
+        <Border.Style>
+            <Style TargetType="{x:Type Border}">
+                <Setter Property="Background" Value="Transparent"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource HighlightedBG}"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+
+        <Grid Margin="1" ShowGridLines="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="auto"/>
+                
+                <ColumnDefinition>
+                    <ColumnDefinition.Style>
+                        <Style TargetType="{x:Type ColumnDefinition}">
+                            <Setter Property="Width">
+                                <Setter.Value>
+                                    <MultiBinding Converter="{StaticResource OffsetWidthConverter}">
+                                        <Binding ElementName="Container" Path="NameWidth"/>
+                                        <Binding ElementName="Container" Path="TreePadding"/>
+                                        <Binding Path="CanExpand"/>
+                                    </MultiBinding>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ColumnDefinition.Style>
+                </ColumnDefinition>
+                
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="{Binding ElementName=Container, Path=DescriptionWidth}"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Color display for the node state -->
+            <Border 
+                CornerRadius="3" 
+                Background="{Binding State, Converter={StaticResource NodeStateConverter}}" 
+                Margin="2,5,2,5"/>
+
+            <!-- Button for Expanding and collapsing the children of a node -->
+            <ToggleButton 
+                x:Name="Expander" 
+                Grid.Column="1"
+                Width="20"
+                IsChecked="{Binding Path=IsExpanded, ElementName=Container}"
+                ClickMode="Press"
+                Focusable="False">
+
+                <ToggleButton.Style>
+                    <Style TargetType="{x:Type ToggleButton}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding CanExpand}" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ToggleButton.Style>
+
+                <ToggleButton.Template>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" MinWidth="20">
+                            <TextBlock
+                                Style="{DynamicResource AppTextBlock}"
+                                x:Name="ExpandSymbol"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Margin="1"
+                                Text="▸"/>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Text" TargetName="ExpandSymbol" Value="▾"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </ToggleButton.Template>
+
+            </ToggleButton>
+
+            <!-- Node Name -->
+            <TextBlock
+                Style="{DynamicResource AppTextBlock}"
+                Grid.Column="2"
+                Margin="4"
+                Text="{Binding Name}"
+                VerticalAlignment="Center"/>
+
+            <ContentPresenter
+                Grid.Column="3" 
+                Content="{Binding ElementName=Container, Path=InnerContent}"/>
+
+            <!-- Node Description -->
+            <Grid Grid.Column="4">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock 
+                    Style="{DynamicResource AppTextBlock}"
+                    Grid.Column="4" 
+                    Text="{Binding Description}"
+                    Foreground="{DynamicResource HintFontBrush}"
+                    VerticalAlignment="Center"
+                    Margin="6"/>
+
+                <Border 
+                    x:Name="DefaultValueDisplay" 
+                    Grid.Row="1"
+                    Margin="10, 3" 
+                    BorderThickness="0, 2, 0, 0" 
+                    BorderBrush="{DynamicResource HintFontBrush}">
+
+                    <Border.Style>
+                        <Style TargetType="{x:Type Border}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding DefaultValue}" Value="">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    
+                    <TextBlock
+                        Style="{DynamicResource AppTextBlock}"
+                        Text="{Binding DefaultValue}"
+                        Margin="-6, 3"
+                        VerticalAlignment="Center"/>
+                </Border>
+            </Grid>
+
+        </Grid>
+    </Border>
+</UserControl>
