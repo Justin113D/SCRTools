@@ -31,6 +31,9 @@
 
         #endregion
 
+        /// <summary>
+        /// Used for checking if a change tracker is on the same change-state
+        /// </summary>
         public struct Pin
         {
             private readonly ChangeTracker tracker;
@@ -54,8 +57,14 @@
             }
         }
 
+        /// <summary>
+        /// Resets the tracker when the next change occurs (waits for grouping to end)
+        /// </summary>
         public bool ResetOnNextChange { get; set; }
 
+        /// <summary>
+        /// Whether there are any active changes
+        /// </summary>
         public bool HasChanges => _currentChangeIndex > -1;
 
         static ChangeTracker()
@@ -72,6 +81,9 @@
             _currentChangeIndex = -1;
         }
 
+        /// <summary>
+        /// Places the instance into <see cref="Global"/>
+        /// </summary>
         public void Use()
             => Global = this;
 
@@ -197,6 +209,9 @@
             _trackedChanges.Add(change);
         }
 
+        /// <summary>
+        /// Creates a change that does nothing
+        /// </summary>
         public void BlankChange()
             => TrackChange(new BlankChange());
 

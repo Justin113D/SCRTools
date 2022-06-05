@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SCR.Tools.UndoRedo
+﻿namespace SCR.Tools.UndoRedo
 {
     /// <summary>
     /// Trackable for changing a single value
@@ -8,13 +6,8 @@ namespace SCR.Tools.UndoRedo
     /// <typeparam name="T">Type of the changed value</typeparam>
     public struct ChangedValue<T> : ITrackable
     {
-        /// <summary>
-        /// Modify callback which executes the value change
-        /// </summary>
         private readonly Action<T> _modifyCallback;
-
         private readonly T _oldValue;
-
         private readonly T _newValue;
 
         /// <summary>
