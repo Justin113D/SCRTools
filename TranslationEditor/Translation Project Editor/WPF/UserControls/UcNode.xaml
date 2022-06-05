@@ -14,7 +14,7 @@
         <wpf:OffsetWidthConverter x:Key="OffsetWidthConverter"/>
     </UserControl.Resources>
     
-    <Border x:Name="NodeContainer" IsHitTestVisible="True"
+    <Border IsHitTestVisible="True"
         Padding="{Binding ElementName=Container, Path=TreePadding}">
 
         <!-- Adding highlight color when hovering above the node -->
@@ -29,7 +29,7 @@
             </Style>
         </Border.Style>
 
-        <Grid Margin="1" ShowGridLines="True">
+        <Grid Margin="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="15"/>
                 <ColumnDefinition Width="auto"/>
