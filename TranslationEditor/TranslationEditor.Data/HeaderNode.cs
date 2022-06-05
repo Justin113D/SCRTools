@@ -157,7 +157,9 @@ namespace SCR.Tools.TranslationEditor.Data
                 if (finished)
                     break;
 
-                _versions.RemoveAt(currentIndex);
+                ChangeTracker.Global.TrackChange(
+                    new ChangeListRemoveAt<Version>(
+                        _versions, currentIndex));
             }
 
             ChangeTracker.Global.EndGroup();
