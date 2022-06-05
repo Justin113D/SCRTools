@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Input;
 using System.Text.Json;
 using SCR.Tools.DynamicDataExpression;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Linq;

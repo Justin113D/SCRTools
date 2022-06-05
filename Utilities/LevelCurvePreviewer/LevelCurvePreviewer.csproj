@@ -15,4 +15,8 @@
 		<PackageReference Include="PropertyChanged.Fody" Version="3.4.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Libraries\WPF\WPF.csproj" />
+	</ItemGroup>
+
 </Project>
