@@ -81,6 +81,9 @@ namespace SCR.Tools.TranslationEditor.Data
 
         public static HeaderNode ReadFormat(string text)
         {
+            ChangeTracker prev = ChangeTracker.Global;
+
+            new ChangeTracker().Use();
             ChangeTracker.Global.BeginGroup();
 
             HeaderNode result = new();
@@ -123,15 +126,13 @@ namespace SCR.Tools.TranslationEditor.Data
                 {
                     result.AddChildNode(node, false);
                 }
-
             }
-            catch
+            finally
             {
-                ChangeTracker.Global.EndGroup(true);
-                throw;
+                ChangeTracker.Global.EndGroup();
+                prev.Use();
             }
 
-            ChangeTracker.Global.EndGroup();
             return result;
         }
 

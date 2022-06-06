@@ -273,9 +273,19 @@ namespace SCR.Tools.TranslationEditor.Data
                 throw new ArgumentException($"Old name \"{lowerCase}\" doesnt match the node \"{node.Name}\" passed. Matches: \"{_stringNodes[lowerCase].Name}\"");
             }
 
-            _stringNodes.Remove(lowerCase);
+            string newName = node.Name.ToLower();
 
-            _stringNodes.Add(node.Name.ToLower(), node);
+            ChangeTracker.Global.TrackChange(new Change(
+                () =>
+                {
+                    _stringNodes.Remove(lowerCase);
+                    _stringNodes.Add(newName, node);
+                },
+                () =>
+                {
+                    _stringNodes.Remove(newName);
+                    _stringNodes.Add(lowerCase, node);
+                }));
         }
 
         /// <summary>

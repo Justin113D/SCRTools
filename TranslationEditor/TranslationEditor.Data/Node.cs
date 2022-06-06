@@ -93,6 +93,7 @@ namespace SCR.Tools.TranslationEditor.Data
             set
             {
                 string? newValue = value?.Trim();
+                newValue = newValue?.Length > 0 ? newValue : null;
 
                 if (newValue == _description)
                 {
@@ -104,7 +105,7 @@ namespace SCR.Tools.TranslationEditor.Data
                     new ChangedValue<string?>(
                         (v) => _description = v,
                         _description,
-                        newValue?.Length > 0 ? newValue : null
+                        newValue
                 )); ;
             }
         }
