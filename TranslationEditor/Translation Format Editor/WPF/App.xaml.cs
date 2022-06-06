@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace SCR.Tools.TranslationEditor.Format.WPF
+namespace SCR.Tools.TranslationEditor.FormatEditor.WPF
 {
     /// <summary>
     /// Interaction logic for App.xaml
@@ -37,7 +37,7 @@ namespace SCR.Tools.TranslationEditor.Format.WPF
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            AppFontSize = Format.Properties.Settings.Default.Fontsize;
+            AppFontSize = FormatEditor.Properties.Settings.Default.Fontsize;
         }
 
         private void OnRedo(object sender, object e)

@@ -7,7 +7,7 @@
 		<UseWPF>true</UseWPF>
 		<RootNamespace>SCR.Tools.TranslationEditor.FormatEditor</RootNamespace>
 		<AssemblyName>Translation Format Editor</AssemblyName>
-		<StartupObject>SCR.Tools.TranslationEditor.Format.WPF.App</StartupObject>
+		<StartupObject>SCR.Tools.TranslationEditor.FormatEditor.WPF.App</StartupObject>
 		<ApplicationIcon>Icon.ico</ApplicationIcon>
 	</PropertyGroup>
 
@@ -22,7 +22,44 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Viewmodeling\" />
+	  <Compile Update="WPF\UserControls\UcMenuBar.xaml.cs">
+	    <SubType>Code</SubType>
+	  </Compile>
+	  <Compile Update="WPF\UserControls\UcMessageBar.xaml.cs">
+	    <SubType>Code</SubType>
+	  </Compile>
+	  <Compile Update="WPF\UserControls\UcNode.xaml.cs">
+	    <SubType>Code</SubType>
+	  </Compile>
+	  <Compile Update="WPF\UserControls\UcNodeViewer.xaml.cs">
+	    <SubType>Code</SubType>
+	  </Compile>
+	  <Compile Update="WPF\Windows\WndSettings.xaml.cs">
+	    <SubType>Code</SubType>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="WPF\UserControls\UcMenuBar.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
+	  <Page Update="WPF\UserControls\UcMessageBar.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
+	  <Page Update="WPF\UserControls\UcNode.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
+	  <Page Update="WPF\UserControls\UcNodeViewer.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
+	  <Page Update="WPF\Windows\WndSettings.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
 	</ItemGroup>
 
 </Project>

@@ -4,11 +4,53 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:styling="clr-namespace:SCR.Tools.WPF.Styling;assembly=SCR.Tools.WPF"
+        xmlns:baseVM ="clr-namespace:SCR.Tools.Viewmodeling;assembly=SCR.Tools.WPF"
+        xmlns:ucs="clr-namespace:SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls"
+        xmlns:wpf="clr-namespace:SCR.Tools.TranslationEditor.FormatEditor.WPF"
         mc:Ignorable="d"
         Title="Translation Editor" Height="450" Width="800"
         MinWidth="600"
-        Icon="pack://application:,,,/SCR.Tools.WPF;component/Icons/Dictionary_32x.png">
+        Icon="pack://application:,,,/SCR.Tools.WPF;component/Icons/Dictionary_32x.png"
+        d:DataContext="{x:Static wpf:DesignDataFactory.Main}">
+
+    <styling:Window.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="N">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_New"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+        <KeyBinding Modifiers="Ctrl" Key="O">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_Open"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+        <KeyBinding Modifiers="Ctrl" Key="S">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_Save"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="S">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_SaveAs"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+
+        <KeyBinding Modifiers="Ctrl" Key="Z" Command="{Binding Cmd_Undo}"/>
+        <KeyBinding Modifiers="Ctrl" Key="Y" Command="{Binding Cmd_Redo}"/>
+    </styling:Window.InputBindings>
+
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <ucs:UcMenuBar x:Name="MenuBar" Grid.Row="0" DataContext="{Binding}"/>
+
+        <ucs:UcNodeViewer Grid.Row="1" DataContext="{Binding Format}"/>
+
+        <ucs:UcMessageBar Grid.Row="2" DataContext="{Binding}"/>
+
     </Grid>
 </styling:Window>

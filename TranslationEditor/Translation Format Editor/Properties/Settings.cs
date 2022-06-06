@@ -1,7 +1,7 @@
 ﻿using System.Configuration;
 using System.Diagnostics;
 
-namespace SCR.Tools.TranslationEditor.Format.Properties
+namespace SCR.Tools.TranslationEditor.FormatEditor.Properties
 {
     internal class Settings : ApplicationSettingsBase
     {
@@ -16,6 +16,15 @@ namespace SCR.Tools.TranslationEditor.Format.Properties
         {
             get => (double)this[nameof(Fontsize)];
             set => this[nameof(Fontsize)] = value;
+        }
+
+        [UserScopedSetting()]
+        [DebuggerNonUserCode()]
+        [DefaultSettingValue("True")]
+        public bool JsonIndenting
+        {
+            get => (bool)this[nameof(JsonIndenting)];
+            set => this[nameof(JsonIndenting)] = value;
         }
     }
 }

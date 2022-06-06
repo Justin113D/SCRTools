@@ -1,4 +1,5 @@
-﻿using SCR.Tools.WPF.Styling;
+﻿using SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling;
+using SCR.Tools.WPF.Styling;
 
 namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.Windows
 {
@@ -9,7 +10,34 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.Windows
     {
         public WndMain()
         {
+            InitDataContext();
             InitializeComponent();
+        }
+
+        private void InitDataContext()
+        {
+            VmMain vm = new();
+            DataContext = vm;
+        }
+
+        private void IB_New(object sender, object e)
+        {
+            MenuBar.NewFormat(sender, new());
+        }
+
+        private void IB_Open(object sender, object e)
+        {
+            MenuBar.LoadFormat(sender, new());
+        }
+
+        private void IB_Save(object sender, object e)
+        {
+            MenuBar.SaveFormat(sender, new());
+        }
+
+        private void IB_SaveAs(object sender, object e)
+        {
+            MenuBar.SaveFormatAs(sender, new());
         }
     }
 }
