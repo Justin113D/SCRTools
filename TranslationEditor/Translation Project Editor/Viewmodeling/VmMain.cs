@@ -79,9 +79,10 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         /// </summary>
         private void Undo()
         {
-            ProjectTracker.Undo();
-
-            SetMessage("Performed Undo", false);
+            if(ProjectTracker.Undo())
+            {
+                SetMessage("Performed Undo", false);
+            }
         }
 
         /// <summary>
@@ -89,9 +90,10 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         /// </summary>
         private void Redo()
         {
-            ProjectTracker.Redo();
-
-            SetMessage("Performed Redo", false);
+            if(ProjectTracker.Redo())
+            {
+                SetMessage("Performed Redo", false);
+            }
         }
 
 
@@ -110,10 +112,10 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         {
             try
             {
-                ProjectTracker.ResetOnNextChange = true;
                 HeaderNode headerNode = JsonFormatHandler.ReadFormat(format);
 
                 Format = new(headerNode, ProjectTracker);
+                ProjectTracker.Reset();
                 OnPropertyChanged(nameof(FormatLoaded));
 
                 SetMessage("Loaded Format", false);

@@ -278,7 +278,6 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         /// <param name="data">Data to load</param>
         public void LoadProject(string data)
         {
-            ProjectTracker.ResetOnNextChange = true;
             ProjectTracker.BeginGroup();
 
             try
@@ -293,6 +292,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
 
             RefreshNodeValues();
             ProjectTracker.EndGroup();
+            ProjectTracker.Reset();
         }
 
         /// <summary>
@@ -306,13 +306,9 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         /// </summary>
         public void ResetProject()
         {
-            ProjectTracker.ResetOnNextChange = true;
-            ProjectTracker.BeginGroup();
-
             _header.ResetAllStrings();
             RefreshNodeValues();
-
-            ProjectTracker.EndGroup();
+            ProjectTracker.Reset();
         }
 
 
@@ -327,7 +323,6 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
             string keyFilePath = Path.ChangeExtension(filepath, "langkey");
             string keys = File.ReadAllText(keyFilePath);
 
-            ProjectTracker.ResetOnNextChange = true;
             ProjectTracker.BeginGroup();
 
             try
@@ -340,8 +335,9 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
                 throw;
             }
 
-            RefreshNodeValues();
             ProjectTracker.EndGroup();
+            ProjectTracker.Reset();
+            RefreshNodeValues();
         }
 
         /// <summary>

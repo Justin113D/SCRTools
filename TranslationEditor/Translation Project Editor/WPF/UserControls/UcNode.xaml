@@ -31,9 +31,6 @@
 
         <Grid Margin="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="15"/>
-                <ColumnDefinition Width="auto"/>
-                
                 <ColumnDefinition>
                     <ColumnDefinition.Style>
                         <Style TargetType="{x:Type ColumnDefinition}">
@@ -42,7 +39,6 @@
                                     <MultiBinding Converter="{StaticResource OffsetWidthConverter}">
                                         <Binding ElementName="Container" Path="NameWidth"/>
                                         <Binding ElementName="Container" Path="TreePadding"/>
-                                        <Binding Path="CanExpand"/>
                                     </MultiBinding>
                                 </Setter.Value>
                             </Setter>
@@ -54,83 +50,91 @@
                 <ColumnDefinition Width="{Binding ElementName=Container, Path=DescriptionWidth}"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Color display for the node state -->
-            <Border 
-                CornerRadius="3" 
-                Background="{Binding State, Converter={StaticResource NodeStateConverter}}" 
-                Margin="2,5,2,5"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- Color display for the node state -->
+                <Border 
+                    CornerRadius="3" 
+                    Background="{Binding State, Converter={StaticResource NodeStateConverter}}" 
+                    Margin="2,5,2,5"/>
 
-            <!-- Button for Expanding and collapsing the children of a node -->
-            <ToggleButton 
-                x:Name="Expander" 
-                Grid.Column="1"
-                Width="20"
-                IsChecked="{Binding Path=IsExpanded, ElementName=Container}"
-                ClickMode="Press"
-                Focusable="False">
+                <!-- Button for Expanding and collapsing the children of a node -->
+                <ToggleButton 
+                    x:Name="Expander" 
+                    Grid.Column="1"
+                    Width="20"
+                    IsChecked="{Binding Path=IsExpanded, ElementName=Container}"
+                    ClickMode="Press"
+                    Focusable="False">
 
-                <ToggleButton.Style>
-                    <Style TargetType="{x:Type ToggleButton}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding CanExpand}" Value="False">
-                                <Setter Property="Visibility" Value="Collapsed"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </ToggleButton.Style>
+                    <ToggleButton.Style>
+                        <Style TargetType="{x:Type ToggleButton}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CanExpand}" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
 
-                <ToggleButton.Template>
-                    <ControlTemplate TargetType="ToggleButton">
-                        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" MinWidth="20">
-                            <TextBlock
-                                Style="{DynamicResource AppTextBlock}"
-                                x:Name="ExpandSymbol"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Margin="1"
-                                Text="▸"/>
-                        </Grid>
+                    <ToggleButton.Template>
+                        <ControlTemplate TargetType="ToggleButton">
+                            <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" MinWidth="20">
+                                <TextBlock
+                                    Style="{DynamicResource AppTextBlock}"
+                                    x:Name="ExpandSymbol"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Margin="1"
+                                    Text="▸"/>
+                            </Grid>
 
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter Property="Text" TargetName="ExpandSymbol" Value="▾"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </ToggleButton.Template>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Text" TargetName="ExpandSymbol" Value="▾"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </ToggleButton.Template>
 
-            </ToggleButton>
+                </ToggleButton>
 
-            <!-- Node Name -->
-            <TextBlock
-                Style="{DynamicResource AppTextBlock}"
-                Grid.Column="2"
-                Margin="4"
-                Text="{Binding Name}"
-                VerticalAlignment="Center"/>
+                <!-- Node Name -->
+                <TextBlock
+                    Style="{DynamicResource AppTextBlock}"
+                    Grid.Column="2"
+                    Margin="4"
+                    Text="{Binding Name}"
+                    VerticalAlignment="Center"/>
+                
+            </Grid>
 
             <ContentPresenter
-                Grid.Column="3" 
+                Grid.Column="1" 
                 Content="{Binding ElementName=Container, Path=InnerContent}"/>
 
-            <!-- Node Description -->
-            <Grid Grid.Column="4">
+            <Grid Grid.Column="2">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
+                <!-- Node Description -->
                 <TextBlock 
                     Style="{DynamicResource AppTextBlock}"
-                    Grid.Column="4" 
                     Text="{Binding Description}"
                     Foreground="{DynamicResource HintFontBrush}"
                     VerticalAlignment="Center"
                     Margin="6"/>
 
+                <!-- Default Value -->
                 <Border 
-                    x:Name="DefaultValueDisplay" 
                     Grid.Row="1"
                     Margin="10, 3" 
                     BorderThickness="0, 2, 0, 0" 

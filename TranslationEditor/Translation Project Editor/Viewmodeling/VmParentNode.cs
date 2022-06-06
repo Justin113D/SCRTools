@@ -12,7 +12,6 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
 
         private bool _expanded;
 
-
         public ReadOnlyObservableCollection<VmNode> ChildNodes { get; }
 
         /// <summary>
