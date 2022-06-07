@@ -10,8 +10,11 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF
         {
             Main = new VmMain();
             Main.LoadFormat(_format);
+            Format = Main.Format;
         }
 
         public static VmMain Main { get; }
+
+        public static VmFormat Format { get; }
     }
 }

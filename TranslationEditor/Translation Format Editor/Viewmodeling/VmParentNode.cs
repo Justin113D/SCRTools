@@ -2,6 +2,7 @@
 using SCR.Tools.TranslationEditor.Data.Events;
 using SCR.Tools.UndoRedo;
 using SCR.Tools.UndoRedo.ListChange;
+using SCR.Tools.Viewmodeling;
 using System;
 using System.Collections.ObjectModel;
 
@@ -45,6 +46,12 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         public override bool CanExpand
             => ParentNode.ChildNodes.Count > 0;
 
+        public RelayCommand CmdAddNewStringNode
+            => new(AddNewStringNode);
+
+        public RelayCommand CmdAddNewParentNode
+            => new(AddNewParentNode);
+
         public VmParentNode(VmFormat format, ParentNode node)
             : base(format, node)
         {
@@ -58,7 +65,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         {
             _format.FormatTracker.BeginGroup();
 
-            if(args.FromIndex > -1)
+            if (args.FromIndex > -1)
             {
                 _format.FormatTracker.TrackChange(
                     new ChangeListRemoveAt<VmNode>(
@@ -72,6 +79,8 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                     new ChangeListInsert<VmNode>(
                         _childNodes, vmNode, args.ToIndex));
             }
+
+            TrackNotifyProperty(nameof(CanExpand));
 
             _format.FormatTracker.EndGroup();
         }
@@ -95,7 +104,6 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             ));
         }
 
-
         private void CreateChildViewModels()
         {
             foreach (Node node in ParentNode.ChildNodes)
@@ -103,6 +111,19 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 VmNode vmNode = _format.GetNodeViewmodel(node);
                 _childNodes.Add(vmNode);
             }
+        }
+
+
+        private void AddNewStringNode()
+        {
+            ParentNode.AddChildNode(new StringNode("String", ""));
+            Expanded = true;
+        }
+
+        private void AddNewParentNode()
+        {
+            ParentNode.AddChildNode(new ParentNode("Category"));
+            Expanded = true;
         }
 
         public void ExpandAll()

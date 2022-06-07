@@ -5,11 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls"
              xmlns:converters="clr-namespace:SCR.Tools.WPF.Converters;assembly=SCR.Tools.WPF"
-             xmlns:xaml="clr-namespace:SCR.Tools.TranslationEditor.FormatEditor.WPF"
+             xmlns:wpf="clr-namespace:SCR.Tools.TranslationEditor.FormatEditor.WPF"
              xmlns:vm="clr-namespace:SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling"
-             xmlns:data="clr-namespace:SCR.Tools.TranslationEditor.Data;assembly=SCR.Tools.TranslationEditor.Data"
+             
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{x:Static wpf:DesignDataFactory.Format}"
              x:Name="NodeViewer">
 
     <Grid>
@@ -41,61 +41,60 @@
             <TreeView.Resources>
                 <!--Used for calculating the offset of the left margin-->
                 <converters:LeftMarginMultiplierConverter x:Key="LeftMarginMultiplierConverter" Length="20"/>
-
-                <!--Base node template for all nodes-->
-                <ControlTemplate x:Key="TreeViewItemTemplate" TargetType="{x:Type TreeViewItem}">
-                    <StackPanel MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}">
-
-                        <local:UcNode 
-                            x:Name="NodeDisplay"
-                            DataContext="{Binding}" 
-                            TreePadding="{Binding 
-                                Converter={StaticResource LeftMarginMultiplierConverter},
-                                RelativeSource={RelativeSource TemplatedParent}}"
-                            NameWidth="{Binding ElementName=NameWidth, Path=ActualWidth}"
-                            DescriptionWidth="{Binding ElementName=DescriptionWidth, Path=ActualWidth}"
-                            IsExpanded="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}">
-
-                            <ContentPresenter
-                                Margin="3 0 0 0" 
-                                MinHeight="19" 
-                                HorizontalAlignment="Stretch" 
-                                ContentSource="Header"/>
-
-                        </local:UcNode>
-
-                        <!-- Node Children -->
-                        <Border x:Name="ItemsHost">
-                            <ItemsPresenter/>
-                        </Border>
-
-                    </StackPanel>
-
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsExpanded" Value="false">
-                            <Setter TargetName="ItemsHost" Property="Visibility" Value="Collapsed"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
             </TreeView.Resources>
-
 
             <!-- Using the teomplate from the resources -->
             <TreeView.ItemContainerStyle>
                 <Style TargetType="{x:Type TreeViewItem}">
                     <Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
                     <Setter Property="IsExpanded" Value="{Binding Expanded, Mode=TwoWay}"/>
-                    <Setter Property="Template" Value="{StaticResource TreeViewItemTemplate}"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type TreeViewItem}">
+                                <StackPanel MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}">
+
+                                    <local:UcNode 
+                                        x:Name="NodeDisplay"
+                                        DataContext="{Binding}" 
+                                        TreePadding="{Binding 
+                                            Converter={StaticResource LeftMarginMultiplierConverter},
+                                            RelativeSource={RelativeSource TemplatedParent}}"
+                                        NameWidth="{Binding ElementName=NameWidth, Path=ActualWidth}"
+                                        DescriptionWidth="{Binding ElementName=DescriptionWidth, Path=ActualWidth}"
+                                        IsExpanded="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}">
+
+                                        <ContentPresenter
+                                            Margin="3 0 0 0" 
+                                            MinHeight="19" 
+                                            HorizontalAlignment="Stretch" 
+                                            ContentSource="Header"/>
+
+                                    </local:UcNode>
+
+                                    <!-- Node Children -->
+                                    <Border x:Name="ItemsHost">
+                                        <ItemsPresenter/>
+                                    </Border>
+
+                                </StackPanel>
+
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsExpanded" Value="false">
+                                        <Setter TargetName="ItemsHost" Property="Visibility" Value="Collapsed"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
                 </Style>
             </TreeView.ItemContainerStyle>
 
-
             <!-- Templates for both node types-->
             <TreeView.ItemTemplateSelector>
-                <xaml:NodeTemplateSelector>
+                <wpf:NodeTemplateSelector>
 
                     <!-- Parent Node-->
-                    <xaml:NodeTemplateSelector.ParentTemplate>
+                    <wpf:NodeTemplateSelector.ParentTemplate>
                         <HierarchicalDataTemplate DataType="{x:Type vm:VmParentNode}" ItemsSource="{Binding ChildNodes}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -105,25 +104,28 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Button
-                                    VerticalAlignment="Center"
                                     Grid.Column="1"
-                                    Style="{DynamicResource GreenButton}"
-                                    Padding="5"
-                                    Content="Add String"/>
-
-                                <Button
-                                    VerticalAlignment="Center"
-                                    Grid.Column="2"
                                     Style="{DynamicResource BlueButton}"
+                                    Content="Add Category"
+                                    VerticalAlignment="Center"
                                     Margin="2 0"
-                                    Padding="5"
-                                    Content="Add Parent"/>
+                                    Padding="10, 5"
+                                    Command="{Binding CmdAddNewParentNode}"/>
+                                
+                                <Button
+                                    Grid.Column="2"
+                                    Style="{DynamicResource GreenButton}"
+                                    Content="Add String"
+                                    VerticalAlignment="Center"
+                                    Padding="10, 5"
+                                    Command="{Binding CmdAddNewStringNode}"/>
+
                             </Grid>
                         </HierarchicalDataTemplate>
-                    </xaml:NodeTemplateSelector.ParentTemplate>
+                    </wpf:NodeTemplateSelector.ParentTemplate>
 
                     <!-- String Node-->
-                    <xaml:NodeTemplateSelector.StringTemplate>
+                    <wpf:NodeTemplateSelector.StringTemplate>
                         <HierarchicalDataTemplate DataType="{x:Type vm:VmStringNode}">
                             <TextBox 
                                 Style="{DynamicResource TextBoxUndo}"
@@ -134,9 +136,42 @@
                                 VerticalAlignment="Stretch">
                             </TextBox>
                         </HierarchicalDataTemplate>
-                    </xaml:NodeTemplateSelector.StringTemplate>
-                </xaml:NodeTemplateSelector>
+                    </wpf:NodeTemplateSelector.StringTemplate>
+                </wpf:NodeTemplateSelector>
             </TreeView.ItemTemplateSelector>
+
+            <TreeView.Template>
+                <ControlTemplate TargetType="{x:Type TreeView}">
+                    <ScrollViewer 
+                        Focusable="False"
+                        CanContentScroll="False"
+                        Padding="4" Background="{DynamicResource BG1}">
+                        
+                        <StackPanel>
+                            <ItemsPresenter />
+                            <Grid Margin="5, 20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Column="1" 
+                                        Style="{DynamicResource BlueButton}" 
+                                        Content="Add Category" 
+                                        Margin="4 0"
+                                        Command="{Binding CmdAddNewParentNode}"/>
+                                
+                                <Button Grid.Column="2" 
+                                        Style="{DynamicResource GreenButton}" 
+                                        Content="Add String" 
+                                        Command="{Binding CmdAddNewStringNode}"/>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </ControlTemplate>
+            </TreeView.Template>
         </TreeView>
 
     </Grid>

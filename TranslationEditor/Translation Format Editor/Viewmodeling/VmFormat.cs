@@ -106,6 +106,12 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         private readonly Dictionary<Node, VmNode> _nodeTable;
 
+        public RelayCommand CmdAddNewStringNode
+            => new(AddNewStringNode);
+
+        public RelayCommand CmdAddNewParentNode
+            => new(AddNewParentNode);
+
         public VmFormat(HeaderNode data, ChangeTracker projectTracker)
         {
             _header = data;
@@ -196,6 +202,18 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             ));
             FormatTracker.EndGroup();
         }
+
+
+        private void AddNewStringNode()
+        {
+            _header.AddChildNode(new StringNode("String", ""));
+        }
+
+        private void AddNewParentNode()
+        {
+            _header.AddChildNode(new ParentNode("Category"));
+        }
+
 
         /// <summary>
         /// Expands all nodes
