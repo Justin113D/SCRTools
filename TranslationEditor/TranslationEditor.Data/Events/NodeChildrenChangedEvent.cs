@@ -1,17 +1,17 @@
 ﻿namespace SCR.Tools.TranslationEditor.Data.Events
 {
-    public class NodeChildrenChangedEvent : EventArgs
+    public class NodeChildrenChangedEventArgs : EventArgs
     {
         public int FromIndex { get; }
 
         public int ToIndex { get; }
 
-        public NodeChildrenChangedEvent(int fromIndex, int toIndex)
+        public NodeChildrenChangedEventArgs(int fromIndex, int toIndex)
         {
             FromIndex = fromIndex;
             ToIndex = toIndex;
         }
     }
 
-    public delegate void NodeChildrenChangedEventHandler(ParentNode source, NodeChildrenChangedEvent args);
+    public delegate void NodeChildrenChangedEventHandler(ParentNode source, NodeChildrenChangedEventArgs args);
 }

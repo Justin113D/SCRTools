@@ -1,4 +1,8 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
+using SCR.Tools.TranslationEditor.Data.Events;
+using SCR.Tools.UndoRedo;
+using SCR.Tools.UndoRedo.ListChange;
+using System;
 using System.Collections.ObjectModel;
 
 namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
@@ -46,20 +50,58 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         {
             _childNodes = new();
             ChildNodes = new(_childNodes);
+            node.ChildrenChanged += OnChildrenChanged;
+            node.HeaderChanged += OnHeaderChanged;
         }
+
+        private void OnChildrenChanged(ParentNode node, NodeChildrenChangedEventArgs args)
+        {
+            _format.FormatTracker.BeginGroup();
+
+            if(args.FromIndex > -1)
+            {
+                _format.FormatTracker.TrackChange(
+                    new ChangeListRemoveAt<VmNode>(
+                        _childNodes, args.FromIndex));
+            }
+
+            if(args.ToIndex > -1)
+            {
+                VmNode vmNode = _format.GetNodeViewmodel(ParentNode.ChildNodes[args.ToIndex]);
+                _format.FormatTracker.TrackChange(
+                    new ChangeListInsert<VmNode>(
+                        _childNodes, vmNode, args.ToIndex));
+            }
+
+            _format.FormatTracker.EndGroup();
+        }
+
+        private void OnHeaderChanged(Node node, NodeHeaderChangedEventArgs args)
+        {
+            if (args.NewHeader == ParentNode.Header)
+                return;
+
+            _format.FormatTracker.TrackChange(new Change(
+                () =>
+                {
+                    ParentNode.ChildrenChanged -= OnChildrenChanged;
+                    ParentNode.HeaderChanged -= OnHeaderChanged;
+                },
+                () =>
+                {
+                    ParentNode.ChildrenChanged += OnChildrenChanged;
+                    ParentNode.HeaderChanged += OnHeaderChanged;
+                }
+            ));
+        }
+
 
         private void CreateChildViewModels()
         {
             foreach (Node node in ParentNode.ChildNodes)
             {
-                if (node is ParentNode p)
-                {
-                    _childNodes.Add(new VmParentNode(_format, p));
-                }
-                else if (node is StringNode s)
-                {
-                    _childNodes.Add(new VmStringNode(_format, s));
-                }
+                VmNode vmNode = _format.GetNodeViewmodel(node);
+                _childNodes.Add(vmNode);
             }
         }
 

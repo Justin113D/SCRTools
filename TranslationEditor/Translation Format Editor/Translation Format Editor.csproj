@@ -20,46 +20,4 @@
 		<ProjectReference Include="..\..\Libraries\WPF\WPF.csproj" />
 		<ProjectReference Include="..\TranslationEditor.Data\TranslationEditor.Data.csproj" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Update="WPF\UserControls\UcMenuBar.xaml.cs">
-	    <SubType>Code</SubType>
-	  </Compile>
-	  <Compile Update="WPF\UserControls\UcMessageBar.xaml.cs">
-	    <SubType>Code</SubType>
-	  </Compile>
-	  <Compile Update="WPF\UserControls\UcNode.xaml.cs">
-	    <SubType>Code</SubType>
-	  </Compile>
-	  <Compile Update="WPF\UserControls\UcNodeViewer.xaml.cs">
-	    <SubType>Code</SubType>
-	  </Compile>
-	  <Compile Update="WPF\Windows\WndSettings.xaml.cs">
-	    <SubType>Code</SubType>
-	  </Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Page Update="WPF\UserControls\UcMenuBar.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
-	  <Page Update="WPF\UserControls\UcMessageBar.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
-	  <Page Update="WPF\UserControls\UcNode.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
-	  <Page Update="WPF\UserControls\UcNodeViewer.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
-	  <Page Update="WPF\Windows\WndSettings.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
-	</ItemGroup>
-
 </Project>

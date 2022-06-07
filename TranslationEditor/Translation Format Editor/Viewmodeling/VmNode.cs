@@ -1,5 +1,6 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.TranslationEditor.Data.Events;
+using SCR.Tools.UndoRedo;
 using SCR.Tools.Viewmodeling;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 _format.FormatTracker.EndGroup();
             }
         }
-            
+
         public string? Description
         {
             get => _node.Description;
@@ -53,6 +54,9 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         public virtual bool Expanded { get; set; }
 
+        public RelayCommand CmdRemove
+            => new(Remove);
+
         protected VmNode(VmFormat format, Node node)
         {
             _node = node;
@@ -63,5 +67,8 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         {
             _format.FormatTracker.GroupNotifyPropertyChanged(OnPropertyChanged, propertyName);
         }
+
+        private void Remove() 
+            =>_node.SetParent(null);
     }
 }

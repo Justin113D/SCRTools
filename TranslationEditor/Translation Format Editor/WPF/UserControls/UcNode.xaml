@@ -162,7 +162,8 @@
                     Style="{DynamicResource RedButton}"
                     Padding="5 0"
                     Margin="2 0"
-                    Content="X"/>
+                    Content="X"
+                    Command="{Binding CmdRemove}"/>
             </Grid>
         </Grid>
     </Border>

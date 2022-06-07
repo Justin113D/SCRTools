@@ -210,7 +210,7 @@ namespace SCR.Tools.TranslationEditor.Data
         /// Internal parent setter
         /// </summary>
         /// <param name="newParent"></param>
-        internal void InternalSetParent(ParentNode? newParent, bool updateVersionIndex)
+        internal void InternalSetParent(ParentNode? newParent, bool updateVersionIndex, int oldParentIndex, int newParentIndex)
         {
             ChangeTracker.Global.BeginGroup();
 
@@ -223,8 +223,6 @@ namespace SCR.Tools.TranslationEditor.Data
                     newParent
             ));
 
-            ParentChanged?.Invoke(this, new(oldParent, newParent));
-
             // if the two headers are different, invoke the 
             if (oldParent?.Header != newParent?.Header)
             {
@@ -232,6 +230,11 @@ namespace SCR.Tools.TranslationEditor.Data
                 newParent?.Header?.AddStringNodes(this, updateVersionIndex);
                 InvokeHeaderChanged(new(oldParent?.Header, newParent?.Header));
             }
+
+            ParentChanged?.Invoke(this, new(oldParent, newParent));
+
+            oldParent?.InvokeChildrenChanged(oldParentIndex, -1);
+            newParent?.InvokeChildrenChanged(-1, newParentIndex);
 
             ChangeTracker.Global.EndGroup();
         }

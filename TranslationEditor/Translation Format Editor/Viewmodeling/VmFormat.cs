@@ -1,5 +1,7 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
+using SCR.Tools.TranslationEditor.Data.Events;
 using SCR.Tools.UndoRedo;
+using SCR.Tools.UndoRedo.ListChange;
 using SCR.Tools.Viewmodeling;
 using System;
 using System.Collections.Generic;
@@ -102,15 +104,41 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         /// </summary>
         public ReadOnlyObservableCollection<VmNode> Nodes { get; }
 
+        private readonly Dictionary<Node, VmNode> _nodeTable;
+
         public VmFormat(HeaderNode data, ChangeTracker projectTracker)
         {
             _header = data;
             FormatTracker = projectTracker;
 
-
+            _nodeTable = new();
             _nodes = new();
             Nodes = new(_nodes);
             CreateNodes();
+
+            _header.ChildrenChanged += OnChildrenChanged;
+        }
+
+        public VmNode GetNodeViewmodel(Node node)
+        {
+            if (!_nodeTable.TryGetValue(node, out VmNode? vmNode))
+            {
+                if (node is ParentNode p)
+                {
+                    vmNode = new VmParentNode(this, p);
+                }
+                else if (node is StringNode s)
+                {
+                    vmNode = new VmStringNode(this, s);
+                }
+                else
+                {
+                    throw new NotSupportedException(node.GetType().Name + " is not a valid node type");
+                }
+                node.HeaderChanged += OnHeaderChanged;
+                _nodeTable.Add(node, vmNode);
+            }
+            return vmNode;
         }
 
         /// <summary>
@@ -120,17 +148,54 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         {
             foreach (Node node in _header.ChildNodes)
             {
-                if (node is ParentNode p)
-                {
-                    _nodes.Add(new VmParentNode(this, p));
-                }
-                else if (node is StringNode s)
-                {
-                    _nodes.Add(new VmStringNode(this, s));
-                }
+                VmNode vmNode = GetNodeViewmodel(node);
+                _nodes.Add(vmNode);
             }
         }
 
+        private void OnChildrenChanged(ParentNode node, NodeChildrenChangedEventArgs args)
+        {
+            FormatTracker.BeginGroup();
+
+            if (args.FromIndex > -1)
+            {
+                FormatTracker.TrackChange(
+                    new ChangeListRemoveAt<VmNode>(
+                        _nodes, args.FromIndex));
+            }
+
+            if (args.ToIndex > -1)
+            {
+                VmNode vmNode = GetNodeViewmodel(_header.ChildNodes[args.ToIndex]);
+                FormatTracker.TrackChange(
+                    new ChangeListInsert<VmNode>(
+                        _nodes, vmNode, args.ToIndex));
+            }
+
+            FormatTracker.EndGroup();
+        }
+
+        private void OnHeaderChanged(Node node, NodeHeaderChangedEventArgs args)
+        {
+            if (args.NewHeader == _header)
+                return;
+            
+            FormatTracker.BeginGroup();
+            VmNode vmNode = _nodeTable[node];
+            FormatTracker.TrackChange(new Change(
+                () =>
+                {
+                    _nodeTable.Remove(node);
+                    node.HeaderChanged -= OnHeaderChanged;
+                },
+                () =>
+                { 
+                    _nodeTable.Add(node, vmNode);
+                    node.HeaderChanged += OnHeaderChanged;
+                }
+            ));
+            FormatTracker.EndGroup();
+        }
 
         /// <summary>
         /// Expands all nodes

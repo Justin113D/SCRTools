@@ -32,38 +32,8 @@ namespace SCR.Tools.TranslationEditor.Data
         }
 
         public void AddChildNode(Node node, bool updateVersionIndex = true)
-        {
-            if (node.Parent == this)
-            {
-                ChangeTracker.Global.BlankChange();
-                return;
-            }
-
-            ChangeTracker.Global.BeginGroup();
-
-            if (node.Parent != null)
-            {
-                ParentNode otherParent = node.Parent;
-                int index = otherParent._childNodes.IndexOf(node);
-                otherParent.InternalRemoveNode(node);
-                otherParent.ChildrenChanged?.Invoke(otherParent, new(index, -1));
-            }
-
-            ChangeTracker.Global.TrackChange(new ChangeListAdd<Node>(
-                _childNodes, node));
-
-            if (node.State > State)
-            {
-                State = node.State;
-            }
-
-            node.InternalSetParent(this, updateVersionIndex);
-
-            ChildrenChanged?.Invoke(this, new(-1, _childNodes.Count - 1));
-
-            ChangeTracker.Global.EndGroup();
-        }
-
+            => InternalAddNode(node, _childNodes.Count, updateVersionIndex);
+            
         public void RemoveChildNode(Node node)
         {
             if (node.Parent != this)
@@ -75,31 +45,16 @@ namespace SCR.Tools.TranslationEditor.Data
             ChangeTracker.Global.BeginGroup();
 
             int index = _childNodes.IndexOf(node);
-            InternalRemoveNode(node);
+            InternalRemoveNode(index);
 
-            // if the node is the same state (contributed to the current nodes state)
-            // then reevaluate the state across all children
-            if (node.State == State)
-            {
-                EvaluateState();
-            }
-
-            node.InternalSetParent(null, false);
-            ChildrenChanged?.Invoke(this, new(index, -1));
+            node.InternalSetParent(null, false, index, -1);
 
             ChangeTracker.Global.EndGroup();
         }
 
         public void InsertChildNodeAt(Node node, int index)
-        {
-            ChangeTracker.Global.BeginGroup();
-
-            AddChildNode(node);
-            MoveChildNode(_childNodes.Count - 1, index);
-
-            ChangeTracker.Global.EndGroup();
-        }
-
+            => InternalAddNode(node, index);
+        
         public void MoveChildNode(int fromIndex, int toIndex)
         {
             if (fromIndex < 0 || fromIndex >= _childNodes.Count
@@ -131,18 +86,56 @@ namespace SCR.Tools.TranslationEditor.Data
                 }
             ));
 
-            ChildrenChanged?.Invoke(this, new(fromIndex, toIndex));
+            InvokeChildrenChanged(fromIndex, toIndex);
 
             ChangeTracker.Global.EndGroup();
         }
 
-        private void InternalRemoveNode(Node node)
+
+        private void InternalAddNode(Node node, int index, bool updateVersionIndex = true)
         {
-            ChangeTracker.Global.TrackChange(new ChangeListRemove<Node>(
-                _childNodes, node));
+            if (node.Parent == this)
+            {
+                ChangeTracker.Global.BlankChange();
+                return;
+            }
+
+            if (index < 0 || index > _childNodes.Count)
+            {
+                throw new IndexOutOfRangeException("Index out of range!");
+            }
+
+            ChangeTracker.Global.BeginGroup();
+
+            int otherIndex = -1;
+            if (node.Parent != null)
+            {
+                ParentNode otherParent = node.Parent;
+                otherIndex = otherParent._childNodes.IndexOf(node);
+                otherParent.InternalRemoveNode(otherIndex);
+            }
+
+            ChangeTracker.Global.TrackChange(new ChangeListInsert<Node>(
+                _childNodes, node, index));
+
+            if (node.State > State)
+            {
+                State = node.State;
+            }
+
+            node.InternalSetParent(this, updateVersionIndex, otherIndex, index);
+
+            ChangeTracker.Global.EndGroup();
+        }
+
+        private void InternalRemoveNode(int index)
+        {
+            ChangeTracker.Global.TrackChange(new ChangeListRemoveAt<Node>(
+                _childNodes, index));
 
             EvaluateState();
         }
+
 
         internal void EvaluateState(Node changedNode)
         {
@@ -166,6 +159,7 @@ namespace SCR.Tools.TranslationEditor.Data
                 : NodeState.None;
         }
 
+
         internal override void InvokeHeaderChanged(NodeHeaderChangedEventArgs args)
         {
             base.InvokeHeaderChanged(args);
@@ -174,5 +168,9 @@ namespace SCR.Tools.TranslationEditor.Data
                 n.InvokeHeaderChanged(args);
         }
 
+        internal void InvokeChildrenChanged(int fromIndex, int toIndex)
+        {
+            ChildrenChanged?.Invoke(this, new(fromIndex, toIndex));
+        }
     }
 }
