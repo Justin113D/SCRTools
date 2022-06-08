@@ -19,6 +19,8 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         /// </summary>
         private readonly HeaderNode _header;
 
+        private VmNode? _activeNode;
+
         /// <summary>
         /// Change tracker for the viewmodels
         /// </summary>
@@ -106,11 +108,43 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         private readonly Dictionary<Node, VmNode> _nodeTable;
 
+
+        public HashSet<VmNode> SelectedNodes { get; private set; }
+
+        public VmNode? ActiveNode
+        {
+            get => _activeNode;
+            set
+            {
+                if(_activeNode == value)
+                {
+                    FormatTracker.BlankChange();
+                    return;
+                }
+
+                FormatTracker.TrackChange(new ChangedValue<VmNode?>(
+                    (v) => _activeNode = v,
+                    _activeNode,
+                    value));
+
+                // as this value does not get bound,
+                // we do not need to track property changed
+            }
+        }
+
+
         public RelayCommand CmdAddNewStringNode
             => new(AddNewStringNode);
 
         public RelayCommand CmdAddNewParentNode
             => new(AddNewParentNode);
+
+        public RelayCommand CmdDeselectAll
+            => new(DeselectAll);
+
+        public RelayCommand CmdRemoveSelected
+            => new(RemoveSelected);
+
 
         public VmFormat(HeaderNode data, ChangeTracker projectTracker)
         {
@@ -122,8 +156,11 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             Nodes = new(_nodes);
             CreateNodes();
 
+            SelectedNodes = new();
+
             _header.ChildrenChanged += OnChildrenChanged;
         }
+
 
         public VmNode GetNodeViewmodel(Node node)
         {
@@ -188,6 +225,17 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             
             FormatTracker.BeginGroup();
             VmNode vmNode = _nodeTable[node];
+
+            if(vmNode.Selected)
+            {
+                vmNode.Selected = false;
+            }
+
+            if(ActiveNode == vmNode)
+            {
+                ActiveNode = null;
+            }
+
             FormatTracker.TrackChange(new Change(
                 () =>
                 {
@@ -200,6 +248,9 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                     node.HeaderChanged += OnHeaderChanged;
                 }
             ));
+
+
+
             FormatTracker.EndGroup();
         }
 
@@ -213,7 +264,6 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         {
             _header.AddChildNode(new ParentNode("Category"));
         }
-
 
         /// <summary>
         /// Expands all nodes
@@ -243,6 +293,98 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             }
         }
 
+        public void RemoveSelected()
+        {
+            HashSet<VmNode> toDelete = new();
+
+            foreach(VmNode node in SelectedNodes)
+            {
+                VmNode finalSelected = node;
+
+                Node current = node.Node;
+                while(current.Parent is ParentNode pn and not HeaderNode)
+                {
+                    current = pn;
+                    if(_nodeTable[current].Selected)
+                    {
+                        finalSelected = _nodeTable[current];
+                    }
+                }
+
+                toDelete.Add(finalSelected);
+            }
+
+            FormatTracker.BeginGroup();
+
+            foreach(VmNode node in toDelete)
+            {
+                node.Remove();
+            }
+
+            FormatTracker.EndGroup();
+        }
+
+        public void DeselectAll()
+        {
+            FormatTracker.BeginGroup();
+            foreach (VmNode vmNode in SelectedNodes.ToArray())
+            {
+                vmNode.Selected = false;
+            }
+            FormatTracker.EndGroup();
+        }
+
+        public void SelectRange(VmNode target, bool multi)
+        {
+            FormatTracker.BeginGroup();
+
+            if (!multi)
+            {
+                DeselectAll();
+            }
+
+            Stack<(IList<VmNode> children, int index)> treeStack = new();
+            treeStack.Push((Nodes, 0));
+
+            bool found = false;
+
+            while (treeStack.Count > 0)
+            {
+                for ((IList<VmNode> children, int index) = treeStack.Pop();
+                    index < children.Count;
+                    index++)
+                {
+                    VmNode node = children[index];
+                    if (node == target || node == ActiveNode)
+                    {
+                        if (!found)
+                        {
+                            found = true;
+                        }
+                        else
+                        {
+                            node.Selected = true;
+                            treeStack.Clear();
+                            break;
+                        }
+                    }
+
+                    if (found)
+                    {
+                        node.Selected = true;
+                    }
+
+                    if (node is VmParentNode pn && pn.Expanded)
+                    {
+                        treeStack.Push((children, index + 1));
+                        treeStack.Push((pn.ChildNodes, 0));
+                        break;
+                    }
+                }
+            }
+
+            FormatTracker.EndGroup();
+        }
 
         public string WriteFormat()
         {

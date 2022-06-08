@@ -5,7 +5,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
     public class VmStringNode : VmNode
     {
         private StringNode StringNode
-            => (StringNode)_node;
+            => (StringNode)Node;
 
 
         public string DefaultValue

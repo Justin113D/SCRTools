@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -73,26 +74,68 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
             set => SetValue(TreePaddingProperty, value);
         }
 
-        public static readonly DependencyProperty IsExpandedProperty =
-           DependencyProperty.Register(
-               nameof(IsExpanded),
-               typeof(bool),
-               typeof(UcNode),
-               new FrameworkPropertyMetadata()
-               {
-                   BindsTwoWayByDefault=true,
-               }
-           );
+        public static readonly DependencyProperty DragHighlightsProperty =
+            DependencyProperty.Register(
+                nameof(DragHighlights),
+                typeof(bool),
+                typeof(UcNode));
 
-        public bool IsExpanded
+        public bool DragHighlights
         {
-            get => (bool)GetValue(IsExpandedProperty);
-            set => SetValue(IsExpandedProperty, value);
+            get => (bool)GetValue(DragHighlightsProperty);
+            set => SetValue(DragHighlightsProperty, value);
         }
+
+        private bool _clickCheck;
+
+        private VmNode ViewModel => (VmNode)DataContext;
 
         public UcNode()
         {
             InitializeComponent();
+        }
+
+        private void GrabSurface_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            _clickCheck = true;
+        }
+
+        private void GrabSurface_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if(_clickCheck)
+            {
+                bool multi = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+                if(Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                {
+                    ViewModel.SelectRegion(multi);
+                }
+                else
+                {
+                    ViewModel.Select(multi);
+                }
+                _clickCheck = false;
+            }
+        }
+
+        private void GrabSurface_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if(_clickCheck)
+            {
+                _clickCheck = false;
+            }
+        }
+
+        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if(!_clickCheck)
+            {
+                ViewModel.DeselectAll();
+            }
+        }
+
+        private void Event_DeselectAll(object sender, RoutedEventArgs e)
+        {
+            ViewModel.DeselectAll();
         }
     }
 }

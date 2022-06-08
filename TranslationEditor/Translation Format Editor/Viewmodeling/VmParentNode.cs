@@ -11,7 +11,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
     public class VmParentNode : VmNode
     {
         private ParentNode ParentNode
-            => (ParentNode)_node;
+            => (ParentNode)Node;
 
         private readonly ObservableCollection<VmNode> _childNodes;
 

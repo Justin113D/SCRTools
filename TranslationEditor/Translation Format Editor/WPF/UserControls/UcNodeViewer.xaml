@@ -7,10 +7,15 @@
              xmlns:converters="clr-namespace:SCR.Tools.WPF.Converters;assembly=SCR.Tools.WPF"
              xmlns:wpf="clr-namespace:SCR.Tools.TranslationEditor.FormatEditor.WPF"
              xmlns:vm="clr-namespace:SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling"
-             
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{x:Static wpf:DesignDataFactory.Format}"
              x:Name="NodeViewer">
+
+    <UserControl.InputBindings>
+        <KeyBinding Key="Esc" Command="{Binding CmdDeselectAll}"/>
+        <KeyBinding Key="Delete" Command="{Binding CmdRemoveSelected}"/>
+        <KeyBinding Key="X" Modifiers="Ctrl" Command="{Binding CmdRemoveSelected}"/>
+    </UserControl.InputBindings>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -35,19 +40,17 @@
             <Rectangle    Grid.Column="4" Height="4" Fill="{DynamicResource BG1}" x:Name="DescriptionWidth"/>
         </Grid>
 
-        <!-- Node Viewer -->
-        <TreeView Grid.Row="1" ItemsSource="{Binding Nodes}">
+        <TreeView Grid.Row="1" ItemsSource="{Binding Nodes}" MouseDown="TreeView_MouseDown">
 
             <TreeView.Resources>
                 <!--Used for calculating the offset of the left margin-->
                 <converters:LeftMarginMultiplierConverter x:Key="LeftMarginMultiplierConverter" Length="20"/>
             </TreeView.Resources>
 
-            <!-- Using the teomplate from the resources -->
             <TreeView.ItemContainerStyle>
                 <Style TargetType="{x:Type TreeViewItem}">
                     <Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
-                    <Setter Property="IsExpanded" Value="{Binding Expanded, Mode=TwoWay}"/>
+                    <Setter Property="IsExpanded" Value="{Binding Expanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type TreeViewItem}">
@@ -60,8 +63,7 @@
                                             Converter={StaticResource LeftMarginMultiplierConverter},
                                             RelativeSource={RelativeSource TemplatedParent}}"
                                         NameWidth="{Binding ElementName=NameWidth, Path=ActualWidth}"
-                                        DescriptionWidth="{Binding ElementName=DescriptionWidth, Path=ActualWidth}"
-                                        IsExpanded="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}">
+                                        DescriptionWidth="{Binding ElementName=DescriptionWidth, Path=ActualWidth}">
 
                                         <ContentPresenter
                                             Margin="3 0 0 0" 
@@ -72,17 +74,20 @@
                                     </local:UcNode>
 
                                     <!-- Node Children -->
-                                    <Border x:Name="ItemsHost">
+                                    <Border>
+                                        <Border.Style>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" Value="false">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
                                         <ItemsPresenter/>
                                     </Border>
 
                                 </StackPanel>
-
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsExpanded" Value="false">
-                                        <Setter TargetName="ItemsHost" Property="Visibility" Value="Collapsed"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
@@ -110,7 +115,8 @@
                                     VerticalAlignment="Center"
                                     Margin="2 0"
                                     Padding="10, 5"
-                                    Command="{Binding CmdAddNewParentNode}"/>
+                                    Command="{Binding CmdAddNewParentNode}"
+                                    Click="Event_DeselectAll"/>
                                 
                                 <Button
                                     Grid.Column="2"
@@ -118,7 +124,8 @@
                                     Content="Add String"
                                     VerticalAlignment="Center"
                                     Padding="10, 5"
-                                    Command="{Binding CmdAddNewStringNode}"/>
+                                    Command="{Binding CmdAddNewStringNode}"
+                                    Click="Event_DeselectAll"/>
 
                             </Grid>
                         </HierarchicalDataTemplate>
@@ -133,8 +140,8 @@
                                 AcceptsReturn="True" 
                                 Padding="5" 
                                 Background="{DynamicResource BG3}"
-                                VerticalAlignment="Stretch">
-                            </TextBox>
+                                VerticalAlignment="Stretch"
+                                GotFocus="Event_DeselectAll"/>
                         </HierarchicalDataTemplate>
                     </wpf:NodeTemplateSelector.StringTemplate>
                 </wpf:NodeTemplateSelector>
@@ -161,12 +168,14 @@
                                         Style="{DynamicResource BlueButton}" 
                                         Content="Add Category" 
                                         Margin="4 0"
-                                        Command="{Binding CmdAddNewParentNode}"/>
+                                        Command="{Binding CmdAddNewParentNode}"
+                                        Click="Event_DeselectAll"/>
                                 
                                 <Button Grid.Column="2" 
                                         Style="{DynamicResource GreenButton}" 
                                         Content="Add String" 
-                                        Command="{Binding CmdAddNewStringNode}"/>
+                                        Command="{Binding CmdAddNewStringNode}"
+                                        Click="Event_DeselectAll"/>
                             </Grid>
                         </StackPanel>
                     </ScrollViewer>

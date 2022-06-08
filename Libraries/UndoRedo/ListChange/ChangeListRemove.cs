@@ -14,15 +14,17 @@ namespace SCR.Tools.UndoRedo.ListChange
     {
         private readonly IList<T> _list;
         private readonly T _item;
+        private readonly int _index;
 
         public ChangeListRemove(IList<T> list, T item)
         {
             _list = list;
             _item = item;
+            _index = _list.IndexOf(item);
         }
 
         public void Redo() => _list.Remove(_item);
 
-        public void Undo() => _list.Add(_item);
+        public void Undo() => _list.Insert(_index, _item);
     }
 }
