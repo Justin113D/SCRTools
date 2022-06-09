@@ -24,6 +24,9 @@
                     <Trigger Property="IsMouseOver" Value="True">
                         <Setter Property="Background" Value="{DynamicResource HighlightedBG}"/>
                     </Trigger>
+                    <DataTrigger Binding="{Binding Active}" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource HighlightedBG}"/>
+                    </DataTrigger>
                     <DataTrigger Binding="{Binding Selected}" Value="True">
                         <Setter Property="Background" Value="{DynamicResource SelectedBG}"/>
                     </DataTrigger>
@@ -56,15 +59,57 @@
 
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition Width="20"/>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
                     <!-- Grab surface -->
+
+                    <Rectangle
+                        Margin="3" 
+                        IsHitTestVisible="False"
+                        SnapsToDevicePixels="True" 
+                        UseLayoutRounding="True">
+
+                        <Rectangle.Style>
+                            <Style TargetType="{x:Type Rectangle}">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Active}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Rectangle.Style>
+
+                        <Rectangle.Fill>
+                            <VisualBrush
+                                TileMode="Tile" 
+                                Viewport="0,0,4,4" 
+                                ViewportUnits="Absolute" 
+                                Viewbox="0,0,4,4" 
+                                ViewboxUnits="Absolute" 
+                                RenderOptions.BitmapScalingMode="NearestNeighbor">
+
+                                <VisualBrush.Visual>
+                                    <Path Fill="{DynamicResource Green.Highlighted}">
+                                        <Path.Data>
+                                            <GeometryGroup>
+                                                <RectangleGeometry Rect="2,0,1,1"/>
+                                                <RectangleGeometry Rect="0,2,1,1"/>
+                                            </GeometryGroup>
+                                        </Path.Data>
+                                    </Path>
+                                </VisualBrush.Visual>
+
+                            </VisualBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
                     <Rectangle 
                         x:Name="GrabSurface" 
-                        Margin="2,6,1,6" 
+                        Margin="3" 
                         Cursor="Hand" 
                         IsHitTestVisible="True"
                         SnapsToDevicePixels="True" 
@@ -81,18 +126,14 @@
                                 ViewboxUnits="Absolute" 
                                 RenderOptions.BitmapScalingMode="NearestNeighbor">
                                 <VisualBrush.Visual>
-                                    <Grid>
-                                        <Path Fill="{DynamicResource HintFontBrush}">
-                                            <Path.Data>
+                                    <Path Fill="{DynamicResource HintFontBrush}">
+                                        <Path.Data>
+                                            <GeometryGroup>
                                                 <RectangleGeometry Rect="0,0,1,1"/>
-                                            </Path.Data>
-                                        </Path>
-                                        <Path Fill="{DynamicResource HintFontBrush}">
-                                            <Path.Data>
                                                 <RectangleGeometry Rect="2,2,1,1"/>
-                                            </Path.Data>
-                                        </Path>
-                                    </Grid>
+                                            </GeometryGroup>
+                                        </Path.Data>
+                                    </Path>
                                 </VisualBrush.Visual>
                             </VisualBrush>
                         </Rectangle.Fill>
@@ -180,37 +221,50 @@
 
             </Grid>
 
-            <Grid IsHitTestVisible="{Binding ElementName=Container, Path=DragHighlights}" Background="Transparent" Margin="0 -2">
+            <Grid x:Name="Insert" 
+                  IsHitTestVisible="{Binding ElementName=Container, Path=DragHighlights}" 
+                  Background="Transparent" 
+                  Margin="0 -2" 
+                  MouseEnter="Insert_MouseEnter">
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Grid.Resources>
-                    <Style TargetType="{x:Type Border}">
-                        <Setter Property="IsHitTestVisible" Value="True"/>
-                        <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="BorderBrush" Value="Transparent"/>
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="BorderBrush" Value="{DynamicResource Green}"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Grid.Resources>
+                <Border x:Name="_insertAbove" Grid.Row="0" MouseUp="InsertAbove_MouseUp" IsHitTestVisible="True" Background="Transparent"/>
+                <Border x:Name="_insertBelow" Grid.Row="1" MouseUp="InsertBelow_MouseUp" IsHitTestVisible="True" Background="Transparent"/>
 
-                <Border Grid.Row="0" BorderThickness="0 4 0 0"/>
-                <Border Grid.Row="1" BorderThickness="0 0 0 4">
+                <Border x:Name="InsertAboveDisplay" IsHitTestVisible="False" Grid.Row="0" BorderThickness="0 4 0 0">
                     <Border.Style>
-                        <Style TargetType="{x:Type Border}" BasedOn="{StaticResource {x:Type Border}}">
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="Visibility" Value="Hidden"/>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding Expanded}" Value="True">
-                                    <Setter Property="Margin" Value="20 0 0 0"/>
+                                <DataTrigger Binding="{Binding ElementName=_insertAbove, Path=IsMouseOver}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </Border.Style>
                 </Border>
+                    
+                <Border x:Name="InsertBelowDisplay" IsHitTestVisible="False" Grid.Row="1" BorderThickness="0 0 0 4">
+                    <Border.Style>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Expanded}" Value="True">
+                                    <Setter Property="Margin" Value="20 0 0 0"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ElementName=_insertBelow, Path=IsMouseOver}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                </Border>
+
+
             </Grid>
         </Grid>
     </Border>

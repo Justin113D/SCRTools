@@ -4,7 +4,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 {
     public class VmStringNode : VmNode
     {
-        private StringNode StringNode
+        public StringNode StringNode
             => (StringNode)Node;
 
 

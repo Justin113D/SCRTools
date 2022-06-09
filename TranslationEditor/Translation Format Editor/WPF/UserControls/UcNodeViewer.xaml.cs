@@ -1,4 +1,5 @@
 ﻿using SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
@@ -9,6 +10,19 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
     public partial class UcNodeViewer : UserControl
     {
         private VmFormat ViewModel => (VmFormat)DataContext;
+
+        public static readonly DependencyProperty DraggingProperty =
+            DependencyProperty.Register(
+                nameof(Dragging),
+                typeof(bool),
+                typeof(UcNodeViewer));
+
+        public bool Dragging
+        {
+            get => (bool)GetValue(DraggingProperty);
+            set => SetValue(DraggingProperty, value);
+        }
+
 
         public UcNodeViewer()
         {

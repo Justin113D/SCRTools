@@ -122,13 +122,19 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                     return;
                 }
 
+                FormatTracker.BeginGroup();
+
+                VmNode? oldValue = _activeNode;
+
                 FormatTracker.TrackChange(new ChangedValue<VmNode?>(
                     (v) => _activeNode = v,
                     _activeNode,
                     value));
 
-                // as this value does not get bound,
-                // we do not need to track property changed
+                oldValue?.TrackNotifyProperty(nameof(VmNode.Active));
+                _activeNode?.TrackNotifyProperty(nameof(VmNode.Active));
+
+                FormatTracker.EndGroup();
             }
         }
 
@@ -293,6 +299,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             }
         }
 
+
         public void RemoveSelected()
         {
             HashSet<VmNode> toDelete = new();
@@ -385,6 +392,29 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
             FormatTracker.EndGroup();
         }
+
+        public void MoveSelected(ParentNode parent, int index)
+        {
+            FormatTracker.BeginGroup();
+
+            foreach(VmNode vmNode in SelectedNodes)
+            {
+                if(parent.ChildNodes.Contains(vmNode.Node))
+                {
+                    int moveIndex = parent.ChildNodes.IndexOf(vmNode.Node);
+                    parent.MoveChildNode(moveIndex, index);
+                    index = parent.ChildNodes.IndexOf(vmNode.Node);
+                }
+                else
+                {
+                    parent.InsertChildNodeAt(vmNode.Node, index);
+                }
+                index++;
+            }
+
+            FormatTracker.EndGroup();
+        }
+
 
         public string WriteFormat()
         {

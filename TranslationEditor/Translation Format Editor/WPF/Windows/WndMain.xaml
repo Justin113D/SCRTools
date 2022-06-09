@@ -8,7 +8,7 @@
         xmlns:ucs="clr-namespace:SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls"
         xmlns:wpf="clr-namespace:SCR.Tools.TranslationEditor.FormatEditor.WPF"
         mc:Ignorable="d"
-        Title="Translation Editor" Height="450" Width="800"
+        Title="Translation Format Editor" Height="450" Width="800"
         MinWidth="600"
         Icon="pack://application:,,,/SCR.Tools.WPF;component/Icons/Dictionary_32x.png"
         d:DataContext="{x:Static wpf:DesignDataFactory.Main}">

@@ -23,6 +23,10 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
     [ContentProperty("InnerContent")]
     public partial class UcNode : UserControl
     {
+        static readonly SolidColorBrush Transparent = new(Colors.Transparent);
+        static readonly SolidColorBrush CanInsert = new(Tools.WPF.Styling.Colors.Green);
+        static readonly SolidColorBrush CannotInsert = new(Tools.WPF.Styling.Colors.Red);
+
         public static readonly DependencyProperty InnerContentProperty =
             DependencyProperty.Register(
                 nameof(InnerContent),
@@ -88,6 +92,8 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
 
         private bool _clickCheck;
 
+        private bool _insertCheck;
+
         private VmNode ViewModel => (VmNode)DataContext;
 
         public UcNode()
@@ -95,24 +101,32 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
             InitializeComponent();
         }
 
+        private void Select()
+        {
+            bool multi = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+            if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+            {
+                ViewModel.SelectRegion(multi);
+            }
+            else
+            {
+                ViewModel.Select(multi);
+            }
+        }
+
         private void GrabSurface_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            _clickCheck = true;
+            if(e.LeftButton == MouseButtonState.Pressed)
+            {
+                _clickCheck = true;
+            }
         }
 
         private void GrabSurface_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if(_clickCheck)
             {
-                bool multi = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
-                if(Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
-                {
-                    ViewModel.SelectRegion(multi);
-                }
-                else
-                {
-                    ViewModel.Select(multi);
-                }
+                Select();
                 _clickCheck = false;
             }
         }
@@ -121,7 +135,12 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
         {
             if(_clickCheck)
             {
+                if(!ViewModel.Selected)
+                {
+                    Select();
+                }
                 _clickCheck = false;
+                DragHighlights = true;
             }
         }
 
@@ -136,6 +155,46 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
         private void Event_DeselectAll(object sender, RoutedEventArgs e)
         {
             ViewModel.DeselectAll();
+        }
+
+        private void InsertAbove_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            DragHighlights = false;
+            if(_insertCheck)
+            {
+                ViewModel.InsertAbove();
+            }
+        }
+
+        private void InsertBelow_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            DragHighlights = false;
+            if(_insertCheck)
+            {
+                ViewModel.InsertBelow();
+            }
+        }
+
+        private void Insert_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if(Mouse.LeftButton == MouseButtonState.Released)
+            {
+                _insertCheck = false;
+                DragHighlights = false;
+                return;
+            }
+
+            if(ViewModel.Selected)
+            {
+                InsertAboveDisplay.BorderBrush = Transparent;
+                InsertBelowDisplay.BorderBrush = Transparent;
+                return;
+            }
+
+            _insertCheck = ViewModel.CanInsert();
+
+            InsertAboveDisplay.BorderBrush = _insertCheck ? CanInsert : CannotInsert;
+            InsertBelowDisplay.BorderBrush = InsertAboveDisplay.BorderBrush;
         }
     }
 }

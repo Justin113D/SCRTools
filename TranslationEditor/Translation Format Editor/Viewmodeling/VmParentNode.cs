@@ -10,7 +10,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 {
     public class VmParentNode : VmNode
     {
-        private ParentNode ParentNode
+        public ParentNode ParentNode
             => (ParentNode)Node;
 
         private readonly ObservableCollection<VmNode> _childNodes;
@@ -147,6 +147,19 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 {
                     parent.CollapseAll();
                 }
+            }
+        }
+
+
+        public override void InsertBelow()
+        {
+            if(!Expanded)
+            {
+                base.InsertBelow();
+            }
+            else
+            {
+                _format.MoveSelected(ParentNode, 0);
             }
         }
     }

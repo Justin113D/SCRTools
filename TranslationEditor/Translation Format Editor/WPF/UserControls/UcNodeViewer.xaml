@@ -57,13 +57,13 @@
                                 <StackPanel MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}">
 
                                     <local:UcNode 
-                                        x:Name="NodeDisplay"
                                         DataContext="{Binding}" 
                                         TreePadding="{Binding 
                                             Converter={StaticResource LeftMarginMultiplierConverter},
                                             RelativeSource={RelativeSource TemplatedParent}}"
                                         NameWidth="{Binding ElementName=NameWidth, Path=ActualWidth}"
-                                        DescriptionWidth="{Binding ElementName=DescriptionWidth, Path=ActualWidth}">
+                                        DescriptionWidth="{Binding ElementName=DescriptionWidth, Path=ActualWidth}"
+                                        DragHighlights="{Binding ElementName=NodeViewer, Path=Dragging, Mode=TwoWay}">
 
                                         <ContentPresenter
                                             Margin="3 0 0 0" 

@@ -57,8 +57,8 @@ namespace SCR.Tools.TranslationEditor.Data
         
         public void MoveChildNode(int fromIndex, int toIndex)
         {
-            if (fromIndex < 0 || fromIndex >= _childNodes.Count
-                || toIndex < 0 || toIndex >= _childNodes.Count)
+            if (fromIndex < 0 || fromIndex > _childNodes.Count
+                || toIndex < 0 || toIndex > _childNodes.Count)
             {
                 throw new IndexOutOfRangeException("One or both indices are out of range!");
             }
@@ -67,6 +67,11 @@ namespace SCR.Tools.TranslationEditor.Data
             {
                 ChangeTracker.Global.BlankChange();
                 return;
+            }
+
+            if(fromIndex < toIndex)
+            {
+                toIndex--;
             }
 
             Node target = _childNodes[fromIndex];

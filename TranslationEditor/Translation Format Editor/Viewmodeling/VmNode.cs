@@ -13,7 +13,6 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 {
     public abstract class VmNode : BaseViewModel
     {
-
         public Node Node { get; }
 
         protected readonly VmFormat _format;
@@ -95,6 +94,9 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             }
         }
 
+        public bool Active => _format.ActiveNode == this;
+        
+
         public RelayCommand CmdRemove
             => new(Remove);
 
@@ -104,7 +106,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             _format = format;
         }
 
-        protected void TrackNotifyProperty(string propertyName)
+        public void TrackNotifyProperty(string propertyName)
         {
             _format.FormatTracker.GroupNotifyPropertyChanged(OnPropertyChanged, propertyName);
         }
@@ -144,6 +146,65 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         public void DeselectAll()
             => _format.DeselectAll();
+
+        public bool CanInsert()
+        {
+            if(Node.Parent == null)
+            {
+                throw new InvalidOperationException("Node has no parent");
+            }
+
+            // this is only true if the parent is the header, which can always be inserted in
+            if(Node.Parent is not ParentNode pn)
+            {
+                return true;
+            }
+
+            // check if pn is inside the hierarchy of any selected node, to prevent recursion
+            foreach(VmNode node in _format.SelectedNodes)
+            {
+                if(node is not VmParentNode vmPn)
+                {
+                    continue;
+                }
+
+                ParentNode check = vmPn.ParentNode;
+
+                ParentNode current = pn;
+                while(current.Parent is ParentNode next)
+                {
+                    if(current == check)
+                    {
+                        return false;
+                    }
+                    current = next;
+                }
+            }
+
+            return true;
+        }
+
+        public void InsertAbove()
+        {
+            if(Node.Parent == null)
+            {
+                return;
+            }
+
+            int insertIndex = Node.Parent.ChildNodes.IndexOf(Node);
+            _format.MoveSelected(Node.Parent, insertIndex);
+        }
+
+        public virtual void InsertBelow()
+        {
+            if (Node.Parent == null)
+            {
+                return;
+            }
+
+            int insertIndex = Node.Parent.ChildNodes.IndexOf(Node) + 1;
+            _format.MoveSelected(Node.Parent, insertIndex);
+        }
 
         public override string ToString()
             => Node.Name;
