@@ -18,6 +18,14 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.Windows
             InitializeComponent();
         }
 
+        protected override void Close(object sender, RoutedEventArgs e)
+        {
+            if(MenuBar.CloseConfirmation())
+            {
+                base.Close(sender, e);
+            }
+        }
+
         private void InitDataContext()
         {
             VmMain vm = new();

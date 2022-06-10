@@ -38,6 +38,9 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
             }
         }
 
+        public bool CloseConfirmation()
+            => _formatFileHandler?.ResetConfirmation() ?? true;
+
         public void NewFormat(object sender, RoutedEventArgs e)
         {
             _formatFileHandler?.Reset();
@@ -73,7 +76,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
             new Windows.WndSettings().ShowDialog();
         }
 
-        private void Export(object sender, RoutedEventArgs e)
+        public void Export(object sender, RoutedEventArgs e)
         {
             _exportHandler?.Save(true);
         }

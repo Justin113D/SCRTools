@@ -1,5 +1,7 @@
 ﻿using SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling;
 using SCR.Tools.WPF.Styling;
+using System.Windows;
+using Window = SCR.Tools.WPF.Styling.Window;
 
 namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.Windows
 {
@@ -12,6 +14,14 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.Windows
         {
             InitDataContext();
             InitializeComponent();
+        }
+
+        protected override void Close(object sender, RoutedEventArgs e)
+        {
+            if (MenuBar.CloseConfirmation())
+            {
+                base.Close(sender, e);
+            }
         }
 
         private void InitDataContext()
@@ -38,6 +48,11 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.Windows
         private void IB_SaveAs(object sender, object e)
         {
             MenuBar.SaveFormatAs(sender, new());
+        }
+
+        private void IB_Export(object sender, object e)
+        {
+            MenuBar.Export(sender, new());
         }
     }
 }

@@ -35,6 +35,12 @@
             </KeyBinding.Command>
         </KeyBinding>
 
+        <KeyBinding Modifiers="Ctrl+Shift" Key="E">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_Export"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+
         <KeyBinding Modifiers="Ctrl" Key="Z" Command="{Binding CmdUndo}"/>
         <KeyBinding Modifiers="Ctrl" Key="Y" Command="{Binding CmdRedo}"/>
     </styling:Window.InputBindings>

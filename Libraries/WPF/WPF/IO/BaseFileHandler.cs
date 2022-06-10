@@ -29,7 +29,7 @@ namespace SCR.Tools.WPF.IO
         {
             if (_savePin?.CheckValid() != true)
             {
-                MessageBoxResult r = MessageBox.Show("Unsaved changes will be reset!\nDo you want to save before?", "Warning!", MessageBoxButton.YesNoCancel, MessageBoxImage.Exclamation);
+                MessageBoxResult r = MessageBox.Show("Unsaved changes will be lost!\nDo you want to save before?", "Warning!", MessageBoxButton.YesNoCancel, MessageBoxImage.Exclamation);
                 switch (r)
                 {
                     case MessageBoxResult.Yes:

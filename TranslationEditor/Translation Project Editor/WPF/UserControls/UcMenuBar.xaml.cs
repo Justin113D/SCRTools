@@ -47,6 +47,9 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.UserControls
             }
         }
 
+        public bool CloseConfirmation()
+            => _projectFileHandler?.ResetConfirmation() ?? true;
+
         public void LoadFormat(object sender, RoutedEventArgs e)
         {
             if (_formatFileHandler == null)
