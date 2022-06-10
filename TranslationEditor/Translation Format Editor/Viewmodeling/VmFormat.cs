@@ -164,7 +164,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
             SelectedNodes = new();
 
-            _header.ChildrenChanged += OnChildrenChanged;
+            _header.ChildrenChanged += ChildrenChanged;
         }
 
 
@@ -184,7 +184,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 {
                     throw new NotSupportedException(node.GetType().Name + " is not a valid node type");
                 }
-                node.HeaderChanged += OnHeaderChanged;
+                node.HeaderChanged += HeaderChanged;
                 _nodeTable.Add(node, vmNode);
             }
             return vmNode;
@@ -202,7 +202,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             }
         }
 
-        private void OnChildrenChanged(ParentNode node, NodeChildrenChangedEventArgs args)
+        private void ChildrenChanged(ParentNode node, NodeChildrenChangedEventArgs args)
         {
             FormatTracker.BeginGroup();
 
@@ -224,7 +224,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             FormatTracker.EndGroup();
         }
 
-        private void OnHeaderChanged(Node node, NodeHeaderChangedEventArgs args)
+        private void HeaderChanged(Node node, NodeHeaderChangedEventArgs args)
         {
             if (args.NewHeader == _header)
                 return;
@@ -246,12 +246,12 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 () =>
                 {
                     _nodeTable.Remove(node);
-                    node.HeaderChanged -= OnHeaderChanged;
+                    node.HeaderChanged -= HeaderChanged;
                 },
                 () =>
                 { 
                     _nodeTable.Add(node, vmNode);
-                    node.HeaderChanged += OnHeaderChanged;
+                    node.HeaderChanged += HeaderChanged;
                 }
             ));
 

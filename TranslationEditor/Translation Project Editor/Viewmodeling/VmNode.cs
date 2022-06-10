@@ -31,12 +31,12 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
             _node = node;
             _project = project;
 
-            _node.NodeStateChanged += OnStateChanged;
+            _node.NodeStateChanged += StateChanged;
         }
 
         ~VmNode()
         {
-            _node.NodeStateChanged -= OnStateChanged;
+            _node.NodeStateChanged -= StateChanged;
         }
 
         protected void TrackNotifyProperty(string propertyName)
@@ -44,7 +44,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
             _project.ProjectTracker.GroupNotifyPropertyChanged(OnPropertyChanged, propertyName);
         }
 
-        private void OnStateChanged(Node node, NodeStateChangedEventArgs args)
+        private void StateChanged(Node node, NodeStateChangedEventArgs args)
         {
             TrackNotifyProperty(nameof(State));
         }

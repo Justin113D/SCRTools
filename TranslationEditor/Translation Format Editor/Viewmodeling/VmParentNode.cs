@@ -57,11 +57,11 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         {
             _childNodes = new();
             ChildNodes = new(_childNodes);
-            node.ChildrenChanged += OnChildrenChanged;
-            node.HeaderChanged += OnHeaderChanged;
+            node.ChildrenChanged += ChildrenChanged;
+            node.HeaderChanged += HeaderChanged;
         }
 
-        private void OnChildrenChanged(ParentNode node, NodeChildrenChangedEventArgs args)
+        private void ChildrenChanged(ParentNode node, NodeChildrenChangedEventArgs args)
         {
             _format.FormatTracker.BeginGroup();
 
@@ -85,7 +85,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             _format.FormatTracker.EndGroup();
         }
 
-        private void OnHeaderChanged(Node node, NodeHeaderChangedEventArgs args)
+        private void HeaderChanged(Node node, NodeHeaderChangedEventArgs args)
         {
             if (args.NewHeader == ParentNode.Header)
                 return;
@@ -93,13 +93,13 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             _format.FormatTracker.TrackChange(new Change(
                 () =>
                 {
-                    ParentNode.ChildrenChanged -= OnChildrenChanged;
-                    ParentNode.HeaderChanged -= OnHeaderChanged;
+                    ParentNode.ChildrenChanged -= ChildrenChanged;
+                    ParentNode.HeaderChanged -= HeaderChanged;
                 },
                 () =>
                 {
-                    ParentNode.ChildrenChanged += OnChildrenChanged;
-                    ParentNode.HeaderChanged += OnHeaderChanged;
+                    ParentNode.ChildrenChanged += ChildrenChanged;
+                    ParentNode.HeaderChanged += HeaderChanged;
                 }
             ));
         }
