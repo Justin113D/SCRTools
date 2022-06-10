@@ -21,8 +21,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicDataExpression", "Ut
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicDataExpressionTester", "Utilities\DynamicDataExpressionTester\DynamicDataExpressionTester.csproj", "{E9A9E114-6C67-448B-972D-9360C88B762F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OldTranslationEditor", "OldTranslationEditor\OldTranslationEditor.csproj", "{FBC57C43-4120-48F5-BCE4-D9784116AD55}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DialogEditor", "DialogEditor\DialogEditor.csproj", "{31C68FA6-A020-466D-A58D-49BEC711227A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{882C8D5D-E122-4DAA-A1C5-DD3F6246D762}"
@@ -77,9 +75,6 @@ Global
 		{E9A9E114-6C67-448B-972D-9360C88B762F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9A9E114-6C67-448B-972D-9360C88B762F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9A9E114-6C67-448B-972D-9360C88B762F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FBC57C43-4120-48F5-BCE4-D9784116AD55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FBC57C43-4120-48F5-BCE4-D9784116AD55}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FBC57C43-4120-48F5-BCE4-D9784116AD55}.Release|Any CPU.Build.0 = Release|Any CPU
 		{31C68FA6-A020-466D-A58D-49BEC711227A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{31C68FA6-A020-466D-A58D-49BEC711227A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31C68FA6-A020-466D-A58D-49BEC711227A}.Release|Any CPU.Build.0 = Release|Any CPU

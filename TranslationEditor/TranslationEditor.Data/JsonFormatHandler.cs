@@ -11,10 +11,13 @@ namespace SCR.Tools.TranslationEditor.Data
 
         #region To Json
 
-        public static string WriteFormat(this HeaderNode header)
+        public static string WriteFormat(this HeaderNode header, bool indenting)
         {
             using MemoryStream stream = new();
-            using Utf8JsonWriter jsonWriter = new(stream);
+            using Utf8JsonWriter jsonWriter = new(stream, new()
+            {
+                Indented = indenting
+            });
 
             jsonWriter.WriteStartObject();
             jsonWriter.WriteString(nameof(HeaderNode.Name), header.Name);
@@ -22,7 +25,7 @@ namespace SCR.Tools.TranslationEditor.Data
             jsonWriter.WriteString(nameof(HeaderNode.Author), header.Author);
 
             jsonWriter.WriteStartArray(nameof(HeaderNode.Versions));
-            foreach(Version version in header.Versions)
+            foreach (Version version in header.Versions)
             {
                 jsonWriter.WriteStringValue(version.ToString());
             }
@@ -40,7 +43,7 @@ namespace SCR.Tools.TranslationEditor.Data
         private static void WriteChildNodes(Utf8JsonWriter jsonWriter, IList<Node> nodes)
         {
             jsonWriter.WriteStartArray(nameof(ParentNode.ChildNodes));
-            foreach(Node n in nodes)
+            foreach (Node n in nodes)
             {
                 WriteNode(jsonWriter, n);
             }
@@ -51,12 +54,12 @@ namespace SCR.Tools.TranslationEditor.Data
         {
             jsonWriter.WriteStartObject();
             jsonWriter.WriteString(nameof(Node.Name), node.Name);
-            if(node.Description != null)
+            if (node.Description != null)
             {
                 jsonWriter.WriteString(nameof(Node.Description), node.Description);
             }
 
-            if(node is StringNode stringNode)
+            if (node is StringNode stringNode)
             {
                 jsonWriter.WriteString(nameof(StringNode.DefaultValue), stringNode.DefaultValue);
                 if (stringNode.VersionIndex != 0)
@@ -64,7 +67,7 @@ namespace SCR.Tools.TranslationEditor.Data
                     jsonWriter.WriteNumber(nameof(StringNode.VersionIndex), stringNode.VersionIndex);
                 }
             }
-            else if(node is ParentNode parent)
+            else if (node is ParentNode parent)
             {
                 WriteChildNodes(jsonWriter, parent.ChildNodes);
             }
@@ -91,7 +94,7 @@ namespace SCR.Tools.TranslationEditor.Data
             try
             {
                 JsonNode? json = JsonNode.Parse(text);
-                if(json == null)
+                if (json == null)
                 {
                     throw new ArgumentException("Format not a valid json object");
                 }
@@ -110,7 +113,7 @@ namespace SCR.Tools.TranslationEditor.Data
                     throw new InvalidDataException("Header has no versions!");
 
                 Version[] versions = new Version[jsonVersions.Count];
-                for(int i = 0; i < versions.Length; i++)
+                for (int i = 0; i < versions.Length; i++)
                 {
                     JsonNode? jsonVersion = jsonVersions[i];
                     if (jsonVersion == null)
@@ -138,7 +141,7 @@ namespace SCR.Tools.TranslationEditor.Data
 
         private static Node ReadNode(JsonNode json)
         {
-            if(json[nameof(ParentNode.ChildNodes)] == null)
+            if (json[nameof(ParentNode.ChildNodes)] == null)
             {
                 return ReadStringNode(json);
             }
@@ -178,7 +181,7 @@ namespace SCR.Tools.TranslationEditor.Data
 
 
             Node[] result = new Node[array.Count];
-            for(int i = 0; i < result.Length; i++)
+            for (int i = 0; i < result.Length; i++)
             {
                 JsonNode? childJson = array[i];
                 if (childJson == null)
@@ -197,7 +200,7 @@ namespace SCR.Tools.TranslationEditor.Data
             Node[] childNodes = ReadChildNodes(json);
 
             ParentNode result = new(name, description);
-            foreach(Node node in childNodes)
+            foreach (Node node in childNodes)
             {
                 result.AddChildNode(node, false);
             }

@@ -562,7 +562,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         public string WriteFormat()
         {
-            return _header.WriteFormat();
+            return _header.WriteFormat(Properties.Settings.Default.JsonIndenting);
         }
 
         /// <summary>

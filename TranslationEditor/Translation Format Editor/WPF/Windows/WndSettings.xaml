@@ -54,8 +54,7 @@
                 <!-- Json indenting -->
                 <StackPanel>
                     <TextBlock Text="Json Indenting"/>
-                    <CheckBox 
-                        x:Name="JsonIndentingCheckbox"/>
+                    <CheckBox x:Name="JsonIndentingCheckbox"/>
                 </StackPanel>
 
             </StackPanel>

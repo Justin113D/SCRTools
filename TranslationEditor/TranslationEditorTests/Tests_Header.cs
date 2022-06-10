@@ -289,7 +289,7 @@ namespace SCR.Tools.TranslationEditor.Tests
         {
             HeaderNode header = TestFormat();
 
-            string format = header.WriteFormat();
+            string format = header.WriteFormat(false);
 
             HeaderNode readHeader = JsonFormatHandler.ReadFormat(format);
 

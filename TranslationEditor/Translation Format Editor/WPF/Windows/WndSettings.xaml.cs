@@ -18,6 +18,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.Windows
             FontSizeField.Text = Properties.Settings.Default.Fontsize.ToString();
             ThemeCombobox.ItemsSource = Enum.GetValues(typeof(Theme));
             ThemeCombobox.SelectedItem = BaseStyle.Theme;
+            JsonIndentingCheckbox.IsChecked = Properties.Settings.Default.JsonIndenting;
         }
 
         private void FontSizeField_PreviewTextInput(object sender, TextCompositionEventArgs e)
