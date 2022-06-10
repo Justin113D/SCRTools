@@ -33,14 +33,23 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         /// <summary>
         /// Undo Command 
         /// </summary>
-        public RelayCommand Cmd_Undo
+        public RelayCommand CmdUndo
             => new(Undo);
 
         /// <summary>
         /// Redo Command
         /// </summary>
-        public RelayCommand Cmd_Redo
+        public RelayCommand CmdRedo
             => new(Redo);
+
+        public RelayCommand CmdDeleteSelected
+            => new(DeleteSelected);
+
+        public RelayCommand CmdExpandAll
+            => new(ExpandAll);
+
+        public RelayCommand CmdCollapseAll
+            => new(CollapseAll);
 
         public VmMain()
         {
@@ -88,10 +97,15 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             }
         }
 
-        public void ExpandAll()
+        private void DeleteSelected()
+        {
+            Format.CmdRemoveSelected.Execute(null);
+        }
+
+        private void ExpandAll()
             => Format?.ExpandAll();
 
-        public void CollapseAll()
+        private void CollapseAll()
             => Format?.CollapseAll();
 
 

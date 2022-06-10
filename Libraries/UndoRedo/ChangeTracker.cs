@@ -168,8 +168,14 @@
         public void EndGroup(bool discard = false)
         {
             _groupings--;
-            if (_currentGroup == null || _groupings > 0 || _currentGroup.Changes.Count == 0)
+            if (_currentGroup == null || _groupings > 0)
                 return;
+
+            if(_currentGroup.Changes.Count == 0)
+            {
+                _currentGroup = null;
+                return;
+            }
 
             if (discard)
             {

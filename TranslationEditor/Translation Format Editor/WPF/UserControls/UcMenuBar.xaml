@@ -48,12 +48,28 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="Edit">
+                <MenuItem Header="Undo" Command="{Binding CmdUndo}" InputGestureText="Ctrl+Z">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/Undo.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Redo" Command="{Binding CmdRedo}" InputGestureText="Ctrl+Y">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/Redo.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Delete Selected" InputGestureText="Delete | Ctrl+X">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/RemoveFromDictionary.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
                 <MenuItem Header="Expand All" Click="ExpandAll">
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/ExpandAll.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Collapse All" Click="CollapseAll">
+                <MenuItem Header="Collapse All" Command="{Binding CmdCollapseAll}">
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/ExpandAll.png"/>
                     </MenuItem.Icon>

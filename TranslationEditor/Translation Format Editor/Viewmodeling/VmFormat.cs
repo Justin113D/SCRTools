@@ -302,6 +302,11 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         public void RemoveSelected()
         {
+            if (SelectedNodes.Count == 0)
+            {
+                return;
+            }
+
             HashSet<VmNode> toDelete = new();
 
             foreach(VmNode node in SelectedNodes)
@@ -333,6 +338,11 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         public void DeselectAll()
         {
+            if(SelectedNodes.Count == 0)
+            {
+                //return;
+            }
+
             FormatTracker.BeginGroup();
             foreach (VmNode vmNode in SelectedNodes.ToArray())
             {
@@ -395,6 +405,11 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         public void MoveSelected(ParentNode parent, int index)
         {
+            if (SelectedNodes.Count == 0)
+            {
+                return;
+            }
+
             FormatTracker.BeginGroup();
 
             foreach(VmNode vmNode in SelectedNodes)

@@ -61,12 +61,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
             if (t != MessageBoxResult.OK)
                 return;
 
-            _viewModel?.ExpandAll();
-        }
-
-        private void CollapseAll(object sender, RoutedEventArgs e)
-        {
-            _viewModel?.CollapseAll();
+            _viewModel?.CmdExpandAll.Execute(null);
         }
 
         private void SettingsOpen(object sender, RoutedEventArgs e)
