@@ -10,6 +10,19 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.CopyPasteData
 
         public ICPNode[] Children { get; }
 
+        public int NodeCount
+        {
+            get
+            {
+                int count = 1;
+                foreach(ICPNode node in Children)
+                {
+                    count += node.NodeCount;
+                }
+                return count;
+            }
+        }
+
         public CPParentNode(string name, string? description, ICPNode[] children)
         {
             Name = name;

@@ -69,6 +69,16 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.Windows
             MenuBar.SaveProjectAs(sender, new());
         }
 
+        private void IB_Export(object sender, object e)
+        {
+            MenuBar.ExportLanguageFiles(sender, new());
+        }
+
+        private void IB_Import(object sender, object e)
+        {
+            MenuBar.ImportLanguageFiles(sender, new());
+        }
+
         protected override void OnClosing(CancelEventArgs e)
         {
             MenuBar.Close();

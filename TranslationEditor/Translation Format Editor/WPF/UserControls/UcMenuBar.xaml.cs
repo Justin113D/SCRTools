@@ -11,6 +11,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
     public partial class UcMenuBar : UserControl
     {
         private TextFileHandler? _formatFileHandler;
+        private FileHandler? _exportHandler;
         private VmMain? _viewModel;
 
         public UcMenuBar()
@@ -31,6 +32,9 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
                 _viewModel = vm;
                 _formatFileHandler = new("Format File (.json)|*.json", "Format Json File", vm.FormatTracker,
                     () => vm.WriteFormat(), (format) => vm.LoadFormat(format), vm.NewFormat);
+
+                _exportHandler = new("Language Files (.lang & .langkey)|*.lang", "Language Files",
+                    vm.FormatTracker, vm.ExportLanguage, null, null);
             }
         }
 
@@ -69,5 +73,9 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
             new Windows.WndSettings().ShowDialog();
         }
 
+        private void Export(object sender, RoutedEventArgs e)
+        {
+            _exportHandler?.Save(true);
+        }
     }
 }

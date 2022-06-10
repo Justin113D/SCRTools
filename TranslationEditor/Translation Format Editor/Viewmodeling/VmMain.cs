@@ -49,7 +49,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         {
             FormatTracker = new();
             FormatTracker.Use();
-            Format = new(new(), FormatTracker);
+            Format = new(this, new(), FormatTracker);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         /// </summary>
         /// <param name="message">Message to display</param>
         /// <param name="warning">Whether its a warning</param>
-        private void SetMessage(string message, bool warning)
+        public void SetMessage(string message, bool warning)
         {
             if (DisplayMessage > 0)
             {
@@ -103,7 +103,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 HeaderNode headerNode = JsonFormatHandler.ReadFormat(path);
 
                 FormatTracker.Reset();
-                Format = new(headerNode, FormatTracker);
+                Format = new(this, headerNode, FormatTracker);
                 SetMessage("Loaded Format", false);
             }
             catch
@@ -123,8 +123,21 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         public void NewFormat()
         {
             FormatTracker.Reset();
-            Format = new(new(), FormatTracker);
+            Format = new(this, new(), FormatTracker);
             SetMessage("Created new Format", false);
         }
+
+        public void ExportLanguage(string filepath)
+        {
+            if (Format == null)
+            {
+                SetMessage("No Format Loaded!", true);
+                return;
+            }
+
+            Format.ExportLanguage(filepath);
+            SetMessage("Exported Language Files", false);
+        }
+
     }
 }

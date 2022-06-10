@@ -7,6 +7,7 @@ using SCR.Tools.Viewmodeling;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,8 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
     public class VmFormat : BaseViewModel
     {
         #region Private fields
+
+        private readonly VmMain _main;
 
         /// <summary>
         /// Headernode holding the format information
@@ -28,6 +31,8 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
 
         #endregion
+
+        #region Properties
 
         /// <summary>
         /// Change tracker for the viewmodels
@@ -139,6 +144,8 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             }
         }
 
+        #endregion
+
         #region Commands
 
         public RelayCommand CmdAddNewStringNode
@@ -164,8 +171,9 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         #endregion
 
-        public VmFormat(HeaderNode data, ChangeTracker projectTracker)
+        public VmFormat(VmMain main, HeaderNode data, ChangeTracker projectTracker)
         {
+            _main = main;
             _header = data;
             FormatTracker = projectTracker;
 
@@ -266,7 +274,17 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 }
             ));
         }
+       
+        /// <summary>
+        /// Tells the current change tracker grouping to notify the viewmodel that a property changed on undo/redo
+        /// </summary>
+        /// <param name="propertyName"></param>
+        private void TrackNotifyProperty(string propertyName)
+        {
+            FormatTracker.GroupNotifyPropertyChanged(OnPropertyChanged, propertyName);
+        }
 
+        #region Action methods
 
         private void AddNewStringNode()
         {
@@ -470,19 +488,25 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
             Node[] nodes = SortNodesByHierarchy(GetTopSelected());
             _copyPasteNodes = new ICPNode[nodes.Length];
+            int copyCount = 0;
 
             for(int i = 0; i < nodes.Length; i++)
             {
                 Node node = nodes[i];
                 if(node is ParentNode pn)
                 {
-                    _copyPasteNodes[i] = CPParentNode.FromNode(pn);
+                    CPParentNode cpPn =  CPParentNode.FromNode(pn);
+                    _copyPasteNodes[i] = cpPn;
+                    copyCount += cpPn.NodeCount;
                 }
                 else if(node is StringNode sn)
                 {
                     _copyPasteNodes[i] = CPStringNode.FromNode(sn);
+                    copyCount++;
                 }
             }
+
+            _main.SetMessage($"Copied a total of {copyCount} nodes!", false);
         }
 
         private void PasteSelected()
@@ -519,16 +543,22 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 parent = _header;
             }
 
+            int pasteCount = 0;
+
             FormatTracker.BeginGroup();
 
             foreach (ICPNode t in _copyPasteNodes)
             {
                 t.CreateNode(parent);
+                pasteCount += t.NodeCount;
             }
 
             FormatTracker.EndGroup();
+
+            _main.SetMessage($"Pasted a total of {pasteCount} nodes!", false);
         }
 
+        #endregion
 
         public string WriteFormat()
         {
@@ -536,12 +566,17 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         }
 
         /// <summary>
-        /// Tells the current change tracker grouping to notify the viewmodel that a property changed on undo/redo
+        /// Exports language to a key and values file
         /// </summary>
-        /// <param name="propertyName"></param>
-        private void TrackNotifyProperty(string propertyName)
+        /// <param name="filepath"></param>
+        public void ExportLanguage(string filepath)
         {
-            FormatTracker.GroupNotifyPropertyChanged(OnPropertyChanged, propertyName);
+            (string keys, string values) = _header.ExportLanguageData();
+
+            File.WriteAllText(filepath, values);
+
+            string keyFilePath = Path.ChangeExtension(filepath, "langkey");
+            File.WriteAllText(keyFilePath, keys);
         }
     }
 }

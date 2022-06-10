@@ -35,6 +35,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.UserControls
             else
             {
                 _viewModel = vm;
+
                 _projectFileHandler = new("Language Project (.langproj)|*.langproj", "Language project file",
                     vm.ProjectTracker, vm.WriteProject, vm.LoadProject, vm.NewProject);
 
@@ -55,6 +56,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.UserControls
             }
 
             _formatFileHandler.Open();
+            _projectFileHandler?.Clear();
             _projectFileHandler?.CopyPin(_formatFileHandler);
             _importExportHandler?.CopyPin(_formatFileHandler);
         }
@@ -98,7 +100,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.UserControls
             _formatFileHandler?.CopyPin(_projectFileHandler);
         }
 
-        private void ExportLanguageFiles(object sender, RoutedEventArgs e)
+        public void ExportLanguageFiles(object sender, RoutedEventArgs e)
         {
             if (_projectFileHandler == null || _importExportHandler == null || _viewModel?.Format == null)
                 return;
@@ -107,7 +109,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.UserControls
             _importExportHandler.CopyPin(_projectFileHandler);
         }
 
-        private void ImportLanguageFiles(object sender, RoutedEventArgs e)
+        public void ImportLanguageFiles(object sender, RoutedEventArgs e)
         {
             if (_projectFileHandler == null || _importExportHandler == null || _viewModel?.Format == null)
                 return;

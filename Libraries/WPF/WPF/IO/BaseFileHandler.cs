@@ -137,6 +137,12 @@ namespace SCR.Tools.WPF.IO
 
         protected abstract void InternalLoad(string filePath);
 
+        public void Clear()
+        {
+            LoadedFilePath = null;
+            _savePin = null;
+        }
+
         public void CopyPin(BaseFileHandler handler)
         {
             _savePin = handler._savePin;

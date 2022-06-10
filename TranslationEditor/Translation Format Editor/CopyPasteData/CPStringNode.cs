@@ -10,6 +10,8 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.CopyPasteData
 
         public string DefaultValue { get; }
 
+        public int NodeCount => 1;
+
         public CPStringNode(string name, string? description, string defaultValue)
         {
             Name = name;

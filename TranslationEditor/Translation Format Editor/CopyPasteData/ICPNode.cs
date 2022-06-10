@@ -8,6 +8,8 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.CopyPasteData
 
         public string? Description { get; }
 
+        public int NodeCount { get; }
+
         public void CreateNode(ParentNode parent);
     }
 }

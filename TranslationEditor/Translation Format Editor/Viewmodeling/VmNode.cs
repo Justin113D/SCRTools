@@ -1,13 +1,16 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
-using SCR.Tools.UndoRedo;
-using SCR.Tools.UndoRedo.ListChange;
 using SCR.Tools.Viewmodeling;
 
 namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 {
+    /// <summary>
+    /// Viewmodel for a node
+    /// </summary>
     public abstract class VmNode : BaseViewModel
     {
-
+        /// <summary>
+        /// Assigned format
+        /// </summary>
         protected readonly VmFormat _format;
 
         #region Properties
@@ -56,6 +59,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 _format.FormatTracker.EndGroup();
             }
         }
+
 
         /// <summary>
         /// Whether this node can be expanded

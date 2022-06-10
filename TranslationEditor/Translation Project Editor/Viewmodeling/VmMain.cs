@@ -49,7 +49,6 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         public RelayCommand Cmd_Redo
             => new(Redo);
 
-
         public VmMain()
         {
             ProjectTracker = new();

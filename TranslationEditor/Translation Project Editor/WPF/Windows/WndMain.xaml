@@ -39,7 +39,18 @@
                 <baseVM:EventCommand Executed="IB_SaveAs"/>
             </KeyBinding.Command>
         </KeyBinding>
-        
+
+        <KeyBinding Modifiers="Ctrl+Shift" Key="E">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_Export"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="I">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_Import"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+
         <KeyBinding Modifiers="Ctrl" Key="Z" Command="{Binding Cmd_Undo}"/>
         <KeyBinding Modifiers="Ctrl" Key="Y" Command="{Binding Cmd_Redo}"/>
     </styling:Window.InputBindings>

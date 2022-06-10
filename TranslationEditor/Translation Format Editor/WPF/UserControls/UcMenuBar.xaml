@@ -46,6 +46,12 @@
                         <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/SaveAs.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
+                <Separator/>
+                <MenuItem Header="Export Language Files" Click="Export" InputGestureText="Ctrl+Shift+E">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/ExportFile.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="Edit">
                 <MenuItem Header="Undo" Command="{Binding CmdUndo}" InputGestureText="Ctrl+Z">
