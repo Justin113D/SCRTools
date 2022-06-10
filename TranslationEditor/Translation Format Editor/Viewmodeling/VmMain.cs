@@ -45,12 +45,6 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         public RelayCommand CmdDeleteSelected
             => new(DeleteSelected);
 
-        public RelayCommand CmdExpandAll
-            => new(ExpandAll);
-
-        public RelayCommand CmdCollapseAll
-            => new(CollapseAll);
-
         public VmMain()
         {
             FormatTracker = new();
@@ -101,13 +95,6 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         {
             Format.CmdRemoveSelected.Execute(null);
         }
-
-        private void ExpandAll()
-            => Format?.ExpandAll();
-
-        private void CollapseAll()
-            => Format?.CollapseAll();
-
 
         public void LoadFormat(string path)
         {

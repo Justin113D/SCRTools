@@ -58,6 +58,16 @@
                         <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/Redo.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="Copy Selected" Command="{Binding Format.CmdCopySelected}" InputGestureText="Ctrl+C">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/Copy.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Paste Selected" Command="{Binding Format.CmdPasteSelected}" InputGestureText="Ctrl+V">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/Paste.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="Delete Selected" InputGestureText="Delete | Ctrl+X">
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/RemoveFromDictionary.png"/>
@@ -69,7 +79,7 @@
                         <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/ExpandAll.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Collapse All" Command="{Binding CmdCollapseAll}">
+                <MenuItem Header="Collapse All" Command="{Binding Format.CmdCollapseAll}">
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/ExpandAll.png"/>
                     </MenuItem.Icon>

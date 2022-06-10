@@ -1,6 +1,7 @@
 ﻿using SCR.Tools.TranslationEditor.Data.Events;
 using SCR.Tools.UndoRedo;
 using SCR.Tools.UndoRedo.ListChange;
+using System.Collections;
 using System.Collections.ObjectModel;
 
 namespace SCR.Tools.TranslationEditor.Data
@@ -8,7 +9,7 @@ namespace SCR.Tools.TranslationEditor.Data
     /// <summary>
     /// A node which holds more nodes as children (hierarchy node)
     /// </summary>
-    public class ParentNode : Node
+    public class ParentNode : Node, IEnumerable<Node>
     {
         protected readonly List<Node> _childNodes;
 
@@ -177,5 +178,11 @@ namespace SCR.Tools.TranslationEditor.Data
         {
             ChildrenChanged?.Invoke(this, new(fromIndex, toIndex));
         }
+
+        public IEnumerator<Node> GetEnumerator()
+            => new NodeHierarchyEnumerator(this);
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => GetEnumerator();
     }
 }

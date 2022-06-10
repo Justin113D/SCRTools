@@ -15,6 +15,8 @@
         <KeyBinding Key="Esc" Command="{Binding CmdDeselectAll}"/>
         <KeyBinding Key="Delete" Command="{Binding CmdRemoveSelected}"/>
         <KeyBinding Key="X" Modifiers="Ctrl" Command="{Binding CmdRemoveSelected}"/>
+        <KeyBinding Key="C" Modifiers="Ctrl" Command="{Binding CmdCopySelected}"/>
+        <KeyBinding Key="V" Modifiers="Ctrl" Command="{Binding CmdPasteSelected}"/>
     </UserControl.InputBindings>
 
     <Grid>

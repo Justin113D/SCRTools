@@ -61,7 +61,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
             if (t != MessageBoxResult.OK)
                 return;
 
-            _viewModel?.CmdExpandAll.Execute(null);
+            _viewModel?.Format.ExpandAll();
         }
 
         private void SettingsOpen(object sender, RoutedEventArgs e)

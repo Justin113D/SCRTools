@@ -10,8 +10,6 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         protected readonly VmFormat _format;
 
-        private bool _selected;
-
         #region Properties
 
         /// <summary>
@@ -74,32 +72,25 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         /// </summary>
         public bool Selected
         {
-            get => _selected;
+            get => _format.SelectedNodes.Contains(Node);
             set
             {
-                if (_selected == value)
+                if (Selected == value)
                     return;
 
                 _format.FormatTracker.BeginGroup();
 
-                ChangeTracker.Global.TrackChange(
-                    new ChangedValue<bool>(
-                        (v) => _selected = v,
-                        _selected,
-                        value
-                ));
-
                 if (value)
                 {
                     _format.FormatTracker.TrackChange(
-                        new ChangeCollectionAdd<VmNode>(
-                            _format.SelectedNodes, this));
+                        new ChangeCollectionAdd<Node>(
+                            _format.SelectedNodes, Node));
                 }
                 else
                 {
                     _format.FormatTracker.TrackChange(
-                        new ChangeCollectionRemove<VmNode>(
-                            _format.SelectedNodes, this));
+                        new ChangeCollectionRemove<Node>(
+                            _format.SelectedNodes, Node));
                 }
 
                 TrackNotifyProperty(nameof(Selected));
@@ -200,14 +191,12 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             }
 
             // check if pn is inside the hierarchy of any selected node, to prevent recursion
-            foreach(VmNode node in _format.SelectedNodes)
+            foreach(Node node in _format.SelectedNodes)
             {
-                if(node is not VmParentNode vmPn)
+                if(node is not ParentNode check)
                 {
                     continue;
                 }
-
-                ParentNode check = vmPn.ParentNode;
 
                 ParentNode current = pn;
                 while(current.Parent is ParentNode next)

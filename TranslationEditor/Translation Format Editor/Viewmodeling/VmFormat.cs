@@ -1,5 +1,6 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.TranslationEditor.Data.Events;
+using SCR.Tools.TranslationEditor.FormatEditor.CopyPasteData;
 using SCR.Tools.UndoRedo;
 using SCR.Tools.UndoRedo.ListChange;
 using SCR.Tools.Viewmodeling;
@@ -20,6 +21,9 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         private readonly HeaderNode _header;
 
         private VmNode? _activeNode;
+
+        private ICPNode[] _copyPasteNodes = Array.Empty<ICPNode>();
+
 
         /// <summary>
         /// Change tracker for the viewmodels
@@ -109,7 +113,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         private readonly Dictionary<Node, VmNode> _nodeTable;
 
 
-        public HashSet<VmNode> SelectedNodes { get; private set; }
+        public HashSet<Node> SelectedNodes { get; private set; }
 
         public VmNode? ActiveNode
         {
@@ -151,6 +155,14 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         public RelayCommand CmdRemoveSelected
             => new(RemoveSelected);
 
+        public RelayCommand CmdCopySelected
+            => new(CopySelected);
+
+        public RelayCommand CmdPasteSelected
+            => new(PasteSelected);
+
+        public RelayCommand CmdCollapseAll
+            => new(CollapseAll);
 
         public VmFormat(HeaderNode data, ChangeTracker projectTracker)
         {
@@ -271,6 +283,51 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             _header.AddChildNode(new ParentNode("Category"));
         }
 
+        private HashSet<Node> GetTopSelected()
+        {
+            HashSet<Node> topSelected = new();
+
+            foreach (Node node in SelectedNodes)
+            {
+                Node finalSelected = node;
+
+                Node current = node;
+                while (current.Parent is ParentNode pn and not HeaderNode)
+                {
+                    current = pn;
+                    if (SelectedNodes.Contains(current))
+                    {
+                        finalSelected = current;
+                    }
+                }
+
+                topSelected.Add(finalSelected);
+            }
+
+            return topSelected;
+        }
+
+        private Node[] SortNodesByHierarchy(HashSet<Node> nodes)
+        {
+            Node[] output = new Node[nodes.Count];
+            int insertIndex = 0;
+            foreach(Node node in _header)
+            {
+                if(nodes.Contains(node))
+                {
+                    output[insertIndex] = node;
+                    insertIndex++;
+                    if (insertIndex == output.Length)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return output;
+        }
+
+
         /// <summary>
         /// Expands all nodes
         /// </summary>
@@ -299,7 +356,6 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             }
         }
 
-
         public void RemoveSelected()
         {
             if (SelectedNodes.Count == 0)
@@ -307,30 +363,13 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 return;
             }
 
-            HashSet<VmNode> toDelete = new();
-
-            foreach(VmNode node in SelectedNodes)
-            {
-                VmNode finalSelected = node;
-
-                Node current = node.Node;
-                while(current.Parent is ParentNode pn and not HeaderNode)
-                {
-                    current = pn;
-                    if(_nodeTable[current].Selected)
-                    {
-                        finalSelected = _nodeTable[current];
-                    }
-                }
-
-                toDelete.Add(finalSelected);
-            }
+            HashSet<Node> toDelete = GetTopSelected();
 
             FormatTracker.BeginGroup();
 
-            foreach(VmNode node in toDelete)
+            foreach(Node node in toDelete)
             {
-                node.Remove();
+                _nodeTable[node].Remove();
             }
 
             FormatTracker.EndGroup();
@@ -340,14 +379,18 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         {
             if(SelectedNodes.Count == 0)
             {
-                //return;
+                return;
             }
 
             FormatTracker.BeginGroup();
-            foreach (VmNode vmNode in SelectedNodes.ToArray())
+
+            Node[] nodes = SelectedNodes.ToArray();
+            FormatTracker.TrackChange(new ChangeCollectionClear<Node>(SelectedNodes));
+            foreach (Node node in nodes)
             {
-                vmNode.Selected = false;
+                _nodeTable[node].TrackNotifyProperty(nameof(VmNode.Selected));
             }
+
             FormatTracker.EndGroup();
         }
 
@@ -410,10 +453,13 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 return;
             }
 
+            Node[] nodes = SortNodesByHierarchy(SelectedNodes);
+            
             FormatTracker.BeginGroup();
 
-            foreach(VmNode vmNode in SelectedNodes)
+            foreach (Node node in nodes)
             {
+                VmNode vmNode = _nodeTable[node];
                 if(parent.ChildNodes.Contains(vmNode.Node))
                 {
                     int moveIndex = parent.ChildNodes.IndexOf(vmNode.Node);
@@ -425,6 +471,75 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                     parent.InsertChildNodeAt(vmNode.Node, index);
                 }
                 index++;
+            }
+
+            FormatTracker.EndGroup();
+        }
+
+
+        private void CopySelected()
+        {
+            if (SelectedNodes.Count == 0)
+            {
+                return;
+            }
+
+            Node[] nodes = SortNodesByHierarchy(GetTopSelected());
+            _copyPasteNodes = new ICPNode[nodes.Length];
+
+            for(int i = 0; i < nodes.Length; i++)
+            {
+                Node node = nodes[i];
+                if(node is ParentNode pn)
+                {
+                    _copyPasteNodes[i] = CPParentNode.FromNode(pn);
+                }
+                else if(node is StringNode sn)
+                {
+                    _copyPasteNodes[i] = CPStringNode.FromNode(sn);
+                }
+            }
+        }
+
+        private void PasteSelected()
+        {
+            if(_copyPasteNodes.Length == 0)
+            {
+                return;
+            }
+
+            ParentNode parent;
+            if(ActiveNode != null && ActiveNode.Selected)
+            {
+                if (ActiveNode.Node is ParentNode pn)
+                {
+                    parent = pn;
+                }
+                else if (ActiveNode.Node is StringNode sn)
+                {
+                    if (sn.Parent == null)
+                    {
+                        // can't happen but i want the warnings to shut up
+                        throw new InvalidOperationException();
+                    }
+                    parent = sn.Parent;
+                }
+                else
+                {
+                    // can't happen, but necessary
+                    throw new InvalidOperationException();
+                }
+            }
+            else
+            {
+                parent = _header;
+            }
+
+            FormatTracker.BeginGroup();
+
+            foreach (ICPNode t in _copyPasteNodes)
+            {
+                t.CreateNode(parent);
             }
 
             FormatTracker.EndGroup();
