@@ -15,6 +15,8 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 {
     public class VmFormat : BaseViewModel
     {
+        #region Private fields
+
         /// <summary>
         /// Headernode holding the format information
         /// </summary>
@@ -24,6 +26,8 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         private ICPNode[] _copyPasteNodes = Array.Empty<ICPNode>();
 
+
+        #endregion
 
         /// <summary>
         /// Change tracker for the viewmodels
@@ -100,6 +104,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             }
         }
 
+
         /// <summary>
         /// Private collection for the node viewmodels
         /// </summary>
@@ -122,26 +127,19 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             {
                 if(_activeNode == value)
                 {
-                    FormatTracker.BlankChange();
                     return;
                 }
 
-                FormatTracker.BeginGroup();
-
                 VmNode? oldValue = _activeNode;
 
-                FormatTracker.TrackChange(new ChangedValue<VmNode?>(
-                    (v) => _activeNode = v,
-                    _activeNode,
-                    value));
+                _activeNode = value;
 
-                oldValue?.TrackNotifyProperty(nameof(VmNode.Active));
-                _activeNode?.TrackNotifyProperty(nameof(VmNode.Active));
-
-                FormatTracker.EndGroup();
+                oldValue?.NotifyActiveChanged();
+                _activeNode?.NotifyActiveChanged();
             }
         }
 
+        #region Commands
 
         public RelayCommand CmdAddNewStringNode
             => new(AddNewStringNode);
@@ -163,6 +161,8 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         public RelayCommand CmdCollapseAll
             => new(CollapseAll);
+
+        #endregion
 
         public VmFormat(HeaderNode data, ChangeTracker projectTracker)
         {
@@ -231,6 +231,14 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 FormatTracker.TrackChange(
                     new ChangeListInsert<VmNode>(
                         _nodes, vmNode, args.ToIndex));
+
+                FormatTracker.TrackChange(new Change(
+                    () => { },
+                    () =>
+                    {
+                        vmNode.Selected = false;
+                        vmNode.Active = false;
+                    }));
             }
 
             FormatTracker.EndGroup();
@@ -241,22 +249,13 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             if (args.NewHeader == _header)
                 return;
             
-            FormatTracker.BeginGroup();
             VmNode vmNode = _nodeTable[node];
-
-            if(vmNode.Selected)
-            {
-                vmNode.Selected = false;
-            }
-
-            if(ActiveNode == vmNode)
-            {
-                ActiveNode = null;
-            }
 
             FormatTracker.TrackChange(new Change(
                 () =>
                 {
+                    vmNode.Selected = false;
+                    vmNode.Active = false;
                     _nodeTable.Remove(node);
                     node.HeaderChanged -= HeaderChanged;
                 },
@@ -266,10 +265,6 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                     node.HeaderChanged += HeaderChanged;
                 }
             ));
-
-
-
-            FormatTracker.EndGroup();
         }
 
 
@@ -377,21 +372,10 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         public void DeselectAll()
         {
-            if(SelectedNodes.Count == 0)
+            foreach (Node node in SelectedNodes.ToArray())
             {
-                return;
+                _nodeTable[node].Selected = false;
             }
-
-            FormatTracker.BeginGroup();
-
-            Node[] nodes = SelectedNodes.ToArray();
-            FormatTracker.TrackChange(new ChangeCollectionClear<Node>(SelectedNodes));
-            foreach (Node node in nodes)
-            {
-                _nodeTable[node].TrackNotifyProperty(nameof(VmNode.Selected));
-            }
-
-            FormatTracker.EndGroup();
         }
 
         public void SelectRange(VmNode target, bool multi)

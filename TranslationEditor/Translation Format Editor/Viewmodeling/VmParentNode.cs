@@ -37,6 +37,13 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                     CreateChildViewModels();
                 }
 
+                if (!_expanded)
+                {
+                    foreach (VmNode vmNode in ChildNodes)
+                    {
+                        vmNode.DeselectHierarchy();
+                    }
+                }
             }
         }
 
@@ -72,7 +79,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                         _childNodes, args.FromIndex));
             }
 
-            if(args.ToIndex > -1)
+            if (args.ToIndex > -1)
             {
                 VmNode vmNode = _format.GetNodeViewmodel(ParentNode.ChildNodes[args.ToIndex]);
                 _format.FormatTracker.TrackChange(
@@ -150,10 +157,25 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             }
         }
 
+        public override void DeselectHierarchy()
+        {
+            Selected = false;
+            Active = false;
+
+            if (!Expanded)
+            {
+                return;
+            }
+
+            foreach (VmNode vmNode in ChildNodes)
+            {
+                vmNode.DeselectHierarchy();
+            }
+        }
 
         public override void InsertBelow()
         {
-            if(!Expanded)
+            if (!Expanded)
             {
                 base.InsertBelow();
             }

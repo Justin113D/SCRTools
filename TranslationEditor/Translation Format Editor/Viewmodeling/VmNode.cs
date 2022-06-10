@@ -78,31 +78,42 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 if (Selected == value)
                     return;
 
-                _format.FormatTracker.BeginGroup();
-
                 if (value)
                 {
-                    _format.FormatTracker.TrackChange(
-                        new ChangeCollectionAdd<Node>(
-                            _format.SelectedNodes, Node));
+                    _format.SelectedNodes.Add(Node);
                 }
                 else
                 {
-                    _format.FormatTracker.TrackChange(
-                        new ChangeCollectionRemove<Node>(
-                            _format.SelectedNodes, Node));
+                    _format.SelectedNodes.Remove(Node);
                 }
-
-                TrackNotifyProperty(nameof(Selected));
-
-                _format.FormatTracker.EndGroup();
             }
         }
 
         /// <summary>
         /// Whether the node is the active selected one
         /// </summary>
-        public bool Active => _format.ActiveNode == this;
+        public bool Active
+        {
+            get => _format.ActiveNode == this;
+            set
+            {
+                if (Active == value)
+                {
+                    return;
+                }
+
+                if(value)
+                {
+                    var previous = _format.ActiveNode;
+                    _format.ActiveNode = this;
+                    previous?.OnPropertyChanged(nameof(Active));
+                }
+                else
+                {
+                    _format.ActiveNode = null;
+                }
+            }
+        }
 
         #endregion
 
@@ -118,6 +129,9 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             Node = node;
             _format = format;
         }
+
+        public void NotifyActiveChanged()
+            => OnPropertyChanged(nameof(Active));
 
         public void TrackNotifyProperty(string propertyName)
         {
@@ -153,7 +167,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 Selected = !Selected;
             }
 
-            _format.ActiveNode = this;
+            Active = true;
             _format.FormatTracker.EndGroup();
         }
 
@@ -238,6 +252,12 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
             int insertIndex = Node.Parent.ChildNodes.IndexOf(Node) + 1;
             _format.MoveSelected(Node.Parent, insertIndex);
+        }
+
+        public virtual void DeselectHierarchy()
+        {
+            Selected = false;
+            Active = false;
         }
 
         #endregion
