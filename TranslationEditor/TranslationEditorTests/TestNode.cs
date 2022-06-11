@@ -1,6 +1,4 @@
-﻿using SCR.Tools.TranslationEditor.Data;
-
-namespace SCR.Tools.TranslationEditor.Tests
+﻿namespace SCR.Tools.TranslationEditor.Data.Tests
 {
     public class TestNode : Node
     {

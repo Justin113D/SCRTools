@@ -1,9 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.UndoRedo;
 using System;
 
-namespace SCR.Tools.TranslationEditor.Tests
+namespace SCR.Tools.TranslationEditor.Data.Tests
 {
     [TestClass]
     public class Tests_SharedNodeFunctionality

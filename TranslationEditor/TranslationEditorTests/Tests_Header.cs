@@ -1,13 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.UndoRedo;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SCR.Tools.TranslationEditor.Tests
+namespace SCR.Tools.TranslationEditor.Data.Tests
 {
     [TestClass]
     public class Tests_Header
