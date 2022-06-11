@@ -45,7 +45,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
             }
         }
 
-        public RelayCommand Cmd_Reset
+        public RelayCommand CmdReset
             => new(ResetValue);
 
         public VmStringNode(VmProject project, StringNode node) : base(project, node)

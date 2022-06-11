@@ -40,13 +40,13 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         /// <summary>
         /// Undo Command 
         /// </summary>
-        public RelayCommand Cmd_Undo
+        public RelayCommand CmdUndo
             => new(Undo);
 
         /// <summary>
         /// Redo Command
         /// </summary>
-        public RelayCommand Cmd_Redo
+        public RelayCommand CmdRedo
             => new(Redo);
 
         public VmMain()

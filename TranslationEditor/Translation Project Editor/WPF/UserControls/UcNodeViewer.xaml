@@ -5,13 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SCR.Tools.TranslationEditor.ProjectEditor.WPF.UserControls"
              xmlns:converters="clr-namespace:SCR.Tools.WPF.Converters;assembly=SCR.Tools.WPF"
-             xmlns:xaml="clr-namespace:SCR.Tools.TranslationEditor.ProjectEditor.WPF"
+             xmlns:wpf="clr-namespace:SCR.Tools.TranslationEditor.ProjectEditor.WPF"
              xmlns:vm="clr-namespace:SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling"
              xmlns:data="clr-namespace:SCR.Tools.TranslationEditor.Data;assembly=SCR.Tools.TranslationEditor.Data"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              x:Name="NodeViewer"
-             d:DataContext="{x:Static xaml:DesignDataFactory.Project}">
+             d:DataContext="{x:Static wpf:DesignDataFactory.Project}">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -93,15 +93,15 @@
 
             <!-- Templates for both node types-->
             <TreeView.ItemTemplateSelector>
-                <xaml:NodeTemplateSelector>
+                <wpf:NodeTemplateSelector>
 
                     <!-- Parent Node-->
-                    <xaml:NodeTemplateSelector.ParentTemplate>
+                    <wpf:NodeTemplateSelector.ParentTemplate>
                         <HierarchicalDataTemplate DataType="{x:Type vm:VmParentNode}" ItemsSource="{Binding ChildNodes}"/>
-                    </xaml:NodeTemplateSelector.ParentTemplate>
+                    </wpf:NodeTemplateSelector.ParentTemplate>
 
                     <!-- String Node-->
-                    <xaml:NodeTemplateSelector.StringTemplate>
+                    <wpf:NodeTemplateSelector.StringTemplate>
                         <HierarchicalDataTemplate DataType="{x:Type vm:VmStringNode}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -129,7 +129,7 @@
                                     </TextBox.Style>
 
                                     <TextBox.InputBindings>
-                                        <KeyBinding Modifiers="Ctrl" Key="R" Command="{Binding Cmd_Reset}"/>
+                                        <KeyBinding Modifiers="Ctrl" Key="R" Command="{Binding CmdReset}"/>
                                     </TextBox.InputBindings>
                                 </TextBox>
 
@@ -154,8 +154,8 @@
                                 </CheckBox>
                             </Grid>
                         </HierarchicalDataTemplate>
-                    </xaml:NodeTemplateSelector.StringTemplate>
-                </xaml:NodeTemplateSelector>
+                    </wpf:NodeTemplateSelector.StringTemplate>
+                </wpf:NodeTemplateSelector>
             </TreeView.ItemTemplateSelector>
         </TreeView>
 

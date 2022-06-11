@@ -1,5 +1,5 @@
 ﻿<styling:Window 
-    x:Class="SCR.Tools.TranslationEditor.FormatEditor.WPF.Windows.WndSettings"
+    x:Class="SCR.Tools.DialogEditor.WPF.Windows.WndSettings"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:styling="clr-namespace:SCR.Tools.WPF.Styling;assembly=SCR.Tools.WPF"
@@ -50,13 +50,7 @@
                         PreviewTextInput="FontSizeField_PreviewTextInput" 
                         TextAlignment="Right"/>
                 </StackPanel>
-
-                <!-- Json indenting -->
-                <StackPanel>
-                    <TextBlock Text="Json Indenting"/>
-                    <CheckBox x:Name="JsonIndentingCheckbox"/>
-                </StackPanel>
-
+                
             </StackPanel>
 
             <Button 

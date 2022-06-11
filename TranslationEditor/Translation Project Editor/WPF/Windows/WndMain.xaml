@@ -51,8 +51,8 @@
             </KeyBinding.Command>
         </KeyBinding>
 
-        <KeyBinding Modifiers="Ctrl" Key="Z" Command="{Binding Cmd_Undo}"/>
-        <KeyBinding Modifiers="Ctrl" Key="Y" Command="{Binding Cmd_Redo}"/>
+        <KeyBinding Modifiers="Ctrl" Key="Z" Command="{Binding CmdUndo}"/>
+        <KeyBinding Modifiers="Ctrl" Key="Y" Command="{Binding CmdRedo}"/>
     </styling:Window.InputBindings>
 
     <Grid>

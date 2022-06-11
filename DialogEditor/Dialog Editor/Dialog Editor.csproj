@@ -1,11 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <RootNamespace>Dialog_Editor</RootNamespace>
-    <Nullable>enable</Nullable>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<OutputType>WinExe</OutputType>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<RootNamespace>SCR.Tools.DialogEditor</RootNamespace>
+		<AssemblyName>Dialog Editor</AssemblyName>
+		<StartupObject>SCR.Tools.DialogEditor.WPF.App</StartupObject>
+		<ApplicationIcon>Icon.ico</ApplicationIcon>
+	</PropertyGroup>
 
+	<ItemGroup>
+		<Resource Include="Icon.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Libraries\UndoRedo\UndoRedo.csproj" />
+		<ProjectReference Include="..\..\Libraries\WPF\WPF.csproj" />
+		<ProjectReference Include="..\DialogEditor.Data\DialogEditor.Data.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="WPF\UserControls\UcMessageBar.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
+	  <Page Update="WPF\Windows\WndSettings.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
+	</ItemGroup>
 </Project>

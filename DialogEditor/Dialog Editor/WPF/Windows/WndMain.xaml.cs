@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SCR.Tools.DialogEditor.Viewmodeling;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,19 +11,26 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Window = SCR.Tools.WPF.Styling.Window;
 
-namespace Dialog_Editor
+namespace SCR.Tools.DialogEditor.WPF.Windows
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for WndMain.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class WndMain : Window
     {
-        public MainWindow()
+        public WndMain()
         {
+            InitDataContext();
             InitializeComponent();
+        }
+
+        private void InitDataContext()
+        {
+            VmMain vm = new();
+            DataContext = vm;
         }
     }
 }

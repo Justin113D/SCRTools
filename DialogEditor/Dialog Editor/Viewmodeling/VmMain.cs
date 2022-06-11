@@ -1,20 +1,15 @@
-﻿using SCR.Tools.TranslationEditor.Data;
-using SCR.Tools.UndoRedo;
+﻿using SCR.Tools.UndoRedo;
 using SCR.Tools.Viewmodeling;
 
-namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
+namespace SCR.Tools.DialogEditor.Viewmodeling
 {
-    public class VmMain : BaseViewModel
+    public class VmMain
     {
         /// <summary>
         /// Viewmodel specific Change Tracker for undoing redoing
         /// </summary>
-        public ChangeTracker FormatTracker { get; }
+        public ChangeTracker DialogTracker { get; }
 
-        /// <summary>
-        /// The loaded format
-        /// </summary>
-        public VmFormat Format { get; private set; }
 
         /// <summary>
         /// Error/warning message that is displayed in the main window
@@ -42,22 +37,20 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         public RelayCommand CmdRedo
             => new(Redo);
 
-        public RelayCommand CmdDeleteSelected
-            => new(DeleteSelected);
 
         public VmMain()
         {
-            FormatTracker = new();
-            FormatTracker.Use();
-            Format = new(this, new(), FormatTracker);
+            DialogTracker = new();
+            DialogTracker.Use();
         }
+
 
         /// <summary>
         /// Sets/Refreshes the message display
         /// </summary>
         /// <param name="message">Message to display</param>
         /// <param name="warning">Whether its a warning</param>
-        public void SetMessage(string message, bool warning)
+        private void SetMessage(string message, bool warning)
         {
             if (DisplayMessage > 0)
             {
@@ -74,7 +67,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         /// </summary>
         private void Undo()
         {
-            if (FormatTracker.Undo())
+            if (DialogTracker.Undo())
             {
                 SetMessage("Performed Undo", false);
             }
@@ -85,58 +78,41 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         /// </summary>
         private void Redo()
         {
-            if (FormatTracker.Redo())
+            if (DialogTracker.Redo())
             {
                 SetMessage("Performed Redo", false);
             }
         }
 
-        private void DeleteSelected()
-        {
-            Format.CmdRemoveSelected.Execute(null);
-        }
 
-        public void LoadFormat(string content)
+        public void LoadDialog(string path)
         {
             try
             {
-                HeaderNode headerNode = JsonFormatHandler.ReadFormat(content);
+                // load here
 
-                FormatTracker.Reset();
-                Format = new(this, headerNode, FormatTracker);
-                SetMessage("Loaded Format", false);
+                DialogTracker.Reset();
+                SetMessage("Loaded Dialog", false);
             }
             catch
             {
-                SetMessage("Error loading Format", true);
+                SetMessage("Error loading Dialog", true);
                 throw;
             }
         }
 
-        public string WriteFormat()
+        public string WriteDialog()
         {
-            string result = Format.WriteFormat();
-            SetMessage("Saved Format", false);
+            string result = ""; // Create content here
+            SetMessage("Saved Dialog", false);
             return result;
         }
 
-        public void NewFormat()
+        public void NewDialog()
         {
-            FormatTracker.Reset();
-            Format = new(this, new(), FormatTracker);
+            DialogTracker.Reset();
+            // reset here
             SetMessage("Created new Format", false);
-        }
-
-        public void ExportLanguage(string filepath)
-        {
-            if (Format == null)
-            {
-                SetMessage("No Format Loaded!", true);
-                return;
-            }
-
-            Format.ExportLanguage(filepath);
-            SetMessage("Exported Language Files", false);
         }
 
     }
