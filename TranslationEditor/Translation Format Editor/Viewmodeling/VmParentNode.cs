@@ -3,7 +3,6 @@ using SCR.Tools.TranslationEditor.Data.Events;
 using SCR.Tools.UndoRedo;
 using SCR.Tools.UndoRedo.ListChange;
 using SCR.Tools.Viewmodeling;
-using System;
 using System.Collections.ObjectModel;
 
 namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
@@ -70,11 +69,11 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         private void ChildrenChanged(ParentNode node, NodeChildrenChangedEventArgs args)
         {
-            _format.FormatTracker.BeginGroup();
+            ChangeTracker.Global.BeginGroup();
 
             if (args.FromIndex > -1)
             {
-                _format.FormatTracker.TrackChange(
+                ChangeTracker.Global.TrackChange(
                     new ChangeListRemoveAt<VmNode>(
                         _childNodes, args.FromIndex));
             }
@@ -82,14 +81,14 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             if (args.ToIndex > -1)
             {
                 VmNode vmNode = _format.GetNodeViewmodel(ParentNode.ChildNodes[args.ToIndex]);
-                _format.FormatTracker.TrackChange(
+                ChangeTracker.Global.TrackChange(
                     new ChangeListInsert<VmNode>(
                         _childNodes, vmNode, args.ToIndex));
             }
 
             TrackNotifyProperty(nameof(CanExpand));
 
-            _format.FormatTracker.EndGroup();
+            ChangeTracker.Global.EndGroup();
         }
 
         private void HeaderChanged(Node node, NodeHeaderChangedEventArgs args)
@@ -97,7 +96,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             if (args.NewHeader == ParentNode.Header)
                 return;
 
-            _format.FormatTracker.TrackChange(new Change(
+            ChangeTracker.Global.TrackChange(new Change(
                 () =>
                 {
                     ParentNode.ChildrenChanged -= ChildrenChanged;

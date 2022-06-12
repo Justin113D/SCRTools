@@ -49,7 +49,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         {
             FormatTracker = new();
             FormatTracker.Use();
-            Format = new(this, new(), FormatTracker);
+            Format = new(this, new());
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 HeaderNode headerNode = JsonFormatHandler.ReadFormat(content);
 
                 FormatTracker.Reset();
-                Format = new(this, headerNode, FormatTracker);
+                Format = new(this, headerNode);
                 SetMessage("Loaded Format", false);
             }
             catch
@@ -123,7 +123,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         public void NewFormat()
         {
             FormatTracker.Reset();
-            Format = new(this, new(), FormatTracker);
+            Format = new(this, new());
             SetMessage("Created new Format", false);
         }
 

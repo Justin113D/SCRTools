@@ -1,19 +1,9 @@
 ﻿using SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
 {
@@ -116,7 +106,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
 
         private void GrabSurface_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(e.LeftButton == MouseButtonState.Pressed)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
                 _clickCheck = true;
             }
@@ -124,7 +114,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
 
         private void GrabSurface_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if(_clickCheck)
+            if (_clickCheck)
             {
                 Select();
                 _clickCheck = false;
@@ -133,9 +123,9 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
 
         private void GrabSurface_MouseLeave(object sender, MouseEventArgs e)
         {
-            if(_clickCheck)
+            if (_clickCheck)
             {
-                if(!ViewModel.Selected)
+                if (!ViewModel.Selected)
                 {
                     Select();
                 }
@@ -146,7 +136,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(!_clickCheck)
+            if (!_clickCheck)
             {
                 ViewModel.DeselectAll();
             }
@@ -160,7 +150,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
         private void InsertAbove_MouseUp(object sender, MouseButtonEventArgs e)
         {
             DragHighlights = false;
-            if(_insertCheck)
+            if (_insertCheck)
             {
                 ViewModel.InsertAbove();
             }
@@ -169,7 +159,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
         private void InsertBelow_MouseUp(object sender, MouseButtonEventArgs e)
         {
             DragHighlights = false;
-            if(_insertCheck)
+            if (_insertCheck)
             {
                 ViewModel.InsertBelow();
             }
@@ -177,14 +167,14 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
 
         private void Insert_MouseEnter(object sender, MouseEventArgs e)
         {
-            if(Mouse.LeftButton == MouseButtonState.Released)
+            if (Mouse.LeftButton == MouseButtonState.Released)
             {
                 _insertCheck = false;
                 DragHighlights = false;
                 return;
             }
 
-            if(ViewModel.Selected)
+            if (ViewModel.Selected)
             {
                 InsertAboveDisplay.BorderBrush = Transparent;
                 InsertBelowDisplay.BorderBrush = Transparent;

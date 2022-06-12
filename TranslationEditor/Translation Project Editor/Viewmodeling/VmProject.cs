@@ -17,11 +17,6 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         private readonly HeaderNode _header;
 
         /// <summary>
-        /// Change tracker for the viewmodels
-        /// </summary>
-        public ChangeTracker ProjectTracker { get; }
-
-        /// <summary>
         /// The amount of untranslated nodes in the project
         /// </summary>
         public int UntranslatedNodes { get; private set; }
@@ -48,12 +43,12 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
                 if (_header.Author == value)
                     return;
 
-                ProjectTracker.BeginGroup();
+                ChangeTracker.Global.BeginGroup();
 
                 _header.Author = value;
                 TrackNotifyProperty(nameof(Author));
 
-                ProjectTracker.EndGroup();
+                ChangeTracker.Global.EndGroup();
             }
         }
 
@@ -68,12 +63,12 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
                 if (_header.Language == value)
                     return;
 
-                ProjectTracker.BeginGroup();
+                ChangeTracker.Global.BeginGroup();
 
                 _header.Language = value;
                 TrackNotifyProperty(nameof(Language));
 
-                ProjectTracker.EndGroup();
+                ChangeTracker.Global.EndGroup();
             }
         }
 
@@ -100,10 +95,9 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         public ReadOnlyObservableCollection<VmNode> Nodes { get; }
 
 
-        public VmProject(HeaderNode data, ChangeTracker projectTracker)
+        public VmProject(HeaderNode data)
         {
             _header = data;
-            ProjectTracker = projectTracker;
 
             _nodes = new();
             Nodes = new(_nodes);
@@ -162,7 +156,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         /// <param name="propertyName"></param>
         private void TrackNotifyProperty(string propertyName)
         {
-            ProjectTracker.GroupNotifyPropertyChanged(OnPropertyChanged, propertyName);
+            ChangeTracker.Global.GroupNotifyPropertyChanged(OnPropertyChanged, propertyName);
         }
 
 
@@ -195,7 +189,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
                     return;
             }
 
-            ProjectTracker.TrackChange(change);
+            ChangeTracker.Global.TrackChange(change);
         }
 
         /// <summary>
@@ -227,7 +221,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
                     return;
             }
 
-            ProjectTracker.TrackChange(change);
+            ChangeTracker.Global.TrackChange(change);
         }
 
         /// <summary>
@@ -235,12 +229,12 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         /// </summary>
         public void RefreshNodeValues()
         {
-            ProjectTracker.BeginGroup();
+            ChangeTracker.Global.BeginGroup();
             foreach (VmNode node in _nodes)
             {
                 node.RefreshNodeValues();
             }
-            ProjectTracker.EndGroup();
+            ChangeTracker.Global.EndGroup();
         }
 
         /// <summary>
@@ -278,7 +272,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         /// <param name="data">Data to load</param>
         public void LoadProject(string data)
         {
-            ProjectTracker.BeginGroup();
+            ChangeTracker.Global.BeginGroup();
 
             try
             {
@@ -286,13 +280,13 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
             }
             catch
             {
-                ProjectTracker.EndGroup(true);
+                ChangeTracker.Global.EndGroup(true);
                 throw;
             }
 
             RefreshNodeValues();
-            ProjectTracker.EndGroup();
-            ProjectTracker.Reset();
+            ChangeTracker.Global.EndGroup();
+            ChangeTracker.Global.Reset();
         }
 
         /// <summary>
@@ -308,7 +302,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         {
             _header.ResetAllStrings();
             RefreshNodeValues();
-            ProjectTracker.Reset();
+            ChangeTracker.Global.Reset();
         }
 
 
@@ -323,7 +317,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
             string keyFilePath = Path.ChangeExtension(filepath, "langkey");
             string keys = File.ReadAllText(keyFilePath);
 
-            ProjectTracker.BeginGroup();
+            ChangeTracker.Global.BeginGroup();
 
             try
             {
@@ -331,12 +325,12 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
             }
             catch
             {
-                ProjectTracker.EndGroup(true);
+                ChangeTracker.Global.EndGroup(true);
                 throw;
             }
 
-            ProjectTracker.EndGroup();
-            ProjectTracker.Reset();
+            ChangeTracker.Global.EndGroup();
+            ChangeTracker.Global.Reset();
             RefreshNodeValues();
         }
 

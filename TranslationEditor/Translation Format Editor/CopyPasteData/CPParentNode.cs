@@ -15,7 +15,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.CopyPasteData
             get
             {
                 int count = 1;
-                foreach(ICPNode node in Children)
+                foreach (ICPNode node in Children)
                 {
                     count += node.NodeCount;
                 }
@@ -34,14 +34,14 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.CopyPasteData
         {
             ICPNode[] children = new ICPNode[node.ChildNodes.Count];
 
-            for(int i = 0; i < children.Length; i++)
+            for (int i = 0; i < children.Length; i++)
             {
                 Node child = node.ChildNodes[i];
-                if(child is StringNode sn)
+                if (child is StringNode sn)
                 {
                     children[i] = CPStringNode.FromNode(sn);
                 }
-                else if(child is ParentNode pn)
+                else if (child is ParentNode pn)
                 {
                     children[i] = FromNode(pn);
                 }
@@ -55,7 +55,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.CopyPasteData
             ParentNode node = new(Name, Description);
             parent.AddChildNode(node);
 
-            foreach(ICPNode cpNode in Children)
+            foreach (ICPNode cpNode in Children)
             {
                 cpNode.CreateNode(node);
             }

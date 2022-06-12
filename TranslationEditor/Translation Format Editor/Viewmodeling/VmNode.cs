@@ -1,4 +1,5 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
+using SCR.Tools.UndoRedo;
 using SCR.Tools.Viewmodeling;
 
 namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
@@ -31,12 +32,12 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 if (Node.Name == value)
                     return;
 
-                _format.FormatTracker.BeginGroup();
+                ChangeTracker.Global.BeginGroup();
 
                 Node.Name = value;
                 TrackNotifyProperty(nameof(Name));
 
-                _format.FormatTracker.EndGroup();
+                ChangeTracker.Global.EndGroup();
             }
         }
 
@@ -51,12 +52,12 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 if (Node.Description == value)
                     return;
 
-                _format.FormatTracker.BeginGroup();
+                ChangeTracker.Global.BeginGroup();
 
                 Node.Description = value;
                 TrackNotifyProperty(nameof(Description));
 
-                _format.FormatTracker.EndGroup();
+                ChangeTracker.Global.EndGroup();
             }
         }
 
@@ -106,7 +107,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                     return;
                 }
 
-                if(value)
+                if (value)
                 {
                     var previous = _format.ActiveNode;
                     _format.ActiveNode = this;
@@ -139,7 +140,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         public void TrackNotifyProperty(string propertyName)
         {
-            _format.FormatTracker.GroupNotifyPropertyChanged(OnPropertyChanged, propertyName);
+            ChangeTracker.Global.GroupNotifyPropertyChanged(OnPropertyChanged, propertyName);
         }
 
         public override string ToString()
@@ -159,7 +160,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         /// <param name="multi">Whether to keep previous selected nodes</param>
         public void Select(bool multi)
         {
-            _format.FormatTracker.BeginGroup();
+            ChangeTracker.Global.BeginGroup();
 
             if (!multi)
             {
@@ -172,7 +173,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             }
 
             Active = true;
-            _format.FormatTracker.EndGroup();
+            ChangeTracker.Global.EndGroup();
         }
 
         /// <summary>
@@ -203,23 +204,23 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         public bool CanInsert()
         {
             // this is only true if the parent is the header, which can always be inserted in
-            if(Node.Parent is not ParentNode pn)
+            if (Node.Parent is not ParentNode pn)
             {
                 return true;
             }
 
             // check if pn is inside the hierarchy of any selected node, to prevent recursion
-            foreach(Node node in _format.SelectedNodes)
+            foreach (Node node in _format.SelectedNodes)
             {
-                if(node is not ParentNode check)
+                if (node is not ParentNode check)
                 {
                     continue;
                 }
 
                 ParentNode current = pn;
-                while(current.Parent is ParentNode next)
+                while (current.Parent is ParentNode next)
                 {
-                    if(current == check)
+                    if (current == check)
                     {
                         return false;
                     }
@@ -235,7 +236,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         /// </summary>
         public void InsertAbove()
         {
-            if(Node.Parent == null)
+            if (Node.Parent == null)
             {
                 return;
             }

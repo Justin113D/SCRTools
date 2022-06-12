@@ -33,7 +33,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.Windows
             parent.AddChildNode(node);
             header.AddChildNode(parent);
 
-            VmProject format = new(header, changeTracker);
+            VmProject format = new(header);
             format.ExpandAll();
 
             DataContext = format;

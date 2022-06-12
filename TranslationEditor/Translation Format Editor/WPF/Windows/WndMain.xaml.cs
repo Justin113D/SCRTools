@@ -1,5 +1,4 @@
 ﻿using SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling;
-using SCR.Tools.WPF.Styling;
 using System.Windows;
 using Window = SCR.Tools.WPF.Styling.Window;
 
