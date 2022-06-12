@@ -221,6 +221,18 @@
         public void BlankChange()
             => TrackChange(new BlankChange());
 
+        public void BlankValueChange<T>(Action<T> modifyCallback, T oldValue, T newValue) where T : IEquatable<T>
+        {
+            if(oldValue.Equals(newValue))
+            {
+                BlankChange();
+                return;
+            }
+
+            TrackChange(new ChangedValue<T>(
+                modifyCallback, oldValue, newValue));
+        }
+
         private void ClearRedos()
         {
             if (ResetOnNextChange)

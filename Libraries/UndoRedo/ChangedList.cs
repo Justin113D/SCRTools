@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SCR.Tools.UndoRedo
+﻿namespace SCR.Tools.UndoRedo
 {
     public struct ChangedList<T> : ITrackable
     {
 
         private readonly ICollection<T> _collection;
 
-        private readonly Action _postChange;
+        private readonly Action? _postChange;
 
         private readonly T[] _oldContents;
 
         private readonly T[] _newContents;
 
-        public ChangedList(ICollection<T> collection, T[] newContents, Action postChange)
+        public ChangedList(ICollection<T> collection, T[] newContents, Action? postChange)
         {
             _collection = collection;
             _postChange = postChange;
