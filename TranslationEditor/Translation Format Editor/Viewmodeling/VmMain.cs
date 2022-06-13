@@ -1,6 +1,7 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.UndoRedo;
 using SCR.Tools.Viewmodeling;
+using System.IO;
 
 namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 {
@@ -115,7 +116,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         public string WriteFormat()
         {
-            string result = Format.WriteFormat();
+            string result = Format.Header.WriteFormat(Properties.Settings.Default.JsonIndenting);
             SetMessage("Saved Format", false);
             return result;
         }
@@ -135,7 +136,13 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 return;
             }
 
-            Format.ExportLanguage(filepath);
+            (string keys, string values) = Format.Header.ExportLanguageData();
+
+            File.WriteAllText(filepath, values);
+
+            string keyFilePath = Path.ChangeExtension(filepath, "langkey");
+            File.WriteAllText(keyFilePath, keys);
+
             SetMessage("Exported Language Files", false);
         }
 

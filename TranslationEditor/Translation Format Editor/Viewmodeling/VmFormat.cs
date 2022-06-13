@@ -18,34 +18,35 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         private readonly VmMain _main;
 
-        /// <summary>
-        /// Headernode holding the format information
-        /// </summary>
-        private readonly HeaderNode _header;
-
         private VmNode? _activeNode;
 
-        private ICPNode[] _copyPasteNodes = Array.Empty<ICPNode>();
-
+        private ICPNode[] _copyPasteNodes 
+            = Array.Empty<ICPNode>();
 
         #endregion
 
         #region Properties
 
         /// <summary>
+        /// Headernode holding the format information
+        /// </summary>
+        public HeaderNode Header { get; }
+
+
+        /// <summary>
         /// Default Language that the project targets
         /// </summary>
         public string Language
         {
-            get => _header.Language;
+            get => Header.Language;
             set
             {
-                if (_header.Language == value)
+                if (Header.Language == value)
                     return;
 
                 ChangeTracker.Global.BeginGroup();
 
-                _header.Language = value;
+                Header.Language = value;
                 TrackNotifyProperty(nameof(Language));
 
                 ChangeTracker.Global.EndGroup();
@@ -57,15 +58,15 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         /// </summary>
         public string TargetName
         {
-            get => _header.Name;
+            get => Header.Name;
             set
             {
-                if (_header.Name == value)
+                if (Header.Name == value)
                     return;
 
                 ChangeTracker.Global.BeginGroup();
 
-                _header.Name = value;
+                Header.Name = value;
                 TrackNotifyProperty(nameof(TargetName));
 
                 ChangeTracker.Global.EndGroup();
@@ -77,7 +78,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         /// </summary>
         public string Version
         {
-            get => _header.Version.ToString();
+            get => Header.Version.ToString();
             set
             {
                 Version newVersion;
@@ -90,12 +91,12 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                     return;
                 }
 
-                if (newVersion <= _header.Version)
+                if (newVersion <= Header.Version)
                     return;
 
                 ChangeTracker.Global.BeginGroup();
 
-                _header.Version = newVersion;
+                Header.Version = newVersion;
                 TrackNotifyProperty(nameof(Version));
 
                 ChangeTracker.Global.EndGroup();
@@ -167,7 +168,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         public VmFormat(VmMain main, HeaderNode data)
         {
             _main = main;
-            _header = data;
+            Header = data;
 
             _nodeTable = new();
             _nodes = new();
@@ -176,7 +177,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
             SelectedNodes = new();
 
-            _header.ChildrenChanged += ChildrenChanged;
+            Header.ChildrenChanged += ChildrenChanged;
         }
 
 
@@ -207,7 +208,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         /// </summary>
         private void CreateNodes()
         {
-            foreach (Node node in _header.ChildNodes)
+            foreach (Node node in Header.ChildNodes)
             {
                 VmNode vmNode = GetNodeViewmodel(node);
                 _nodes.Add(vmNode);
@@ -227,7 +228,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
             if (args.ToIndex > -1)
             {
-                VmNode vmNode = GetNodeViewmodel(_header.ChildNodes[args.ToIndex]);
+                VmNode vmNode = GetNodeViewmodel(Header.ChildNodes[args.ToIndex]);
                 ChangeTracker.Global.TrackChange(
                     new ChangeListInsert<VmNode>(
                         _nodes, vmNode, args.ToIndex));
@@ -246,7 +247,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         private void HeaderChanged(Node node, NodeHeaderChangedEventArgs args)
         {
-            if (args.NewHeader == _header)
+            if (args.NewHeader == Header)
                 return;
 
             VmNode vmNode = _nodeTable[node];
@@ -280,12 +281,12 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         private void AddNewStringNode()
         {
-            _header.AddChildNode(new StringNode("String", ""));
+            Header.AddChildNode(new StringNode("String", ""));
         }
 
         private void AddNewParentNode()
         {
-            _header.AddChildNode(new ParentNode("Category"));
+            Header.AddChildNode(new ParentNode("Category"));
         }
 
         private HashSet<Node> GetTopSelected()
@@ -316,7 +317,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         {
             Node[] output = new Node[nodes.Count];
             int insertIndex = 0;
-            foreach (Node node in _header)
+            foreach (Node node in Header)
             {
                 if (nodes.Contains(node))
                 {
@@ -532,7 +533,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             }
             else
             {
-                parent = _header;
+                parent = Header;
             }
 
             int pasteCount = 0;
@@ -552,23 +553,5 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         #endregion
 
-        public string WriteFormat()
-        {
-            return _header.WriteFormat(Properties.Settings.Default.JsonIndenting);
-        }
-
-        /// <summary>
-        /// Exports language to a key and values file
-        /// </summary>
-        /// <param name="filepath"></param>
-        public void ExportLanguage(string filepath)
-        {
-            (string keys, string values) = _header.ExportLanguageData();
-
-            File.WriteAllText(filepath, values);
-
-            string keyFilePath = Path.ChangeExtension(filepath, "langkey");
-            File.WriteAllText(keyFilePath, keys);
-        }
     }
 }

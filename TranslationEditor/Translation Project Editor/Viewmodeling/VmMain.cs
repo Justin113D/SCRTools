@@ -1,6 +1,7 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.UndoRedo;
 using SCR.Tools.Viewmodeling;
+using System.IO;
 
 namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
 {
@@ -135,16 +136,23 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
             if (Format == null)
                 return;
 
+            ChangeTracker.Global.BeginGroup();
+
             try
             {
-                Format.LoadProject(data);
-                SetMessage("Loaded Project", false);
+                Format.Header.LoadProject(data);
             }
             catch
             {
-                SetMessage("Failed to load Project", false);
+                ChangeTracker.Global.EndGroup(true);
+                SetMessage("Failed to load Project", true);
                 throw;
             }
+
+            SetMessage("Loaded Project", false);
+            ChangeTracker.Global.EndGroup();
+            ChangeTracker.Global.Reset();
+            Format.RefreshNodeValues();
         }
 
 
@@ -155,7 +163,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
 
             try
             {
-                string data = Format.CompileProject();
+                string data = Format.Header.CompileProject();
                 SetMessage("Saved Project", false);
                 return data;
             }
@@ -171,7 +179,9 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
             if (Format == null)
                 return;
 
-            Format.ResetProject();
+            Format.Header.ResetAllStrings();
+            Format.RefreshNodeValues();
+            ChangeTracker.Global.Reset();
             SetMessage("Reset Project", false);
         }
 
@@ -184,7 +194,13 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
                 return;
             }
 
-            Format.ExportLanguage(filepath);
+            (string keys, string values) = Format.Header.ExportLanguageData();
+
+            File.WriteAllText(filepath, values);
+
+            string keyFilePath = Path.ChangeExtension(filepath, "langkey");
+            File.WriteAllText(keyFilePath, keys);
+
             SetMessage("Exported Language Files", false);
         }
 
@@ -196,7 +212,27 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
                 return;
             }
 
-            Format.ImportLanguage(filepath);
+            string values = File.ReadAllText(filepath);
+
+            string keyFilePath = Path.ChangeExtension(filepath, "langkey");
+            string keys = File.ReadAllText(keyFilePath);
+
+            ChangeTracker.Global.BeginGroup();
+
+            try
+            {
+                Format.Header.ImportLanguageData(keys, values);
+            }
+            catch
+            {
+                ChangeTracker.Global.EndGroup(true);
+                throw;
+            }
+
+            ChangeTracker.Global.EndGroup();
+            ChangeTracker.Global.Reset();
+            Format.RefreshNodeValues();
+
             SetMessage("Imported Language Files", false);
         }
 

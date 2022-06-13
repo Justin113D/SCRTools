@@ -39,7 +39,6 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.Windows
             DataContext = format;
 
             prev.Use();
-
         }
 
         public void Open()

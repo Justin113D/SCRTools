@@ -14,7 +14,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         /// <summary>
         /// Headernode holding the format information
         /// </summary>
-        private readonly HeaderNode _header;
+        public HeaderNode Header { get; }
 
         /// <summary>
         /// The amount of untranslated nodes in the project
@@ -37,15 +37,15 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         /// </summary>
         public string Author
         {
-            get => _header.Author;
+            get => Header.Author;
             set
             {
-                if (_header.Author == value)
+                if (Header.Author == value)
                     return;
 
                 ChangeTracker.Global.BeginGroup();
 
-                _header.Author = value;
+                Header.Author = value;
                 TrackNotifyProperty(nameof(Author));
 
                 ChangeTracker.Global.EndGroup();
@@ -57,15 +57,15 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         /// </summary>
         public string Language
         {
-            get => _header.Language;
+            get => Header.Language;
             set
             {
-                if (_header.Language == value)
+                if (Header.Language == value)
                     return;
 
                 ChangeTracker.Global.BeginGroup();
 
-                _header.Language = value;
+                Header.Language = value;
                 TrackNotifyProperty(nameof(Language));
 
                 ChangeTracker.Global.EndGroup();
@@ -76,13 +76,13 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         /// Target name specified in the header
         /// </summary>
         public string TargetName
-            => _header.Name;
+            => Header.Name;
 
         /// <summary>
         /// Current version in the header
         /// </summary>
         public string Version
-            => _header.Version.ToString();
+            => Header.Version.ToString();
 
         /// <summary>
         /// Private collection for the node viewmodels
@@ -97,7 +97,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
 
         public VmProject(HeaderNode data)
         {
-            _header = data;
+            Header = data;
 
             _nodes = new();
             Nodes = new(_nodes);
@@ -111,7 +111,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         /// </summary>
         private void CreateNodes()
         {
-            foreach (Node node in _header.ChildNodes)
+            foreach (Node node in Header.ChildNodes)
             {
                 if (node is ParentNode p)
                 {
@@ -133,7 +133,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
             OutdatedNodes = 0;
             UntranslatedNodes = 0;
 
-            foreach (StringNode sNode in _header.StringNodes)
+            foreach (StringNode sNode in Header.StringNodes)
             {
                 switch (sNode.State)
                 {
@@ -265,87 +265,5 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
             }
         }
 
-
-        /// <summary>
-        /// Loads project data into the
-        /// </summary>
-        /// <param name="data">Data to load</param>
-        public void LoadProject(string data)
-        {
-            ChangeTracker.Global.BeginGroup();
-
-            try
-            {
-                _header.LoadProject(data);
-            }
-            catch
-            {
-                ChangeTracker.Global.EndGroup(true);
-                throw;
-            }
-
-            RefreshNodeValues();
-            ChangeTracker.Global.EndGroup();
-            ChangeTracker.Global.Reset();
-        }
-
-        /// <summary>
-        /// Compiles the project to a string
-        /// </summary>
-        public string CompileProject()
-            => _header.CompileProject();
-
-        /// <summary>
-        /// Resets all node values back to a blank project
-        /// </summary>
-        public void ResetProject()
-        {
-            _header.ResetAllStrings();
-            RefreshNodeValues();
-            ChangeTracker.Global.Reset();
-        }
-
-
-        /// <summary>
-        /// Imports a language from a language key and values file
-        /// </summary>
-        /// <param name="filepath"></param>
-        public void ImportLanguage(string filepath)
-        {
-            string values = File.ReadAllText(filepath);
-
-            string keyFilePath = Path.ChangeExtension(filepath, "langkey");
-            string keys = File.ReadAllText(keyFilePath);
-
-            ChangeTracker.Global.BeginGroup();
-
-            try
-            {
-                _header.ImportLanguageData(keys, values);
-            }
-            catch
-            {
-                ChangeTracker.Global.EndGroup(true);
-                throw;
-            }
-
-            ChangeTracker.Global.EndGroup();
-            ChangeTracker.Global.Reset();
-            RefreshNodeValues();
-        }
-
-        /// <summary>
-        /// Exports language to a key and values file
-        /// </summary>
-        /// <param name="filepath"></param>
-        public void ExportLanguage(string filepath)
-        {
-            (string keys, string values) = _header.ExportLanguageData();
-
-            File.WriteAllText(filepath, values);
-
-            string keyFilePath = Path.ChangeExtension(filepath, "langkey");
-            File.WriteAllText(keyFilePath, keys);
-        }
     }
 }
