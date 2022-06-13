@@ -1,14 +1,17 @@
-﻿using SCR.Tools.UndoRedo;
+﻿using SCR.Tools.DialogEditor.Data;
+using SCR.Tools.UndoRedo;
 using SCR.Tools.Viewmodeling;
 
 namespace SCR.Tools.DialogEditor.Viewmodeling
 {
-    public class VmMain
+    public class VmMain : BaseViewModel
     {
         /// <summary>
         /// Viewmodel specific Change Tracker for undoing redoing
         /// </summary>
         public ChangeTracker DialogTracker { get; }
+
+        public VmDialog Dialog { get; private set; }
 
 
         /// <summary>
@@ -42,6 +45,8 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         {
             DialogTracker = new();
             DialogTracker.Use();
+
+            Dialog = new(this, new());
         }
 
 
@@ -85,12 +90,12 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         }
 
 
-        public void LoadDialog(string path)
+        public void LoadDialog(string data)
         {
             try
             {
-                // load here
-
+                Dialog dialog = JsonFormatHandler.ReadDialog(data);
+                Dialog = new VmDialog(this, dialog);
                 DialogTracker.Reset();
                 SetMessage("Loaded Dialog", false);
             }
@@ -103,15 +108,15 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
         public string WriteDialog()
         {
-            string result = ""; // Create content here
+            string result = Dialog.Data.WriteDialog(true);
             SetMessage("Saved Dialog", false);
             return result;
         }
 
         public void NewDialog()
         {
+            Dialog = new(this, new());
             DialogTracker.Reset();
-            // reset here
             SetMessage("Created new Format", false);
         }
 

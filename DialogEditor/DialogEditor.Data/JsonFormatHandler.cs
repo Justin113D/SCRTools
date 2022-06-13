@@ -144,7 +144,7 @@ namespace SCR.Tools.DialogEditor.Data
             output.LocationY = json[nameof(Node.LocationY)]?.GetValue<int>() ?? 0;
             output.RightPortrait = json[nameof(Node.RightPortrait)]?.GetValue<bool>() ?? false;
 
-            if (json[nameof(Dialog.Nodes)] is JsonArray jsonNodes)
+            if (json[nameof(Node.Outputs)] is JsonArray jsonNodes)
             {
                 foreach (JsonNode? jsonNode in jsonNodes)
                 {

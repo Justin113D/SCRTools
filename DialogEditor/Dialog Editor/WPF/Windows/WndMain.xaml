@@ -6,7 +6,8 @@
         xmlns:styling="clr-namespace:SCR.Tools.WPF.Styling;assembly=SCR.Tools.WPF"
         xmlns:local="clr-namespace:SCR.Tools.DialogEditor.WPF.Windows"
         xmlns:uc="clr-namespace:SCR.Tools.DialogEditor.WPF.UserControls"
-        mc:Ignorable="d"
+        xmlns:wpf="clr-namespace:SCR.Tools.DialogEditor.WPF"
+        mc:Ignorable="d" d:DataContext="{x:Static wpf:DesignDataFactory.Main}"
         Title="Dialog Editor" Height="450" Width="800">
     
     <styling:Window.InputBindings>
@@ -22,6 +23,35 @@
         </Grid.RowDefinitions>
 
         <uc:UcMenuBar DataContext="{Binding}"/>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="200"/>
+            </Grid.ColumnDefinitions>
+
+            <uc:UcDialogOverview DataContext="{Binding Dialog}"/>
+
+            <uc:UcGridView Grid.Column="2"/>
+                
+            <GridSplitter 
+                Grid.Column="1" 
+                Width="5" 
+                HorizontalAlignment="Stretch" 
+                Background="{DynamicResource BG3}"/>
+
+            <!-- This is where the grid editor is actually-->
+
+            <GridSplitter 
+                Grid.Column="3" 
+                Width="5" 
+                HorizontalAlignment="Stretch" 
+                Background="{DynamicResource BG3}"/>
+                
+        </Grid>
         
         <uc:UcMessageBar Grid.Row="2" DataContext="{Binding}"/>
     </Grid>
