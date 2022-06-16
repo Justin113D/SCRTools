@@ -169,51 +169,7 @@ namespace SCR.Tools.TranslationEditor.Data
         {
             name = new string(name.Where(c => !char.IsWhiteSpace(c)).ToArray());
 
-            // if name is whitespace or doesnt exist, then we can just return it
-            if (name.Length == 0 || !_stringNodes.ContainsKey(name.ToLower()))
-            {
-                return name;
-            }
-
-            // check for a .### (e.g. .001) ending
-            bool endsWithNumber = false;
-            bool hasNumber = false;
-            int index = name.Length - 1;
-            for (; index > 0; index--)
-            {
-                char curChar = name[index];
-                if (curChar == '.')
-                {
-                    if (hasNumber)
-                        endsWithNumber = true;
-                    break;
-                }
-
-                if (!char.IsNumber(curChar))
-                    break;
-
-                hasNumber = true;
-            }
-
-            int nameIndex = 1;
-            string baseName = name;
-
-            // if the name ends with a number, then we want to continue off of it
-            if (endsWithNumber)
-            {
-                baseName = name[..index];
-                nameIndex = int.Parse(name[++index..]);
-            }
-
-            // check names until we find a fitting one
-            string newName = $"{baseName}.{nameIndex:D3}";
-            while (_stringNodes.ContainsKey(newName.ToLower()))
-            {
-                nameIndex++;
-                newName = $"{baseName}.{nameIndex:D3}";
-            }
-
-            return newName;
+            return _stringNodes.FindNextFreeKey(name, true);
         }
 
         internal void RemoveStringNodes(Node node)

@@ -9,8 +9,8 @@ namespace SCR.Tools.WPF.IO
     /// </summary>
     public class TextFileHandler : BaseFileHandler
     {
-        private readonly Func<string>? _toFile;
-        private readonly Action<string>? _fromFile;
+        private readonly Func<string, string>? _toFile;
+        private readonly Action<string, string>? _fromFile;
         private readonly Action? _reset;
 
         /// <param name="fileFilter">Dialog File Filter</param>
@@ -23,8 +23,8 @@ namespace SCR.Tools.WPF.IO
             string fileFilter, 
             string fileTypeName, 
             ChangeTracker? pinTracker, 
-            Func<string>? toFile, 
-            Action<string>? fromFile, 
+            Func<string, string>? toFile, 
+            Action<string, string>? fromFile, 
             Action? reset)
             : 
             base(fileFilter, fileTypeName, pinTracker)
@@ -45,7 +45,7 @@ namespace SCR.Tools.WPF.IO
         {
             if (_toFile == null)
                 throw new InvalidOperationException("Save action not specified");
-            string content = _toFile();
+            string content = _toFile(filePath);
             File.WriteAllText(filePath, content);
         }
 
@@ -54,7 +54,7 @@ namespace SCR.Tools.WPF.IO
             if (_fromFile == null)
                 throw new InvalidOperationException("Load action not specified");
             string content = File.ReadAllText(filePath);
-            _fromFile(content);
+            _fromFile(content, filePath);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
             {
                 _viewModel = vm;
                 _formatFileHandler = new("Format File (.json)|*.json", "Format Json File", vm.FormatTracker,
-                    () => vm.WriteFormat(), (format) => vm.LoadFormat(format), vm.NewFormat);
+                    (path) => vm.WriteFormat(), (format, path) => vm.LoadFormat(format), vm.NewFormat);
 
                 _exportHandler = new("Language Files (.lang & .langkey)|*.lang", "Language Files",
                     vm.FormatTracker, vm.ExportLanguage, null, null);

@@ -37,13 +37,13 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.UserControls
                 _viewModel = vm;
 
                 _projectFileHandler = new("Language Project (.langproj)|*.langproj", "Language project file",
-                    vm.ProjectTracker, vm.WriteProject, vm.LoadProject, vm.NewProject);
+                    vm.ProjectTracker, (path) => vm.WriteProject(), (format, path) => vm.LoadProject(format), vm.NewProject);
 
                 _importExportHandler = new("Language Files (.lang & .langkey)|*.lang", "Language Files",
                     vm.ProjectTracker, vm.ExportLanguage, vm.ImportLanguage, null);
 
                 _formatFileHandler = new("Format File (.json)|*.json", "Format Json File", vm.ProjectTracker,
-                    null, (format) => vm.LoadFormat(format), null);
+                    null, (format, path) => vm.LoadFormat(format), null);
             }
         }
 

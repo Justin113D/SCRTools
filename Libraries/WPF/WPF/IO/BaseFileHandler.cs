@@ -128,6 +128,7 @@ namespace SCR.Tools.WPF.IO
             if (!ResetConfirmation())
                 return;
             InternalReset();
+            LoadedFilePath = null;
             _savePin = _pinTracker?.PinCurrent();
         }
 

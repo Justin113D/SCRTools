@@ -1,0 +1,202 @@
+﻿<styling:Window x:Class="SCR.Tools.WPF.ColorPicker"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SCR.Tools.WPF"
+        xmlns:styling="clr-namespace:SCR.Tools.WPF.Styling"
+        xmlns:num="http://gu.se/NumericInput"
+        mc:Ignorable="d"
+        Title="Color Picker" WindowStartupLocation="CenterScreen" 
+        MinimizeButton="Collapsed"
+        MaximizeButton="Collapsed"
+        Width="600" Height="390" ResizeMode="NoResize" 
+        MouseUp="PickerBG_MouseUp"
+        MouseMove="PickerBG_MouseMove" 
+        MouseLeave="PickerBG_MouseLeave"
+        x:Name="Container">
+
+    <styling:Window.Resources>
+        <Style x:Key="ColorNameStyle" 
+               TargetType="{x:Type TextBlock}" 
+               BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="Margin" Value="5,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Background" Value="{DynamicResource BG2}"/>
+        </Style>
+
+        <Style TargetType="{x:Type local:ByteBox}" BasedOn="{StaticResource {x:Type local:ByteBox}}">
+            <Setter Property="Background" Value="{DynamicResource BG2}"/>
+        </Style>
+
+        <Style TargetType="{x:Type num:DoubleBox}" BasedOn="{StaticResource {x:Type num:DoubleBox}}">
+            <Setter Property="Background" Value="{DynamicResource BG2}"/>
+        </Style>
+    </styling:Window.Resources>
+
+    <Grid DataContext="{Binding ElementName=Container, Path=.}"
+          Background="{DynamicResource BG1}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid ClipToBounds="False">
+            <Grid Margin="10" x:Name="PickerBG" Background="Red" Width="256" Height="256" VerticalAlignment="top" MouseDown="PickerBG_MouseDown" ClipToBounds="False">
+                <Rectangle IsHitTestVisible="False">
+                    <Rectangle.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#FFFFFF"/>
+                            <GradientStop Color="#00FFFFFF" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <Rectangle IsHitTestVisible="False">
+                    <Rectangle.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="#00000000"/>
+                            <GradientStop Color="#FF000000" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+            </Grid>
+            <Border x:Name="PickPos" Margin="7,0,0,7" VerticalAlignment="Bottom" HorizontalAlignment="Left" 
+                    Background="Transparent" BorderBrush="Black" BorderThickness="1" 
+                    IsHitTestVisible="False">
+                <Border BorderThickness="1" BorderBrush="White" Width="6" Height="6"/>
+            </Border>
+        </Grid>
+
+        <Rectangle Grid.Row="1" Margin="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Rectangle.Fill>
+                <DrawingBrush Stretch="None" TileMode="Tile" Viewport="0,0,20,20" ViewportUnits="Absolute">
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <GeometryDrawing Brush="#DDD">
+                                <GeometryDrawing.Geometry>
+                                    <RectangleGeometry Rect="0,0,20,20"/>
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                            <GeometryDrawing Brush="#AAA">
+                                <GeometryDrawing.Geometry>
+                                    <GeometryGroup>
+                                        <RectangleGeometry Rect="0,0,10,10"/>
+                                        <RectangleGeometry Rect="10,10,10,10"/>
+                                    </GeometryGroup>
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <Rectangle Grid.Row="1" Margin="10" x:Name="ColorDisplay" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" x:Name="ColorBrush">
+                    <GradientStop Offset="0.33" Color="Red" x:Name="ColorOpaque"/>
+                    <GradientStop Offset="0.66" Color="Transparent" x:Name="ColorTransparent"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <Grid Grid.Column="1" Grid.RowSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width= "70"/>
+                <ColumnDefinition Width="10"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="Red, Green, Blue, Alpha" Padding="5" TextAlignment="Center"/>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="R" Style="{StaticResource ColorNameStyle}"/>
+            <Slider    Grid.Row="1" Grid.Column="1" x:Name="RedSlider" Margin="5"
+                       Minimum="0" Maximum="255" TickFrequency="1"/>
+            <local:ByteBox Grid.Row="1" Grid.Column="2" Height="24" VerticalAlignment="Center" VerticalContentAlignment="Center"
+                           Text="0" x:Name="RedNumber"/>
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="G" Style="{StaticResource ColorNameStyle}"/>
+            <Slider    Grid.Row="2" Grid.Column="1" x:Name="GreenSlider" Margin="5"
+                       Minimum="0" Maximum="255" TickFrequency="1"/>
+            <local:ByteBox Grid.Row="2" Grid.Column="2" Height="24" VerticalAlignment="Center" VerticalContentAlignment="Center"
+                           Text="0" x:Name="GreenNumber"/>
+
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="B" Style="{StaticResource ColorNameStyle}"/>
+            <Slider    Grid.Row="3" Grid.Column="1" x:Name="BlueSlider" Margin="5"
+                       Minimum="0" Maximum="255" TickFrequency="1"/>
+            <local:ByteBox Grid.Row="3" Grid.Column="2" Height="24" VerticalAlignment="Center" VerticalContentAlignment="Center"
+                           Text="0" x:Name="BlueNumber"/>
+
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="A" Style="{StaticResource ColorNameStyle}"/>
+            <Slider    Grid.Row="4" Grid.Column="1" x:Name="AlphaSlider" Margin="5"
+                       Minimum="0" Maximum="255" TickFrequency="1"/>
+            <local:ByteBox Grid.Row="4" Grid.Column="2" Height="24" VerticalAlignment="Center" VerticalContentAlignment="Center"
+                           Text="0" x:Name="AlphaNumber"/>
+
+            <TextBlock Grid.Row="5" Grid.Column="1" Text="Hue, Saturation, Value" Padding="5" TextAlignment="Center"/>
+
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="H" Style="{StaticResource ColorNameStyle}"/>
+            <Slider    Grid.Row="6" Grid.Column="1" x:Name="HueSlider" Margin="5" IsMoveToPointEnabled="True"
+                       Minimum="0" Maximum="1" TickFrequency="0.01"/>
+            <num:DoubleBox Grid.Row="6" Grid.Column="2" Height="24" VerticalAlignment="Center" VerticalContentAlignment="Center"
+                           Text="0" MinValue="0" MaxValue="1" x:Name="HueNumber" StringFormat="0.###"/>
+
+            <TextBlock Grid.Row="7" Grid.Column="0" Text="S" Style="{StaticResource ColorNameStyle}"/>
+            <Slider    Grid.Row="7" Grid.Column="1" x:Name="SaturationSlider" Margin="5" IsMoveToPointEnabled="True"
+                       Minimum="0" Maximum="1" TickFrequency="0.01"/>
+            <num:DoubleBox Grid.Row="7" Grid.Column="2" Height="24" VerticalAlignment="Center" VerticalContentAlignment="Center"
+                           Text="0" MinValue="0" MaxValue="1" x:Name="SaturationNumber" StringFormat="0.###"/>
+
+            <TextBlock Grid.Row="8" Grid.Column="0" Text="V" Style="{StaticResource ColorNameStyle}"/>
+            <Slider    Grid.Row="8" Grid.Column="1" x:Name="ValueSlider" Margin="5" IsMoveToPointEnabled="True"
+                       Minimum="0" Maximum="1" TickFrequency="0.01"/>
+            <num:DoubleBox Grid.Row="8" Grid.Column="2" Height="24" VerticalAlignment="Center" VerticalContentAlignment="Center"
+                           Text="0" MinValue="0" MaxValue="1" x:Name="ValueNumber" StringFormat="0.###"/>
+
+            <Grid Grid.Row="9" Grid.ColumnSpan="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="RGBA Hex String" FontWeight="Bold" Padding="5"/>
+
+                <Border Grid.Column="1" Background="{DynamicResource BG2}">
+                    <TextBox  Padding="5,5,0,5" VerticalAlignment="Top"
+                             x:Name="HexTextBox" Text="#FFFFFFFF"/>
+                </Border>
+            </Grid>
+
+
+            <StackPanel Grid.Row="10" Grid.ColumnSpan="3" Margin="10" Orientation="Horizontal" FlowDirection="RightToLeft">
+                <Button Content="Ok" Width="70" Margin="10, 0" VerticalAlignment="Bottom" Click="Submit"/>
+                <Button Content="Cancel" Width="70" VerticalAlignment="Bottom" Click="Cancel"/>
+            </StackPanel>
+        </Grid>
+
+    </Grid>
+</styling:Window>

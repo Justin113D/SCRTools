@@ -1,17 +1,4 @@
 ﻿using SCR.Tools.DialogEditor.Viewmodeling;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Window = SCR.Tools.WPF.Styling.Window;
 
 namespace SCR.Tools.DialogEditor.WPF.Windows
@@ -31,6 +18,26 @@ namespace SCR.Tools.DialogEditor.WPF.Windows
         {
             VmMain vm = new();
             DataContext = vm;
+        }
+
+        private void IB_New(object sender, object e)
+        {
+            MenuBar.NewDialog(sender, new());
+        }
+
+        private void IB_Open(object sender, object e)
+        {
+            MenuBar.LoadDialog(sender, new());
+        }
+
+        private void IB_Save(object sender, object e)
+        {
+            MenuBar.SaveDialog(sender, new());
+        }
+
+        private void IB_SaveAs(object sender, object e)
+        {
+            MenuBar.SaveDialogAs(sender, new());
         }
     }
 }

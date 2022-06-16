@@ -1,19 +1,7 @@
 ﻿using SCR.Tools.DialogEditor.Viewmodeling;
 using SCR.Tools.WPF.IO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SCR.Tools.DialogEditor.WPF.UserControls
 {
@@ -23,7 +11,9 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
     public partial class UcMenuBar : UserControl
     {
         private TextFileHandler? _dialogFileHandler;
+        private TextFileHandler? _dialogOptionsFileHandler;
         private VmMain? _viewModel;
+
 
         public UcMenuBar()
         {
@@ -41,28 +31,40 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             else
             {
                 _viewModel = vm;
-                _dialogFileHandler = new("Dialog File (.json)|*.json", "Dialog Json File", vm.DialogTracker,
-                    () => vm.WriteDialog(), (format) => vm.LoadDialog(format), vm.NewDialog);
+                _dialogFileHandler = new(
+                    "Dialog File (.json)|*.json", 
+                    "Dialog Json File", 
+                    vm.DialogTracker,
+                    (path) => vm.WriteDialog(), 
+                    (format, path) => vm.LoadDialog(format), 
+                    vm.NewDialog);
 
+                _dialogOptionsFileHandler = new(
+                    "Dialog Options File (.json)|*.json",
+                    "Dialog Options Json File",
+                    null,
+                    (path) => _viewModel.DialogOptions.Write(path),
+                    (data, path) => _viewModel.DialogOptions.Read(data, path),
+                    _viewModel.DialogOptions.Reset);
             }
         }
 
-        public void NewFormat(object sender, RoutedEventArgs e)
+        public void NewDialog(object sender, RoutedEventArgs e)
         {
             _dialogFileHandler?.Reset();
         }
 
-        public void LoadFormat(object sender, RoutedEventArgs e)
+        public void LoadDialog(object sender, RoutedEventArgs e)
         {
             _dialogFileHandler?.Open();
         }
 
-        public void SaveFormat(object sender, RoutedEventArgs e)
+        public void SaveDialog(object sender, RoutedEventArgs e)
         {
             _dialogFileHandler?.Save(false);
         }
 
-        public void SaveFormatAs(object sender, RoutedEventArgs e)
+        public void SaveDialogAs(object sender, RoutedEventArgs e)
         {
             _dialogFileHandler?.Save(true);
         }
@@ -70,6 +72,16 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
         private void SettingsOpen(object sender, RoutedEventArgs e)
         {
             new Windows.WndSettings().ShowDialog();
+        }
+
+        private void OpenDialogOptions(object sender, RoutedEventArgs e)
+        {
+            if(_viewModel == null)
+            {
+                return;
+            }
+
+            new Windows.WndDialogOptions(_viewModel.DialogOptions, _dialogOptionsFileHandler).ShowDialog();
         }
     }
 }

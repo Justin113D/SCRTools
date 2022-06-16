@@ -7,10 +7,32 @@
         xmlns:local="clr-namespace:SCR.Tools.DialogEditor.WPF.Windows"
         xmlns:uc="clr-namespace:SCR.Tools.DialogEditor.WPF.UserControls"
         xmlns:wpf="clr-namespace:SCR.Tools.DialogEditor.WPF"
+        xmlns:baseVM="clr-namespace:SCR.Tools.Viewmodeling;assembly=SCR.Tools.WPF"
         mc:Ignorable="d" d:DataContext="{x:Static wpf:DesignDataFactory.Main}"
         Title="Dialog Editor" Height="450" Width="800">
-    
+
     <styling:Window.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="N">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_New"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+        <KeyBinding Modifiers="Ctrl" Key="O">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_Open"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+        <KeyBinding Modifiers="Ctrl" Key="S">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_Save"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="S">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_SaveAs"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+
         <KeyBinding Modifiers="Ctrl" Key="Z" Command="{Binding CmdUndo}"/>
         <KeyBinding Modifiers="Ctrl" Key="Y" Command="{Binding CmdRedo}"/>
     </styling:Window.InputBindings>
@@ -22,7 +44,7 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <uc:UcMenuBar DataContext="{Binding}"/>
+        <uc:UcMenuBar x:Name="MenuBar" DataContext="{Binding}"/>
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>

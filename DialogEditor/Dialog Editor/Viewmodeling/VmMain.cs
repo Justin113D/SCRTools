@@ -13,6 +13,8 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
         public VmDialog Dialog { get; private set; }
 
+        public VmDialogOptions DialogOptions { get; }
+
 
         /// <summary>
         /// Error/warning message that is displayed in the main window
@@ -47,6 +49,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             DialogTracker.Use();
 
             Dialog = new(this, new());
+            DialogOptions = new();
         }
 
 
