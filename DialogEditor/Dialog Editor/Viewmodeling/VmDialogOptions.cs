@@ -8,6 +8,8 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 {
     public class VmDialogOptions : BaseViewModel
     {
+        public ChangeTracker DialogOptionsTracker { get; }
+
         public DialogOptions Data { get; private set; }
 
         public VmNodeOptions<Color> CharacterOptions { get; private set; }
@@ -18,11 +20,13 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
         public VmDialogOptions()
         {
+            DialogOptionsTracker = new();
             Data = new();
             CharacterOptions = new(Data.CharacterOptions, Color.Red);
             ExpressionOptions = new(Data.ExpressionOptions, Color.Red);
             NodeIcons = new(Data.NodeIcons, "");
         }
+
 
         public void Read(string data, string? path)
         {
@@ -30,7 +34,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             CharacterOptions = new(Data.CharacterOptions, Color.Red);
             ExpressionOptions = new(Data.ExpressionOptions, Color.Red);
             NodeIcons = new(Data.NodeIcons, "");
-            Reset();
+            ResetTracker();
         }
 
         public string Write(string? path)
@@ -44,7 +48,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             CharacterOptions = new(Data.CharacterOptions, Color.Red);
             ExpressionOptions = new(Data.ExpressionOptions, Color.Red);
             NodeIcons = new(Data.NodeIcons, "");
-            Reset();
+            ResetTracker();
         }
     }
 }

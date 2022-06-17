@@ -264,15 +264,6 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 });
         }
 
-        /// <summary>
-        /// Tells the current change tracker grouping to notify the viewmodel that a property changed on undo/redo
-        /// </summary>
-        /// <param name="propertyName"></param>
-        private void TrackNotifyProperty(string propertyName)
-        {
-            ChangeGroupNotifyPropertyChanged(OnPropertyChanged, propertyName);
-        }
-
         #region Action methods
 
         private void AddNewStringNode()

@@ -50,7 +50,7 @@ namespace SCR.Tools.DialogEditor.WPF
             if (_focused == null)
                 return;
 
-            _focused.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+            _focused.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
 
             Window? wnd = Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);
 

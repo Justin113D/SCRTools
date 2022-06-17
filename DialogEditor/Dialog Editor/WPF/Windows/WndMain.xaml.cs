@@ -1,4 +1,5 @@
 ﻿using SCR.Tools.DialogEditor.Viewmodeling;
+using System.Windows;
 using Window = SCR.Tools.WPF.Styling.Window;
 
 namespace SCR.Tools.DialogEditor.WPF.Windows
@@ -19,6 +20,15 @@ namespace SCR.Tools.DialogEditor.WPF.Windows
             VmMain vm = new();
             DataContext = vm;
         }
+
+        protected override void Close(object sender, RoutedEventArgs e)
+        {
+            if (MenuBar.CloseConfirmation())
+            {
+                base.Close(sender, e);
+            }
+        }
+
 
         private void IB_New(object sender, object e)
         {

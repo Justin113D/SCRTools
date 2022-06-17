@@ -42,11 +42,6 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
             _node.NodeStateChanged -= StateChanged;
         }
 
-        protected void TrackNotifyProperty(string propertyName)
-        {
-            ChangeGroupNotifyPropertyChanged(OnPropertyChanged, propertyName);
-        }
-
         private void StateChanged(Node node, NodeStateChangedEventArgs args)
         {
             TrackNotifyProperty(nameof(State));

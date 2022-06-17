@@ -35,7 +35,8 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBox
-                        Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Style="{StaticResource TextBoxUndo}"
+                        Text="{Binding Name, Mode=TwoWay}"
                         KeyDown="TextBox_KeyDown"/>
 
                     <Border 
@@ -51,8 +52,8 @@
                                 BasedOn="{StaticResource {x:Type Button}}">
                                 <Style.Resources>
                                     <SolidColorBrush x:Key="Default"  Color="Transparent"/>
-                                    <SolidColorBrush x:Key="Hover"    Color="#88FFFFFF"/>
-                                    <SolidColorBrush x:Key="Clicked"  Color="#CCFFFFFF"/>
+                                    <SolidColorBrush x:Key="Hover"    Color="#8FFF"/>
+                                    <SolidColorBrush x:Key="Clicked"  Color="#8888"/>
                                 </Style.Resources>
                             </Style>
                         </Button.Style>
@@ -78,8 +79,9 @@
                         <ItemsPresenter />
 
                         <TextBox 
+                            Style="{StaticResource TextBoxUndo}"
                             Margin="4"
-                            KeyDown="TextBox_KeyDown"
+                            KeyDown="TextBox_KeyUp"
                             Background="{DynamicResource BG1}"/>
 
                     </StackPanel>

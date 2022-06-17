@@ -116,7 +116,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
                 HeaderNode headerNode = JsonFormatHandler.ReadFormat(format);
 
                 Format = new(headerNode);
-                ProjectTracker.Reset();
+                ResetTracker();
                 OnPropertyChanged(nameof(FormatLoaded));
 
                 SetMessage("Loaded Format", false);

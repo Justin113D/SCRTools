@@ -38,7 +38,7 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
 
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
-          TextBox textbox = (TextBox)sender;
+            TextBox textbox = (TextBox)sender;
             if (e.Key == Key.Enter)
             {
                 Viewmodel.AddOption(textbox.Text);

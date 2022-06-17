@@ -100,7 +100,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             {
                 Dialog dialog = JsonFormatHandler.ReadDialog(data);
                 Dialog = new VmDialog(this, dialog);
-                DialogTracker.Reset();
+                ResetTracker();
                 SetMessage("Loaded Dialog", false);
             }
             catch
@@ -120,7 +120,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         public void NewDialog()
         {
             Dialog = new(this, new());
-            DialogTracker.Reset();
+            ResetTracker();
             SetMessage("Created new Format", false);
         }
 

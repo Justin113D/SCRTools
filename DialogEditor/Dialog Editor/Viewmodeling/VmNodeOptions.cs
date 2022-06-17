@@ -1,4 +1,5 @@
-﻿using SCR.Tools.Viewmodeling;
+﻿
+using SCR.Tools.Viewmodeling;
 using SCR.Tools.Common;
 using SCR.Tools.UndoRedo;
 using SCR.Tools.UndoRedo.Collections;
@@ -92,7 +93,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
                 TrackValueChange(
                     (v) => _name = v, _name, newName);
 
-                _name = _parent.RenameOption(_name, value);
+                TrackNotifyProperty(nameof(Name));
 
                 EndChangeGroup();
             }
@@ -101,7 +102,15 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         public T Value
         {
             get => _parent[Name];
-            set => _parent[Name] = value;
+            set
+            {
+                BeginChangeGroup();
+                
+                _parent[Name] = value;
+                TrackNotifyProperty(nameof(Value));
+
+                EndChangeGroup();
+            }
         }
 
         public VmNodeOption(VmNodeOptions<T> parent, string name)

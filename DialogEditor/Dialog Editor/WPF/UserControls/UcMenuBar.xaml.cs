@@ -42,12 +42,15 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
                 _dialogOptionsFileHandler = new(
                     "Dialog Options File (.json)|*.json",
                     "Dialog Options Json File",
-                    null,
+                    vm.DialogOptions.DialogOptionsTracker,
                     (path) => _viewModel.DialogOptions.Write(path),
                     (data, path) => _viewModel.DialogOptions.Read(data, path),
                     _viewModel.DialogOptions.Reset);
             }
         }
+
+        public bool CloseConfirmation()
+            => _dialogFileHandler?.ResetConfirmation() ?? true;
 
         public void NewDialog(object sender, RoutedEventArgs e)
         {
@@ -76,12 +79,14 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
 
         private void OpenDialogOptions(object sender, RoutedEventArgs e)
         {
-            if(_viewModel == null)
+            if(_viewModel == null || _dialogOptionsFileHandler == null)
             {
                 return;
             }
 
+            _viewModel.DialogOptions.DialogOptionsTracker.Use();
             new Windows.WndDialogOptions(_viewModel.DialogOptions, _dialogOptionsFileHandler).ShowDialog();
+            _viewModel.DialogTracker.Use();
         }
     }
 }

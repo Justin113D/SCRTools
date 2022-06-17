@@ -16,7 +16,7 @@
     x:Name="Container">
 
     <DataGrid 
-        ItemsSource="{Binding Icons}" 
+        ItemsSource="{Binding Options}" 
         AutoGenerateColumns="False"
         HeadersVisibility="None"
         BorderThickness="0"
@@ -26,7 +26,7 @@
 
         <DataGrid.Resources>
             <ResourceDictionary>
-                
+
                 <Style x:Key="{x:Type DataGridCell}" TargetType="{x:Type DataGridCell}">
                     <Setter Property="Background" Value="{x:Null}" />
                     <Setter Property="BorderBrush" Value="{x:Null}" />
@@ -37,7 +37,7 @@
                         </Trigger>
                     </Style.Triggers>
                 </Style>
-                
+
                 <Style TargetType="{x:Type DataGridRow}">
                     <Setter Property="Background" Value="{x:Null}" />
                     <Setter Property="BorderBrush" Value="{x:Null}" />
@@ -48,7 +48,7 @@
                         </Trigger>
                     </Style.Triggers>
                 </Style>
-                
+
             </ResourceDictionary>
         </DataGrid.Resources>
 
@@ -65,7 +65,8 @@
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <TextBox 
-                            Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            Style="{StaticResource TextBoxUndo}"
+                            Text="{Binding Name, Mode=TwoWay}"/>
                     </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>
             </DataGridTemplateColumn>
@@ -119,6 +120,7 @@
                         <ItemsPresenter />
 
                         <TextBox 
+                            Style="{StaticResource TextBoxUndo}"                            
                             Margin="4"
                             KeyDown="TextBox_KeyDown"
                             Background="{DynamicResource BG1}"/>

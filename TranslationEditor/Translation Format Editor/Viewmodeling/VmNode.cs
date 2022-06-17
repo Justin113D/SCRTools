@@ -139,11 +139,6 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         public void NotifyActiveChanged()
             => OnPropertyChanged(nameof(Active));
 
-        public void TrackNotifyProperty(string propertyName)
-        {
-            ChangeGroupNotifyPropertyChanged(OnPropertyChanged, propertyName);
-        }
-
         public override string ToString()
             => Node.Name;
 

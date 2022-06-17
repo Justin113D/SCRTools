@@ -11,8 +11,8 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
     /// </summary>
     public partial class UcNodeOptions : UserControl
     {
-        public VmNodeOptions<Color> Viewmodel 
-            => (VmNodeOptions<Color>)DataContext;
+        public VmNodeOptions<System.Drawing.Color> Viewmodel 
+            => (VmNodeOptions<System.Drawing.Color>)DataContext;
 
         public UcNodeOptions()
         {

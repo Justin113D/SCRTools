@@ -1,6 +1,9 @@
 ﻿using SCR.Tools.WPF.Styling;
 using SCR.Tools.DialogEditor.Viewmodeling;
 using SCR.Tools.WPF.IO;
+using System.Windows;
+using Window = SCR.Tools.WPF.Styling.Window;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.DialogEditor.WPF.Windows
 {
@@ -19,22 +22,30 @@ namespace SCR.Tools.DialogEditor.WPF.Windows
             InitializeComponent();
         }
 
-        private void MenuItem_OpenFile(object sender, System.Windows.RoutedEventArgs e)
+        protected override void Close(object sender, RoutedEventArgs e)
+        {
+            if (_dialogOptionsFileHandler?.ResetConfirmation() ?? true)
+            {
+                base.Close(sender, e);
+            }
+        }
+
+        private void MenuItem_OpenFile(object sender, RoutedEventArgs e)
         {
             _dialogOptionsFileHandler.Open();
         }
 
-        private void MenuItem_NewFile(object sender, System.Windows.RoutedEventArgs e)
+        private void MenuItem_NewFile(object sender, RoutedEventArgs e)
         {
             _dialogOptionsFileHandler.Reset();
         }
 
-        private void MenuItem_Save(object sender, System.Windows.RoutedEventArgs e)
+        private void MenuItem_Save(object sender, RoutedEventArgs e)
         {
             _dialogOptionsFileHandler.Save(false);
         }
 
-        private void MenuItem_SaveAs(object sender, System.Windows.RoutedEventArgs e)
+        private void MenuItem_SaveAs(object sender, RoutedEventArgs e)
         {
             _dialogOptionsFileHandler.Save(true);
         }
@@ -57,6 +68,26 @@ namespace SCR.Tools.DialogEditor.WPF.Windows
         private void IB_SaveAs(object sender, object e)
         {
             _dialogOptionsFileHandler.Save(true);
+        }
+
+        private void IB_Undo(object sender, object e)
+        {
+            UndoChange();
+        }
+
+        private void IB_Redo(object sender, object e)
+        {
+            RedoChange();
+        }
+
+        private void MenuItem_Undo(object sender, RoutedEventArgs e)
+        {
+            UndoChange();
+        }
+
+        private void MenuItem_Redo(object sender, RoutedEventArgs e)
+        {
+            RedoChange();
         }
     }
 }
