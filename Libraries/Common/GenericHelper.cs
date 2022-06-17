@@ -1,4 +1,6 @@
-﻿namespace SCR.Tools.Common
+﻿using System.Collections.Generic;
+
+namespace SCR.Tools.Common
 {
     public static class GenericHelper
     {

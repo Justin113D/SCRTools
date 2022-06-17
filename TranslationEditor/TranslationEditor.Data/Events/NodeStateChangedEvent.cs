@@ -1,4 +1,6 @@
-﻿namespace SCR.Tools.TranslationEditor.Data.Events
+﻿using System;
+
+namespace SCR.Tools.TranslationEditor.Data.Events
 {
     public class NodeStateChangedEventArgs : EventArgs
     {

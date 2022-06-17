@@ -1,4 +1,6 @@
-﻿namespace SCR.Tools.UndoRedo
+﻿using System;
+
+namespace SCR.Tools.UndoRedo
 {
     /// <summary>
     /// Trackable for changing a single value

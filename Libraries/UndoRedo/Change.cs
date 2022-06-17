@@ -1,4 +1,6 @@
-﻿namespace SCR.Tools.UndoRedo
+﻿using System;
+
+namespace SCR.Tools.UndoRedo
 {
     /// <summary>
     /// Calls an action upon undo/redo. Passes "false" for undo and "true" for redo

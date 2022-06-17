@@ -1,4 +1,7 @@
-﻿namespace SCR.Tools.UndoRedo
+﻿using System;
+using System.Collections.Generic;
+
+namespace SCR.Tools.UndoRedo
 {
     /// <summary>
     /// Undo-Redo Change system

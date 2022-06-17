@@ -7,6 +7,7 @@
     xmlns:vm="clr-namespace:SCR.Tools.DialogEditor.Viewmodeling"
     xmlns:wpf="clr-namespace:SCR.Tools.DialogEditor.WPF"
     xmlns:converters="clr-namespace:SCR.Tools.WPF.Converters;assembly=SCR.Tools.WPF"
+    xmlns:drawing="clr-namespace:System.Drawing;assembly=System.Drawing.Primitives"
     mc:Ignorable="d" 
     d:DesignHeight="450" d:DesignWidth="200"
     d:DataContext="{x:Static wpf:DesignDataFactory.NodeOptions}"
@@ -25,7 +26,7 @@
             Background="Transparent">
 
         <ListBox.ItemTemplate>
-            <DataTemplate DataType="{x:Type vm:VmNodeOption}">
+            <DataTemplate>
                 <Grid>
 
                     <Grid.ColumnDefinitions>
@@ -39,7 +40,7 @@
 
                     <Border 
                         Grid.Column="1"  
-                        Background="{Binding Color, Converter={StaticResource ColorToBrush}, Mode=TwoWay}"/>
+                        Background="{Binding Value, Converter={StaticResource ColorToBrush}, Mode=TwoWay}"/>
 
                     <Button 
                         Grid.Column="1"

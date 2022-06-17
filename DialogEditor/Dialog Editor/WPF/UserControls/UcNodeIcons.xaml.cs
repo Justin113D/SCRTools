@@ -1,10 +1,8 @@
 ﻿using Microsoft.Win32;
 using SCR.Tools.DialogEditor.Viewmodeling;
 using SCR.Tools.Viewmodeling;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace SCR.Tools.DialogEditor.WPF.UserControls
 {
@@ -13,18 +11,18 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
     /// </summary>
     public partial class UcNodeIcons : UserControl
     {
-        public RelayCommand<VmNodeIcon> CmdSelectIcon
+        public RelayCommand<VmNodeOption<string>> CmdSelectIcon
             => new(SelectIcon);
 
-        public VmNodeIcons Viewmodel
-            => (VmNodeIcons)DataContext;
+        public VmNodeOptions<string> Viewmodel
+            => (VmNodeOptions<string>)DataContext;
 
         public UcNodeIcons()
         {
             InitializeComponent();
         }
 
-        private void SelectIcon(VmNodeIcon icon)
+        private void SelectIcon(VmNodeOption<string> icon)
         {
             OpenFileDialog ofd = new()
             {
@@ -34,7 +32,7 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
 
             if (ofd.ShowDialog() == true)
             {
-                icon.IconPath = ofd.FileName;
+                icon.Value = ofd.FileName;
             }
         }
 

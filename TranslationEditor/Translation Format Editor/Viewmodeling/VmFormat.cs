@@ -2,7 +2,7 @@
 using SCR.Tools.TranslationEditor.Data.Events;
 using SCR.Tools.TranslationEditor.FormatEditor.CopyPasteData;
 using SCR.Tools.UndoRedo;
-using SCR.Tools.UndoRedo.ListChange;
+using SCR.Tools.UndoRedo.Collections;
 using SCR.Tools.Viewmodeling;
 using System;
 using System.Collections.Generic;
@@ -107,14 +107,14 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         /// <summary>
         /// Private collection for the node viewmodels
         /// </summary>
-        private readonly ObservableCollection<VmNode> _nodes;
+        private readonly TrackList<VmNode> _nodes;
 
         /// <summary>
         /// Top level node viewmodels
         /// </summary>
         public ReadOnlyObservableCollection<VmNode> Nodes { get; }
 
-        private readonly Dictionary<Node, VmNode> _nodeTable;
+        private readonly TrackDictionary<Node, VmNode> _nodeTable;
 
 
         public HashSet<Node> SelectedNodes { get; private set; }
@@ -170,10 +170,17 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             _main = main;
             Header = data;
 
+
             _nodeTable = new();
-            _nodes = new();
-            Nodes = new(_nodes);
-            CreateNodes();
+            ObservableCollection<VmNode> internalNodes = new();
+            _nodes = new(internalNodes);
+            Nodes = new(internalNodes);
+
+            foreach (Node node in Header.ChildNodes)
+            {
+                VmNode vmNode = GetNodeViewmodel(node);
+                internalNodes.Add(vmNode);
+            }
 
             SelectedNodes = new();
 
@@ -203,35 +210,21 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             return vmNode;
         }
 
-        /// <summary>
-        /// Create the top level node viewmodels
-        /// </summary>
-        private void CreateNodes()
-        {
-            foreach (Node node in Header.ChildNodes)
-            {
-                VmNode vmNode = GetNodeViewmodel(node);
-                _nodes.Add(vmNode);
-            }
-        }
-
         private void ChildrenChanged(ParentNode node, NodeChildrenChangedEventArgs args)
         {
             ChangeTracker.Global.BeginGroup();
 
             if (args.FromIndex > -1)
             {
-                ChangeTracker.Global.TrackChange(
-                    new ChangeListRemoveAt<VmNode>(
-                        _nodes, args.FromIndex));
+                _nodes.RemoveAt(args.FromIndex);
             }
 
             if (args.ToIndex > -1)
             {
+
                 VmNode vmNode = GetNodeViewmodel(Header.ChildNodes[args.ToIndex]);
-                ChangeTracker.Global.TrackChange(
-                    new ChangeListInsert<VmNode>(
-                        _nodes, vmNode, args.ToIndex));
+
+                _nodes.Insert(args.ToIndex, vmNode);
 
                 ChangeTracker.Global.TrackChange(new Change(
                     () => { },
@@ -252,17 +245,17 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
             VmNode vmNode = _nodeTable[node];
 
+            _nodeTable.Remove(node);
+
             ChangeTracker.Global.TrackChange(new Change(
                 () =>
                 {
                     vmNode.Selected = false;
                     vmNode.Active = false;
-                    _nodeTable.Remove(node);
                     node.HeaderChanged -= HeaderChanged;
                 },
                 () =>
                 {
-                    _nodeTable.Add(node, vmNode);
                     node.HeaderChanged += HeaderChanged;
                 }
             ));

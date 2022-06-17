@@ -1,19 +1,15 @@
 ﻿using SCR.Tools.DialogEditor.Data;
 using SCR.Tools.UndoRedo;
-using SCR.Tools.UndoRedo.ListChange;
+using SCR.Tools.UndoRedo.Collections;
 using SCR.Tools.Viewmodeling;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SCR.Tools.DialogEditor.Viewmodeling
 {
     public class VmDialog : BaseViewModel
     {
-        private readonly ObservableCollection<VmNode> _nodes;
+        private readonly TrackList<VmNode> _nodes;
 
         public VmMain Main { get; }
 
@@ -26,7 +22,6 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         /// Nodes to display
         /// </summary>
         public ReadOnlyObservableCollection<VmNode> Nodes { get; private set; }
-
 
         #region Wrapper Properties
 
@@ -68,6 +63,10 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
         #endregion
 
+        #region Interaction Properties
+
+        #endregion
+
         #region Relay Commands
 
         public RelayCommand CmdSortNodes
@@ -80,13 +79,16 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             Main = mainVM;
             Data = dialog;
 
-            _nodes = new();
+            ObservableCollection<VmNode> internalNodes = new();
+
             foreach (Node node in dialog.Nodes)
             {
                 VmNode vmnode = new(this, node);
-                _nodes.Add(vmnode);
+                internalNodes.Add(vmnode);
             }
-            Nodes = new(_nodes);
+
+            _nodes = new(internalNodes);
+            Nodes = new(internalNodes);
         }
 
         private void SortNodes()
@@ -95,11 +97,10 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
             Data.Sort();
 
-            ChangeTracker.Global.TrackChange(
-                new ChangeCollectionContent<VmNode>(
-                    _nodes, 
-                    Nodes.OrderBy(x => Data.Nodes.IndexOf(x.Data)).ToArray()
-                ));
+            _nodes.Clear();
+            _nodes.AddRange(
+                Nodes.OrderBy(x => Data.Nodes.IndexOf(x.Data))
+                );
 
             ChangeTracker.Global.EndGroup();
         }

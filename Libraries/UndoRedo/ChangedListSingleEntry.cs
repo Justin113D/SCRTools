@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace SCR.Tools.UndoRedo
 {
+    [Obsolete("Please use a track collection/list")]
     public struct ChangedListSingleEntry<T> : ITrackable
     {
         /// <summary>

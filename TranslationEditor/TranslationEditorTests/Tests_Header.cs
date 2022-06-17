@@ -80,10 +80,10 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
 
             header.RemoveChildNode(parent);
 
-            Assert.IsFalse(header.TryGetStringNode(childNode1.Name));
-            Assert.IsFalse(header.TryGetStringNode(childNode2.Name));
-            Assert.IsFalse(header.TryGetStringNode(subchildNode1.Name));
-            Assert.IsFalse(header.TryGetStringNode(subchildNode2.Name));
+            Assert.IsFalse(header.TryGetStringNode(childNode1.Name, out _));
+            Assert.IsFalse(header.TryGetStringNode(childNode2.Name, out _));
+            Assert.IsFalse(header.TryGetStringNode(subchildNode1.Name, out _));
+            Assert.IsFalse(header.TryGetStringNode(subchildNode2.Name, out _));
         }
 
         [TestMethod]
@@ -172,19 +172,19 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             parent.AddChildNode(subParent);
 
             ChangeTracker.Global.Undo();
-            Assert.IsFalse(header.TryGetStringNode(subchildNode1.Name));
-            Assert.IsFalse(header.TryGetStringNode(subchildNode2.Name));
+            Assert.IsFalse(header.TryGetStringNode(subchildNode1.Name, out _));
+            Assert.IsFalse(header.TryGetStringNode(subchildNode2.Name, out _));
             Assert.AreEqual(subchildNode1.Name, SubChildNodeName);
             Assert.AreEqual(subchildNode2.Name, SubChildNodeName);
 
             ChangeTracker.Global.Undo();
-            Assert.IsFalse(header.TryGetStringNode(childNode1.Name));
-            Assert.IsFalse(header.TryGetStringNode(childNode2.Name));
+            Assert.IsFalse(header.TryGetStringNode(childNode1.Name, out _));
+            Assert.IsFalse(header.TryGetStringNode(childNode2.Name, out _));
             Assert.AreEqual(childNode1.Name, ChildNodeName);
             Assert.AreEqual(childNode2.Name, ChildNodeName);
 
             ChangeTracker.Global.Undo();
-            Assert.IsFalse(header.TryGetStringNode(single.Name));
+            Assert.IsFalse(header.TryGetStringNode(single.Name, out _));
 
             ChangeTracker.Global.Redo();
             Assert.AreEqual(single, header[single.Name]);
@@ -213,7 +213,7 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             node.SetParent(header);
             node.SetParent(otherHeader);
 
-            Assert.IsFalse(header.TryGetStringNode(node.Name));
+            Assert.IsFalse(header.TryGetStringNode(node.Name, out _));
             Assert.AreEqual(node, otherHeader[node.Name]);
         }
 
@@ -230,12 +230,12 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
 
             Undo();
 
-            Assert.IsFalse(otherHeader.TryGetStringNode(node.Name));
+            Assert.IsFalse(otherHeader.TryGetStringNode(node.Name, out _));
             Assert.AreEqual(node, header[node.Name]);
 
             Redo();
 
-            Assert.IsFalse(header.TryGetStringNode(node.Name));
+            Assert.IsFalse(header.TryGetStringNode(node.Name, out _));
             Assert.AreEqual(node, otherHeader[node.Name]);
         }
 

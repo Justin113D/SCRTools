@@ -1,8 +1,11 @@
 ﻿using SCR.Tools.TranslationEditor.Data.Events;
 using SCR.Tools.UndoRedo;
-using SCR.Tools.UndoRedo.ListChange;
+using SCR.Tools.UndoRedo.Collections;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace SCR.Tools.TranslationEditor.Data
 {
@@ -11,7 +14,7 @@ namespace SCR.Tools.TranslationEditor.Data
     /// </summary>
     public class ParentNode : Node, IEnumerable<Node>
     {
-        protected readonly List<Node> _childNodes;
+        protected readonly TrackList<Node> _childNodes;
 
         /// <summary>
         /// The children of this node
@@ -79,18 +82,8 @@ namespace SCR.Tools.TranslationEditor.Data
 
             ChangeTracker.Global.BeginGroup();
 
-            ChangeTracker.Global.TrackChange(new Change(
-                () =>
-                {
-                    _childNodes.RemoveAt(fromIndex);
-                    _childNodes.Insert(toIndex, target);
-                },
-                () =>
-                {
-                    _childNodes.RemoveAt(toIndex);
-                    _childNodes.Insert(fromIndex, target);
-                }
-            ));
+            _childNodes.RemoveAt(fromIndex);
+            _childNodes.Insert(toIndex, target);
 
             InvokeChildrenChanged(fromIndex, toIndex);
 
@@ -121,8 +114,7 @@ namespace SCR.Tools.TranslationEditor.Data
                 otherParent.InternalRemoveNode(otherIndex);
             }
 
-            ChangeTracker.Global.TrackChange(new ChangeListInsert<Node>(
-                _childNodes, node, index));
+            _childNodes.Insert(index, node);
 
             if (node.State > State)
             {
@@ -136,9 +128,7 @@ namespace SCR.Tools.TranslationEditor.Data
 
         private void InternalRemoveNode(int index)
         {
-            ChangeTracker.Global.TrackChange(new ChangeListRemoveAt<Node>(
-                _childNodes, index));
-
+            _childNodes.RemoveAt(index);
             EvaluateState();
         }
 

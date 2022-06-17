@@ -1,6 +1,9 @@
 ﻿using SCR.Tools.UndoRedo;
-using SCR.Tools.UndoRedo.ListChange;
+using SCR.Tools.UndoRedo.Collections;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace SCR.Tools.DialogEditor.Data
 {
@@ -13,7 +16,7 @@ namespace SCR.Tools.DialogEditor.Data
         /// <summary>
         /// Nodes list
         /// </summary>
-        private readonly List<Node> _nodes;
+        private readonly TrackList<Node> _nodes;
 
         private string _name;
 
@@ -91,7 +94,7 @@ namespace SCR.Tools.DialogEditor.Data
             _author = "";
 
             _nodes = new();
-            Nodes = _nodes.AsReadOnly();
+            Nodes = new(_nodes);
         }
 
         /// <summary>
@@ -100,11 +103,7 @@ namespace SCR.Tools.DialogEditor.Data
         public Node CreateNode()
         {
             Node n = new();
-
-            ChangeTracker.Global.TrackChange(
-                new ChangeListAdd<Node>(
-                    _nodes, n));
-
+            _nodes.Add(n);
             return n;
         }
 
@@ -116,9 +115,7 @@ namespace SCR.Tools.DialogEditor.Data
             ChangeTracker.Global.BeginGroup();
             node.Disconnect();
 
-            ChangeTracker.Global.TrackChange(
-                new ChangeListRemove<Node>(
-                _nodes, node));
+            _nodes.Remove(node);
 
             ChangeTracker.Global.EndGroup();
         }
@@ -158,11 +155,8 @@ namespace SCR.Tools.DialogEditor.Data
                 }
             }
 
-            ChangeTracker.Global.TrackChange(new ChangedList<Node>(
-                _nodes,
-                sorted.ToArray(),
-                null
-            ));
+            _nodes.Clear();
+            _nodes.AddRange(sorted);
         }
 
 

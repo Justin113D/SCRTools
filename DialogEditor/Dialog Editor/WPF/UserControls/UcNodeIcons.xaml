@@ -56,7 +56,7 @@
             <DataGridTemplateColumn Width="24">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
-                        <Image Source="{Binding IconPath, TargetNullValue={x:Null}}" Height="24" Width="24"/>
+                        <Image Source="{Binding Value, TargetNullValue={x:Null}}" Height="24" Width="24"/>
                     </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>
             </DataGridTemplateColumn>
@@ -74,7 +74,7 @@
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <TextBlock 
-                            Text="{Binding IconPath}" 
+                            Text="{Binding Value}" 
                             TextWrapping="NoWrap"
                             HorizontalAlignment="Right"
                             Margin="5 0"/>

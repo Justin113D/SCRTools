@@ -1,26 +1,35 @@
 ﻿using SCR.Tools.Viewmodeling;
 using SCR.Tools.Common;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
+using SCR.Tools.UndoRedo.Collections;
+using SCR.Tools.UndoRedo;
 
 namespace SCR.Tools.DialogEditor.Viewmodeling
 {
-    public class VmNodeOptions : BaseViewModel
+    public class VmNodeOptions<T> : BaseViewModel
     {
-        private readonly Dictionary<string, Color> _rawOptions;
+        private readonly TrackDictionary<string, T> _rawOptions;
 
-        public ObservableCollection<VmNodeOption> Options { get; }
+        private readonly TrackList<VmNodeOption<T>> _options;
 
-        public VmNodeOptions(Dictionary<string, Color> options)
+        public ReadOnlyObservableCollection<VmNodeOption<T>> Options { get; }
+
+        private readonly T _defaultValue;
+
+        public VmNodeOptions(TrackDictionary<string, T> options, T defaultValue)
         {
             _rawOptions = options;
-            Options = new();
+            _defaultValue = defaultValue;
+
+            ObservableCollection<VmNodeOption<T>> internalOptions = new();
             foreach(string o in _rawOptions.Keys)
-                Options.Add(new(this, o));
+                internalOptions.Add(new(this, o));
+
+            _options = new(internalOptions);
+            Options = new(internalOptions);
         }
 
-        public Color this[string name]
+        public T this[string name]
         {
             get => _rawOptions[name];
             set => _rawOptions[name] = value;
@@ -30,9 +39,14 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         {
             string name = _rawOptions.FindNextFreeKey(newName, true);
 
-            Color colorValue = _rawOptions[oldName];
+            T TValue = _rawOptions[oldName];
+
+            ChangeTracker.Global.BeginGroup();
+
             _rawOptions.Remove(oldName);
-            _rawOptions.Add(name, colorValue);
+            _rawOptions.Add(name, TValue);
+
+            ChangeTracker.Global.EndGroup();
 
             return name;
         }
@@ -44,17 +58,21 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
                 return;
             }
 
-            string freeName = _rawOptions.FindNextFreeKey(name, true);
-            _rawOptions.Add(freeName, Color.Red);
+            ChangeTracker.Global.BeginGroup();
 
-            VmNodeOption vmOption = new(this, freeName);
-            Options.Add(vmOption);
+            string freeName = _rawOptions.FindNextFreeKey(name, true);
+            _rawOptions.Add(freeName, _defaultValue);
+
+            VmNodeOption<T> vmOption = new(this, freeName);
+            _options.Add(vmOption);
+
+            ChangeTracker.Global.EndGroup();
         }
     }
 
-    public class VmNodeOption : BaseViewModel
+    public class VmNodeOption<T> : BaseViewModel
     {
-        private readonly VmNodeOptions _parent;
+        private readonly VmNodeOptions<T> _parent;
 
         private string _name;
 
@@ -66,17 +84,29 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
                 if(string.IsNullOrWhiteSpace(value) || _name == value)
                     return;
 
+                ChangeTracker.Global.BeginGroup();
+
+                string newName = _parent.RenameOption(_name, value);
+
+                ChangeTracker.Global.TrackChange(
+                    new ChangedValue<string>(
+                        (v) => _name = v,
+                        _name,
+                        newName));
+
                 _name = _parent.RenameOption(_name, value);
+
+                ChangeTracker.Global.EndGroup();
             }
         }
 
-        public Color Color
+        public T Value
         {
             get => _parent[Name];
             set => _parent[Name] = value;
         }
 
-        public VmNodeOption(VmNodeOptions parent, string name)
+        public VmNodeOption(VmNodeOptions<T> parent, string name)
         {
             _parent = parent;
             _name = name;

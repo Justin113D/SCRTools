@@ -1,4 +1,5 @@
 ﻿using SCR.Tools.DialogEditor.Viewmodeling;
+using System.Drawing;
 
 namespace SCR.Tools.DialogEditor.WPF
 {
@@ -22,8 +23,8 @@ namespace SCR.Tools.DialogEditor.WPF
 
         public static VmDialogOptions Options { get; }
 
-        public static VmNodeOptions NodeOptions { get; }
+        public static VmNodeOptions<Color> NodeOptions { get; }
 
-        public static VmNodeIcons NodeIcons { get; }
+        public static VmNodeOptions<string> NodeIcons { get; }
     }
 }

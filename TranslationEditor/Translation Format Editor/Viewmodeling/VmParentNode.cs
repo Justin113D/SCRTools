@@ -1,7 +1,7 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.TranslationEditor.Data.Events;
 using SCR.Tools.UndoRedo;
-using SCR.Tools.UndoRedo.ListChange;
+using SCR.Tools.UndoRedo.Collections;
 using SCR.Tools.Viewmodeling;
 using System.Collections.ObjectModel;
 
@@ -12,7 +12,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         public ParentNode ParentNode
             => (ParentNode)Node;
 
-        private readonly ObservableCollection<VmNode> _childNodes;
+        private readonly TrackList<VmNode> _childNodes;
 
         private bool _expanded;
 
@@ -61,8 +61,10 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         public VmParentNode(VmFormat format, ParentNode node)
             : base(format, node)
         {
-            _childNodes = new();
-            ChildNodes = new(_childNodes);
+            ObservableCollection<VmNode> internalChildren = new();
+
+            _childNodes = new(internalChildren);
+            ChildNodes = new(internalChildren);
             node.ChildrenChanged += ChildrenChanged;
             node.HeaderChanged += HeaderChanged;
         }
@@ -71,19 +73,25 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         {
             ChangeTracker.Global.BeginGroup();
 
+            bool canExpandBefore = ChildNodes.Count > 0;
+
             if (args.FromIndex > -1)
             {
-                ChangeTracker.Global.TrackChange(
-                    new ChangeListRemoveAt<VmNode>(
-                        _childNodes, args.FromIndex));
+                _childNodes.RemoveAt(args.FromIndex);
             }
 
             if (args.ToIndex > -1)
             {
                 VmNode vmNode = _format.GetNodeViewmodel(ParentNode.ChildNodes[args.ToIndex]);
+                _childNodes.Insert(args.ToIndex, vmNode);
+            }
+
+            if(!canExpandBefore && CanExpand)
+            {
                 ChangeTracker.Global.TrackChange(
-                    new ChangeListInsert<VmNode>(
-                        _childNodes, vmNode, args.ToIndex));
+                    new Change(
+                        () => { },
+                        () => Expanded = false));
             }
 
             TrackNotifyProperty(nameof(CanExpand));

@@ -1,5 +1,6 @@
 ﻿using SCR.Tools.TranslationEditor.Data.Events;
 using SCR.Tools.UndoRedo;
+using System;
 
 namespace SCR.Tools.TranslationEditor.Data
 {

@@ -1,4 +1,8 @@
-﻿namespace SCR.Tools.UndoRedo
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace SCR.Tools.UndoRedo
 {
     internal class TrackGroup : ITrackable
     {

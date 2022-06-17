@@ -1,5 +1,6 @@
 ﻿using SCR.Tools.UndoRedo;
-using SCR.Tools.UndoRedo.ListChange;
+using SCR.Tools.UndoRedo.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace SCR.Tools.DialogEditor.Data
@@ -17,9 +18,9 @@ namespace SCR.Tools.DialogEditor.Data
 
         private bool _rightPortrait;
 
-        private readonly List<NodeOutput> _outputs;
+        private readonly TrackList<NodeOutput> _outputs;
 
-        private readonly List<NodeOutput> _inputs;
+        private readonly TrackList<NodeOutput> _inputs;
 
         #endregion
 
@@ -84,8 +85,8 @@ namespace SCR.Tools.DialogEditor.Data
             };
             _inputs = new();
 
-            Outputs = _outputs.AsReadOnly();
-            Inputs = _inputs.AsReadOnly();
+            Outputs = new(_outputs);
+            Inputs = new(_inputs);
         }
 
 
@@ -114,9 +115,7 @@ namespace SCR.Tools.DialogEditor.Data
                 Character = Outputs[0].Character
             };
 
-            ChangeTracker.Global.TrackChange(
-                new ChangeListAdd<NodeOutput>(
-                    _outputs, result));
+            _outputs.Add(result);
 
             return result;
         }
@@ -135,10 +134,7 @@ namespace SCR.Tools.DialogEditor.Data
             ChangeTracker.Global.BeginGroup();
 
             nodeOutput.Disconnect();
-
-            ChangeTracker.Global.TrackChange(
-                new ChangeListRemove<NodeOutput>(
-                    _outputs, nodeOutput));
+            _outputs.Remove(nodeOutput);
 
             ChangeTracker.Global.EndGroup();
             return true;
@@ -149,18 +145,14 @@ namespace SCR.Tools.DialogEditor.Data
         /// </summary>
         /// <param name="nodeOutput"></param>
         internal void AddInput(NodeOutput nodeOutput)
-            => ChangeTracker.Global.TrackChange(
-                new ChangeListAdd<NodeOutput>(
-                    _inputs, nodeOutput));
+            => _inputs.Add(nodeOutput);
 
         /// <summary>
         /// Deregisters a connected input
         /// </summary>
         /// <param name="nodeOutput"></param>
         internal void RemoveInput(NodeOutput nodeOutput)
-            => ChangeTracker.Global.TrackChange(
-                new ChangeListRemove<NodeOutput>(
-                    _inputs, nodeOutput));
+            => _inputs.Remove(nodeOutput);
 
         public override string ToString()
             => $"Loc ({LocationX}, {LocationY}); Out: {_outputs.Count}, In: {_inputs.Count}";

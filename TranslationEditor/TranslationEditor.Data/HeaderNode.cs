@@ -1,10 +1,13 @@
 ﻿using SCR.Tools.UndoRedo;
-using SCR.Tools.UndoRedo.ListChange;
-using System.CodeDom;
-using System.CodeDom.Compiler;
+using SCR.Tools.UndoRedo.Collections;
 using System.Collections.ObjectModel;
 using System.Text;
 using SCR.Tools.Common;
+using System.Diagnostics.CodeAnalysis;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace SCR.Tools.TranslationEditor.Data
 {
@@ -14,8 +17,9 @@ namespace SCR.Tools.TranslationEditor.Data
 
         private string _author;
         private string _language;
-        private readonly SortedList<string, StringNode> _stringNodes;
-        private readonly List<Version> _versions;
+        private readonly SortedList<string, StringNode> _internalStringNodes; // ONLY USED FOR READING!
+        private readonly TrackDictionary<string, StringNode> _stringNodes;
+        private readonly TrackList<Version> _versions;
 
         #endregion
 
@@ -84,9 +88,7 @@ namespace SCR.Tools.TranslationEditor.Data
                 ChangeTracker.Global.BeginGroup();
 
                 RemoveUnusedVersions();
-
-                ChangeTracker.Global.TrackChange(
-                    new ChangeListAdd<Version>(_versions, value));
+                _versions.Add(value);
 
                 ChangeTracker.Global.EndGroup();
             }
@@ -109,8 +111,9 @@ namespace SCR.Tools.TranslationEditor.Data
             _author = "";
             _language = "English";
 
-            _stringNodes = new();
-            StringNodes = new(_stringNodes.Values);
+            _internalStringNodes = new();
+            _stringNodes = new(_internalStringNodes);
+            StringNodes = new(_internalStringNodes.Values);
 
             _versions = new();
             _versions.Add(new(0, 0, 1));
@@ -118,8 +121,8 @@ namespace SCR.Tools.TranslationEditor.Data
 
         }
 
-        public bool TryGetStringNode(string key)
-            => _stringNodes.TryGetValue(key.ToLower(), out StringNode? result);
+        public bool TryGetStringNode(string key, [MaybeNullWhen(false)] out StringNode result)
+            => _stringNodes.TryGetValue(key.ToLower(), out result);
 
         /// <summary>
         /// Resets all string in the stringnodes of the headers hierarchy
@@ -157,9 +160,7 @@ namespace SCR.Tools.TranslationEditor.Data
                 if (finished)
                     break;
 
-                ChangeTracker.Global.TrackChange(
-                    new ChangeListRemoveAt<Version>(
-                        _versions, currentIndex));
+                _versions.RemoveAt(currentIndex);
             }
 
             ChangeTracker.Global.EndGroup();
@@ -180,11 +181,7 @@ namespace SCR.Tools.TranslationEditor.Data
             foreach (StringNode stringNode in stringNodes)
             {
                 string key = stringNode.Name.ToLower();
-
-                ChangeTracker.Global.TrackChange(new Change(
-                    () => _stringNodes.Remove(key),
-                    () => _stringNodes.Add(key, stringNode)
-                ));
+                _stringNodes.Remove(key);
             }
 
             ChangeTracker.Global.EndGroup();
@@ -203,12 +200,9 @@ namespace SCR.Tools.TranslationEditor.Data
                 {
                     stringNode.Name = newName;
                 }
-                string key = newName.ToLower();
 
-                ChangeTracker.Global.TrackChange(new Change(
-                    () => _stringNodes.Add(key, stringNode),
-                    () => _stringNodes.Remove(key)
-                ));
+                string key = newName.ToLower();
+                _stringNodes.Add(key, stringNode);
 
                 if (updateVersionIndex)
                     stringNode.VersionIndex = currentVersionIndex;
@@ -219,7 +213,7 @@ namespace SCR.Tools.TranslationEditor.Data
 
         internal void StringNodeChangeKey(StringNode node, string oldName)
         {
-            if (!_stringNodes.ContainsValue(node))
+            if (!_internalStringNodes.ContainsValue(node))
                 return;
 
             string lowerCase = oldName.ToLower();
@@ -231,17 +225,8 @@ namespace SCR.Tools.TranslationEditor.Data
 
             string newName = node.Name.ToLower();
 
-            ChangeTracker.Global.TrackChange(new Change(
-                () =>
-                {
-                    _stringNodes.Remove(lowerCase);
-                    _stringNodes.Add(newName, node);
-                },
-                () =>
-                {
-                    _stringNodes.Remove(newName);
-                    _stringNodes.Add(lowerCase, node);
-                }));
+            _stringNodes.Remove(lowerCase);
+            _stringNodes.Add(newName, node);
         }
 
         /// <summary>
@@ -318,7 +303,7 @@ namespace SCR.Tools.TranslationEditor.Data
             }
 
             Version version = new(metaData[1]);
-            int versionIndex = _versions.FindIndex(x => x == version);
+            int versionIndex = _versions.FindIndex(x => x.Equals(version));
 
             if (versionIndex == -1)
             {

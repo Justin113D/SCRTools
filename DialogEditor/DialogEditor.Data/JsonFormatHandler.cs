@@ -1,5 +1,8 @@
 ﻿using SCR.Tools.UndoRedo;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -202,7 +205,7 @@ namespace SCR.Tools.DialogEditor.Data
             return Encoding.UTF8.GetString(stream.ToArray());
         }
 
-        private static void WriteDialogNodeOptions(Utf8JsonWriter jsonWriter, string name, Dictionary<string, Color> options)
+        private static void WriteDialogNodeOptions(Utf8JsonWriter jsonWriter, string name, IDictionary<string, Color> options)
         {
             jsonWriter.WriteStartObject(name);
 
@@ -215,7 +218,7 @@ namespace SCR.Tools.DialogEditor.Data
             jsonWriter.WriteEndObject();
         }
 
-        private static void WriteDialogIcons(Utf8JsonWriter jsonWriter, Dictionary<string, string> iconPaths, string? basePath)
+        private static void WriteDialogIcons(Utf8JsonWriter jsonWriter, IDictionary<string, string> iconPaths, string? basePath)
         {
             jsonWriter.WriteStartObject(nameof(DialogOptions.NodeIcons));
 
@@ -279,7 +282,7 @@ namespace SCR.Tools.DialogEditor.Data
             return result;
         }
 
-        private static void ReadDialogNodeOptions(JsonNode json, Dictionary<string, Color> output)
+        private static void ReadDialogNodeOptions(JsonNode json, IDictionary<string, Color> output)
         {
             foreach(KeyValuePair<string, JsonNode?> p in json.AsObject())
             {
@@ -296,7 +299,7 @@ namespace SCR.Tools.DialogEditor.Data
             }
         }
 
-        private static void ReadDialogIcons(JsonNode json, Dictionary<string, string> output, string? basepath)
+        private static void ReadDialogIcons(JsonNode json, IDictionary<string, string> output, string? basepath)
         {
             foreach (KeyValuePair<string, JsonNode?> p in json.AsObject())
             {
