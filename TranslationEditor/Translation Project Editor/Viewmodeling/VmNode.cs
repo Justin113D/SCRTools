@@ -1,6 +1,7 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.TranslationEditor.Data.Events;
 using SCR.Tools.UndoRedo;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using SCR.Tools.Viewmodeling;
 
 namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
@@ -43,7 +44,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
 
         protected void TrackNotifyProperty(string propertyName)
         {
-            ChangeTracker.Global.GroupNotifyPropertyChanged(OnPropertyChanged, propertyName);
+            ChangeGroupNotifyPropertyChanged(OnPropertyChanged, propertyName);
         }
 
         private void StateChanged(Node node, NodeStateChangedEventArgs args)

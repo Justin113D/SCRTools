@@ -1,4 +1,5 @@
 ﻿using SCR.Tools.UndoRedo;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System;
 
 namespace SCR.Tools.TranslationEditor.Data
@@ -23,9 +24,9 @@ namespace SCR.Tools.TranslationEditor.Data
             get => _defaultValue;
             set
             {
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
 
-                ChangeTracker.Global.TrackValueChange(
+                TrackValueChange(
                     (v) => _defaultValue = v, _defaultValue, value.Trim());
 
                 var header = Header;
@@ -39,7 +40,7 @@ namespace SCR.Tools.TranslationEditor.Data
                     SetTrackNodeValue(_defaultValue);
                 }
 
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
             }
         }
 
@@ -51,7 +52,7 @@ namespace SCR.Tools.TranslationEditor.Data
             get => _versionIndex;
             set
             {
-                ChangeTracker.Global.TrackValueChange(
+                TrackValueChange(
                     (v) => _versionIndex = v, _versionIndex, value);
             }
         }
@@ -69,13 +70,13 @@ namespace SCR.Tools.TranslationEditor.Data
 
                 if (value == _changedVersionIndex)
                 {
-                    ChangeTracker.Global.BlankChange();
+                    BlankChange();
                     return;
                 }
 
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
 
-                ChangeTracker.Global.TrackValueChange(
+                TrackValueChange(
                     (v) => _changedVersionIndex = v, _changedVersionIndex, value);
 
                 if (value == -1)
@@ -91,7 +92,7 @@ namespace SCR.Tools.TranslationEditor.Data
                     State = NodeState.Outdated;
                 }
 
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
             }
         }
 
@@ -106,11 +107,11 @@ namespace SCR.Tools.TranslationEditor.Data
             {
                 if (_nodeValue == value)
                 {
-                    ChangeTracker.Global.BlankChange();
+                    BlankChange();
                     return;
                 }
 
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
 
                 SetTrackNodeValue(value);
 
@@ -121,7 +122,7 @@ namespace SCR.Tools.TranslationEditor.Data
 
                 ChangedVersionIndex = value == DefaultValue ? -1 : VersionIndex;
 
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
             }
         }
 
@@ -132,11 +133,11 @@ namespace SCR.Tools.TranslationEditor.Data
             {
                 if (value == _keepDefault)
                 {
-                    ChangeTracker.Global.BlankChange();
+                    BlankChange();
                     return;
                 }
 
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
 
 
                 if (value)
@@ -152,7 +153,7 @@ namespace SCR.Tools.TranslationEditor.Data
                     ChangedVersionIndex = -1;
                 }
 
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
             }
         }
 
@@ -167,25 +168,25 @@ namespace SCR.Tools.TranslationEditor.Data
 
         private void SetTrackNodeValue(string value)
         {
-            ChangeTracker.Global.TrackValueChange(
+            TrackValueChange(
                 (v) => _nodeValue = v, _nodeValue, value.Trim());
         }
 
         private void SetTrackKeepDefault(bool value)
         {
-            ChangeTracker.Global.TrackValueChange(
+            TrackValueChange(
                 (v) => _keepDefault = v, _keepDefault, value);
         }
 
         internal void ImportValue(string value, int changedVersionIndex, bool keepDefault)
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             SetTrackNodeValue(value);
             SetTrackKeepDefault(keepDefault);
             ChangedVersionIndex = changedVersionIndex;
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
         /// <summary>
@@ -193,11 +194,11 @@ namespace SCR.Tools.TranslationEditor.Data
         /// </summary>
         public void ResetValue()
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
             SetTrackNodeValue(DefaultValue);
             ChangedVersionIndex = -1;
             SetTrackKeepDefault(false);
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
 

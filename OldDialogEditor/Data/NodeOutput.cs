@@ -36,7 +36,7 @@ namespace SCR.Tools.DialogEditor.Data
             set
             {
                 string oldValue = _expression;
-                ChangeTracker.Global.TrackChange(new ChangedValue<string>(
+                TrackChange(new ChangedValue<string>(
                     (v) => _expression = v,
                     oldValue,
                     value
@@ -53,7 +53,7 @@ namespace SCR.Tools.DialogEditor.Data
             set
             {
                 string oldValue = _character;
-                ChangeTracker.Global.TrackChange(new ChangedValue<string>(
+                TrackChange(new ChangedValue<string>(
                     (v) => _character = v,
                     oldValue,
                     value
@@ -70,7 +70,7 @@ namespace SCR.Tools.DialogEditor.Data
             set
             {
                 string oldValue = _icon;
-                ChangeTracker.Global.TrackChange(new ChangedValue<string>(
+                TrackChange(new ChangedValue<string>(
                     (v) => _icon = v,
                     oldValue,
                     value
@@ -87,7 +87,7 @@ namespace SCR.Tools.DialogEditor.Data
             set
             {
                 string oldValue = _text;
-                ChangeTracker.Global.TrackChange(new ChangedValue<string>(
+                TrackChange(new ChangedValue<string>(
                     (v) => _text = v,
                     oldValue,
                     value
@@ -104,7 +104,7 @@ namespace SCR.Tools.DialogEditor.Data
             set
             {
                 bool oldValue = _keepEnabled;
-                ChangeTracker.Global.TrackChange(new ChangedValue<bool>(
+                TrackChange(new ChangedValue<bool>(
                     (v) => _keepEnabled = v,
                     oldValue,
                     value
@@ -121,7 +121,7 @@ namespace SCR.Tools.DialogEditor.Data
             private set
             {
                 string oldValue = _condition;
-                ChangeTracker.Global.TrackChange(new ChangedValue<string>(
+                TrackChange(new ChangedValue<string>(
                     (v) => _condition = v,
                     oldValue,
                     value
@@ -138,7 +138,7 @@ namespace SCR.Tools.DialogEditor.Data
             set
             {
                 int oldValue = _event;
-                ChangeTracker.Global.TrackChange(new ChangedValue<int>(
+                TrackChange(new ChangedValue<int>(
                     (v) => _event = v,
                     oldValue,
                     value
@@ -155,7 +155,7 @@ namespace SCR.Tools.DialogEditor.Data
             private set
             {
                 Node oldValue = _output;
-                ChangeTracker.Global.TrackChange(new ChangedValue<Node>(
+                TrackChange(new ChangedValue<Node>(
                     (v) => _output = v,
                     oldValue,
                     value
@@ -244,13 +244,13 @@ namespace SCR.Tools.DialogEditor.Data
             if(node?.Outputs.Contains(this) == true)
                 return false;
 
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             Output?.RemoveInput(this);
             Output = node;
             Output?.AddInput(this);
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
 
             return true;
         }

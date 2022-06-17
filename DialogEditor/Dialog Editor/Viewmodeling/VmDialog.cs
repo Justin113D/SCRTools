@@ -2,6 +2,7 @@
 using SCR.Tools.UndoRedo;
 using SCR.Tools.UndoRedo.Collections;
 using SCR.Tools.Viewmodeling;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -30,10 +31,10 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             get => Data.Name;
             set
             {
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
                 Data.Name = value;
-                ChangeTracker.Global.PostGroupAction(() => OnPropertyChanged(nameof(Name)));
-                ChangeTracker.Global.EndGroup();
+                PostChangeGroupAction(() => OnPropertyChanged(nameof(Name)));
+                EndChangeGroup();
             }
         }
 
@@ -42,10 +43,10 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             get => Data.Author;
             set
             {
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
                 Data.Author = value;
-                ChangeTracker.Global.PostGroupAction(() => OnPropertyChanged(nameof(Author)));
-                ChangeTracker.Global.EndGroup();
+                PostChangeGroupAction(() => OnPropertyChanged(nameof(Author)));
+                EndChangeGroup();
             }
         }
 
@@ -54,10 +55,10 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             get => Data.Description;
             set
             {
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
                 Data.Description = value;
-                ChangeTracker.Global.PostGroupAction(() => OnPropertyChanged(nameof(Description)));
-                ChangeTracker.Global.EndGroup();
+                PostChangeGroupAction(() => OnPropertyChanged(nameof(Description)));
+                EndChangeGroup();
             }
         }
 
@@ -93,7 +94,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
         private void SortNodes()
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             Data.Sort();
 
@@ -102,7 +103,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
                 Nodes.OrderBy(x => Data.Nodes.IndexOf(x.Data))
                 );
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
     }
 }

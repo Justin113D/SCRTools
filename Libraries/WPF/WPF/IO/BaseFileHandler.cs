@@ -17,12 +17,15 @@ namespace SCR.Tools.WPF.IO
 
         private ChangeTracker.Pin? _savePin;
 
+        private ChangeTracker PinTracker
+            => _pinTracker ?? GlobalChangeTrackerC.GlobalChangeTracker;
+
         protected BaseFileHandler(string fileFilter, string fileTypeName, ChangeTracker? pinTracker)
         {
             _fileFilter = fileFilter;
             _fileTypeName = fileTypeName;
             _pinTracker = pinTracker;
-            _savePin = pinTracker?.PinCurrent();
+            _savePin = PinTracker?.PinCurrent();
         }
 
         public bool ResetConfirmation()
@@ -88,7 +91,7 @@ namespace SCR.Tools.WPF.IO
                 }
             }
 
-            _savePin = _pinTracker?.PinCurrent();
+            _savePin = PinTracker?.PinCurrent();
             return true;
         }
 
@@ -119,7 +122,7 @@ namespace SCR.Tools.WPF.IO
             }
 
             LoadedFilePath = ofd.FileName;
-            _savePin = _pinTracker?.PinCurrent();
+            _savePin = PinTracker?.PinCurrent();
             return true;
         }
 
@@ -129,7 +132,7 @@ namespace SCR.Tools.WPF.IO
                 return;
             InternalReset();
             LoadedFilePath = null;
-            _savePin = _pinTracker?.PinCurrent();
+            _savePin = PinTracker?.PinCurrent();
         }
 
         protected abstract void InternalReset();

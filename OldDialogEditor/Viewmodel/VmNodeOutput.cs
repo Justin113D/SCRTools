@@ -62,10 +62,10 @@ namespace SCR.Tools.DialogEditor.Viewmodel
             }
             set
             {
-                Tracker.BeginGroup();
+                Tracker.BeginChangeGroup();
                 Data.Character = value.Name;
 
-                Tracker.PostGroupAction(() =>
+                Tracker.PostChangeGroupAction(() =>
                 {
                     OnPropertyChanged(nameof(Character));
                     OnPropertyChanged(nameof(CharacterText));
@@ -74,7 +74,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
                     Parent.RefreshColor();
                 });
 
-                Tracker.EndGroup();
+                Tracker.EndChangeGroup();
             }
         }
 
@@ -104,10 +104,10 @@ namespace SCR.Tools.DialogEditor.Viewmodel
             }
             set
             {
-                Tracker.BeginGroup();
+                Tracker.BeginChangeGroup();
                 Data.Expression = value.Name;
 
-                Tracker.PostGroupAction(() =>
+                Tracker.PostChangeGroupAction(() =>
                 {
                     OnPropertyChanged(nameof(Expression));
                     OnPropertyChanged(nameof(ExpressionText));
@@ -116,7 +116,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
                     Parent.RefreshColor();
                 });
 
-                Tracker.EndGroup();
+                Tracker.EndChangeGroup();
             }
         }
 
@@ -146,15 +146,15 @@ namespace SCR.Tools.DialogEditor.Viewmodel
             }
             set
             {
-                Tracker.BeginGroup();
+                Tracker.BeginChangeGroup();
                 Data.Icon = value.Name;
-                Tracker.PostGroupAction(() =>
+                Tracker.PostChangeGroupAction(() =>
                 {
                     OnPropertyChanged(nameof(NodeIcon));
                     OnPropertyChanged(nameof(NodeIconPath));
                     OnPropertyChanged(nameof(NodeIconText));
                 });
-                Tracker.EndGroup();
+                Tracker.EndChangeGroup();
             }
         }
 
@@ -170,10 +170,10 @@ namespace SCR.Tools.DialogEditor.Viewmodel
             set
             {
 
-                Tracker.BeginGroup();
+                Tracker.BeginChangeGroup();
                 Data.Text = value;
-                Tracker.PostGroupAction(() => OnPropertyChanged(nameof(Text)));
-                Tracker.EndGroup();
+                Tracker.PostChangeGroupAction(() => OnPropertyChanged(nameof(Text)));
+                Tracker.EndChangeGroup();
             }
         }
 
@@ -182,10 +182,10 @@ namespace SCR.Tools.DialogEditor.Viewmodel
             get => Data.Condition;
             set
             {
-                Tracker.BeginGroup();
+                Tracker.BeginChangeGroup();
                 Data.SetCondition(value);
-                Tracker.PostGroupAction(() => OnPropertyChanged(nameof(Condition)));
-                Tracker.EndGroup();
+                Tracker.PostChangeGroupAction(() => OnPropertyChanged(nameof(Condition)));
+                Tracker.EndChangeGroup();
             }
         }
 
@@ -194,10 +194,10 @@ namespace SCR.Tools.DialogEditor.Viewmodel
             get => Data.KeepEnabled;
             set
             {
-                Tracker.BeginGroup();
+                Tracker.BeginChangeGroup();
                 Data.KeepEnabled = value;
-                Tracker.PostGroupAction(() => OnPropertyChanged(nameof(KeepEnabled)));
-                Tracker.EndGroup();
+                Tracker.PostChangeGroupAction(() => OnPropertyChanged(nameof(KeepEnabled)));
+                Tracker.EndChangeGroup();
             }
         }
 
@@ -216,7 +216,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
             {
                 if(_vmOutput == value || _vmOutput == Parent)
                     return;
-                Tracker.BeginGroup();
+                Tracker.BeginChangeGroup();
 
                 if(Data.SetOutput(value?.Data))
                 {
@@ -230,13 +230,13 @@ namespace SCR.Tools.DialogEditor.Viewmodel
                         value
                     ));
 
-                    Tracker.PostGroupAction(() => OnPropertyChanged(nameof(VmOutput)));
+                    Tracker.PostChangeGroupAction(() => OnPropertyChanged(nameof(VmOutput)));
 
                     Displaying = _vmOutput != null;
                     _vmOutput?.AddInput(this);
                 }
 
-                Tracker.EndGroup();
+                Tracker.EndChangeGroup();
             }
         }
 

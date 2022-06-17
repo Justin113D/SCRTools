@@ -1,6 +1,7 @@
 ﻿using SCR.Tools.TranslationEditor.Data.Events;
 using SCR.Tools.UndoRedo;
 using SCR.Tools.UndoRedo.Collections;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -42,18 +43,18 @@ namespace SCR.Tools.TranslationEditor.Data
         {
             if (node.Parent != this)
             {
-                ChangeTracker.Global.BlankChange();
+                BlankChange();
                 return;
             }
 
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             int index = _childNodes.IndexOf(node);
             InternalRemoveNode(index);
 
             node.InternalSetParent(null, false, index, -1);
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
         public void InsertChildNodeAt(Node node, int index)
@@ -69,7 +70,7 @@ namespace SCR.Tools.TranslationEditor.Data
 
             if (fromIndex == toIndex)
             {
-                ChangeTracker.Global.BlankChange();
+                BlankChange();
                 return;
             }
 
@@ -80,14 +81,14 @@ namespace SCR.Tools.TranslationEditor.Data
 
             Node target = _childNodes[fromIndex];
 
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             _childNodes.RemoveAt(fromIndex);
             _childNodes.Insert(toIndex, target);
 
             InvokeChildrenChanged(fromIndex, toIndex);
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
 
@@ -95,7 +96,7 @@ namespace SCR.Tools.TranslationEditor.Data
         {
             if (node.Parent == this)
             {
-                ChangeTracker.Global.BlankChange();
+                BlankChange();
                 return;
             }
 
@@ -104,7 +105,7 @@ namespace SCR.Tools.TranslationEditor.Data
                 throw new IndexOutOfRangeException("Index out of range!");
             }
 
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             int otherIndex = -1;
             if (node.Parent != null)
@@ -123,7 +124,7 @@ namespace SCR.Tools.TranslationEditor.Data
 
             node.InternalSetParent(this, updateVersionIndex, otherIndex, index);
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
         private void InternalRemoveNode(int index)

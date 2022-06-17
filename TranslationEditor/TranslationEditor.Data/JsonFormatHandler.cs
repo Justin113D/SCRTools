@@ -1,4 +1,5 @@
 ﻿using SCR.Tools.UndoRedo;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -87,10 +88,10 @@ namespace SCR.Tools.TranslationEditor.Data
 
         public static HeaderNode ReadFormat(string text)
         {
-            ChangeTracker prev = ChangeTracker.Global;
+            ChangeTracker prev = GlobalChangeTracker;
 
             new ChangeTracker().Use();
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             HeaderNode result = new();
 
@@ -135,7 +136,7 @@ namespace SCR.Tools.TranslationEditor.Data
             }
             finally
             {
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
                 prev.Use();
             }
 

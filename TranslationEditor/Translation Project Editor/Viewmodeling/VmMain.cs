@@ -1,6 +1,7 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.UndoRedo;
 using SCR.Tools.Viewmodeling;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.IO;
 
 namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
@@ -79,7 +80,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         /// </summary>
         private void Undo()
         {
-            if(ProjectTracker.Undo())
+            if(UndoChange())
             {
                 SetMessage("Performed Undo", false);
             }
@@ -90,7 +91,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         /// </summary>
         private void Redo()
         {
-            if(ProjectTracker.Redo())
+            if(RedoChange())
             {
                 SetMessage("Performed Redo", false);
             }
@@ -136,7 +137,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
             if (Format == null)
                 return;
 
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             try
             {
@@ -144,14 +145,14 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
             }
             catch
             {
-                ChangeTracker.Global.EndGroup(true);
+                EndChangeGroup(true);
                 SetMessage("Failed to load Project", true);
                 throw;
             }
 
             SetMessage("Loaded Project", false);
-            ChangeTracker.Global.EndGroup();
-            ChangeTracker.Global.Reset();
+            EndChangeGroup();
+            ResetTracker();
             Format.RefreshNodeValues();
         }
 
@@ -181,7 +182,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
 
             Format.Header.ResetAllStrings();
             Format.RefreshNodeValues();
-            ChangeTracker.Global.Reset();
+            ResetTracker();
             SetMessage("Reset Project", false);
         }
 
@@ -217,7 +218,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
             string keyFilePath = Path.ChangeExtension(filepath, "langkey");
             string keys = File.ReadAllText(keyFilePath);
 
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             try
             {
@@ -225,12 +226,12 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
             }
             catch
             {
-                ChangeTracker.Global.EndGroup(true);
+                EndChangeGroup(true);
                 throw;
             }
 
-            ChangeTracker.Global.EndGroup();
-            ChangeTracker.Global.Reset();
+            EndChangeGroup();
+            ResetTracker();
             Format.RefreshNodeValues();
 
             SetMessage("Imported Language Files", false);

@@ -1,5 +1,6 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.UndoRedo;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 {
@@ -17,12 +18,12 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 if (StringNode.DefaultValue == value)
                     return;
 
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
 
                 StringNode.DefaultValue = value;
                 TrackNotifyProperty(nameof(DefaultValue));
 
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
             }
         }
 

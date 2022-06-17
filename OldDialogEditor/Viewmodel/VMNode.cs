@@ -58,10 +58,10 @@ namespace SCR.Tools.DialogEditor.Viewmodel
             get => Data.RightPortrait;
             set
             {
-                Tracker.BeginGroup();
+                Tracker.BeginChangeGroup();
                 Data.RightPortrait = value;
-                Tracker.PostGroupAction(() => OnPropertyChanged(nameof(RightPortrait)));
-                Tracker.EndGroup();
+                Tracker.PostChangeGroupAction(() => OnPropertyChanged(nameof(RightPortrait)));
+                Tracker.EndChangeGroup();
             }
         }
 
@@ -99,7 +99,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
             get => _updateCounter;
             set
             {
-                Tracker.BeginGroup();
+                Tracker.BeginChangeGroup();
 
                 int oldValue = _updateCounter;
 
@@ -109,8 +109,8 @@ namespace SCR.Tools.DialogEditor.Viewmodel
                     value
                 ));
 
-                Tracker.PostGroupAction(() => OnPropertyChanged(nameof(UpdatePositionCounter)));
-                Tracker.EndGroup();
+                Tracker.PostChangeGroupAction(() => OnPropertyChanged(nameof(UpdatePositionCounter)));
+                Tracker.EndChangeGroup();
             }
         }
 
@@ -165,7 +165,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
         /// </summary>
         public void Disconnect()
         {
-            Tracker.BeginGroup();
+            Tracker.BeginChangeGroup();
 
             foreach(VmNodeOutput no in _outputs)
                 no.Disconnect();
@@ -173,7 +173,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
             foreach(VmNodeOutput no in _inputs.ToArray())
                 no.Disconnect();
 
-            Tracker.EndGroup();
+            Tracker.EndChangeGroup();
         }
 
         #region Collection methods
@@ -183,7 +183,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
         /// </summary>
         public void AddOutput()
         {
-            Tracker.BeginGroup();
+            Tracker.BeginChangeGroup();
 
             NodeOutput output = Data.CreateOutput();
             VmNodeOutput vmOutput = new(output, this);
@@ -195,9 +195,9 @@ namespace SCR.Tools.DialogEditor.Viewmodel
                 null
             ));
 
-            Tracker.PostGroupAction(() => OnPropertyChanged(nameof(InOutInfo)));
+            Tracker.PostChangeGroupAction(() => OnPropertyChanged(nameof(InOutInfo)));
 
-            Tracker.EndGroup();
+            Tracker.EndChangeGroup();
         }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
             if(_outputs.Count < 2)
                 return;
 
-            Tracker.BeginGroup();
+            Tracker.BeginChangeGroup();
 
             vmOutput.Disconnect();
 
@@ -222,13 +222,13 @@ namespace SCR.Tools.DialogEditor.Viewmodel
 
             Data.RemoveOutput(vmOutput.Data);
 
-            Tracker.PostGroupAction(() =>
+            Tracker.PostChangeGroupAction(() =>
             {
                 RefreshColor();
                 OnPropertyChanged(nameof(InOutInfo));
             });
 
-            Tracker.EndGroup();
+            Tracker.EndChangeGroup();
         }
 
 
@@ -238,7 +238,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
         /// <param name="vmInput"></param>
         public void AddInput(VmNodeOutput vmInput)
         {
-            Tracker.BeginGroup();
+            Tracker.BeginChangeGroup();
 
             Tracker.TrackChange(new ChangedListSingleEntry<VmNodeOutput>(
                 _inputs,
@@ -249,13 +249,13 @@ namespace SCR.Tools.DialogEditor.Viewmodel
 
             UpdatePositionCounter++;
 
-            Tracker.PostGroupAction(() =>
+            Tracker.PostChangeGroupAction(() =>
             {
                 OnPropertyChanged(nameof(InOutInfo));
                 RefreshBackwardsConnection();
             });
 
-            Tracker.EndGroup();
+            Tracker.EndChangeGroup();
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
         /// <param name="vmInput"></param>
         public void RemoveInput(VmNodeOutput vmInput)
         {
-            Tracker.BeginGroup();
+            Tracker.BeginChangeGroup();
 
             Tracker.TrackChange(new ChangedListSingleEntry<VmNodeOutput>(
                 _inputs,
@@ -275,13 +275,13 @@ namespace SCR.Tools.DialogEditor.Viewmodel
 
             UpdatePositionCounter--;
 
-            Tracker.PostGroupAction(() =>
+            Tracker.PostChangeGroupAction(() =>
             {
                 OnPropertyChanged(nameof(InOutInfo));
                 RefreshBackwardsConnection();
             });
 
-            Tracker.EndGroup();
+            Tracker.EndChangeGroup();
         }
 
 
@@ -294,12 +294,12 @@ namespace SCR.Tools.DialogEditor.Viewmodel
             if(!_outputs.Contains(vmOutput) || vmOutput.Displaying)
                 return;
 
-            Tracker.BeginGroup();
+            Tracker.BeginChangeGroup();
 
             Grid?.RegisterOutput(vmOutput);
             UpdatePositionCounter++;
 
-            Tracker.EndGroup();
+            Tracker.EndChangeGroup();
         }
 
         /// <summary>
@@ -311,12 +311,12 @@ namespace SCR.Tools.DialogEditor.Viewmodel
             if(!_outputs.Contains(vmOutput) || !vmOutput.Displaying)
                 return;
 
-            Tracker.BeginGroup();
+            Tracker.BeginChangeGroup();
 
             Grid?.DeregisterOutput(vmOutput);
             UpdatePositionCounter--;
 
-            Tracker.EndGroup();
+            Tracker.EndChangeGroup();
         }
 
         #endregion
@@ -342,15 +342,15 @@ namespace SCR.Tools.DialogEditor.Viewmodel
 
         public void UpdateDataPosition()
         {
-            Tracker.BeginGroup();
+            Tracker.BeginChangeGroup();
 
             Point dataLoc = VmGrid.ToGridSpace(Position);
             Data.LocationX = (int)dataLoc.X;
             Data.LocationY = (int)dataLoc.Y;
 
-            Tracker.PostGroupAction(() => Position = VmGrid.FromGridSpace(Data.LocationX, Data.LocationY));
+            Tracker.PostChangeGroupAction(() => Position = VmGrid.FromGridSpace(Data.LocationX, Data.LocationY));
 
-            Tracker.EndGroup();
+            Tracker.EndChangeGroup();
         }
 
         #endregion

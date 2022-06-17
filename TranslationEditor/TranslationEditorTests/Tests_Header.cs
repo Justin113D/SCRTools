@@ -1,18 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SCR.Tools.UndoRedo;
 using System;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.TranslationEditor.Data.Tests
 {
     [TestClass]
     public class Tests_Header
     {
-        private static void Undo()
-            => ChangeTracker.Global.Undo();
-
-        private static void Redo()
-            => ChangeTracker.Global.Redo();
-
         private static HeaderNode TestFormat()
         {
             HeaderNode header = new();
@@ -171,31 +165,31 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             header.AddChildNode(parent);
             parent.AddChildNode(subParent);
 
-            ChangeTracker.Global.Undo();
+            UndoChange();
             Assert.IsFalse(header.TryGetStringNode(subchildNode1.Name, out _));
             Assert.IsFalse(header.TryGetStringNode(subchildNode2.Name, out _));
             Assert.AreEqual(subchildNode1.Name, SubChildNodeName);
             Assert.AreEqual(subchildNode2.Name, SubChildNodeName);
 
-            ChangeTracker.Global.Undo();
+            UndoChange();
             Assert.IsFalse(header.TryGetStringNode(childNode1.Name, out _));
             Assert.IsFalse(header.TryGetStringNode(childNode2.Name, out _));
             Assert.AreEqual(childNode1.Name, ChildNodeName);
             Assert.AreEqual(childNode2.Name, ChildNodeName);
 
-            ChangeTracker.Global.Undo();
+            UndoChange();
             Assert.IsFalse(header.TryGetStringNode(single.Name, out _));
 
-            ChangeTracker.Global.Redo();
+            RedoChange();
             Assert.AreEqual(single, header[single.Name]);
 
-            ChangeTracker.Global.Redo();
+            RedoChange();
             Assert.AreEqual(childNode1, header[childNode1.Name]);
             Assert.AreEqual(childNode2, header[childNode2.Name]);
             Assert.AreEqual(childNode1.Name, ChildNodeName);
             Assert.AreEqual(childNode2.Name, ChildNodeNameNumbered);
 
-            ChangeTracker.Global.Redo();
+            RedoChange();
             Assert.AreEqual(subchildNode1, header[subchildNode1.Name]);
             Assert.AreEqual(subchildNode2, header[subchildNode2.Name]);
             Assert.AreEqual(subchildNode1.Name, SubChildNodeName);
@@ -228,12 +222,12 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             node.SetParent(header);
             node.SetParent(otherHeader);
 
-            Undo();
+            UndoChange();
 
             Assert.IsFalse(otherHeader.TryGetStringNode(node.Name, out _));
             Assert.AreEqual(node, header[node.Name]);
 
-            Redo();
+            RedoChange();
 
             Assert.IsFalse(header.TryGetStringNode(node.Name, out _));
             Assert.AreEqual(node, otherHeader[node.Name]);

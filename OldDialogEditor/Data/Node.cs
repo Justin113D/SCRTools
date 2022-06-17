@@ -33,7 +33,7 @@ namespace SCR.Tools.DialogEditor.Data
             set
             {
                 int oldValue = _locationX;
-                ChangeTracker.Global.TrackChange(new ChangedValue<int>(
+                TrackChange(new ChangedValue<int>(
                     (v) => _locationX = v,
                     oldValue,
                     value
@@ -50,7 +50,7 @@ namespace SCR.Tools.DialogEditor.Data
             set
             {
                 int oldValue = _locationY;
-                ChangeTracker.Global.TrackChange(new ChangedValue<int>(
+                TrackChange(new ChangedValue<int>(
                     (v) => _locationY = v,
                     oldValue,
                     value
@@ -67,7 +67,7 @@ namespace SCR.Tools.DialogEditor.Data
             set
             {
                 bool oldValue = _rightPortrait;
-                ChangeTracker.Global.TrackChange(new ChangedValue<bool>(
+                TrackChange(new ChangedValue<bool>(
                     (v) => _rightPortrait = v,
                     oldValue,
                     value
@@ -107,12 +107,12 @@ namespace SCR.Tools.DialogEditor.Data
         /// </summary>
         public void Disconnect()
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
             foreach(NodeOutput no in _inputs)
                 no.Disconnect();
             foreach(NodeOutput no in _outputs)
                 no.Disconnect();
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace SCR.Tools.DialogEditor.Data
                 Character = Outputs[0].Character
             };
 
-            ChangeTracker.Global.TrackChange(new ChangedListSingleEntry<NodeOutput>(
+            TrackChange(new ChangedListSingleEntry<NodeOutput>(
                 _outputs,
                 result,
                 _outputs.Count,
@@ -148,18 +148,18 @@ namespace SCR.Tools.DialogEditor.Data
                || !_outputs.Contains(nodeOutput))
                 return false;
 
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             nodeOutput.Disconnect();
 
-            ChangeTracker.Global.TrackChange(new ChangedListSingleEntry<NodeOutput>(
+            TrackChange(new ChangedListSingleEntry<NodeOutput>(
                 _outputs,
                 nodeOutput,
                 null,
                 null
             ));
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
             return true;
         }
 
@@ -168,7 +168,7 @@ namespace SCR.Tools.DialogEditor.Data
         /// </summary>
         /// <param name="nodeOutput"></param>
         public void AddInput(NodeOutput nodeOutput)
-            => ChangeTracker.Global.TrackChange(new ChangedListSingleEntry<NodeOutput>(
+            => TrackChange(new ChangedListSingleEntry<NodeOutput>(
                     _inputs,
                     nodeOutput,
                     _inputs.Count,
@@ -180,7 +180,7 @@ namespace SCR.Tools.DialogEditor.Data
         /// </summary>
         /// <param name="nodeOutput"></param>
         public void RemoveInput(NodeOutput nodeOutput)
-            => ChangeTracker.Global.TrackChange(new ChangedListSingleEntry<NodeOutput>(
+            => TrackChange(new ChangedListSingleEntry<NodeOutput>(
                     _inputs,
                     nodeOutput,
                     null,

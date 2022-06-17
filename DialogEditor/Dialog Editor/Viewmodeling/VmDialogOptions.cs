@@ -1,6 +1,7 @@
 ﻿using SCR.Tools.DialogEditor.Data;
-using SCR.Tools.UndoRedo;
 using SCR.Tools.Viewmodeling;
+using SCR.Tools.UndoRedo;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Drawing;
 
 namespace SCR.Tools.DialogEditor.Viewmodeling
@@ -29,7 +30,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             CharacterOptions = new(Data.CharacterOptions, Color.Red);
             ExpressionOptions = new(Data.ExpressionOptions, Color.Red);
             NodeIcons = new(Data.NodeIcons, "");
-            ChangeTracker.Global.Reset();
+            Reset();
         }
 
         public string Write(string? path)
@@ -43,7 +44,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             CharacterOptions = new(Data.CharacterOptions, Color.Red);
             ExpressionOptions = new(Data.ExpressionOptions, Color.Red);
             NodeIcons = new(Data.NodeIcons, "");
-            ChangeTracker.Global.Reset();
+            Reset();
         }
     }
 }

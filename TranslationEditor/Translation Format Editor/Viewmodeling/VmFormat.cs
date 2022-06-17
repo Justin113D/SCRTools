@@ -1,9 +1,10 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.TranslationEditor.Data.Events;
 using SCR.Tools.TranslationEditor.FormatEditor.CopyPasteData;
+using SCR.Tools.Viewmodeling;
 using SCR.Tools.UndoRedo;
 using SCR.Tools.UndoRedo.Collections;
-using SCR.Tools.Viewmodeling;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -44,12 +45,12 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 if (Header.Language == value)
                     return;
 
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
 
                 Header.Language = value;
                 TrackNotifyProperty(nameof(Language));
 
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
             }
         }
 
@@ -64,12 +65,12 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 if (Header.Name == value)
                     return;
 
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
 
                 Header.Name = value;
                 TrackNotifyProperty(nameof(TargetName));
 
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
             }
         }
 
@@ -94,12 +95,12 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 if (newVersion <= Header.Version)
                     return;
 
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
 
                 Header.Version = newVersion;
                 TrackNotifyProperty(nameof(Version));
 
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
             }
         }
 
@@ -113,6 +114,8 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         /// Top level node viewmodels
         /// </summary>
         public ReadOnlyObservableCollection<VmNode> Nodes { get; }
+
+        private readonly Dictionary<Node, VmNode> _internalNodeTable;
 
         private readonly TrackDictionary<Node, VmNode> _nodeTable;
 
@@ -170,8 +173,9 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             _main = main;
             Header = data;
 
+            _internalNodeTable = new();
+            _nodeTable = new(_internalNodeTable);
 
-            _nodeTable = new();
             ObservableCollection<VmNode> internalNodes = new();
             _nodes = new(internalNodes);
             Nodes = new(internalNodes);
@@ -190,7 +194,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         public VmNode GetNodeViewmodel(Node node)
         {
-            if (!_nodeTable.TryGetValue(node, out VmNode? vmNode))
+            if (!_internalNodeTable.TryGetValue(node, out VmNode? vmNode))
             {
                 if (node is ParentNode p)
                 {
@@ -205,14 +209,14 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                     throw new NotSupportedException(node.GetType().Name + " is not a valid node type");
                 }
                 node.HeaderChanged += HeaderChanged;
-                _nodeTable.Add(node, vmNode);
+                _internalNodeTable.Add(node, vmNode);
             }
             return vmNode;
         }
 
         private void ChildrenChanged(ParentNode node, NodeChildrenChangedEventArgs args)
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             if (args.FromIndex > -1)
             {
@@ -226,7 +230,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
                 _nodes.Insert(args.ToIndex, vmNode);
 
-                ChangeTracker.Global.TrackChange(
+                TrackChange(
                     () => { },
                     () =>
                     {
@@ -235,7 +239,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                     });
             }
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
         private void HeaderChanged(Node node, NodeHeaderChangedEventArgs args)
@@ -247,7 +251,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
             _nodeTable.Remove(node);
 
-            ChangeTracker.Global.TrackChange(
+            TrackChange(
                 () =>
                 {
                     vmNode.Selected = false;
@@ -266,7 +270,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         /// <param name="propertyName"></param>
         private void TrackNotifyProperty(string propertyName)
         {
-            ChangeTracker.Global.GroupNotifyPropertyChanged(OnPropertyChanged, propertyName);
+            ChangeGroupNotifyPropertyChanged(OnPropertyChanged, propertyName);
         }
 
         #region Action methods
@@ -363,14 +367,14 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
             HashSet<Node> toDelete = GetTopSelected();
 
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             foreach (Node node in toDelete)
             {
                 _nodeTable[node].Remove();
             }
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
         public void DeselectAll()
@@ -383,7 +387,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         public void SelectRange(VmNode target, bool multi)
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             if (!multi)
             {
@@ -430,7 +434,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 }
             }
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
         public void MoveSelected(ParentNode parent, int index)
@@ -442,7 +446,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
             Node[] nodes = SortNodesByHierarchy(SelectedNodes);
 
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             foreach (Node node in nodes)
             {
@@ -460,7 +464,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 index++;
             }
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
 
@@ -530,7 +534,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
             int pasteCount = 0;
 
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             foreach (ICPNode t in _copyPasteNodes)
             {
@@ -538,7 +542,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 pasteCount += t.NodeCount;
             }
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
 
             _main.SetMessage($"Pasted a total of {pasteCount} nodes!", false);
         }

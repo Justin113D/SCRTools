@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace SCR.Tools.UndoRedo.Collections
             {
                 TValue previousItem = _dictionary[key];
 
-                ChangeTracker.Global.TrackChange(
+                TrackChange(
                     () => _dictionary[key] = value,
                     () => _dictionary[key] = previousItem);
             }
@@ -46,14 +47,14 @@ namespace SCR.Tools.UndoRedo.Collections
 
         public void Add(TKey key, TValue value)
         {
-            ChangeTracker.Global.TrackChange(
+            TrackChange(
                 () => _dictionary.Add(key, value),
                 () => _dictionary.Remove(key));
         }
 
         public void Add(KeyValuePair<TKey, TValue> item)
         {
-            ChangeTracker.Global.TrackChange(
+            TrackChange(
                 () => _dictionary.Add(item),
                 () => _dictionary.Remove(item));
         }
@@ -62,7 +63,7 @@ namespace SCR.Tools.UndoRedo.Collections
         {
             KeyValuePair<TKey, TValue>[] contents = _dictionary.ToArray();
 
-            ChangeTracker.Global.TrackChange(
+            TrackChange(
                 () => _dictionary.Clear(),
                 () =>
                 {
@@ -92,7 +93,7 @@ namespace SCR.Tools.UndoRedo.Collections
                 return false;
             }
 
-            ChangeTracker.Global.TrackChange(
+            TrackChange(
                 () => _dictionary.Remove(key),
                 () => _dictionary.Add(key, value));
 
@@ -106,7 +107,7 @@ namespace SCR.Tools.UndoRedo.Collections
                 return false;
             }
 
-            ChangeTracker.Global.TrackChange(
+            TrackChange(
                 () => _dictionary.Remove(item),
                 () => _dictionary.Add(item));
 

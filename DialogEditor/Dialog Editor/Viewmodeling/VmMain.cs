@@ -1,5 +1,6 @@
 ﻿using SCR.Tools.DialogEditor.Data;
 using SCR.Tools.UndoRedo;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using SCR.Tools.Viewmodeling;
 
 namespace SCR.Tools.DialogEditor.Viewmodeling
@@ -75,7 +76,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         /// </summary>
         private void Undo()
         {
-            if (DialogTracker.Undo())
+            if (UndoChange())
             {
                 SetMessage("Performed Undo", false);
             }
@@ -86,7 +87,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         /// </summary>
         private void Redo()
         {
-            if (DialogTracker.Redo())
+            if (RedoChange())
             {
                 SetMessage("Performed Redo", false);
             }

@@ -3,6 +3,7 @@ using SCR.Tools.TranslationEditor.Data.Events;
 using SCR.Tools.UndoRedo;
 using SCR.Tools.UndoRedo.Collections;
 using SCR.Tools.Viewmodeling;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Collections.ObjectModel;
 
 namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
@@ -71,7 +72,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         private void ChildrenChanged(ParentNode node, NodeChildrenChangedEventArgs args)
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             bool canExpandBefore = ChildNodes.Count > 0;
 
@@ -88,14 +89,14 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
             if(!canExpandBefore && CanExpand)
             {
-                ChangeTracker.Global.TrackChange(
+                TrackChange(
                     () => { },
                     () => Expanded = false);
             }
 
             TrackNotifyProperty(nameof(CanExpand));
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
         private void HeaderChanged(Node node, NodeHeaderChangedEventArgs args)
@@ -103,7 +104,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             if (args.NewHeader == ParentNode.Header)
                 return;
 
-            ChangeTracker.Global.TrackChange(
+            TrackChange(
                 () =>
                 {
                     ParentNode.ChildrenChanged -= ChildrenChanged;

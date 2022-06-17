@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,7 +22,7 @@ namespace SCR.Tools.UndoRedo.Collections
 
         public void Add(T item)
         {
-            ChangeTracker.Global.TrackChange(
+            TrackChange(
                 () => _collection.Add(item),
                 () => _collection.Remove(item));
         }
@@ -30,7 +31,7 @@ namespace SCR.Tools.UndoRedo.Collections
         {
             T[] contents = _collection.ToArray();
 
-            ChangeTracker.Global.TrackChange(
+            TrackChange(
                 () => _collection.Clear(),
                 () =>
                 {
@@ -57,7 +58,7 @@ namespace SCR.Tools.UndoRedo.Collections
                 return false;
             }
 
-            ChangeTracker.Global.TrackChange(
+            TrackChange(
                 () => _collection.Remove(item), 
                 () => _collection.Add(item));
 

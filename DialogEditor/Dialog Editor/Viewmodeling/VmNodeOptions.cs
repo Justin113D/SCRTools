@@ -1,8 +1,9 @@
 ﻿using SCR.Tools.Viewmodeling;
 using SCR.Tools.Common;
-using System.Collections.ObjectModel;
-using SCR.Tools.UndoRedo.Collections;
 using SCR.Tools.UndoRedo;
+using SCR.Tools.UndoRedo.Collections;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
+using System.Collections.ObjectModel;
 
 namespace SCR.Tools.DialogEditor.Viewmodeling
 {
@@ -41,12 +42,12 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
             T TValue = _rawOptions[oldName];
 
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             _rawOptions.Remove(oldName);
             _rawOptions.Add(name, TValue);
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
 
             return name;
         }
@@ -58,7 +59,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
                 return;
             }
 
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             string freeName = _rawOptions.FindNextFreeKey(name, true);
             _rawOptions.Add(freeName, _defaultValue);
@@ -66,7 +67,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             VmNodeOption<T> vmOption = new(this, freeName);
             _options.Add(vmOption);
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
     }
 
@@ -84,16 +85,16 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
                 if(string.IsNullOrWhiteSpace(value) || _name == value)
                     return;
 
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
 
                 string newName = _parent.RenameOption(_name, value);
 
-                ChangeTracker.Global.TrackValueChange(
+                TrackValueChange(
                     (v) => _name = v, _name, newName);
 
                 _name = _parent.RenameOption(_name, value);
 
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
             }
         }
 

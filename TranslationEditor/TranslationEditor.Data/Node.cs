@@ -1,5 +1,6 @@
 ﻿using SCR.Tools.TranslationEditor.Data.Events;
 using SCR.Tools.UndoRedo;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System;
 
 namespace SCR.Tools.TranslationEditor.Data
@@ -63,21 +64,21 @@ namespace SCR.Tools.TranslationEditor.Data
 
                 if (value == _name)
                 {
-                    ChangeTracker.Global.BlankChange();
+                    BlankChange();
                     return;
                 }
 
                 string oldNodeName = _name;
 
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
 
-                ChangeTracker.Global.TrackValueChange(
+                TrackValueChange(
                     (v) => _name = v, oldNodeName, value);
 
                 InternalOnNameChanged(oldNodeName);
                 NameChanged?.Invoke(this, new(oldNodeName, value));
 
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
             }
         }
 
@@ -94,11 +95,11 @@ namespace SCR.Tools.TranslationEditor.Data
 
                 if (newValue == _description)
                 {
-                    ChangeTracker.Global.BlankChange();
+                    BlankChange();
                     return;
                 }
 
-                ChangeTracker.Global.TrackValueChange(
+                TrackValueChange(
                     (v) => _description = v, _description, newValue);
             }
         }
@@ -113,23 +114,23 @@ namespace SCR.Tools.TranslationEditor.Data
             {
                 if (value == _state)
                 {
-                    ChangeTracker.Global.BlankChange();
+                    BlankChange();
                     return;
                 }
 
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
 
                 NodeState oldState = _state;
                 NodeState newState = value;
 
-                ChangeTracker.Global.TrackValueChange(
+                TrackValueChange(
                         (v) => _state = v, oldState, newState);
 
                 Parent?.EvaluateState(this);
 
                 NodeStateChanged?.Invoke(this, new(oldState, newState));
 
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
             }
         }
 
@@ -181,7 +182,7 @@ namespace SCR.Tools.TranslationEditor.Data
         {
             if (parent == _parent)
             {
-                ChangeTracker.Global.BlankChange();
+                BlankChange();
                 return;
             }
 
@@ -201,11 +202,11 @@ namespace SCR.Tools.TranslationEditor.Data
         /// <param name="newParent"></param>
         internal void InternalSetParent(ParentNode? newParent, bool updateVersionIndex, int oldParentIndex, int newParentIndex)
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             ParentNode? oldParent = _parent;
 
-            ChangeTracker.Global.TrackValueChange(
+            TrackValueChange(
                 (v) => _parent = v, oldParent, newParent);
 
             // if the two headers are different, invoke the 
@@ -221,7 +222,7 @@ namespace SCR.Tools.TranslationEditor.Data
             oldParent?.InvokeChildrenChanged(oldParentIndex, -1);
             newParent?.InvokeChildrenChanged(-1, newParentIndex);
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
         /// <summary>

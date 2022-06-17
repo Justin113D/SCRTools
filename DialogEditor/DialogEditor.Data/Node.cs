@@ -1,6 +1,6 @@
 ﻿using SCR.Tools.UndoRedo;
 using SCR.Tools.UndoRedo.Collections;
-using System.Collections.Generic;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Collections.ObjectModel;
 
 namespace SCR.Tools.DialogEditor.Data
@@ -32,7 +32,7 @@ namespace SCR.Tools.DialogEditor.Data
             get => _locationX;
             set
             {
-                ChangeTracker.Global.BlankValueChange(
+                BlankValueChange(
                     (v) => _locationX = v, _locationX, value);
             }
         }
@@ -45,7 +45,7 @@ namespace SCR.Tools.DialogEditor.Data
             get => _locationY;
             set
             {
-                ChangeTracker.Global.BlankValueChange(
+                BlankValueChange(
                     (v) => _locationY = v, _locationY, value);
             }
         }
@@ -58,7 +58,7 @@ namespace SCR.Tools.DialogEditor.Data
             get => _rightPortrait;
             set
             {
-                ChangeTracker.Global.BlankValueChange(
+                BlankValueChange(
                     (v) => _rightPortrait = v, _rightPortrait, value);
             }
         }
@@ -95,12 +95,12 @@ namespace SCR.Tools.DialogEditor.Data
         /// </summary>
         public void Disconnect()
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
             foreach (NodeOutput no in _inputs)
                 no.Disconnect();
             foreach (NodeOutput no in _outputs)
                 no.Disconnect();
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
         /// <summary>
@@ -131,12 +131,12 @@ namespace SCR.Tools.DialogEditor.Data
                || !_outputs.Contains(nodeOutput))
                 return false;
 
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             nodeOutput.Disconnect();
             _outputs.Remove(nodeOutput);
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
             return true;
         }
 

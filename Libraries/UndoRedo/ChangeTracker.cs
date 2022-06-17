@@ -9,8 +9,6 @@ namespace SCR.Tools.UndoRedo
     /// </summary>
     public class ChangeTracker
     {
-        public static ChangeTracker Global { get; private set; }
-
         #region Private
 
         /// <summary>
@@ -62,19 +60,9 @@ namespace SCR.Tools.UndoRedo
         }
 
         /// <summary>
-        /// Resets the tracker when the next change occurs (waits for grouping to end)
-        /// </summary>
-        public bool ResetOnNextChange { get; set; }
-
-        /// <summary>
         /// Whether there are any active changes
         /// </summary>
         public bool HasChanges => _currentChangeIndex > -1;
-
-        static ChangeTracker()
-        {
-            Global = new();
-        }
 
         /// <summary>
         /// Creates a new change tracker
@@ -89,7 +77,7 @@ namespace SCR.Tools.UndoRedo
         /// Places the instance into <see cref="Global"/>
         /// </summary>
         public void Use()
-            => Global = this;
+            => GlobalChangeTrackerC.GlobalChangeTracker = this;
 
         /// <summary>
         /// Resets the tracked changes
@@ -108,7 +96,7 @@ namespace SCR.Tools.UndoRedo
             if (_currentGroup != null)
                 throw new InvalidOperationException("Cannot perform Redo while grouping is active! Make sure to stop grouping using EndGroup()!");
 
-            if (_currentChangeIndex == -1 || ResetOnNextChange)
+            if (_currentChangeIndex == -1)
                 return false;
 
             _trackedChanges[_currentChangeIndex].Undo();
@@ -124,7 +112,7 @@ namespace SCR.Tools.UndoRedo
             if (_currentGroup != null)
                 throw new InvalidOperationException("Cannot perform Redo while grouping is active! Make sure to stop grouping using EndGroup()!");
 
-            if (_currentChangeIndex == _trackedChanges.Count - 1 || ResetOnNextChange)
+            if (_currentChangeIndex == _trackedChanges.Count - 1)
                 return false;
 
             _currentChangeIndex++;
@@ -185,7 +173,6 @@ namespace SCR.Tools.UndoRedo
             {
                 _currentGroup.Undo();
                 _currentGroup = null;
-                ResetOnNextChange = false;
                 return;
             }
 
@@ -230,7 +217,7 @@ namespace SCR.Tools.UndoRedo
         /// <param name="newValue">New value (passed on redo)</param>
         /// <exception cref="ArgumentNullException"></exception>
         public void TrackValueChange<T>(Action<T> modifyCallback, T oldValue, T newValue)
-            => TrackChange(new Change(() => modifyCallback(newValue), () => modifyCallback(oldValue)));
+            => TrackChange(new ValueChange<T>(modifyCallback, oldValue, newValue));
 
         /// <summary>
         /// Creates a change that does nothing
@@ -252,14 +239,7 @@ namespace SCR.Tools.UndoRedo
 
         private void ClearRedos()
         {
-            if (ResetOnNextChange)
-            {
-                _currentChangeIndex = 0;
-                ResetOnNextChange = false;
-            }
-            else
-                _currentChangeIndex++;
-
+            _currentChangeIndex++;
             int removeCount = _trackedChanges.Count - _currentChangeIndex;
             if (removeCount > 0)
                 _trackedChanges.RemoveRange(_currentChangeIndex, removeCount);

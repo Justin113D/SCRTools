@@ -1,4 +1,5 @@
 ﻿using SCR.Tools.UndoRedo;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -89,10 +90,10 @@ namespace SCR.Tools.DialogEditor.Data
 
         public static Dialog ReadDialog(string text)
         {
-            ChangeTracker prev = ChangeTracker.Global;
+            ChangeTracker prev = GlobalChangeTracker;
 
             new ChangeTracker().Use();
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             Dialog result = new();
 
@@ -108,7 +109,7 @@ namespace SCR.Tools.DialogEditor.Data
             }
             finally
             {
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
                 prev.Use();
             }
 
@@ -243,10 +244,10 @@ namespace SCR.Tools.DialogEditor.Data
 
         public static DialogOptions ReadDialogOptions(string text, string? basePath = null)
         {
-            ChangeTracker prev = ChangeTracker.Global;
+            ChangeTracker prev = GlobalChangeTracker;
 
             new ChangeTracker().Use();
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             DialogOptions result = new();
 
@@ -275,7 +276,7 @@ namespace SCR.Tools.DialogEditor.Data
             }
             finally
             {
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
                 prev.Use();
             }
 

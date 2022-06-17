@@ -45,7 +45,7 @@ namespace SCR.Tools.DialogEditor.Data
             set
             {
                 string oldValue = _name;
-                ChangeTracker.Global.TrackChange(new ChangedValue<string>(
+                TrackChange(new ChangedValue<string>(
                     (v) => _name = v,
                     oldValue,
                     value
@@ -62,7 +62,7 @@ namespace SCR.Tools.DialogEditor.Data
             set
             {
                 string oldValue = _description;
-                ChangeTracker.Global.TrackChange(new ChangedValue<string>(
+                TrackChange(new ChangedValue<string>(
                     (v) => _description = v,
                     oldValue,
                     value
@@ -79,7 +79,7 @@ namespace SCR.Tools.DialogEditor.Data
             set
             {
                 string oldValue = _author;
-                ChangeTracker.Global.TrackChange(new ChangedValue<string>(
+                TrackChange(new ChangedValue<string>(
                     (v) => _author = v,
                     oldValue,
                     value
@@ -100,7 +100,7 @@ namespace SCR.Tools.DialogEditor.Data
         {
             Node n = new();
 
-            ChangeTracker.Global.TrackChange(new ChangedListSingleEntry<Node>(
+            TrackChange(new ChangedListSingleEntry<Node>(
                 _nodes,
                 n,
                 _nodes.Count,
@@ -115,17 +115,17 @@ namespace SCR.Tools.DialogEditor.Data
         /// </summary>
         public void RemoveNode(Node node)
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
             node.Disconnect();
 
-            ChangeTracker.Global.TrackChange(new ChangedListSingleEntry<Node>(
+            TrackChange(new ChangedListSingleEntry<Node>(
                 _nodes,
                 node,
                 null,
                 null
             ));
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace SCR.Tools.DialogEditor.Data
                 }
             }
 
-            ChangeTracker.Global.TrackChange(new ChangedList<Node>(
+            TrackChange(new ChangedList<Node>(
                 _nodes,
                 sorted.ToArray(),
                 null

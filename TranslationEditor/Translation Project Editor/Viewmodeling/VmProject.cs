@@ -1,9 +1,9 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.UndoRedo;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using SCR.Tools.Viewmodeling;
 using System;
 using System.Collections.ObjectModel;
-using System.IO;
 
 namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
 {
@@ -44,12 +44,12 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
                 if (Header.Author == value)
                     return;
 
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
 
                 Header.Author = value;
                 TrackNotifyProperty(nameof(Author));
 
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
             }
         }
 
@@ -64,12 +64,12 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
                 if (Header.Language == value)
                     return;
 
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
 
                 Header.Language = value;
                 TrackNotifyProperty(nameof(Language));
 
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
             }
         }
 
@@ -157,7 +157,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         /// <param name="propertyName"></param>
         private void TrackNotifyProperty(string propertyName)
         {
-            ChangeTracker.Global.GroupNotifyPropertyChanged(OnPropertyChanged, propertyName);
+            ChangeGroupNotifyPropertyChanged(OnPropertyChanged, propertyName);
         }
 
 
@@ -202,7 +202,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
                     throw new InvalidOperationException();
             }
 
-            ChangeTracker.Global.TrackValueChange(
+            TrackValueChange(
                 callback, oldVal, newVal);
         }
 
@@ -211,12 +211,12 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         /// </summary>
         public void RefreshNodeValues()
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
             foreach (VmNode node in _nodes)
             {
                 node.RefreshNodeValues();
             }
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
         /// <summary>

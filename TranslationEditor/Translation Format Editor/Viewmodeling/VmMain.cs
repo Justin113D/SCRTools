@@ -1,5 +1,6 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.UndoRedo;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using SCR.Tools.Viewmodeling;
 using System.IO;
 
@@ -75,7 +76,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         /// </summary>
         private void Undo()
         {
-            if (FormatTracker.Undo())
+            if (UndoChange())
             {
                 SetMessage("Performed Undo", false);
             }
@@ -86,7 +87,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         /// </summary>
         private void Redo()
         {
-            if (FormatTracker.Redo())
+            if (RedoChange())
             {
                 SetMessage("Performed Redo", false);
             }
@@ -103,7 +104,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             {
                 HeaderNode headerNode = JsonFormatHandler.ReadFormat(content);
 
-                FormatTracker.Reset();
+                ResetTracker();
                 Format = new(this, headerNode);
                 SetMessage("Loaded Format", false);
             }
@@ -123,7 +124,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         public void NewFormat()
         {
-            FormatTracker.Reset();
+            ResetTracker();
             Format = new(this, new());
             SetMessage("Created new Format", false);
         }

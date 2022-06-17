@@ -1,5 +1,6 @@
 ﻿using SCR.Tools.UndoRedo;
 using SCR.Tools.UndoRedo.Collections;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -44,7 +45,7 @@ namespace SCR.Tools.DialogEditor.Data
             get => _name;
             set
             {
-                ChangeTracker.Global.TrackValueChange(
+                TrackValueChange(
                     (v) => _name = v, _name, value);
             }
         }
@@ -58,7 +59,7 @@ namespace SCR.Tools.DialogEditor.Data
             set
             {
                 string oldValue = _description;
-                ChangeTracker.Global.TrackValueChange(
+                TrackValueChange(
                     (v) => _description = v, _description, value);
             }
         }
@@ -72,7 +73,7 @@ namespace SCR.Tools.DialogEditor.Data
             set
             {
                 string oldValue = _author;
-                ChangeTracker.Global.TrackValueChange(
+                TrackValueChange(
                     (v) => _author = v, _author, value);
             }
         }
@@ -102,12 +103,12 @@ namespace SCR.Tools.DialogEditor.Data
         /// </summary>
         public void RemoveNode(Node node)
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
             node.Disconnect();
 
             _nodes.Remove(node);
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
         /// <summary>

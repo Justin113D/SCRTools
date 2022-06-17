@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SCR.Tools.TranslationEditor.Data.Events;
-using SCR.Tools.UndoRedo;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.TranslationEditor.Data.Tests
 {
@@ -9,12 +9,6 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
     {
         private static TestNode CreateNode()
             => new("Test", null);
-
-        private static void Undo()
-            => ChangeTracker.Global.Undo();
-
-        private static void Redo()
-            => ChangeTracker.Global.Redo();
 
         #region Setting in Node
 
@@ -101,7 +95,7 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             ParentNode parent = new("Parent");
 
             node.SetParent(parent);
-            Undo();
+            UndoChange();
 
             Assert.IsNull(node.Parent, "Parent still set");
             Assert.IsFalse(parent.ChildNodes.Contains(node), "Child still part of parent");
@@ -114,8 +108,8 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             ParentNode parent = new("Parent");
 
             node.SetParent(parent);
-            Undo();
-            Redo();
+            UndoChange();
+            RedoChange();
 
             Assert.AreEqual(node.Parent, parent, "Parent not set");
             Assert.IsTrue(parent.ChildNodes.Contains(node), "Child not part of parent");
@@ -126,7 +120,7 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
         {
             TestNode node = CreateNode();
 
-            var pin = ChangeTracker.Global.PinCurrent();
+            var pin = PinCurrentChange();
             node.SetParent(node.Parent);
 
             Assert.IsFalse(pin.CheckValid(), "Re-setting nodes parent to itself should track a blank change, which did not happen");
@@ -147,12 +141,12 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             Assert.AreEqual(node.Parent, parent, "Parent not set");
             Assert.IsTrue(parent.ChildNodes.Contains(node), "Child not part of parent");
 
-            Undo();
+            UndoChange();
 
             Assert.IsNull(node.Parent, "Parent still set");
             Assert.IsFalse(parent.ChildNodes.Contains(node), "Child still part of parent");
 
-            Redo();
+            RedoChange();
 
             Assert.AreEqual(node.Parent, parent, "Parent not set");
             Assert.IsTrue(parent.ChildNodes.Contains(node), "Child not part of parent");
@@ -190,11 +184,11 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             Assert.IsNull(node.Parent, "Parent still set");
             Assert.IsFalse(parent.ChildNodes.Contains(node), "Child still part of parent");
 
-            Undo();
+            UndoChange();
             Assert.AreEqual(node.Parent, parent, "Parent not set");
             Assert.IsTrue(parent.ChildNodes.Contains(node), "Child not part of parent");
 
-            Redo();
+            RedoChange();
             Assert.IsNull(node.Parent, "Parent still set");
             Assert.IsFalse(parent.ChildNodes.Contains(node), "Child still part of parent");
         }
@@ -213,13 +207,13 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             Assert.IsTrue(parentTarget.ChildNodes.Contains(node), "Child not part of parent");
             Assert.IsFalse(parent.ChildNodes.Contains(node), "Child still part of parent");
 
-            Undo();
+            UndoChange();
 
             Assert.AreEqual(node.Parent, parent, "Parent not set");
             Assert.IsTrue(parent.ChildNodes.Contains(node), "Child not part of parent");
             Assert.IsFalse(parentTarget.ChildNodes.Contains(node), "Child still part of parent");
 
-            Redo();
+            RedoChange();
 
             Assert.AreEqual(node.Parent, parentTarget, "Parent not set");
             Assert.IsTrue(parentTarget.ChildNodes.Contains(node), "Child not part of parent");
@@ -243,12 +237,12 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             Assert.AreEqual(node2, parent.ChildNodes[0]);
             Assert.AreEqual(node, parent.ChildNodes[1]);
 
-            Undo();
+            UndoChange();
 
             Assert.AreEqual(node, parent.ChildNodes[0]);
             Assert.IsNull(node2.Parent);
 
-            Redo();
+            RedoChange();
 
             Assert.AreEqual(node2, parent.ChildNodes[0]);
             Assert.AreEqual(node, parent.ChildNodes[1]);

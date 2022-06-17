@@ -1,4 +1,5 @@
-﻿using System;
+﻿using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace SCR.Tools.UndoRedo.Collections
             {
                 T previousItem = _list[index];
 
-                ChangeTracker.Global.TrackChange(
+                TrackChange(
                     () => _list[index] = value,
                     () => _list[index] = previousItem);
             }
@@ -38,24 +39,24 @@ namespace SCR.Tools.UndoRedo.Collections
 
         public void Add(T item)
         {
-            ChangeTracker.Global.TrackChange(
+            TrackChange(
                 () => _list.Add(item),
                 () => _list.Remove(item));
         }
 
         public void AddRange(IEnumerable<T> range)
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
             foreach (T item in range)
             {
                 Add(item);
             }
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
         public void Insert(int index, T item)
         {
-            ChangeTracker.Global.TrackChange(
+            TrackChange(
                 () => _list.Insert(index, item),
                 () => _list.RemoveAt(index));
         }
@@ -66,11 +67,11 @@ namespace SCR.Tools.UndoRedo.Collections
 
             if (index < 0)
             {
-                ChangeTracker.Global.BlankChange();
+                BlankChange();
                 return false;
             }
 
-            ChangeTracker.Global.TrackChange(
+            TrackChange(
                 () => _list.RemoveAt(index),
                 () => _list.Insert(index, item));
 
@@ -81,7 +82,7 @@ namespace SCR.Tools.UndoRedo.Collections
         {
             T item = this[index];
 
-            ChangeTracker.Global.TrackChange(
+            TrackChange(
                 () => _list.RemoveAt(index),
                 () => _list.Insert(index, item));
         }
@@ -90,7 +91,7 @@ namespace SCR.Tools.UndoRedo.Collections
         {
             T[] contents = _list.ToArray();
 
-            ChangeTracker.Global.TrackChange(
+            TrackChange(
                 () => _list.Clear(),
                 () =>
                 {

@@ -1,5 +1,6 @@
 ﻿using SCR.Tools.UndoRedo;
 using SCR.Tools.UndoRedo.Collections;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Collections.ObjectModel;
 using System.Text;
 using SCR.Tools.Common;
@@ -17,8 +18,17 @@ namespace SCR.Tools.TranslationEditor.Data
 
         private string _author;
         private string _language;
+
+        /// <summary>
+        /// <see cref="_stringNodes"/> without tracking
+        /// </summary>
         private readonly SortedList<string, StringNode> _internalStringNodes; // ONLY USED FOR READING!
         private readonly TrackDictionary<string, StringNode> _stringNodes;
+
+        /// <summary>
+        /// <see cref="_versions"/> without tracking
+        /// </summary>
+        private readonly List<Version> _internalVersions;
         private readonly TrackList<Version> _versions;
 
         #endregion
@@ -35,7 +45,7 @@ namespace SCR.Tools.TranslationEditor.Data
             get => _author;
             set
             {
-                ChangeTracker.Global.TrackValueChange(
+                TrackValueChange(
                     (v) => _author = v, _author, value.Trim());
             }
         }
@@ -48,7 +58,7 @@ namespace SCR.Tools.TranslationEditor.Data
             get => _language;
             set
             {
-                ChangeTracker.Global.TrackValueChange(
+                TrackValueChange(
                     (v) => _language = v, _language, value.Trim());
             }
         }
@@ -73,16 +83,16 @@ namespace SCR.Tools.TranslationEditor.Data
             {
                 if (value <= _versions[^1])
                 {
-                    ChangeTracker.Global.BlankChange();
+                    BlankChange();
                     return;
                 }
 
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
 
                 RemoveUnusedVersions();
                 _versions.Add(value);
 
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
             }
         }
 
@@ -107,9 +117,11 @@ namespace SCR.Tools.TranslationEditor.Data
             _stringNodes = new(_internalStringNodes);
             StringNodes = new(_internalStringNodes.Values);
 
-            _versions = new();
-            _versions.Add(new(0, 0, 1));
-            Versions = new(_versions);
+            _internalVersions = new();
+            _internalVersions.Add(new(0, 0, 1));
+
+            _versions = new(_internalVersions);
+            Versions = new(_internalVersions);
 
         }
 
@@ -121,16 +133,16 @@ namespace SCR.Tools.TranslationEditor.Data
         /// </summary>
         public void ResetAllStrings()
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
             foreach (StringNode n in _stringNodes.Values)
                 n.ResetValue();
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
 
         private void RemoveUnusedVersions()
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             bool finished = false;
             while (!finished)
@@ -155,7 +167,7 @@ namespace SCR.Tools.TranslationEditor.Data
                 _versions.RemoveAt(currentIndex);
             }
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
         public string GetFreeStringNodeName(string name)
@@ -167,7 +179,7 @@ namespace SCR.Tools.TranslationEditor.Data
 
         internal void RemoveStringNodes(Node node)
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             StringNode[] stringNodes = GetStringNodes(node);
             foreach (StringNode stringNode in stringNodes)
@@ -176,12 +188,12 @@ namespace SCR.Tools.TranslationEditor.Data
                 _stringNodes.Remove(key);
             }
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
         internal void AddStringNodes(Node node, bool updateVersionIndex)
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             StringNode[] stringNodes = GetStringNodes(node);
             int currentVersionIndex = _versions.Count - 1;
@@ -200,7 +212,7 @@ namespace SCR.Tools.TranslationEditor.Data
                     stringNode.VersionIndex = currentVersionIndex;
             }
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
         internal void StringNodeChangeKey(StringNode node, string oldName)
@@ -227,8 +239,8 @@ namespace SCR.Tools.TranslationEditor.Data
         /// <param name="versions"></param>
         internal void SetVersions(Version[] versions)
         {
-            _versions.Clear();
-            _versions.AddRange(versions);
+            _internalVersions.Clear();
+            _internalVersions.AddRange(versions);
         }
 
         private static StringNode[] GetStringNodes(Node node)
@@ -346,7 +358,7 @@ namespace SCR.Tools.TranslationEditor.Data
 
         public void LoadProject(string project)
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
             try
             {
                 using StringReader reader = new(project);
@@ -413,11 +425,11 @@ namespace SCR.Tools.TranslationEditor.Data
             }
             catch
             {
-                ChangeTracker.Global.EndGroup(true);
+                EndChangeGroup(true);
                 throw;
             }
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
 
@@ -436,7 +448,7 @@ namespace SCR.Tools.TranslationEditor.Data
 
         public void ImportLanguageData(string keys, string values)
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             try
             {
@@ -470,11 +482,11 @@ namespace SCR.Tools.TranslationEditor.Data
             }
             catch
             {
-                ChangeTracker.Global.EndGroup(true);
+                EndChangeGroup(true);
                 throw;
             }
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
         #endregion

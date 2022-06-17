@@ -1,6 +1,7 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling;
 using SCR.Tools.UndoRedo;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Windows;
 using Window = SCR.Tools.WPF.Styling.Window;
 
@@ -22,13 +23,15 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.Windows
         private void CreateDatacontext()
         {
             ChangeTracker changeTracker = new();
-            ChangeTracker prev = ChangeTracker.Global;
+            ChangeTracker prev = GlobalChangeTracker;
             changeTracker.Use();
 
             HeaderNode header = new();
             ParentNode parent = new("Grouping", "This is a grouping, containing string and more groupings");
-            StringNode node = new("String", "Default Text", 0, "This is a string, which consists of a unique name/key and a text, which is to be translated by you.\n Below this text, you can see its default value");
-            node.NodeValue = "Custom Text";
+            StringNode node = new("String", "Default Text", 0, "This is a string, which consists of a unique name/key and a text, which is to be translated by you.\n Below this text, you can see its default value")
+            {
+                NodeValue = "Custom Text"
+            };
 
             parent.AddChildNode(node);
             header.AddChildNode(parent);
@@ -58,7 +61,5 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.Windows
             Hide();
             _opened = false;
         }
-
-
     }
 }

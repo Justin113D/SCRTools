@@ -1,4 +1,5 @@
 ﻿using SCR.Tools.UndoRedo;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.DialogEditor.Data
 {
@@ -33,7 +34,7 @@ namespace SCR.Tools.DialogEditor.Data
             get => _expression;
             set
             {
-                ChangeTracker.Global.BlankValueChange(
+                BlankValueChange(
                     (v) => _expression = v, _expression, value);
             }
         }
@@ -46,7 +47,7 @@ namespace SCR.Tools.DialogEditor.Data
             get => _character;
             set
             {
-                ChangeTracker.Global.BlankValueChange(
+                BlankValueChange(
                     (v) => _character = v, _character, value);
             }
         }
@@ -59,7 +60,7 @@ namespace SCR.Tools.DialogEditor.Data
             get => _icon;
             set
             {
-                ChangeTracker.Global.BlankValueChange(
+                BlankValueChange(
                     (v) => _icon = v, _icon, value);
             }
         }
@@ -72,7 +73,7 @@ namespace SCR.Tools.DialogEditor.Data
             get => _text;
             set
             {
-                ChangeTracker.Global.BlankValueChange(
+                BlankValueChange(
                     (v) => _text = v, _text, value);
             }
         }
@@ -85,7 +86,7 @@ namespace SCR.Tools.DialogEditor.Data
             get => _keepEnabled;
             set
             {
-                ChangeTracker.Global.BlankValueChange(
+                BlankValueChange(
                     (v) => _keepEnabled = v, _keepEnabled, value);
             }
         }
@@ -98,7 +99,7 @@ namespace SCR.Tools.DialogEditor.Data
             get => _condition;
             private set
             {
-                ChangeTracker.Global.BlankValueChange(
+                BlankValueChange(
                     (v) => _condition = v, _condition, value);
             }
         }
@@ -111,7 +112,7 @@ namespace SCR.Tools.DialogEditor.Data
             get => _event;
             set
             {
-                ChangeTracker.Global.BlankValueChange(
+                BlankValueChange(
                     (v) => _event = v, _event, value);
             }
         }
@@ -126,11 +127,11 @@ namespace SCR.Tools.DialogEditor.Data
             {
                 if(value == _output)
                 {
-                    ChangeTracker.Global.BlankChange();
+                    BlankChange();
                 }
                 else
                 {
-                    ChangeTracker.Global.TrackValueChange(
+                    TrackValueChange(
                         (v) => _output = v, _output, value);
                 }
                 
@@ -175,13 +176,13 @@ namespace SCR.Tools.DialogEditor.Data
             if (node?.Outputs.Contains(this) == true)
                 return false;
 
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             Output?.RemoveInput(this);
             Output = node;
             Output?.AddInput(this);
 
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
 
             return true;
         }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SCR.Tools.UndoRedo;
 using System;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.TranslationEditor.Data.Tests
 {
@@ -10,18 +10,12 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
         private static TestNode CreateNode()
             => new("Test", null);
 
-        private static void Undo()
-            => ChangeTracker.Global.Undo();
-
-        private static void Redo()
-            => ChangeTracker.Global.Redo();
-
         #region Constructor
 
         [TestMethod]
         public void Constructor_EnsureNoChangeTrack()
         {
-            var pin = ChangeTracker.Global.PinCurrent();
+            var pin = PinCurrentChange();
             TestNode node = new("Test", "Test Description");
             Assert.IsTrue(pin.CheckValid(), "A change was tracked where no change should be tracked");
         }
@@ -78,7 +72,7 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             node.Name = "Test2";
             Assert.AreEqual(node.Name, "Test2", "Setting failed");
         }
-        
+
         [TestMethod]
         public void Name_Trimming()
         {
@@ -150,7 +144,7 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             TestNode node = CreateNode();
             string previousName = node.Name;
             node.Name += "_";
-            Undo();
+            UndoChange();
 
             Assert.AreEqual(node.Name, previousName, "Undo failed");
         }
@@ -161,8 +155,8 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             TestNode node = CreateNode();
             string newName = node.Name + "_";
             node.Name = newName;
-            Undo();
-            Redo();
+            UndoChange();
+            RedoChange();
 
             Assert.AreEqual(node.Name, newName, "Redo failed");
         }
@@ -172,7 +166,7 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
         {
             TestNode node = CreateNode();
 
-            var pin = ChangeTracker.Global.PinCurrent();
+            var pin = PinCurrentChange();
             node.Name = node.Name;
 
             Assert.IsFalse(pin.CheckValid(), "Re-setting name to itself should track a blank change, which did not happen");
@@ -217,7 +211,7 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
 
             string? previous = node.Description;
             node.Description += "_";
-            Undo();
+            UndoChange();
 
             Assert.AreEqual(node.Description, previous, "Undo failed");
         }
@@ -229,8 +223,8 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             TestNode node = CreateNode();
 
             node.Description = TestDescription;
-            Undo();
-            Redo();
+            UndoChange();
+            RedoChange();
 
             Assert.AreEqual(node.Description, TestDescription, "Redo failed");
         }
@@ -240,7 +234,7 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
         {
             TestNode node = CreateNode();
 
-            var pin = ChangeTracker.Global.PinCurrent();
+            var pin = PinCurrentChange();
             node.Description = node.Description;
 
             Assert.IsFalse(pin.CheckValid(), "Re-setting description to itself should track a blank change, which did not happen");
@@ -268,7 +262,7 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             NodeState previousState = node.State;
 
             node.SetState(NodeState.Translated);
-            Undo();
+            UndoChange();
 
             Assert.AreEqual(node.State, previousState, "Undo failed");
         }
@@ -281,8 +275,8 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             TestNode node = CreateNode();
 
             node.SetState(newState);
-            Undo();
-            Redo();
+            UndoChange();
+            RedoChange();
 
             Assert.AreEqual(node.State, newState, "Redo failed");
         }
@@ -326,7 +320,7 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
         {
             TestNode node = CreateNode();
 
-            var pin = ChangeTracker.Global.PinCurrent();
+            var pin = PinCurrentChange();
             node.SetState(node.State);
 
             Assert.IsFalse(pin.CheckValid(), "Re-setting state to itself should track a blank change, which did not happen");

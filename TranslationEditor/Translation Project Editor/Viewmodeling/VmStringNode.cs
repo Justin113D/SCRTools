@@ -1,6 +1,7 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.TranslationEditor.Data.Events;
 using SCR.Tools.UndoRedo;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using SCR.Tools.Viewmodeling;
 
 namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
@@ -22,11 +23,11 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
                 if (StringNode.NodeValue == value)
                     return;
 
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
                 StringNode.NodeValue = value;
                 TrackNotifyProperty(nameof(NodeValue));
                 TrackNotifyProperty(nameof(KeepDefault));
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
             }
         }
 
@@ -38,11 +39,11 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
                 if (StringNode.KeepDefault == value)
                     return;
 
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
                 StringNode.KeepDefault = value;
                 TrackNotifyProperty(nameof(KeepDefault));
                 TrackNotifyProperty(nameof(NodeValue));
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
             }
         }
 
@@ -66,10 +67,10 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
 
         private void UpdateNodeCounter(Node node, NodeStateChangedEventArgs args)
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
             _project.DecreaseNodeCounter(args.OldState);
             _project.IncreaseNodeCounter(args.NewState);
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
         public override void RefreshNodeValues()

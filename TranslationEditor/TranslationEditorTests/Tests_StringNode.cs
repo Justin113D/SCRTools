@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SCR.Tools.UndoRedo;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.TranslationEditor.Data.Tests
 {
@@ -9,12 +9,6 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
         private static StringNode CreateNode()
             => new("Test", "TestValue", 3);
 
-        private static void Undo()
-            => ChangeTracker.Global.Undo();
-
-        private static void Redo()
-            => ChangeTracker.Global.Redo();
-
         [TestMethod]
         public void StringNode_Constructor()
         {
@@ -22,7 +16,7 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             const string testValueUntrimmed = $"  {testValue}  ";
             const int version = 3;
 
-            var pin = ChangeTracker.Global.PinCurrent();
+            var pin = PinCurrentChange();
 
             StringNode node = new("Test", testValue, version);
             StringNode trimmedNode = new("Test", testValueUntrimmed, version);
@@ -56,7 +50,7 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             StringNode node = CreateNode();
             int previousVersion = node.VersionIndex;
             node.VersionIndex++;
-            Undo();
+            UndoChange();
             Assert.AreEqual(node.VersionIndex, previousVersion, "Undo failed");
         }
 
@@ -66,9 +60,9 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             const int version = 10;
             StringNode node = CreateNode();
             node.VersionIndex = version;
-            Undo();
-            Redo();
-         
+            UndoChange();
+            RedoChange();
+
             Assert.AreEqual(node.VersionIndex, version, "Setting version failed");
         }
 
@@ -76,7 +70,7 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
         public void StringNode_VersionIndex_EnsureChange()
         {
             StringNode node = CreateNode();
-            var pin = ChangeTracker.Global.PinCurrent();
+            var pin = PinCurrentChange();
             node.VersionIndex = node.VersionIndex;
             Assert.IsFalse(pin.CheckValid(), "No Change created");
         }
@@ -126,7 +120,7 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             StringNode node = CreateNode();
             int previousChangedVersion = node.ChangedVersionIndex;
             node.ChangedVersionIndex = node.VersionIndex;
-            Undo();
+            UndoChange();
             Assert.AreEqual(node.ChangedVersionIndex, previousChangedVersion, "Undo failed");
         }
 
@@ -135,8 +129,8 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
         {
             StringNode node = CreateNode();
             node.ChangedVersionIndex = node.VersionIndex;
-            Undo();
-            Redo();
+            UndoChange();
+            RedoChange();
             Assert.AreEqual(node.ChangedVersionIndex, node.VersionIndex, "Redo failed");
         }
 
@@ -144,7 +138,7 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
         public void StringNode_ChangedVersion_EnsureChange()
         {
             StringNode node = CreateNode();
-            var pin = ChangeTracker.Global.PinCurrent();
+            var pin = PinCurrentChange();
             node.ChangedVersionIndex = node.ChangedVersionIndex;
             Assert.IsFalse(pin.CheckValid(), "No change tracked");
         }
@@ -190,13 +184,13 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
         public void StringNode_KeepDefault_Undo()
         {
             StringNode node = CreateNode();
-            
+
             bool oldvalue = node.KeepDefault;
             int oldChangedVersionIndex = node.ChangedVersionIndex;
             NodeState oldState = node.State;
 
             node.KeepDefault = !node.KeepDefault;
-            Undo();
+            UndoChange();
 
             Assert.AreEqual(node.KeepDefault, oldvalue, "Undo failed");
             Assert.AreEqual(node.ChangedVersionIndex, oldChangedVersionIndex, "Failed to undo ChangedVersionIndex");
@@ -209,8 +203,8 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             const bool newValue = true;
             StringNode node = CreateNode();
             node.KeepDefault = newValue;
-            Undo();
-            Redo();
+            UndoChange();
+            RedoChange();
             Assert.AreEqual(node.KeepDefault, newValue);
             Assert.AreEqual(node.ChangedVersionIndex, node.VersionIndex, "Failed to redo ChangedVersionIndex");
             Assert.AreEqual(node.State, NodeState.Translated, "Failed to redo State");
@@ -250,7 +244,7 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             int oldChangedVersionIndex = node.ChangedVersionIndex;
             node.NodeValue += "+";
 
-            Undo();
+            UndoChange();
 
             Assert.AreEqual(node.NodeValue, oldValue, "Failed to undo Node Value");
             Assert.AreEqual(node.ChangedVersionIndex, oldChangedVersionIndex, "Failed to undo Changed version index");
@@ -263,8 +257,8 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
             string newValue = node.NodeValue + "+";
             node.NodeValue = newValue;
 
-            Undo();
-            Redo();
+            UndoChange();
+            RedoChange();
 
             Assert.AreEqual(node.NodeValue, newValue, "Failed to redo node value");
             Assert.AreEqual(node.ChangedVersionIndex, node.VersionIndex, "Failed to redo Changed version indedx");
@@ -274,7 +268,7 @@ namespace SCR.Tools.TranslationEditor.Data.Tests
         public void StringNode_NodeValue_EnsureChange()
         {
             StringNode node = CreateNode();
-            var pin = ChangeTracker.Global.PinCurrent();
+            var pin = PinCurrentChange();
             node.NodeValue = node.NodeValue;
             Assert.IsFalse(pin.CheckValid(), "Failed to track change");
         }

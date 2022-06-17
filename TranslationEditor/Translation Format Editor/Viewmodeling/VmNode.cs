@@ -1,6 +1,7 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.UndoRedo;
 using SCR.Tools.Viewmodeling;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 {
@@ -32,12 +33,12 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 if (Node.Name == value)
                     return;
 
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
 
                 Node.Name = value;
                 TrackNotifyProperty(nameof(Name));
 
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
             }
         }
 
@@ -52,12 +53,12 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 if (Node.Description == value)
                     return;
 
-                ChangeTracker.Global.BeginGroup();
+                BeginChangeGroup();
 
                 Node.Description = value;
                 TrackNotifyProperty(nameof(Description));
 
-                ChangeTracker.Global.EndGroup();
+                EndChangeGroup();
             }
         }
 
@@ -140,7 +141,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         public void TrackNotifyProperty(string propertyName)
         {
-            ChangeTracker.Global.GroupNotifyPropertyChanged(OnPropertyChanged, propertyName);
+            ChangeGroupNotifyPropertyChanged(OnPropertyChanged, propertyName);
         }
 
         public override string ToString()
@@ -160,7 +161,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         /// <param name="multi">Whether to keep previous selected nodes</param>
         public void Select(bool multi)
         {
-            ChangeTracker.Global.BeginGroup();
+            BeginChangeGroup();
 
             if (!multi)
             {
@@ -173,7 +174,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             }
 
             Active = true;
-            ChangeTracker.Global.EndGroup();
+            EndChangeGroup();
         }
 
         /// <summary>

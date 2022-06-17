@@ -95,10 +95,10 @@ namespace SCR.Tools.DialogEditor.Viewmodel
             get => Data.Name;
             set
             {
-                Tracker.BeginGroup();
+                Tracker.BeginChangeGroup();
                 Data.Name = value;
-                Tracker.PostGroupAction(() => OnPropertyChanged(nameof(Name)));
-                Tracker.EndGroup();
+                Tracker.PostChangeGroupAction(() => OnPropertyChanged(nameof(Name)));
+                Tracker.EndChangeGroup();
             }
         }
 
@@ -107,10 +107,10 @@ namespace SCR.Tools.DialogEditor.Viewmodel
             get => Data.Author;
             set
             {
-                Tracker.BeginGroup();
+                Tracker.BeginChangeGroup();
                 Data.Author = value;
-                Tracker.PostGroupAction(() => OnPropertyChanged(nameof(Author)));
-                Tracker.EndGroup();
+                Tracker.PostChangeGroupAction(() => OnPropertyChanged(nameof(Author)));
+                Tracker.EndChangeGroup();
             }
         }
 
@@ -119,10 +119,10 @@ namespace SCR.Tools.DialogEditor.Viewmodel
             get => Data.Description;
             set
             {
-                Tracker.BeginGroup();
+                Tracker.BeginChangeGroup();
                 Data.Description = value;
-                Tracker.PostGroupAction(() => OnPropertyChanged(nameof(Description)));
-                Tracker.EndGroup();
+                Tracker.PostChangeGroupAction(() => OnPropertyChanged(nameof(Description)));
+                Tracker.EndChangeGroup();
             }
         }
 
@@ -143,7 +143,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
 
                 VmNode oldActive = _active;
 
-                Tracker.BeginGroup();
+                Tracker.BeginChangeGroup();
 
                 Tracker.TrackChange(new ChangedValue<VmNode>(
                     (v) => _active = v,
@@ -151,14 +151,14 @@ namespace SCR.Tools.DialogEditor.Viewmodel
                     value
                 ));
 
-                Tracker.PostGroupAction(() =>
+                Tracker.PostChangeGroupAction(() =>
                 {
                     oldActive?.RefreshActive();
                     value?.RefreshActive();
                     OnPropertyChanged(nameof(ListActive));
                 });
 
-                Tracker.EndGroup();
+                Tracker.EndChangeGroup();
             }
         }
 
@@ -194,7 +194,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
                     return;
 
                 if(value != null)
-                    Tracker.BeginGroup();
+                    Tracker.BeginChangeGroup();
                 else
                 {
                     if(_moved)
@@ -206,7 +206,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
                     else if(Selected.Count > 1)
                         Select(_grabbed, false);
 
-                    Tracker.EndGroup();
+                    Tracker.EndChangeGroup();
                 }
 
                 _grabbed = value;
@@ -227,7 +227,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
 
                 if(value != null)
                 {
-                    Tracker.BeginGroup();
+                    Tracker.BeginChangeGroup();
                     _wasConnected = value.VmOutput;
                     value.VmOutput = null;
                     value.Displaying = true;
@@ -307,7 +307,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
         /// <param name="multiModifier">Whether the shift/multi key was pressed</param>
         private void Select(VmNode select, bool multiModifier)
         {
-            Tracker.BeginGroup();
+            Tracker.BeginChangeGroup();
 
             if(multiModifier)
             {
@@ -331,14 +331,14 @@ namespace SCR.Tools.DialogEditor.Viewmodel
                     new VmNode[] { select },
                     () => select.RefreshSelected()));
 
-                Tracker.PostGroupAction(() =>
+                Tracker.PostChangeGroupAction(() =>
                 {
                     foreach(var o in OldContents)
                         o.RefreshSelected();
                 });
 
             }
-            Tracker.EndGroup();
+            Tracker.EndChangeGroup();
         }
 
         /// <summary>
@@ -427,7 +427,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
             if(Grabbed != null || Connecting != null)
                 return;
 
-            Tracker.BeginGroup();
+            Tracker.BeginChangeGroup();
 
             Node node = Data.CreateNode();
 
@@ -438,7 +438,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
                 null
             ));
 
-            Tracker.EndGroup();
+            Tracker.EndChangeGroup();
 
             Main.SetFeedback("Added node", true);
         }
@@ -451,7 +451,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
             if(Grabbed != null || Connecting != null || Selected.Count == 0)
                 return;
 
-            Tracker.BeginGroup();
+            Tracker.BeginChangeGroup();
 
             if(Active.IsSelected)
                 Active = null;
@@ -486,7 +486,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
                 null
             ));
 
-            Tracker.EndGroup();
+            Tracker.EndChangeGroup();
 
             if(toRemove.Length > 1)
                 Main.SetFeedback($"Deleted {toRemove.Length} nodes", true);
@@ -534,7 +534,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
             VmNode start = Nodes.First(x => x.Data == Data.StartNode);
             Point offset = new(-start.Position.X, -start.Position.Y);
 
-            Tracker.BeginGroup();
+            Tracker.BeginChangeGroup();
 
             foreach(var n in Nodes)
             {
@@ -542,7 +542,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
                 n.UpdateDataPosition();
             }
 
-            Tracker.EndGroup();
+            Tracker.EndChangeGroup();
 
             Main.SetFeedback("Recentered node tree", true);
         }
@@ -552,7 +552,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
         /// </summary>
         private void Sort()
         {
-            Tracker.BeginGroup();
+            Tracker.BeginChangeGroup();
 
             Data.Sort();
 
@@ -564,7 +564,7 @@ namespace SCR.Tools.DialogEditor.Viewmodel
                 new ObservableCollection<VmNode>(Nodes.OrderBy(x => Data.Nodes.IndexOf(x.Data)))
             ));
 
-            Tracker.EndGroup();
+            Tracker.EndChangeGroup();
 
             Main.SetFeedback("Sorted nodes", true);
         }
