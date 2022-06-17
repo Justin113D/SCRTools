@@ -1,4 +1,4 @@
-﻿namespace SCR.Tools.UndoRedo
+﻿namespace SCR.Tools.UndoRedo.Trackable
 {
     /// <summary>
     /// Change tracker base interface

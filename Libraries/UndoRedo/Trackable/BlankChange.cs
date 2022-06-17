@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SCR.Tools.UndoRedo
+namespace SCR.Tools.UndoRedo.Trackable
 {
-    public struct BlankChange : ITrackable
+    internal struct BlankChange : ITrackable
     {
         public void Redo() { }
 

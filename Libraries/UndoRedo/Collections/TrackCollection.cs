@@ -22,9 +22,8 @@ namespace SCR.Tools.UndoRedo.Collections
         public void Add(T item)
         {
             ChangeTracker.Global.TrackChange(
-                new Change(
-                    () => _collection.Add(item),
-                    () => _collection.Remove(item)));
+                () => _collection.Add(item),
+                () => _collection.Remove(item));
         }
 
         public void Clear()
@@ -32,15 +31,14 @@ namespace SCR.Tools.UndoRedo.Collections
             T[] contents = _collection.ToArray();
 
             ChangeTracker.Global.TrackChange(
-                new Change(
-                    () => _collection.Clear(),
-                    () =>
+                () => _collection.Clear(),
+                () =>
+                {
+                    foreach (T item in contents)
                     {
-                        foreach (T item in contents)
-                        {
-                            _collection.Add(item);
-                        }
-                    }));
+                        _collection.Add(item);
+                    }
+                });
         }
 
         public bool Contains(T item)
@@ -60,9 +58,8 @@ namespace SCR.Tools.UndoRedo.Collections
             }
 
             ChangeTracker.Global.TrackChange(
-                new Change(
-                    () => _collection.Remove(item),
-                    () => _collection.Add(item)));
+                () => _collection.Remove(item), 
+                () => _collection.Add(item));
 
             return true;
         }

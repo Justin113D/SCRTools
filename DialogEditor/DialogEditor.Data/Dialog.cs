@@ -44,12 +44,8 @@ namespace SCR.Tools.DialogEditor.Data
             get => _name;
             set
             {
-                string oldValue = _name;
-                ChangeTracker.Global.TrackChange(new ChangedValue<string>(
-                    (v) => _name = v,
-                    oldValue,
-                    value
-                ));
+                ChangeTracker.Global.TrackValueChange(
+                    (v) => _name = v, _name, value);
             }
         }
 
@@ -62,11 +58,8 @@ namespace SCR.Tools.DialogEditor.Data
             set
             {
                 string oldValue = _description;
-                ChangeTracker.Global.TrackChange(new ChangedValue<string>(
-                    (v) => _description = v,
-                    oldValue,
-                    value
-                ));
+                ChangeTracker.Global.TrackValueChange(
+                    (v) => _description = v, _description, value);
             }
         }
 
@@ -79,11 +72,8 @@ namespace SCR.Tools.DialogEditor.Data
             set
             {
                 string oldValue = _author;
-                ChangeTracker.Global.TrackChange(new ChangedValue<string>(
-                    (v) => _author = v,
-                    oldValue,
-                    value
-                ));
+                ChangeTracker.Global.TrackValueChange(
+                    (v) => _author = v, _author, value);
             }
         }
 

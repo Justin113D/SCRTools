@@ -127,14 +127,13 @@ namespace SCR.Tools.DialogEditor.Data
                 if(value == _output)
                 {
                     ChangeTracker.Global.BlankChange();
-                    return;
+                }
+                else
+                {
+                    ChangeTracker.Global.TrackValueChange(
+                        (v) => _output = v, _output, value);
                 }
                 
-                ChangeTracker.Global.TrackChange(
-                    new ChangedValue<Node?>(
-                        (v) => _output = v,
-                        _output,
-                        value));
             }
         }
 

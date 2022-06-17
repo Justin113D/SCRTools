@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace SCR.Tools.UndoRedo
+namespace SCR.Tools.UndoRedo.Trackable
 {
     /// <summary>
     /// Calls an action upon undo/redo. Passes "false" for undo and "true" for redo
     /// </summary>
-    public struct Change : ITrackable
+    internal struct Change : ITrackable
     {
         private readonly Action _redoCallback;
 
@@ -23,10 +23,10 @@ namespace SCR.Tools.UndoRedo
             _undoCallback = undoCallback ?? throw new ArgumentNullException(nameof(undoCallback));
         }
 
-        public void Redo() 
+        public void Redo()
             => _redoCallback.Invoke();
 
-        public void Undo() 
+        public void Undo()
             => _undoCallback();
 
     }

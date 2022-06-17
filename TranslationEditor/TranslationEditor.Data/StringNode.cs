@@ -25,12 +25,8 @@ namespace SCR.Tools.TranslationEditor.Data
             {
                 ChangeTracker.Global.BeginGroup();
 
-                ChangeTracker.Global.TrackChange(
-                    new ChangedValue<string>(
-                        (v) => _defaultValue = v,
-                        _defaultValue,
-                        value.Trim()
-                ));
+                ChangeTracker.Global.TrackValueChange(
+                    (v) => _defaultValue = v, _defaultValue, value.Trim());
 
                 var header = Header;
                 if(header != null)
@@ -55,12 +51,8 @@ namespace SCR.Tools.TranslationEditor.Data
             get => _versionIndex;
             set
             {
-                ChangeTracker.Global.TrackChange(
-                    new ChangedValue<int>(
-                        (v) => _versionIndex = v,
-                        _versionIndex,
-                        value
-                ));
+                ChangeTracker.Global.TrackValueChange(
+                    (v) => _versionIndex = v, _versionIndex, value);
             }
         }
 
@@ -83,12 +75,8 @@ namespace SCR.Tools.TranslationEditor.Data
 
                 ChangeTracker.Global.BeginGroup();
 
-                ChangeTracker.Global.TrackChange(
-                    new ChangedValue<int>(
-                        (v) => _changedVersionIndex = v,
-                        _changedVersionIndex,
-                        value
-                ));
+                ChangeTracker.Global.TrackValueChange(
+                    (v) => _changedVersionIndex = v, _changedVersionIndex, value);
 
                 if (value == -1)
                 {
@@ -179,22 +167,14 @@ namespace SCR.Tools.TranslationEditor.Data
 
         private void SetTrackNodeValue(string value)
         {
-            ChangeTracker.Global.TrackChange(
-                new ChangedValue<string>(
-                    (v) => _nodeValue = v,
-                    _nodeValue,
-                    value.Trim()
-            ));
+            ChangeTracker.Global.TrackValueChange(
+                (v) => _nodeValue = v, _nodeValue, value.Trim());
         }
 
         private void SetTrackKeepDefault(bool value)
         {
-            ChangeTracker.Global.TrackChange(
-                    new ChangedValue<bool>(
-                        (v) => _keepDefault = v,
-                        _keepDefault,
-                        value
-                ));
+            ChangeTracker.Global.TrackValueChange(
+                (v) => _keepDefault = v, _keepDefault, value);
         }
 
         internal void ImportValue(string value, int changedVersionIndex, bool keepDefault)

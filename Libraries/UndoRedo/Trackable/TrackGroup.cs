@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SCR.Tools.UndoRedo
+namespace SCR.Tools.UndoRedo.Trackable
 {
     internal class TrackGroup : ITrackable
     {

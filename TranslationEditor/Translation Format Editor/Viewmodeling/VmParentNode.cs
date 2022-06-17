@@ -89,9 +89,8 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             if(!canExpandBefore && CanExpand)
             {
                 ChangeTracker.Global.TrackChange(
-                    new Change(
-                        () => { },
-                        () => Expanded = false));
+                    () => { },
+                    () => Expanded = false);
             }
 
             TrackNotifyProperty(nameof(CanExpand));
@@ -104,7 +103,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             if (args.NewHeader == ParentNode.Header)
                 return;
 
-            ChangeTracker.Global.TrackChange(new Change(
+            ChangeTracker.Global.TrackChange(
                 () =>
                 {
                     ParentNode.ChildrenChanged -= ChildrenChanged;
@@ -114,8 +113,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 {
                     ParentNode.ChildrenChanged += ChildrenChanged;
                     ParentNode.HeaderChanged += HeaderChanged;
-                }
-            ));
+                });
         }
 
         private void CreateChildViewModels()

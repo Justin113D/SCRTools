@@ -88,11 +88,8 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
                 string newName = _parent.RenameOption(_name, value);
 
-                ChangeTracker.Global.TrackChange(
-                    new ChangedValue<string>(
-                        (v) => _name = v,
-                        _name,
-                        newName));
+                ChangeTracker.Global.TrackValueChange(
+                    (v) => _name = v, _name, newName);
 
                 _name = _parent.RenameOption(_name, value);
 

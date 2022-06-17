@@ -226,13 +226,13 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
                 _nodes.Insert(args.ToIndex, vmNode);
 
-                ChangeTracker.Global.TrackChange(new Change(
+                ChangeTracker.Global.TrackChange(
                     () => { },
                     () =>
                     {
                         vmNode.Selected = false;
                         vmNode.Active = false;
-                    }));
+                    });
             }
 
             ChangeTracker.Global.EndGroup();
@@ -247,7 +247,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
             _nodeTable.Remove(node);
 
-            ChangeTracker.Global.TrackChange(new Change(
+            ChangeTracker.Global.TrackChange(
                 () =>
                 {
                     vmNode.Selected = false;
@@ -257,8 +257,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                 () =>
                 {
                     node.HeaderChanged += HeaderChanged;
-                }
-            ));
+                });
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SCR.Tools.UndoRedo.Trackable;
+using System;
 using System.Collections.Generic;
 
 namespace SCR.Tools.UndoRedo
@@ -174,7 +175,7 @@ namespace SCR.Tools.UndoRedo
             if (_currentGroup == null || _groupings > 0)
                 return;
 
-            if(_currentGroup.Changes.Count == 0)
+            if (_currentGroup.Changes.Count == 0)
             {
                 _currentGroup = null;
                 return;
@@ -190,7 +191,7 @@ namespace SCR.Tools.UndoRedo
 
             ClearRedos();
 
-            if (_currentGroup.Changes.Count == 1 
+            if (_currentGroup.Changes.Count == 1
                 && _currentGroup.PostGroupActions.Count == 0
                 && _currentGroup.NotifyProperties.Count == 0)
                 _trackedChanges.Add(_currentGroup.Changes[0]);
@@ -200,23 +201,36 @@ namespace SCR.Tools.UndoRedo
             _currentGroup = null;
         }
 
+        private void TrackChange(ITrackable trackable)
+        {
+            trackable.Redo();
+            if (_currentGroup != null)
+            {
+                _currentGroup.Changes.Add(trackable);
+                return;
+            }
+
+            ClearRedos();
+            _trackedChanges.Add(trackable);
+        }
+
         /// <summary>
         /// Adds a change to undo/redo <br/>
         /// Performs "redo" after tracking, performing the change
         /// </summary>
         /// <param name="change">The change</param>
-        public void TrackChange(ITrackable change)
-        {
-            change.Redo();
-            if (_currentGroup != null)
-            {
-                _currentGroup.Changes.Add(change);
-                return;
-            }
+        public void TrackChange(Action redo, Action undo)
+            => TrackChange(new Change(redo, undo));
 
-            ClearRedos();
-            _trackedChanges.Add(change);
-        }
+        /// <summary>
+        /// Creates a value change
+        /// </summary>
+        /// <param name="modifyCallback">Callback which executes the value change</param>
+        /// <param name="oldValue">Old value (passed on undo)</param>
+        /// <param name="newValue">New value (passed on redo)</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public void TrackValueChange<T>(Action<T> modifyCallback, T oldValue, T newValue)
+            => TrackChange(new Change(() => modifyCallback(newValue), () => modifyCallback(oldValue)));
 
         /// <summary>
         /// Creates a change that does nothing
@@ -226,14 +240,14 @@ namespace SCR.Tools.UndoRedo
 
         public void BlankValueChange<T>(Action<T> modifyCallback, T oldValue, T newValue) where T : IEquatable<T>
         {
-            if(oldValue.Equals(newValue))
+            if (oldValue.Equals(newValue))
             {
                 BlankChange();
-                return;
             }
-
-            TrackChange(new ChangedValue<T>(
-                modifyCallback, oldValue, newValue));
+            else
+            {
+                TrackValueChange(modifyCallback, oldValue, newValue);
+            }
         }
 
         private void ClearRedos()

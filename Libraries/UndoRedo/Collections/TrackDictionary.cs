@@ -17,9 +17,8 @@ namespace SCR.Tools.UndoRedo.Collections
                 TValue previousItem = _dictionary[key];
 
                 ChangeTracker.Global.TrackChange(
-                    new Change(
-                        () => _dictionary[key] = value,
-                        () => _dictionary[key] = previousItem));
+                    () => _dictionary[key] = value,
+                    () => _dictionary[key] = previousItem);
             }
         }
 
@@ -48,17 +47,15 @@ namespace SCR.Tools.UndoRedo.Collections
         public void Add(TKey key, TValue value)
         {
             ChangeTracker.Global.TrackChange(
-                new Change(
-                    () => _dictionary.Add(key, value),
-                    () => _dictionary.Remove(key)));
+                () => _dictionary.Add(key, value),
+                () => _dictionary.Remove(key));
         }
 
         public void Add(KeyValuePair<TKey, TValue> item)
         {
             ChangeTracker.Global.TrackChange(
-                new Change(
-                    () => _dictionary.Add(item),
-                    () => _dictionary.Remove(item)));
+                () => _dictionary.Add(item),
+                () => _dictionary.Remove(item));
         }
 
         public void Clear()
@@ -66,15 +63,14 @@ namespace SCR.Tools.UndoRedo.Collections
             KeyValuePair<TKey, TValue>[] contents = _dictionary.ToArray();
 
             ChangeTracker.Global.TrackChange(
-                new Change(
-                    () => _dictionary.Clear(),
-                    () =>
+                () => _dictionary.Clear(),
+                () =>
+                {
+                    foreach (KeyValuePair<TKey, TValue> item in contents)
                     {
-                        foreach (KeyValuePair<TKey, TValue> item in contents)
-                        {
-                            _dictionary.Add(item);
-                        }
-                    }));
+                        _dictionary.Add(item);
+                    }
+                });
         }
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
@@ -97,9 +93,8 @@ namespace SCR.Tools.UndoRedo.Collections
             }
 
             ChangeTracker.Global.TrackChange(
-                new Change(
-                    () => _dictionary.Remove(key),
-                    () => _dictionary.Add(key, value)));
+                () => _dictionary.Remove(key),
+                () => _dictionary.Add(key, value));
 
             return true;
         }
@@ -112,9 +107,8 @@ namespace SCR.Tools.UndoRedo.Collections
             }
 
             ChangeTracker.Global.TrackChange(
-               new Change(
-                   () => _dictionary.Remove(item),
-                   () => _dictionary.Add(item)));
+                () => _dictionary.Remove(item),
+                () => _dictionary.Add(item));
 
             return true;
         }

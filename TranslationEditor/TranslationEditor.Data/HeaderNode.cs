@@ -35,12 +35,8 @@ namespace SCR.Tools.TranslationEditor.Data
             get => _author;
             set
             {
-                ChangeTracker.Global.TrackChange(
-                    new ChangedValue<string>(
-                        (v) => _author = v,
-                        _author,
-                        value.Trim()
-                ));
+                ChangeTracker.Global.TrackValueChange(
+                    (v) => _author = v, _author, value.Trim());
             }
         }
 
@@ -52,12 +48,8 @@ namespace SCR.Tools.TranslationEditor.Data
             get => _language;
             set
             {
-                ChangeTracker.Global.TrackChange(
-                    new ChangedValue<string>(
-                        (v) => _language = v,
-                        _language,
-                        value.Trim()
-                ));
+                ChangeTracker.Global.TrackValueChange(
+                    (v) => _language = v, _language, value.Trim());
             }
         }
 

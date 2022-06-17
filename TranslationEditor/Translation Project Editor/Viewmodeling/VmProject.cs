@@ -1,6 +1,7 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.UndoRedo;
 using SCR.Tools.Viewmodeling;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 
@@ -165,63 +166,44 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         /// </summary>
         /// <param name="state">The state of which to increase the counter</param>
         public void IncreaseNodeCounter(NodeState state)
-        {
-            ChangedValue<int> change;
-
-            switch (state)
-            {
-                case NodeState.Translated:
-                    change = new((v) => TranslatedNodes = v,
-                        TranslatedNodes,
-                        TranslatedNodes + 1);
-                    break;
-                case NodeState.Outdated:
-                    change = new((v) => OutdatedNodes = v,
-                        OutdatedNodes,
-                        OutdatedNodes + 1);
-                    break;
-                case NodeState.Untranslated:
-                    change = new((v) => UntranslatedNodes = v,
-                        UntranslatedNodes,
-                        UntranslatedNodes + 1);
-                    break;
-                default:
-                    return;
-            }
-
-            ChangeTracker.Global.TrackChange(change);
-        }
+            => NodeCounterChange(state, 1);
 
         /// <summary>
         /// Decreases the node counter for a specific node state
         /// </summary>
         /// <param name="state">The state of which to decrease the counter</param>
         public void DecreaseNodeCounter(NodeState state)
+            => NodeCounterChange(state, -1);
+
+        private void NodeCounterChange(NodeState state, int difference)
         {
-            ChangedValue<int> change;
+            Action<int> callback;
+            int oldVal;
+            int newVal;
 
             switch (state)
             {
                 case NodeState.Translated:
-                    change = new((v) => TranslatedNodes = v,
-                        TranslatedNodes,
-                        TranslatedNodes - 1);
+                    callback = (v) => TranslatedNodes = v;
+                    oldVal = TranslatedNodes;
+                    newVal = TranslatedNodes + difference;
                     break;
                 case NodeState.Outdated:
-                    change = new((v) => OutdatedNodes = v,
-                        OutdatedNodes,
-                        OutdatedNodes - 1);
+                    callback = (v) => OutdatedNodes = v;
+                    oldVal = OutdatedNodes;
+                    newVal = OutdatedNodes + difference;
                     break;
                 case NodeState.Untranslated:
-                    change = new((v) => UntranslatedNodes = v,
-                        UntranslatedNodes,
-                        UntranslatedNodes - 1);
+                    callback = (v) => UntranslatedNodes = v;
+                    oldVal = UntranslatedNodes;
+                    newVal = UntranslatedNodes + difference;
                     break;
                 default:
-                    return;
+                    throw new InvalidOperationException();
             }
 
-            ChangeTracker.Global.TrackChange(change);
+            ChangeTracker.Global.TrackValueChange(
+                callback, oldVal, newVal);
         }
 
         /// <summary>

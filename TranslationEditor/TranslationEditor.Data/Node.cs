@@ -71,12 +71,8 @@ namespace SCR.Tools.TranslationEditor.Data
 
                 ChangeTracker.Global.BeginGroup();
 
-                ChangeTracker.Global.TrackChange(
-                    new ChangedValue<string>(
-                        (v) => _name = v,
-                        oldNodeName,
-                        value
-                ));
+                ChangeTracker.Global.TrackValueChange(
+                    (v) => _name = v, oldNodeName, value);
 
                 InternalOnNameChanged(oldNodeName);
                 NameChanged?.Invoke(this, new(oldNodeName, value));
@@ -102,12 +98,8 @@ namespace SCR.Tools.TranslationEditor.Data
                     return;
                 }
 
-                ChangeTracker.Global.TrackChange(
-                    new ChangedValue<string?>(
-                        (v) => _description = v,
-                        _description,
-                        newValue
-                )); ;
+                ChangeTracker.Global.TrackValueChange(
+                    (v) => _description = v, _description, newValue);
             }
         }
 
@@ -130,12 +122,8 @@ namespace SCR.Tools.TranslationEditor.Data
                 NodeState oldState = _state;
                 NodeState newState = value;
 
-                ChangeTracker.Global.TrackChange(
-                    new ChangedValue<NodeState>(
-                        (v) => _state = v,
-                        oldState,
-                        newState
-                ));
+                ChangeTracker.Global.TrackValueChange(
+                        (v) => _state = v, oldState, newState);
 
                 Parent?.EvaluateState(this);
 
@@ -193,7 +181,7 @@ namespace SCR.Tools.TranslationEditor.Data
         {
             if (parent == _parent)
             {
-                ChangeTracker.Global.TrackChange(new BlankChange());
+                ChangeTracker.Global.BlankChange();
                 return;
             }
 
@@ -217,12 +205,8 @@ namespace SCR.Tools.TranslationEditor.Data
 
             ParentNode? oldParent = _parent;
 
-            ChangeTracker.Global.TrackChange(
-                new ChangedValue<ParentNode?>(
-                    (v) => _parent = v,
-                    oldParent,
-                    newParent
-            ));
+            ChangeTracker.Global.TrackValueChange(
+                (v) => _parent = v, oldParent, newParent);
 
             // if the two headers are different, invoke the 
             if (oldParent?.Header != newParent?.Header)
