@@ -5,6 +5,7 @@ using SCR.Tools.Viewmodeling;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace SCR.Tools.DialogEditor.Viewmodeling
 {
@@ -18,6 +19,9 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         /// Dialog data
         /// </summary>
         public Dialog Data { get; }
+
+        private Dictionary<Node, VmNode> _internalNodeTable;
+        private TrackDictionary<Node, VmNode> _nodeTable;
 
         /// <summary>
         /// Nodes to display
@@ -66,6 +70,8 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
         #region Interaction Properties
 
+        public VmNode? ActiveNode { get; set; }
+
         #endregion
 
         #region Relay Commands
@@ -80,16 +86,31 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             Main = mainVM;
             Data = dialog;
 
+            _internalNodeTable = new();
+            _nodeTable = new(_internalNodeTable);
+
             ObservableCollection<VmNode> internalNodes = new();
 
             foreach (Node node in dialog.Nodes)
             {
                 VmNode vmnode = new(this, node);
                 internalNodes.Add(vmnode);
+                _internalNodeTable.Add(node, vmnode);
             }
 
             _nodes = new(internalNodes);
             Nodes = new(internalNodes);
+
+            foreach (VmNode vmnode in Nodes)
+            {
+                foreach (VmNodeOutput vmout in vmnode.Outputs)
+                {
+                    if (vmout.Data.Output == null)
+                        continue;
+
+                    vmout.Connected = _internalNodeTable[vmout.Data.Output];
+                }
+            }
         }
 
         private void SortNodes()

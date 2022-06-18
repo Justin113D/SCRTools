@@ -1,16 +1,19 @@
 ﻿
 using SCR.Tools.Viewmodeling;
 using SCR.Tools.Common;
-using SCR.Tools.UndoRedo;
 using SCR.Tools.UndoRedo.Collections;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace SCR.Tools.DialogEditor.Viewmodeling
 {
     public class VmNodeOptions<T> : BaseViewModel
     {
         private readonly TrackDictionary<string, T> _rawOptions;
+
+        private readonly TrackDictionary<string, VmNodeOption<T>> _lut;
 
         private readonly TrackList<VmNodeOption<T>> _options;
 
@@ -23,10 +26,18 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             _rawOptions = options;
             _defaultValue = defaultValue;
 
+            Dictionary<string, VmNodeOption<T>> internalLut = new();
             ObservableCollection<VmNodeOption<T>> internalOptions = new();
-            foreach(string o in _rawOptions.Keys)
-                internalOptions.Add(new(this, o));
 
+            foreach(KeyValuePair<string, T> option in _rawOptions)
+            {
+                VmNodeOption<T> vmOption = new(this, option.Key);
+
+                internalOptions.Add(vmOption);
+                internalLut.Add(vmOption.Name, vmOption);
+            }
+
+            _lut = new(internalLut);
             _options = new(internalOptions);
             Options = new(internalOptions);
         }
@@ -42,11 +53,15 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             string name = _rawOptions.FindNextFreeKey(newName, true);
 
             T TValue = _rawOptions[oldName];
+            VmNodeOption<T> vmValue = _lut[oldName];
 
             BeginChangeGroup();
 
             _rawOptions.Remove(oldName);
             _rawOptions.Add(name, TValue);
+
+            _lut.Remove(oldName);
+            _lut.Add(name, vmValue);
 
             EndChangeGroup();
 
@@ -66,9 +81,20 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             _rawOptions.Add(freeName, _defaultValue);
 
             VmNodeOption<T> vmOption = new(this, freeName);
+            _lut.Add(freeName, vmOption);
             _options.Add(vmOption);
 
             EndChangeGroup();
+        }
+        
+        public VmNodeOption<T>? GetOption(string name)
+        {
+            if(!_lut.TryGetValue(name, out VmNodeOption<T>? result))
+            {
+                return null;
+            }
+
+            return result;
         }
     }
 

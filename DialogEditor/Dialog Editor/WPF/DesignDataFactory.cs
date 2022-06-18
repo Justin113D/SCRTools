@@ -11,6 +11,9 @@ namespace SCR.Tools.DialogEditor.WPF
         {
             Main = new VmMain();
             Dialog = Main.Dialog;
+            Node = new(Dialog, new());
+            Output = Node.Outputs[0];
+            Output.IsExpanded = true;
             Options = Main.DialogOptions;
             Options.Read(TestDialogOptions, null);
             NodeOptions = Options.CharacterOptions;
@@ -20,6 +23,10 @@ namespace SCR.Tools.DialogEditor.WPF
         public static VmMain Main { get; }
 
         public static VmDialog Dialog { get; }
+
+        public static VmNode Node { get; }
+
+        public static VmNodeOutput Output { get; }
 
         public static VmDialogOptions Options { get; }
 

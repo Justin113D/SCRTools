@@ -1,4 +1,6 @@
 ﻿using SCR.Tools.DialogEditor.Viewmodeling;
+using System;
+using System.IO;
 using System.Windows;
 using Window = SCR.Tools.WPF.Styling.Window;
 
@@ -19,6 +21,26 @@ namespace SCR.Tools.DialogEditor.WPF.Windows
         {
             VmMain vm = new();
             DataContext = vm;
+
+            string optionsPath = Properties.Settings.Default.DefaultDialogOptionsPath;
+            if (string.IsNullOrWhiteSpace(optionsPath))
+                return;
+
+            if (!File.Exists(optionsPath))
+            {
+                MessageBox.Show("Default dialog options path does not resolve to a file", "Default dialog options not found", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                string data = File.ReadAllText(optionsPath);
+                vm.DialogOptions.Read(data, optionsPath);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Default dialog options path is not valid!\n " + e.Message, "Error loading default dialog options", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         protected override void Close(object sender, RoutedEventArgs e)

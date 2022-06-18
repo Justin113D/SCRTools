@@ -9,7 +9,7 @@
         xmlns:wpf="clr-namespace:SCR.Tools.DialogEditor.WPF"
         xmlns:baseVM="clr-namespace:SCR.Tools.Viewmodeling;assembly=SCR.Tools.WPF"
         mc:Ignorable="d" d:DataContext="{x:Static wpf:DesignDataFactory.Main}"
-        Title="Dialog Editor" Height="450" Width="800">
+        Title="Dialog Editor" Height="600" Width="900">
 
     <styling:Window.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="N">
@@ -52,7 +52,7 @@
                 <ColumnDefinition Width="2"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="2"/>
-                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="300"/>
             </Grid.ColumnDefinitions>
 
             <uc:UcDialogOverview DataContext="{Binding Dialog}"/>
@@ -72,7 +72,13 @@
                 Width="5" 
                 HorizontalAlignment="Stretch" 
                 Background="{DynamicResource BG3}"/>
-                
+
+            <uc:UcNodeInspector
+                Grid.Column="5"
+                HorizontalAlignment="Stretch" 
+                DataContext="{Binding Dialog.ActiveNode}"
+                />
+
         </Grid>
         
         <uc:UcMessageBar Grid.Row="2" DataContext="{Binding}"/>

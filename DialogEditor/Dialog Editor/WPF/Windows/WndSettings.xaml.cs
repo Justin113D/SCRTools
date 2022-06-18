@@ -1,4 +1,5 @@
-﻿using SCR.Tools.WPF.Styling;
+﻿using Microsoft.Win32;
+using SCR.Tools.WPF.Styling;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,6 +19,7 @@ namespace SCR.Tools.DialogEditor.WPF.Windows
             FontSizeField.Text = Properties.Settings.Default.Fontsize.ToString();
             ThemeCombobox.ItemsSource = Enum.GetValues(typeof(Theme));
             ThemeCombobox.SelectedItem = BaseStyle.Theme;
+            DefaultPathTextBox.Text = Properties.Settings.Default.DefaultDialogOptionsPath;
         }
 
         private void FontSizeField_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -43,8 +45,24 @@ namespace SCR.Tools.DialogEditor.WPF.Windows
                 ((App)Application.Current).AppFontSize = fs;
             }
 
+            Properties.Settings.Default.DefaultDialogOptionsPath = DefaultPathTextBox.Text;
+
             Properties.Settings.Default.Save();
             Close();
+        }
+
+        private void DefaultPathDialog(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new()
+            {
+                Title = "Select dialog options file",
+                Filter = "JSON file (*.json)|*.json"
+            };
+
+            if (ofd.ShowDialog() == true)
+            {
+                DefaultPathTextBox.Text = ofd.FileName;
+            }
         }
     }
 }

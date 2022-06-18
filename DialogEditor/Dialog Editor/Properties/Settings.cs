@@ -17,5 +17,14 @@ namespace SCR.Tools.DialogEditor.Properties
             get => (double)this[nameof(Fontsize)];
             set => this[nameof(Fontsize)] = value;
         }
+
+        [UserScopedSetting()]
+        [DebuggerNonUserCode()]
+        [DefaultSettingValue("")]
+        public string DefaultDialogOptionsPath
+        {
+            get => (string)this[nameof(DefaultDialogOptionsPath)];
+            set => this[nameof(DefaultDialogOptionsPath)] = value;
+        }
     }
 }
