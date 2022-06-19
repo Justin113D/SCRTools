@@ -57,7 +57,7 @@
 
             <uc:UcDialogOverview DataContext="{Binding Dialog}"/>
 
-            <uc:UcGridView Grid.Column="2"/>
+            <uc:UcGridView Grid.Column="2" DataContext="{Binding Dialog}"/>
                 
             <GridSplitter 
                 Grid.Column="1" 

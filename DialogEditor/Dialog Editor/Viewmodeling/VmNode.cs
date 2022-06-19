@@ -36,12 +36,6 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         public ReadOnlyObservableCollection<VmNodeOutput> Inputs { get; }
 
 
-        public string Name
-            => _outputs[0].Name;
-
-        public string InOutInfo
-            => $"[ {_inputs.Count} ; {_outputs.Count} ]";
-
         public bool RightPortrait
         {
             get => Data.RightPortrait;
@@ -61,6 +55,96 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             }
         }
 
+        public int LocationX
+        {
+            get => Data.LocationX;
+            set
+            {
+                if(LocationX == value)
+                {
+                    return;
+                }
+
+                BeginChangeGroup();
+
+                Data.LocationX = value;
+                TrackNotifyProperty(nameof(LocationX));
+
+                EndChangeGroup();
+            }
+        }
+
+        public int LocationY
+        {
+            get => Data.LocationY;
+            set
+            {
+                if (LocationY == value)
+                {
+                    return;
+                }
+
+                BeginChangeGroup();
+
+                Data.LocationY = value;
+                TrackNotifyProperty(nameof(LocationY));
+
+                EndChangeGroup();
+            }
+        }
+
+
+        public string Name
+            => _outputs[0].Name;
+
+        public string InOutInfo
+            => $"[ {_inputs.Count} ; {_outputs.Count} ]";
+
+        public bool IsActive
+        {
+            get => Dialog.ActiveNode == this;
+            set
+            {
+                if(value == IsActive)
+                {
+                    return;
+                }
+
+                if(value)
+                {
+                    IsSelected = true;
+                    Dialog.ActiveNode = this;
+                }
+                else
+                {
+                    Dialog.ActiveNode = null;
+                    IsSelected = false;
+                }
+            }
+        }
+
+        public bool IsSelected
+        {
+            get => Dialog.Selected.Contains(this);
+            set
+            {
+                if(IsSelected == value)
+                {
+                    return;
+                }
+
+                if(value)
+                {
+                    Dialog.Selected.Add(this);
+                }
+                else
+                {
+                    Dialog.Selected.Remove(this);
+                }
+            }
+        }
+
+        
 
         public RelayCommand CmdAddOutput
             => new(AddOutput);

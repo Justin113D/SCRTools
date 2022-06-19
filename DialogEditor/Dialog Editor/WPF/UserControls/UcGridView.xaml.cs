@@ -13,8 +13,8 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
     /// </summary>
     public partial class UcGridView : UserControl
     {
-        private const int brushDim = 50;
-        private const int halfBrushDim = brushDim / 2;
+        public const int brushDim = 50;
+        public const int halfBrushDim = brushDim / 2;
 
         public static readonly DependencyProperty GridTileProperty =
             DependencyProperty.Register(

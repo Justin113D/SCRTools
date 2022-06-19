@@ -15,17 +15,11 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
         public VmMain Main { get; }
 
-        /// <summary>
-        /// Dialog data
-        /// </summary>
         public Dialog Data { get; }
 
-        private Dictionary<Node, VmNode> _internalNodeTable;
-        private TrackDictionary<Node, VmNode> _nodeTable;
 
-        /// <summary>
-        /// Nodes to display
-        /// </summary>
+        private readonly TrackDictionary<Node, VmNode> _nodeTable;
+
         public ReadOnlyObservableCollection<VmNode> Nodes { get; private set; }
 
         #region Wrapper Properties
@@ -72,6 +66,8 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
         public VmNode? ActiveNode { get; set; }
 
+        public ObservableCollection<VmNode> Selected { get; set; }
+
         #endregion
 
         #region Relay Commands
@@ -86,17 +82,19 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             Main = mainVM;
             Data = dialog;
 
-            _internalNodeTable = new();
-            _nodeTable = new(_internalNodeTable);
+            Selected = new();
 
+            Dictionary<Node, VmNode> internalNodeTable = new();
             ObservableCollection<VmNode> internalNodes = new();
 
             foreach (Node node in dialog.Nodes)
             {
                 VmNode vmnode = new(this, node);
                 internalNodes.Add(vmnode);
-                _internalNodeTable.Add(node, vmnode);
+                internalNodeTable.Add(node, vmnode);
             }
+            _nodeTable = new(internalNodeTable);
+
 
             _nodes = new(internalNodes);
             Nodes = new(internalNodes);
@@ -108,9 +106,10 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
                     if (vmout.Data.Output == null)
                         continue;
 
-                    vmout.Connected = _internalNodeTable[vmout.Data.Output];
+                    vmout.Connected = _nodeTable[vmout.Data.Output];
                 }
             }
+
         }
 
         private void SortNodes()
