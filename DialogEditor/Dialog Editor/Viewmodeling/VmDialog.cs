@@ -6,6 +6,7 @@ using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace SCR.Tools.DialogEditor.Viewmodeling
 {
@@ -94,6 +95,12 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         public RelayCommand CmdSortNodes
             => new(SortNodes);
 
+        public RelayCommand CmdDeleteSelectedNodes
+            => new(DeleteSelectedNodes);
+
+        public RelayCommand CmdOrganizeNodes
+            => new(OrganizeNodes);
+
         #endregion
 
         public VmDialog(VmMain mainVM, Dialog dialog)
@@ -120,15 +127,8 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
             foreach (VmNode vmnode in Nodes)
             {
-                foreach (VmNodeOutput vmout in vmnode.Outputs)
-                {
-                    if (vmout.Data.Output == null)
-                        continue;
-
-                    vmout.Connected = _nodeTable[vmout.Data.Output];
-                }
+                vmnode.InitConnections();
             }
-
         }
 
         private void SortNodes()
@@ -143,6 +143,84 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
                 );
 
             EndChangeGroup();
+        }
+
+        public VmNode GetViewmodel(Node node)
+        {
+            return _nodeTable[node];
+        }
+
+        public void CreateNode(int locationX, int locationY)
+        {
+            BeginChangeGroup();
+
+            Node node = Data.CreateNode();
+            node.LocationX = locationX;
+            node.LocationY = locationY;
+
+            VmNode vmNode = new(this, node);
+
+            _nodeTable.Add(node, vmNode);
+            _nodes.Add(vmNode);
+
+            EndChangeGroup();
+
+            Main.SetMessage($"Created node!", false);
+        }
+
+        private void DeleteSelectedNodes()
+        {
+            if(Selected.Count == 0)
+            {
+                return;
+            }
+
+            BeginChangeGroup();
+
+            VmNode[] selectedNodes = Selected.ToArray();
+            foreach (VmNode node in selectedNodes)
+            {   
+                node.Disconnect();
+
+                _nodes.Remove(node);
+                _nodeTable.Remove(node.Data);
+                Data.RemoveNode(node.Data);
+
+                TrackChange(
+                    () => { },
+                    () =>
+                    {
+                        node.Active = false;
+                        node.Selected = false;
+                    });
+            }
+
+            EndChangeGroup();
+
+            Main.SetMessage($"Deleted {selectedNodes.Length} nodes", false);
+        }
+
+        private void OrganizeNodes()
+        {
+            if (Nodes.Count == 0)
+                return;
+
+            BeginChangeGroup();
+
+            // find the starter node
+            VmNode start = _nodeTable[Data.StartNode];
+            int offsetX = start.LocationX;
+            int offsetY = start.LocationY;
+
+            foreach (var n in Nodes)
+            {
+                n.LocationX -= offsetX;
+                n.LocationY -= offsetY;
+            }
+
+            EndChangeGroup();
+
+            Main.SetMessage("Recentered node tree", false);
         }
 
         public void DeselectAll()

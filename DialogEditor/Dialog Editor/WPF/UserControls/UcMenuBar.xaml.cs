@@ -1,4 +1,5 @@
 ﻿using SCR.Tools.DialogEditor.Viewmodeling;
+using SCR.Tools.Viewmodeling;
 using SCR.Tools.WPF.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,6 +11,20 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
     /// </summary>
     public partial class UcMenuBar : UserControl
     {
+        public static readonly DependencyProperty CmdAddNodeProperty =
+            DependencyProperty.Register(
+                nameof(CmdAddNode),
+                typeof(RelayCommand),
+                typeof(UcMenuBar)
+            );
+
+        public RelayCommand CmdAddNode
+        {
+            get => (RelayCommand)GetValue(CmdAddNodeProperty);
+            set => SetValue(CmdAddNodeProperty, value);
+        }
+
+
         private TextFileHandler? _dialogFileHandler;
         private TextFileHandler? _dialogOptionsFileHandler;
         private VmMain? _viewModel;
@@ -87,6 +102,11 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             _viewModel.DialogOptions.DialogOptionsTracker.Use();
             new Windows.WndDialogOptions(_viewModel.DialogOptions, _dialogOptionsFileHandler).ShowDialog();
             _viewModel.DialogTracker.Use();
+        }
+
+        private void EventCommand_Executed(object sender, object e)
+        {
+
         }
     }
 }

@@ -98,12 +98,12 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             InitializeComponent();
         }
    
-        private static double ToGridSpace(int value)
+        public static double ToGridSpace(int value)
         {
             return value * UcGridView.brushDim + UcGridView.halfBrushDim;
         }
 
-        private static int FromGridSpace(double value)
+        public static int FromGridSpace(double value)
         {
             return ((int)value - UcGridView.halfBrushDim * (value < 0 ? 2 : 0)) / UcGridView.brushDim;
         }
@@ -141,14 +141,24 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
 
         private void GrabGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            GridView.NodeClickCheck = e.GetPosition(GridView);
+            if(e.ChangedButton != MouseButton.Left)
+            {
+                return;
+            }
+
+            GridView.DragNodePosition = e.GetPosition(GridView);
         }
 
         private void GrabGrid_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if(GridView.NodeClickCheck != null)
+            if (e.ChangedButton != MouseButton.Left)
             {
-                if(!GridView.IsDragging)
+                return;
+            }
+
+            if (GridView.DragNodePosition != null)
+            {
+                if(!GridView.IsDraggingNodes)
                 {
                     Select();   
                 }
@@ -159,7 +169,7 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
 
         private void GrabGrid_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (GridView.NodeClickCheck != null && !GridView.IsDragging)
+            if (GridView.DragNodePosition != null && !GridView.IsDraggingNodes)
             {
                 Select();
 

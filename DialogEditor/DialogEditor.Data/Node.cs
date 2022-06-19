@@ -96,10 +96,17 @@ namespace SCR.Tools.DialogEditor.Data
         public void Disconnect()
         {
             BeginChangeGroup();
-            foreach (NodeOutput no in _inputs)
-                no.Disconnect();
-            foreach (NodeOutput no in _outputs)
-                no.Disconnect();
+
+            foreach (NodeOutput input in _inputs)
+            {
+                input.Disconnect();
+            }
+
+            foreach (NodeOutput output in _outputs)
+            {
+                output.Disconnect();
+            }
+
             EndChangeGroup();
         }
 

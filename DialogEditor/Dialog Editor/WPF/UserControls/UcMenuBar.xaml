@@ -4,8 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SCR.Tools.DialogEditor.WPF.UserControls"
+             xmlns:vmBase="clr-namespace:SCR.Tools.Viewmodeling;assembly=SCR.Tools.WPF"
+             xmlns:wpf="clr-namespace:SCR.Tools.DialogEditor.WPF"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="30" d:DesignWidth="300"
+             d:DataContext="{x:Static wpf:DesignDataFactory.Main}"
+             x:Name="Container">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" MinWidth="123"/>
@@ -55,6 +59,23 @@
                 <MenuItem Header="Redo" Command="{Binding CmdRedo}" InputGestureText="Ctrl+Y">
                     <MenuItem.Icon>
                         <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/Redo.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                
+                <MenuItem Header="Add Node" InputGestureText="Ctrl+A" Command="{Binding ElementName=Container, Path=CmdAddNode}">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/AddRelationship.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Delete Nodes" InputGestureText="Delete" Command="{Binding Dialog.CmdDeleteSelectedNodes}">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/DeleteRelationship.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Organize Nodes" Command="{Binding Dialog.CmdOrganizeNodes}">
+                    <MenuItem.Icon>
+                        <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/AlignToGrid.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>

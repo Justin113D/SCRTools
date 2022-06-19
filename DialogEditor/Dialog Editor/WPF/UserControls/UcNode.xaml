@@ -13,8 +13,8 @@
 
     <UserControl.Style>
         <Style TargetType="{x:Type local:UcNode}">
-            <Setter Property="LocationX" Value="{Binding LocationX}"/>
-            <Setter Property="LocationY" Value="{Binding LocationY}"/>
+            <Setter Property="LocationX" Value="{Binding LocationX, Mode=TwoWay}"/>
+            <Setter Property="LocationY" Value="{Binding LocationY, Mode=TwoWay}"/>
         </Style>
     </UserControl.Style>
     

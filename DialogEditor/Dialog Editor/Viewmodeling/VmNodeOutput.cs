@@ -1,5 +1,7 @@
 ﻿using SCR.Tools.DialogEditor.Data;
+using SCR.Tools.DialogEditor.Data.Events;
 using SCR.Tools.Viewmodeling;
+using System;
 using System.Drawing;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
@@ -8,6 +10,8 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
     public class VmNodeOutput : BaseViewModel
     {
         private VmNode? _connected;
+
+        private bool _initiatedConnection;
 
 
         /// <summary>
@@ -23,6 +27,8 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         public VmDialogOptions Options
             => Parent.Dialog.Main.DialogOptions;
 
+
+        #region Property Wrappers
 
         #region Character
 
@@ -149,6 +155,17 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             }
         }
 
+        public VmNode? Connected
+        {
+            get => _connected;
+            set
+            {
+                // the viewmodel gets updated via event
+                Data.SetOutput(value?.Data);
+            }
+        }
+
+        #endregion
 
 
         /// <summary>
@@ -162,28 +179,6 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         /// </summary>
         public bool IsExpanded { get; set; }
 
-        public VmNode? Connected
-        {
-            get => _connected;
-            set
-            {
-                BeginChangeGroup();
-
-                if (Data.SetOutput(value?.Data))
-                {
-                    _connected?.RemoveInput(this);
-
-                    TrackValueChange(
-                        (v) => _connected = v, _connected, value);
-
-                    TrackNotifyProperty(nameof(Connected));
-
-                    Connected?.AddInput(this);
-                }
-
-                EndChangeGroup();
-            }
-        }
 
 
         #region Commands
@@ -201,8 +196,47 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         {
             Parent = parent;
             Data = data;
+
+            data.ConnectionChanged += ConnectionChanged;
         }
 
+        public void InitConnection()
+        {
+            if(_initiatedConnection)
+            {
+                throw new InvalidOperationException("Already initiated node output!");
+            }
+
+            _connected = Data.Output == null
+                ? null
+                : Parent.Dialog.GetViewmodel(Data.Output);
+
+            OnPropertyChanged(nameof(Connected));
+
+            _connected?.AddInput(this);
+
+            _initiatedConnection = true;
+        }
+
+        private void ConnectionChanged(NodeOutput output, OutputConnectionChangedEventArgs args)
+        {
+            BeginChangeGroup();
+
+            _connected?.RemoveInput(this);
+
+            VmNode? vmNode = args.NewNode == null 
+                ? null 
+                : Parent.Dialog.GetViewmodel(args.NewNode);
+
+            TrackValueChange(
+                (v) => _connected = v, _connected, vmNode);
+
+            TrackNotifyProperty(nameof(Connected));
+
+            Connected?.AddInput(this);
+
+            EndChangeGroup();
+        }
 
         public void Disconnect()
         {

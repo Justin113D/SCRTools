@@ -59,7 +59,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         /// </summary>
         /// <param name="message">Message to display</param>
         /// <param name="warning">Whether its a warning</param>
-        private void SetMessage(string message, bool warning)
+        public void SetMessage(string message, bool warning)
         {
             if (DisplayMessage > 0)
             {

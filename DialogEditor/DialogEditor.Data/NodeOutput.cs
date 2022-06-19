@@ -1,4 +1,5 @@
-﻿using SCR.Tools.UndoRedo;
+﻿using SCR.Tools.DialogEditor.Data.Events;
+using SCR.Tools.UndoRedo;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.DialogEditor.Data
@@ -25,6 +26,8 @@ namespace SCR.Tools.DialogEditor.Data
 
         private Node? _output;
         #endregion
+
+        public OutputConnectionChangedEventHandler? ConnectionChanged { get; set; }
 
         /// <summary>
         /// Expression of the character
@@ -178,9 +181,13 @@ namespace SCR.Tools.DialogEditor.Data
 
             BeginChangeGroup();
 
+            Node? oldConnection = Output;
+
             Output?.RemoveInput(this);
             Output = node;
             Output?.AddInput(this);
+
+            ConnectionChanged?.Invoke(this, new(oldConnection, node));
 
             EndChangeGroup();
 

@@ -7,6 +7,7 @@ using System.Windows.Shapes;
 using System.Runtime.InteropServices;
 using SCR.Tools.DialogEditor.Viewmodeling;
 using System.Collections.Generic;
+using SCR.Tools.Viewmodeling;
 
 namespace SCR.Tools.DialogEditor.WPF.UserControls
 {
@@ -86,16 +87,27 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             }
         }
 
-        public Point? NodeClickCheck { get; set; }
+        public Point? DragNodePosition { get; set; }
 
         private UcNode[]? _selectedNodes;
 
-        public bool IsDragging
+        public bool IsDraggingNodes
             => _selectedNodes != null;
+
+
+        public RelayCommand CmdRecenterView
+            => new(RecenterView);
+
+        public RelayCommand CmdAddNode
+            => new(AddNodeCenter);
+
+        public RelayCommand<VmNode> CmdFocusNode
+            => new(FocusNode);
 
 
         public VmDialog Viewmodel
             => (VmDialog)DataContext;
+
 
         public UcGridView()
         {
@@ -118,14 +130,15 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             InitializeComponent();
         }
 
-        private Point GetMouseGridPos(Point point)
+
+        private Point ConvertToGridSpace(Point point)
         {
             return GridTransform.Inverse.Transform(point);
         }
 
         private Point GetMouseGridPos(MouseEventArgs e)
         {
-            return GetMouseGridPos(e.GetPosition(this));
+            return ConvertToGridSpace(e.GetPosition(this));
         }
 
 
@@ -201,6 +214,33 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             Mouse.OverrideCursor = null;
         }
 
+        private void RecenterView()
+        {
+            Matrix m = GridTransform.Matrix;
+            m.OffsetX = 0;
+            m.OffsetY = 0;
+            GridTransform.Matrix = m;
+            UpdateBackground();
+        }
+
+        private void FocusNode(VmNode node)
+        {
+            FrameworkElement obj = (FrameworkElement)NodesDisplay.ItemContainerGenerator.ContainerFromItem(node);
+
+            Point GridLoc = new(
+                Canvas.GetLeft(obj) + obj.ActualWidth / 2,
+                Canvas.GetTop(obj) + obj.ActualHeight / 2);
+
+            Matrix m = GridTransform.Matrix;
+            Point p = ConvertToGridSpace(
+                new(ActualWidth / 2, ActualHeight / 2));
+
+            m.TranslatePrepend(p.X - GridLoc.X, p.Y - GridLoc.Y);
+            GridTransform.Matrix = m;
+
+            UpdateBackground();
+        }
+
 
         private void DragSelectBox(Point mousePos, bool active)
         {
@@ -209,7 +249,7 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
                 return;
             }
 
-            Point dragToGridPos = GetMouseGridPos(mousePos);
+            Point dragToGridPos = ConvertToGridSpace(mousePos);
 
             double x = dragToGridPos.X < _selectBoxStartGridPos.X ? dragToGridPos.X : _selectBoxStartGridPos.X;
             double y = dragToGridPos.Y < _selectBoxStartGridPos.Y ? dragToGridPos.Y : _selectBoxStartGridPos.Y;
@@ -258,7 +298,7 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
 
         public void InitMoveSelected()
         {
-            if(NodeClickCheck == null)
+            if(DragNodePosition == null)
             {
                 throw new InvalidOperationException("Nodeclickcheck has to be set!");
             }
@@ -278,8 +318,7 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             }
 
             _selectedNodes = selectedNodes.ToArray();
-            // converting it to grid space
-            NodeClickCheck = GetMouseGridPos(NodeClickCheck ?? default);
+            DragNodePosition = ConvertToGridSpace(DragNodePosition ?? default);
         }
 
         private void MoveSelected(Point mousePos, bool active)
@@ -289,17 +328,17 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
                 return;
             }
 
-            if(NodeClickCheck == null)
+            if(DragNodePosition == null)
             {
                 throw new InvalidOperationException("Click check is null!");
             }
 
 
-            Point gridMousePos = GetMouseGridPos(mousePos);
+            Point gridMousePos = ConvertToGridSpace(mousePos);
 
             Point dif = new(
-               (gridMousePos.X - NodeClickCheck?.X) ?? 0,
-               (gridMousePos.Y - NodeClickCheck?.Y) ?? 0);
+               (gridMousePos.X - DragNodePosition?.X) ?? 0,
+               (gridMousePos.Y - DragNodePosition?.Y) ?? 0);
 
             foreach(UcNode t in _selectedNodes)
             {
@@ -311,11 +350,11 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
         {
             if(_selectedNodes == null)
             {
-                NodeClickCheck = null;
+                DragNodePosition = null;
                 return;
             }
 
-            if (NodeClickCheck == null)
+            if (DragNodePosition == null)
             {
                 throw new InvalidOperationException("Clickcheck or selectednodes are null!");
             }
@@ -341,14 +380,34 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
 
             }
 
-            NodeClickCheck = null;
+            DragNodePosition = null;
             _selectedNodes = null;
+        }
+
+
+        private void CreateNode(Point gridPos)
+        {
+            int locationX = UcNode.FromGridSpace(gridPos.X);
+            int locationY = UcNode.FromGridSpace(gridPos.Y);
+
+            Viewmodel.CreateNode(locationX, locationY);
+        }
+
+        private void AddNodeCenter()
+        {
+            Point p = ConvertToGridSpace(new(
+                ActualWidth / 2, ActualHeight / 2));
+            CreateNode(p);
         }
 
 
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (NodeClickCheck != null)
+            // needed for being able to
+            // interact with input bindings
+            Focus(); 
+
+            if (DragNodePosition != null)
             {
                 return;
             }
@@ -435,11 +494,16 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
                 EndSelectBox(false);
             }
 
-            if(NodeClickCheck != null)
+            if(DragNodePosition != null)
             {
                 DropSelect(true);
             }
         }
 
+        private void IB_CreateNode(object sender, object e)
+        {
+            Point nodePos = ConvertToGridSpace(Mouse.GetPosition(this));
+            CreateNode(nodePos);
+        }
     }
 }

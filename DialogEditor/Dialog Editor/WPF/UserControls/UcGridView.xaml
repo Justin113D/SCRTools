@@ -7,11 +7,13 @@
     xmlns:local="clr-namespace:SCR.Tools.DialogEditor.WPF.UserControls"
     xmlns:vm="clr-namespace:SCR.Tools.DialogEditor.Viewmodeling"
     xmlns:wpf="clr-namespace:SCR.Tools.DialogEditor.WPF"
+    xmlns:baseVM="clr-namespace:SCR.Tools.Viewmodeling;assembly=SCR.Tools.WPF"
     mc:Ignorable="d" 
     d:DesignHeight="450" d:DesignWidth="800"
     d:DataContext="{x:Static wpf:DesignDataFactory.Dialog}"
     Name="Container"
     ClipToBounds="True"
+    Focusable="True"
     Background="{DynamicResource BG4}">
 
     <UserControl.Style>
@@ -19,6 +21,16 @@
             <Setter Property="GridTile" Value="{DynamicResource BG2}"/>
         </Style>
     </UserControl.Style>
+
+    <UserControl.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="A">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_CreateNode"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+        <KeyBinding Key="Delete" Command="{Binding CmdDeleteSelectedNodes}" />
+        <KeyBinding Key="C" Modifiers="Shift" Command="{Binding CmdRecenterView, ElementName=Container}"/>
+    </UserControl.InputBindings>
 
     <UserControl.Resources>
         <ResourceDictionary>

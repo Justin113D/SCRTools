@@ -3,6 +3,7 @@ using SCR.Tools.UndoRedo.Collections;
 using SCR.Tools.Viewmodeling;
 using System.Collections.ObjectModel;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
+using System;
 
 namespace SCR.Tools.DialogEditor.Viewmodeling
 {
@@ -169,6 +170,14 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             Outputs = new(internalOutputs);
         }
 
+        public void InitConnections()
+        {
+            foreach(VmNodeOutput output in Outputs)
+            {
+                output.InitConnection();
+            }
+        }
+
         public void NotifyActiveChanged()
             => OnPropertyChanged(nameof(Active));
 
@@ -204,6 +213,11 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
         public void AddInput(VmNodeOutput vmInput)
         {
+            if(vmInput.Connected != this)
+            {
+                throw new ArgumentException("Input invalid!", nameof(vmInput));
+            }
+
             BeginChangeGroup();
 
             _inputs.Add(vmInput);
@@ -214,6 +228,11 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
         public void RemoveInput(VmNodeOutput vmInput)
         {
+            if (vmInput.Connected != this)
+            {
+                throw new ArgumentException("Input invalid!", nameof(vmInput));
+            }
+
             BeginChangeGroup();
 
             _inputs.Remove(vmInput);
@@ -222,7 +241,9 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             EndChangeGroup();
         }
 
-        
+        public void Disconnect()
+            => Data.Disconnect();
+
         public void Select(bool multi, bool allowActive)
         {
             if (!multi)
