@@ -4,6 +4,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Runtime.InteropServices;
+using SCR.Tools.DialogEditor.Viewmodeling;
+using System.Collections.Generic;
 
 namespace SCR.Tools.DialogEditor.WPF.UserControls
 {
@@ -13,6 +16,13 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
     /// </summary>
     public partial class UcGridView : UserControl
     {
+        /// Return Type: BOOL->int  
+        ///X: int  
+        ///Y: int  
+        [DllImport("user32.dll", EntryPoint = "SetCursorPos")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetCursorPos(int X, int Y);
+
         public const int brushDim = 50;
         public const int halfBrushDim = brushDim / 2;
 
@@ -48,15 +58,39 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
         public VisualBrush GridBackground { get; private set; }
 
 
-        /// <summary>
-        /// Last relative mouse position
-        /// </summary>
-        private Point? _mousePos;
+        private Point? _previousMousePos;
 
-        /// <summary>
-        /// Last grid mouse position
-        /// </summary>
-        private Point? _gridMousePos;
+        private Point _selectBoxStartGridPos;
+
+        private Point? SelectBoxStartGridPos
+        {
+            get
+            {
+                if (SelectBlock.Visibility != Visibility.Visible)
+                {
+                    return null;
+                }
+
+                return _selectBoxStartGridPos;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    SelectBlock.Visibility = Visibility.Collapsed;
+                    return;
+                }
+
+                SelectBlock.Visibility = Visibility.Visible;
+                _selectBoxStartGridPos = value ?? default;
+            }
+        }
+
+        public Point? NodeClickCheck { get; set; }
+
+
+        public VmDialog Viewmodel
+            => (VmDialog)DataContext;
 
         public UcGridView()
         {
@@ -79,56 +113,187 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             InitializeComponent();
         }
 
+        private Point GetMouseGridPos(Point point)
+        {
+            return GridTransform.Inverse.Transform(point);
+        }
+
+        private Point GetMouseGridPos(MouseEventArgs e)
+        {
+            return GetMouseGridPos(e.GetPosition(this));
+        }
+
+
         private void UpdateBackground()
         {
             double width = brushDim * GridTransform.Matrix.M11;
             GridBackground.Viewport = new Rect(GridTransform.Matrix.OffsetX, GridTransform.Matrix.OffsetY, width, width);
         }
 
-        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Middle)
-                Mouse.OverrideCursor = Cursors.SizeAll;
-        }
 
-        private void Grid_MouseLeave(object sender, MouseEventArgs e)
+        private void WrapCursor(MouseEventArgs e)
         {
-            _mousePos = null;
-            _gridMousePos = null;
-        }
+            Window window = Window.GetWindow(this);
+            Point origin = window.PointToScreen(new(0, 0));
 
-        private void Grid_MouseMove(object sender, MouseEventArgs e)
-        {
-            Point mousePos = e.GetPosition(this);
-            Point gridMousePos = GridTransform.Inverse.Transform(mousePos);
+            Point relativeMousePos = e.GetPosition(this);
 
-            if (e.MiddleButton == MouseButtonState.Pressed)
+            Point newRelativeMousePos = e.GetPosition(window);
+
+            if (relativeMousePos.X <= 0)
             {
-                Point dif = new((mousePos.X - _mousePos?.X) ?? 0, (mousePos.Y - _mousePos?.Y) ?? 0);
-
-                Matrix m = GridTransform.Matrix;
-                m.Translate(dif.X, dif.Y);
-                GridTransform.Matrix = m;
-
-                UpdateBackground();
-                Mouse.OverrideCursor = Cursors.SizeAll;
+                relativeMousePos.X += ActualWidth;
+                newRelativeMousePos.X += ActualWidth;
             }
-            else
+            else if (relativeMousePos.X >= ActualWidth)
             {
-                Mouse.OverrideCursor = null;
+                relativeMousePos.X -= ActualWidth;
+                newRelativeMousePos.X -= ActualWidth;
             }
 
-            _mousePos = mousePos;
-            _gridMousePos = gridMousePos;
+            if (relativeMousePos.Y <= 0)
+            {
+                relativeMousePos.Y += ActualHeight;
+                newRelativeMousePos.Y += ActualHeight;
+            }
+            else if (relativeMousePos.Y >= ActualHeight)
+            {
+                relativeMousePos.Y -= ActualHeight;
+                newRelativeMousePos.Y -= ActualHeight;
+            }
+
+            _previousMousePos = relativeMousePos;
+
+            SetCursorPos(
+               (int)(origin.X + newRelativeMousePos.X),
+               (int)(origin.Y + newRelativeMousePos.Y));
+
         }
 
-        private void Grid_MouseWheel(object sender, MouseWheelEventArgs e)
+        private void PanGrid(Point mousePos, bool active)
         {
-            if(_gridMousePos == null)
+            if(_previousMousePos == null)
             {
                 return;
             }
 
+            if(NodeClickCheck != null || !active)
+            {
+                EndPanGrid();
+                return;
+            }
+
+            Point dif = new(
+                (mousePos.X - _previousMousePos?.X) ?? 0,
+                (mousePos.Y - _previousMousePos?.Y) ?? 0);
+
+            Matrix m = GridTransform.Matrix;
+            m.Translate(dif.X, dif.Y);
+            GridTransform.Matrix = m;
+
+            UpdateBackground();
+            
+            _previousMousePos = mousePos;
+        }
+
+        private void EndPanGrid()
+        {
+            _previousMousePos = null;
+            Mouse.OverrideCursor = null;
+        }
+
+
+        private void DragSelectBox(Point mousePos, bool active)
+        {
+            if (SelectBoxStartGridPos == null || !active)
+            {
+                return;
+            }
+
+            Point dragToGridPos = GetMouseGridPos(mousePos);
+
+            double x = dragToGridPos.X < _selectBoxStartGridPos.X ? dragToGridPos.X : _selectBoxStartGridPos.X;
+            double y = dragToGridPos.Y < _selectBoxStartGridPos.Y ? dragToGridPos.Y : _selectBoxStartGridPos.Y;
+            double width = Math.Abs(dragToGridPos.X - _selectBoxStartGridPos.X);
+            double height = Math.Abs(dragToGridPos.Y - _selectBoxStartGridPos.Y);
+
+            Canvas.SetLeft(SelectBlock, x);
+            Canvas.SetTop(SelectBlock, y);
+
+            SelectBlock.Width = width;
+            SelectBlock.Height = height;
+        }
+
+        private void EndSelectBox(bool selectContents)
+        {
+            if (SelectBlock.Width > 20 
+                && SelectBlock.Height > 20 
+                && selectContents)
+            {
+                Rect selectRect = new(
+                    Canvas.GetLeft(SelectBlock),
+                    Canvas.GetTop(SelectBlock),
+                    SelectBlock.Width,
+                    SelectBlock.Height);
+
+                if(!Keyboard.IsKeyDown(Key.LeftShift) && !Keyboard.IsKeyDown(Key.RightShift))
+                {
+                    Viewmodel.DeselectAll();
+                }
+
+                for (int i = 0; i < NodesDisplay.Items.Count; i++)
+                {
+                    UcNode ucNode = (UcNode)VisualTreeHelper.GetChild(
+                        NodesDisplay.ItemContainerGenerator.ContainerFromIndex(i),
+                        0);
+
+                    if (selectRect.IntersectsWith(ucNode.SelectRect) 
+                        && !ucNode.Viewmodel.Selected)
+                    {
+                        ucNode.Viewmodel.Select(true, false);
+                    }
+                }
+            }
+
+            SelectBoxStartGridPos = null;
+        }
+
+
+        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (NodeClickCheck != null)
+            {
+                return;
+            }
+
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                SelectBoxStartGridPos = GetMouseGridPos(e);
+                SelectBlock.Width = 0;
+                SelectBlock.Height = 0;
+            }
+            else if(e.ChangedButton == MouseButton.Middle)
+            {
+                _previousMousePos = e.GetPosition(this);
+                Mouse.OverrideCursor = Cursors.SizeAll;
+            }
+        }
+
+        private void GridCanvas_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if(_previousMousePos != null && e.ChangedButton == MouseButton.Middle)
+            {
+                EndPanGrid();
+            }
+
+            if(SelectBoxStartGridPos != null && e.ChangedButton == MouseButton.Left)
+            {
+                EndSelectBox(true);
+            }
+        }
+
+        private void Grid_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
             double newScale = GridTransform.Matrix.M11 + e.Delta * 0.0005d;
 
             newScale = Math.Clamp(newScale, 0.1, 1);
@@ -140,11 +305,44 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
 
             double scaleFactor = newScale / GridTransform.Matrix.M11;
 
+            Point gridMousePos = GetMouseGridPos(e);
+
             Matrix m = GridTransform.Matrix;
-            m.ScaleAtPrepend(scaleFactor, scaleFactor, _gridMousePos.Value.X, _gridMousePos.Value.Y);
+            m.ScaleAtPrepend(scaleFactor, scaleFactor, gridMousePos.X, gridMousePos.Y);
             GridTransform.Matrix = m;
 
             UpdateBackground();
         }
+
+        private void Grid_MouseMove(object sender, MouseEventArgs e)
+        {
+            Point mousePos = e.GetPosition(this);
+
+            PanGrid(mousePos, e.MiddleButton == MouseButtonState.Pressed);
+
+            DragSelectBox(mousePos, e.LeftButton == MouseButtonState.Pressed);
+        }
+
+        private void Grid_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (_previousMousePos != null)
+            {
+                if (e.MiddleButton != MouseButtonState.Pressed)
+                {
+                    EndPanGrid();
+                }
+                else
+                {
+                    WrapCursor(e);
+                    return;
+                }
+            }
+
+            if(SelectBoxStartGridPos != null)
+            {
+                EndSelectBox(false);
+            }
+        }
+
     }
 }

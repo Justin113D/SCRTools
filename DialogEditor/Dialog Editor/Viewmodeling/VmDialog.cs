@@ -13,6 +13,8 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
     {
         private readonly TrackList<VmNode> _nodes;
 
+        private VmNode? _activeNode;
+
         public VmMain Main { get; }
 
         public Dialog Data { get; }
@@ -64,7 +66,24 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
         #region Interaction Properties
 
-        public VmNode? ActiveNode { get; set; }
+        public VmNode? ActiveNode
+        {
+            get => _activeNode;
+            set
+            {
+                if (_activeNode == value)
+                {
+                    return;
+                }
+
+                VmNode? oldValue = _activeNode;
+
+                _activeNode = value;
+
+                oldValue?.NotifyActiveChanged();
+                _activeNode?.NotifyActiveChanged();
+            }
+        }
 
         public ObservableCollection<VmNode> Selected { get; set; }
 
@@ -124,6 +143,14 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
                 );
 
             EndChangeGroup();
+        }
+
+        public void DeselectAll()
+        {
+            foreach (VmNode vmNode in Selected.ToArray())
+            {
+                vmNode.Selected = false;
+            }
         }
     }
 }

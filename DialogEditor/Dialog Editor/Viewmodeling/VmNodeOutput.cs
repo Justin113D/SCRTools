@@ -95,8 +95,8 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         public string IconText
             => string.IsNullOrWhiteSpace(Data.Icon) ? "<No icon>" : Data.Icon;
 
-        public string IconPath
-            => Icon?.Value ?? "";
+        public string? IconPath
+            => Icon?.Value;
 
         public VmNodeOption<string>? Icon
         {

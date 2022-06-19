@@ -100,35 +100,35 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         public string InOutInfo
             => $"[ {_inputs.Count} ; {_outputs.Count} ]";
 
-        public bool IsActive
+        public bool Active
         {
             get => Dialog.ActiveNode == this;
             set
             {
-                if(value == IsActive)
+                if(value == Active)
                 {
                     return;
                 }
 
                 if(value)
                 {
-                    IsSelected = true;
+                    Selected = true;
                     Dialog.ActiveNode = this;
                 }
                 else
                 {
                     Dialog.ActiveNode = null;
-                    IsSelected = false;
+                    Selected = false;
                 }
             }
         }
 
-        public bool IsSelected
+        public bool Selected
         {
             get => Dialog.Selected.Contains(this);
             set
             {
-                if(IsSelected == value)
+                if(Selected == value)
                 {
                     return;
                 }
@@ -168,7 +168,10 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             _outputs = new(internalOutputs);
             Outputs = new(internalOutputs);
         }
-    
+
+        public void NotifyActiveChanged()
+            => OnPropertyChanged(nameof(Active));
+
 
         private void AddOutput()
         {
@@ -217,6 +220,25 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             TrackNotifyProperty(nameof(InOutInfo));
 
             EndChangeGroup();
+        }
+
+        
+        public void Select(bool multi, bool allowActive)
+        {
+            if (!multi)
+            {
+                Dialog.DeselectAll();
+                Selected = true;
+            }
+            else
+            {
+                Selected = !Selected;
+            }
+
+            if(allowActive)
+            {
+                Active = true;
+            }
         }
     }
 }

@@ -38,6 +38,7 @@
         <Border 
             x:Name="GridCanvas"
             MouseDown="Grid_MouseDown"
+            MouseUp="GridCanvas_MouseUp"
             MouseMove="Grid_MouseMove"
             MouseLeave="Grid_MouseLeave"
             MouseWheel="Grid_MouseWheel">
@@ -59,7 +60,9 @@
 
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type vm:VmNode}">
-                            <local:UcNode DataContext="{Binding }"/>
+                            <local:UcNode 
+                                DataContext="{Binding }"
+                                GridView="{Binding ElementName=Container, Path=.}"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
 
@@ -70,7 +73,15 @@
                     </ItemsControl.Template>
                     
                 </ItemsControl>
-                
+
+                <Border 
+                    x:Name="SelectBlock" 
+                    IsHitTestVisible="False" 
+                    BorderThickness="2" 
+                    BorderBrush="#CC0078D7" 
+                    Background="#3B0078D7" 
+                    Visibility="Collapsed"/>
+
             </Canvas>
 
         </Border>
