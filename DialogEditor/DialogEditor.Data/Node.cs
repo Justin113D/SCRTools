@@ -1,7 +1,7 @@
-﻿using SCR.Tools.UndoRedo;
-using SCR.Tools.UndoRedo.Collections;
+﻿using SCR.Tools.UndoRedo.Collections;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace SCR.Tools.DialogEditor.Data
 {
@@ -97,7 +97,7 @@ namespace SCR.Tools.DialogEditor.Data
         {
             BeginChangeGroup();
 
-            foreach (NodeOutput input in _inputs)
+            foreach (NodeOutput input in _inputs.ToArray())
             {
                 input.Disconnect();
             }
