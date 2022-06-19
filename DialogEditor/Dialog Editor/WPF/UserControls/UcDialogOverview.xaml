@@ -85,7 +85,8 @@
                 BorderThickness="0" 
                 HorizontalContentAlignment="Stretch"
                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                Template="{DynamicResource BasicListControl}">
+                Template="{DynamicResource BasicListControl}"
+                SelectionChanged="ListBox_SelectionChanged">
 
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type vm:VmNode}">

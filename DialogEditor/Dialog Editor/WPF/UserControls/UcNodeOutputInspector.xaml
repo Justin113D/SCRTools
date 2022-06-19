@@ -8,7 +8,8 @@
              xmlns:converters="clr-namespace:SCR.Tools.WPF.Converters;assembly=SCR.Tools.WPF"
              mc:Ignorable="d" 
              d:DesignHeight="320" d:DesignWidth="250"
-             d:DataContext="{x:Static wpf:DesignDataFactory.Output}">
+             d:DataContext="{x:Static wpf:DesignDataFactory.Output}"
+             x:Name="Container">
     
     <UserControl.Resources>
         <converters:VisibilityConverter x:Key="NullToCollapsed" InvisibleType="Collapsed"/>
@@ -252,7 +253,9 @@
                         Padding="10 5 10 3"
                         VerticalAlignment="Center"
                         VerticalContentAlignment="Center"
-                        Visibility="{Binding Connected, Converter={StaticResource NullToCollapsed}}">
+                        Visibility="{Binding Connected, Converter={StaticResource NullToCollapsed}}"
+                        Command="{Binding ElementName=Container, Path=CmdFocusNode}"
+                        CommandParameter="{Binding Connected}">
                         <Button.Content>
                             <TextBlock 
                                 Text="{Binding Connected.Name}" 

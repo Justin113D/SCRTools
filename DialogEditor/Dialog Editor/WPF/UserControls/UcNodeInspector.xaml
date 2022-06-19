@@ -12,7 +12,8 @@
     d:DesignHeight="600" d:DesignWidth="200"
     d:DataContext="{x:Static wpf:DesignDataFactory.Node}"
     Background="{DynamicResource BG1}"
-    Padding="3">
+    Padding="3"
+    x:Name="NodeInspector">
 
     <UserControl.Resources>
         <converters:VisibilityConverter x:Key="NullToCollapsed" InvisibleType="Collapsed"/>
@@ -101,7 +102,7 @@
                                     Content="{Binding Name}"
                                     HorizontalContentAlignment="Left"
                                     VerticalContentAlignment="Center"
-                                    Click="FocusInput"
+                                    Command="{Binding ElementName=NodeInspector, Path=CmdFocusNode}"
                                     CommandParameter="{Binding Parent}"
                                     VerticalAlignment="Center"
                                     Style="{DynamicResource TransparentButton}"/>
@@ -144,9 +145,12 @@
 
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="{x:Type vm:VmNodeOutput}">
-                            <local:UcNodeOutputInspector DataContext="{Binding }"/>
+                            <local:UcNodeOutputInspector 
+                                DataContext="{Binding }"
+                                CmdFocusNode="{Binding CmdFocusNode, ElementName=NodeInspector}"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
+
                 </ListBox>
 
             </Border>

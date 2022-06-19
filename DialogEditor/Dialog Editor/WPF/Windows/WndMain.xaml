@@ -54,7 +54,6 @@
                 <ColumnDefinition Width="300"/>
             </Grid.ColumnDefinitions>
 
-            <uc:UcDialogOverview DataContext="{Binding Dialog}"/>
 
             <uc:UcGridView 
                 x:Name="Gridview"
@@ -67,18 +66,21 @@
                 HorizontalAlignment="Stretch" 
                 Background="{DynamicResource BG3}"/>
 
-            <!-- This is where the grid editor is actually-->
-
             <GridSplitter 
                 Grid.Column="3" 
                 Width="5" 
                 HorizontalAlignment="Stretch" 
                 Background="{DynamicResource BG3}"/>
 
+            <uc:UcDialogOverview 
+                DataContext="{Binding Dialog}"
+                CmdFocusNode="{Binding ElementName=Gridview, Path=CmdFocusNode}"/>
+            
             <uc:UcNodeInspector
                 Grid.Column="5"
                 HorizontalAlignment="Stretch" 
                 DataContext="{Binding Dialog.ActiveNode}"
+                CmdFocusNode="{Binding ElementName=Gridview, Path=CmdFocusNode}"
                 />
 
         </Grid>
