@@ -88,6 +88,11 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
 
         public Point? NodeClickCheck { get; set; }
 
+        private UcNode[]? _selectedNodes;
+
+        public bool IsDragging
+            => _selectedNodes != null;
+
 
         public VmDialog Viewmodel
             => (VmDialog)DataContext;
@@ -172,14 +177,8 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
 
         private void PanGrid(Point mousePos, bool active)
         {
-            if(_previousMousePos == null)
+            if(_previousMousePos == null || !active)
             {
-                return;
-            }
-
-            if(NodeClickCheck != null || !active)
-            {
-                EndPanGrid();
                 return;
             }
 
@@ -226,9 +225,7 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
 
         private void EndSelectBox(bool selectContents)
         {
-            if (SelectBlock.Width > 20 
-                && SelectBlock.Height > 20 
-                && selectContents)
+            if (selectContents)
             {
                 Rect selectRect = new(
                     Canvas.GetLeft(SelectBlock),
@@ -256,6 +253,96 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             }
 
             SelectBoxStartGridPos = null;
+        }
+
+
+        public void InitMoveSelected()
+        {
+            if(NodeClickCheck == null)
+            {
+                throw new InvalidOperationException("Nodeclickcheck has to be set!");
+            }
+
+            List<UcNode> selectedNodes = new();
+
+            for (int i = 0; i < NodesDisplay.Items.Count; i++)
+            {
+                UcNode ucNode = (UcNode)VisualTreeHelper.GetChild(
+                    NodesDisplay.ItemContainerGenerator.ContainerFromIndex(i),
+                    0);
+
+                if (ucNode.Viewmodel.Selected)
+                {
+                    selectedNodes.Add(ucNode);
+                }
+            }
+
+            _selectedNodes = selectedNodes.ToArray();
+            // converting it to grid space
+            NodeClickCheck = GetMouseGridPos(NodeClickCheck ?? default);
+        }
+
+        private void MoveSelected(Point mousePos, bool active)
+        {
+            if(_selectedNodes == null || !active)
+            {
+                return;
+            }
+
+            if(NodeClickCheck == null)
+            {
+                throw new InvalidOperationException("Click check is null!");
+            }
+
+
+            Point gridMousePos = GetMouseGridPos(mousePos);
+
+            Point dif = new(
+               (gridMousePos.X - NodeClickCheck?.X) ?? 0,
+               (gridMousePos.Y - NodeClickCheck?.Y) ?? 0);
+
+            foreach(UcNode t in _selectedNodes)
+            {
+                t.SetDragOffset(dif);
+            }
+        }
+
+        public void DropSelect(bool revert)
+        {
+            if(_selectedNodes == null)
+            {
+                NodeClickCheck = null;
+                return;
+            }
+
+            if (NodeClickCheck == null)
+            {
+                throw new InvalidOperationException("Clickcheck or selectednodes are null!");
+            }
+
+            if(revert)
+            {
+                foreach (UcNode node in _selectedNodes)
+                {
+                    node.ResetCanvasPosition();
+                }
+            }
+            else
+            {
+
+                UndoRedo.GlobalChangeTrackerC.BeginChangeGroup();
+
+                foreach (UcNode node in _selectedNodes)
+                {
+                    node.ApplyCanvasPosition();
+                }
+
+                UndoRedo.GlobalChangeTrackerC.EndChangeGroup();
+
+            }
+
+            NodeClickCheck = null;
+            _selectedNodes = null;
         }
 
 
@@ -290,6 +377,11 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             {
                 EndSelectBox(true);
             }
+
+            if(_selectedNodes != null && e.ChangedButton == MouseButton.Left)
+            {
+                DropSelect(false);
+            }
         }
 
         private void Grid_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -319,8 +411,8 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             Point mousePos = e.GetPosition(this);
 
             PanGrid(mousePos, e.MiddleButton == MouseButtonState.Pressed);
-
             DragSelectBox(mousePos, e.LeftButton == MouseButtonState.Pressed);
+            MoveSelected(mousePos, e.LeftButton == MouseButtonState.Pressed);
         }
 
         private void Grid_MouseLeave(object sender, MouseEventArgs e)
@@ -341,6 +433,11 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             if(SelectBoxStartGridPos != null)
             {
                 EndSelectBox(false);
+            }
+
+            if(NodeClickCheck != null)
+            {
+                DropSelect(true);
             }
         }
 

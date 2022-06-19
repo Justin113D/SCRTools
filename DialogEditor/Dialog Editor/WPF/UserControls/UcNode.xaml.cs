@@ -10,6 +10,8 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
     /// </summary>
     public partial class UcNode : UserControl
     {
+        private bool _dragging;
+
         public static readonly DependencyProperty GridViewProperty =
             DependencyProperty.Register(
                 nameof(GridView),
@@ -74,6 +76,7 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             set => Canvas.SetTop(CanvasController, value);
         }
 
+
         public Rect SelectRect
         {
             get
@@ -105,35 +108,62 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             return ((int)value - UcGridView.halfBrushDim * (value < 0 ? 2 : 0)) / UcGridView.brushDim;
         }
 
-        public void Select()
+        private void Select()
         {
             bool multi = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
+            
+            if(!multi && Viewmodel.Selected)
+            {
+                return;
+            }
+
             Viewmodel.Select(multi, true);
         }
 
-        private void GrabGrid_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        public void SetDragOffset(Point offset)
+        {
+            CanvasX = ToGridSpace(LocationX) + offset.X;
+            CanvasY = ToGridSpace(LocationY) + offset.Y;
+        }
+
+        public void ApplyCanvasPosition()
+        {
+            LocationX = FromGridSpace(CanvasX);
+            LocationY = FromGridSpace(CanvasY);
+        }
+
+        public void ResetCanvasPosition()
+        {
+            CanvasX = ToGridSpace(LocationX);
+            CanvasY = ToGridSpace(LocationY);
+        }
+
+
+        private void GrabGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
             GridView.NodeClickCheck = e.GetPosition(GridView);
         }
 
-        private void GrabGrid_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void GrabGrid_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if(GridView.NodeClickCheck != null)
             {
-                Select();
-                GridView.NodeClickCheck = null;
+                if(!GridView.IsDragging)
+                {
+                    Select();   
+                }
+                
+                GridView.DropSelect(false);
             }
         }
 
         private void GrabGrid_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (GridView.NodeClickCheck != null)
+            if (GridView.NodeClickCheck != null && !GridView.IsDragging)
             {
-                if(!Viewmodel.Selected)
-                {
-                    Select();
-                }
-                GridView.NodeClickCheck = null;
+                Select();
+
+                GridView.InitMoveSelected();
             }
         }
     }
