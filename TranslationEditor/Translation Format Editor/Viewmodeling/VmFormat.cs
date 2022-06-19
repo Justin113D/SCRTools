@@ -378,8 +378,6 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 
         public void SelectRange(VmNode target, bool multi)
         {
-            BeginChangeGroup();
-
             if (!multi)
             {
                 DeselectAll();
@@ -424,8 +422,6 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
                     }
                 }
             }
-
-            EndChangeGroup();
         }
 
         public void MoveSelected(ParentNode parent, int index)

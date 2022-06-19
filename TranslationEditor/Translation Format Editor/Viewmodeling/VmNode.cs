@@ -156,8 +156,6 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
         /// <param name="multi">Whether to keep previous selected nodes</param>
         public void Select(bool multi)
         {
-            BeginChangeGroup();
-
             if (!multi)
             {
                 _format.DeselectAll();
@@ -169,7 +167,6 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
             }
 
             Active = true;
-            EndChangeGroup();
         }
 
         /// <summary>
