@@ -4,6 +4,7 @@ using SCR.Tools.Viewmodeling;
 using System.Collections.ObjectModel;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System;
+using System.Collections.Generic;
 
 namespace SCR.Tools.DialogEditor.Viewmodeling
 {
@@ -261,5 +262,8 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
                 Active = true;
             }
         }
+
+        public override string ToString()
+            => $"{Name} {InOutInfo}";
     }
 }

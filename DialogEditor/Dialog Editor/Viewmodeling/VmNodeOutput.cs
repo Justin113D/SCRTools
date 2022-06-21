@@ -2,6 +2,8 @@
 using SCR.Tools.DialogEditor.Data.Events;
 using SCR.Tools.Viewmodeling;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
@@ -247,5 +249,8 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         {
             Parent.DeleteOutput(this);
         }
+
+        public override string ToString()
+            => Name;
     }
 }

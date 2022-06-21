@@ -16,14 +16,11 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
         private VmNode? _activeNode;
 
+
         public VmMain Main { get; }
 
         public Dialog Data { get; }
 
-
-        private readonly TrackDictionary<Node, VmNode> _nodeTable;
-
-        public ReadOnlyObservableCollection<VmNode> Nodes { get; private set; }
 
         #region Wrapper Properties
 
@@ -66,6 +63,11 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         #endregion
 
         #region Interaction Properties
+
+
+        private readonly TrackDictionary<Node, VmNode> _nodeTable;
+
+        public ReadOnlyObservableCollection<VmNode> Nodes { get; }
 
         public VmNode? ActiveNode
         {
@@ -121,9 +123,9 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             }
             _nodeTable = new(internalNodeTable);
 
-
             _nodes = new(internalNodes);
             Nodes = new(internalNodes);
+
 
             foreach (VmNode vmnode in Nodes)
             {

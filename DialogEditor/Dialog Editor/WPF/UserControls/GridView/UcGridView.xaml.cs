@@ -8,8 +8,9 @@ using System.Runtime.InteropServices;
 using SCR.Tools.DialogEditor.Viewmodeling;
 using System.Collections.Generic;
 using SCR.Tools.Viewmodeling;
+using System.Collections.ObjectModel;
 
-namespace SCR.Tools.DialogEditor.WPF.UserControls
+namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
 {
 
     /// <summary>
@@ -17,13 +18,6 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
     /// </summary>
     public partial class UcGridView : UserControl
     {
-        /// Return Type: BOOL->int  
-        ///X: int  
-        ///Y: int  
-        [DllImport("user32.dll", EntryPoint = "SetCursorPos")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool SetCursorPos(int X, int Y);
-
         public const int brushDim = 50;
         public const int halfBrushDim = brushDim / 2;
 
@@ -94,6 +88,7 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
         public bool IsDraggingNodes
             => _selectedNodes != null;
 
+        #region Commands
 
         public RelayCommand CmdRecenterView
             => new(RecenterView);
@@ -104,15 +99,14 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
         public RelayCommand<VmNode> CmdFocusNode
             => new(FocusNode);
 
+        #endregion
 
         public VmDialog Viewmodel
             => (VmDialog)DataContext;
 
-
         public UcGridView()
         {
             GridTransform = new();
-
             GridBackground = new()
             {
                 TileMode = TileMode.Tile,
@@ -130,24 +124,45 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             InitializeComponent();
         }
 
-
-        private Point ConvertToGridSpace(Point point)
-        {
-            return GridTransform.Inverse.Transform(point);
-        }
-
-        private Point GetMouseGridPos(MouseEventArgs e)
-        {
-            return ConvertToGridSpace(e.GetPosition(this));
-        }
-
-
         private void UpdateBackground()
         {
             double width = brushDim * GridTransform.Matrix.M11;
             GridBackground.Viewport = new Rect(GridTransform.Matrix.OffsetX, GridTransform.Matrix.OffsetY, width, width);
         }
 
+        public UcNode GetNodeControl(VmNode viewmodel)
+        {
+            return (UcNode)VisualTreeHelper.GetChild(
+                    NodesDisplay.ItemContainerGenerator.ContainerFromItem(viewmodel),
+                    0);
+        }
+
+        #region Space conversion
+
+        public static double ToGridCoordinates(int value) 
+            => (value * brushDim) + halfBrushDim;
+
+        public static int FromGridCoordinates(double value) 
+            => ((int)value - (halfBrushDim * (value < 0 ? 2 : 0))) / brushDim;
+
+        public Point ConvertToGridSpace(Point point)
+        {
+            return GridTransform.Inverse.Transform(point);
+        }
+
+        public Point GetMouseGridPos(MouseEventArgs e)
+        {
+            return ConvertToGridSpace(e.GetPosition(this));
+        }
+
+        #endregion
+
+
+        #region Grid moving
+
+        [DllImport("user32.dll", EntryPoint = "SetCursorPos")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetCursorPos(int X, int Y);
 
         private void WrapCursor(MouseEventArgs e)
         {
@@ -241,6 +256,9 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             UpdateBackground();
         }
 
+        #endregion
+
+        #region Drag select box
 
         private void DragSelectBox(Point mousePos, bool active)
         {
@@ -295,6 +313,9 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             SelectBoxStartGridPos = null;
         }
 
+        #endregion
+
+        #region Node moving
 
         public void InitMoveSelected()
         {
@@ -384,11 +405,14 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             _selectedNodes = null;
         }
 
+        #endregion
+
+        #region Node manipulation
 
         private void CreateNode(Point gridPos)
         {
-            int locationX = UcNode.FromGridSpace(gridPos.X);
-            int locationY = UcNode.FromGridSpace(gridPos.Y);
+            int locationX = FromGridCoordinates(gridPos.X);
+            int locationY = FromGridCoordinates(gridPos.Y);
 
             Viewmodel.CreateNode(locationX, locationY);
         }
@@ -400,6 +424,9 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             CreateNode(p);
         }
 
+        #endregion
+
+        #region events
 
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -505,5 +532,7 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             Point nodePos = ConvertToGridSpace(Mouse.GetPosition(this));
             CreateNode(nodePos);
         }
+
+        #endregion
     }
 }

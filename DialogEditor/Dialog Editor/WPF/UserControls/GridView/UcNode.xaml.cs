@@ -1,16 +1,21 @@
 ﻿using SCR.Tools.DialogEditor.Viewmodeling;
+using System;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Controls.Primitives;
+using System.Collections.Generic;
 
-namespace SCR.Tools.DialogEditor.WPF.UserControls
+namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
 {
     /// <summary>
     /// Interaction logic for UcNode.xaml
     /// </summary>
     public partial class UcNode : UserControl
     {
-        private bool _dragging;
+        #region Dependency Properties
 
         public static readonly DependencyProperty GridViewProperty =
             DependencyProperty.Register(
@@ -33,7 +38,7 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
                 new(0, (o, args) =>
                 {
                     UcNode node = (UcNode)o;
-                    node.CanvasX = ToGridSpace((int)args.NewValue);
+                    node.CanvasX = UcGridView.ToGridCoordinates((int)args.NewValue);
                 })
             );
 
@@ -51,7 +56,7 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
                 new(0, (o, args) =>
                 {
                     UcNode node = (UcNode)o;
-                    node.CanvasY = ToGridSpace((int)args.NewValue);
+                    node.CanvasY = UcGridView.ToGridCoordinates((int)args.NewValue);
                 })
             );
 
@@ -61,20 +66,35 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             set => SetValue(LocationYProperty, value);
         }
 
+        #endregion
+
         private ContentPresenter CanvasController
             => (ContentPresenter)VisualParent;
 
-        private double CanvasX
+        public double CanvasX
         {
             get => Canvas.GetLeft(CanvasController);
-            set => Canvas.SetLeft(CanvasController, value);
+            set
+            {
+                Canvas.SetLeft(CanvasController, value);
+                UpdateSocketConnections();
+            }
         }
 
-        private double CanvasY
+        public double CanvasY
         {
             get => Canvas.GetTop(CanvasController);
-            set => Canvas.SetTop(CanvasController, value);
+            set
+            {
+                Canvas.SetTop(CanvasController, value);
+                UpdateSocketConnections();
+            }
         }
+
+
+        private UcNodeOutputSocket[] _sockets = Array.Empty<UcNodeOutputSocket>();
+
+        public List<UcNodeOutputSocket> ConnectedSockets = new();
 
 
         public Rect SelectRect
@@ -93,26 +113,70 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
         public VmNode Viewmodel
             => (VmNode)DataContext;
 
+
         public UcNode()
         {
             InitializeComponent();
-        }
-   
-        public static double ToGridSpace(int value)
-        {
-            return value * UcGridView.brushDim + UcGridView.halfBrushDim;
+
+            OutputSockets.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
         }
 
-        public static int FromGridSpace(double value)
+        private void ItemContainerGenerator_StatusChanged(object? sender, EventArgs e)
         {
-            return ((int)value - UcGridView.halfBrushDim * (value < 0 ? 2 : 0)) / UcGridView.brushDim;
+            if(sender is not ItemContainerGenerator itemGen)
+            {
+                throw new InvalidOperationException("Generating items error");
+            }
+
+            if(itemGen.Status 
+                is GeneratorStatus.GeneratingContainers
+                or GeneratorStatus.NotStarted)
+            {
+                _sockets = Array.Empty<UcNodeOutputSocket>();
+            }
+            else if(OutputSockets.ItemContainerGenerator.Status
+                == GeneratorStatus.ContainersGenerated)
+            {
+                _sockets = new UcNodeOutputSocket[OutputSockets.Items.Count];
+
+                for (int i = 0; i < itemGen.Items.Count; i++)
+                {
+                    DependencyObject itemContainer = OutputSockets.ItemContainerGenerator.ContainerFromIndex(i);
+                    itemContainer = VisualTreeHelper.GetChild(itemContainer, 0);
+
+                    UcNodeOutputSocket socket = (UcNodeOutputSocket)VisualTreeHelper.GetChild(itemContainer, 0);
+
+                    _sockets[i] = socket;
+                    socket.RecalculateNodeOffset(this);
+                    socket.SetCanvasPosition(new(CanvasX, CanvasY));
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("Generating items error");
+            }
         }
+
+        private void UpdateSocketConnections()
+        {
+            Point canvasPos = new(CanvasX, CanvasY);
+            foreach(UcNodeOutputSocket socket in _sockets)
+            {
+                socket.SetCanvasPosition(canvasPos);
+            }
+
+            foreach (UcNodeOutputSocket socket in ConnectedSockets)
+            {
+                socket.SetEndPosition(canvasPos);
+            }
+        }
+
 
         private void Select()
         {
             bool multi = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
-            
-            if(!multi && Viewmodel.Selected)
+
+            if (!multi && Viewmodel.Selected)
             {
                 return;
             }
@@ -122,26 +186,26 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
 
         public void SetDragOffset(Point offset)
         {
-            CanvasX = ToGridSpace(LocationX) + offset.X;
-            CanvasY = ToGridSpace(LocationY) + offset.Y;
+            CanvasX = UcGridView.ToGridCoordinates(LocationX) + offset.X;
+            CanvasY = UcGridView.ToGridCoordinates(LocationY) + offset.Y;
         }
 
         public void ApplyCanvasPosition()
         {
-            LocationX = FromGridSpace(CanvasX);
-            LocationY = FromGridSpace(CanvasY);
+            LocationX = UcGridView.FromGridCoordinates(CanvasX);
+            LocationY = UcGridView.FromGridCoordinates(CanvasY);
         }
 
         public void ResetCanvasPosition()
         {
-            CanvasX = ToGridSpace(LocationX);
-            CanvasY = ToGridSpace(LocationY);
+            CanvasX = UcGridView.ToGridCoordinates(LocationX);
+            CanvasY = UcGridView.ToGridCoordinates(LocationY);
         }
 
 
         private void GrabGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(e.ChangedButton != MouseButton.Left)
+            if (e.ChangedButton != MouseButton.Left)
             {
                 return;
             }
@@ -158,11 +222,11 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
 
             if (GridView.DragNodePosition != null)
             {
-                if(!GridView.IsDraggingNodes)
+                if (!GridView.IsDraggingNodes)
                 {
-                    Select();   
+                    Select();
                 }
-                
+
                 GridView.DropSelect(false);
             }
         }
