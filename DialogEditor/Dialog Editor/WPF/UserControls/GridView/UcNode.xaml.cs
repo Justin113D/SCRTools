@@ -1,12 +1,12 @@
 ﻿using SCR.Tools.DialogEditor.Viewmodeling;
 using System;
-using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Controls.Primitives;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
 {
@@ -15,58 +15,7 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
     /// </summary>
     public partial class UcNode : UserControl
     {
-        #region Dependency Properties
-
-        public static readonly DependencyProperty GridViewProperty =
-            DependencyProperty.Register(
-                nameof(GridView),
-                typeof(UcGridView),
-                typeof(UcNode)
-            );
-
-        public UcGridView GridView
-        {
-            get => (UcGridView)GetValue(GridViewProperty);
-            set => SetValue(GridViewProperty, value);
-        }
-
-        public static readonly DependencyProperty LocationXProperty =
-            DependencyProperty.Register(
-                nameof(LocationX),
-                typeof(int),
-                typeof(UcNode),
-                new(0, (o, args) =>
-                {
-                    UcNode node = (UcNode)o;
-                    node.CanvasX = UcGridView.ToGridCoordinates((int)args.NewValue);
-                })
-            );
-
-        public int LocationX
-        {
-            get => (int)GetValue(LocationXProperty);
-            set => SetValue(LocationXProperty, value);
-        }
-
-        public static readonly DependencyProperty LocationYProperty =
-            DependencyProperty.Register(
-                nameof(LocationY),
-                typeof(int),
-                typeof(UcNode),
-                new(0, (o, args) =>
-                {
-                    UcNode node = (UcNode)o;
-                    node.CanvasY = UcGridView.ToGridCoordinates((int)args.NewValue);
-                })
-            );
-
-        public int LocationY
-        {
-            get => (int)GetValue(LocationYProperty);
-            set => SetValue(LocationYProperty, value);
-        }
-
-        #endregion
+        public UcGridView? _gridView;
 
         private ContentPresenter CanvasController
             => (ContentPresenter)VisualParent;
@@ -116,16 +65,78 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
 
         public UcNode()
         {
+            DataContextChanged += OnDataContextChanged;
+            Unloaded += OnUnloaded;
             InitializeComponent();
-
             OutputSockets.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
         }
 
+
+        #region Control Event handlers
+
+        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.OldValue != null)
+            {
+                // unexpected behavior
+                throw new InvalidOperationException();
+            }
+
+            if (e.NewValue is INotifyPropertyChanged newINotify)
+            {
+                newINotify.PropertyChanged += OnPropertyChanged;
+
+                CanvasX = UcGridView.ToGridCoordinates(Viewmodel.LocationX);
+                CanvasY = UcGridView.ToGridCoordinates(Viewmodel.LocationY);
+            }
+        }
+
+        private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(VmNode.LocationX))
+            {
+                CanvasX = UcGridView.ToGridCoordinates(Viewmodel.LocationX);
+            }
+
+            if (e.PropertyName == nameof(VmNode.LocationY))
+            {
+                CanvasY = UcGridView.ToGridCoordinates(Viewmodel.LocationY);
+            }
+        }
+
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            Viewmodel.PropertyChanged -= OnPropertyChanged;
+        }
+
+        protected override void OnVisualParentChanged(DependencyObject oldParent)
+        {
+            base.OnVisualParentChanged(oldParent);
+
+            if (_gridView != null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            DependencyObject element = VisualParent;
+            while (element is not UcGridView)
+            {
+                element = VisualTreeHelper.GetParent(element);
+            }
+            _gridView = (UcGridView)element;
+        }
+        
         private void ItemContainerGenerator_StatusChanged(object? sender, EventArgs e)
         {
             if(sender is not ItemContainerGenerator itemGen)
             {
                 throw new InvalidOperationException("Generating items error");
+            }
+
+            // preventing NAN
+            if(CanvasX != CanvasX || CanvasY != CanvasY)
+            {
+                return;
             }
 
             if(itemGen.Status 
@@ -157,6 +168,8 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
             }
         }
 
+        #endregion
+
         private void UpdateSocketConnections()
         {
             Point canvasPos = new(CanvasX, CanvasY);
@@ -186,58 +199,73 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
 
         public void SetDragOffset(Point offset)
         {
-            CanvasX = UcGridView.ToGridCoordinates(LocationX) + offset.X;
-            CanvasY = UcGridView.ToGridCoordinates(LocationY) + offset.Y;
+            CanvasX = UcGridView.ToGridCoordinates(Viewmodel.LocationX) + offset.X;
+            CanvasY = UcGridView.ToGridCoordinates(Viewmodel.LocationY) + offset.Y;
         }
 
         public void ApplyCanvasPosition()
         {
-            LocationX = UcGridView.FromGridCoordinates(CanvasX);
-            LocationY = UcGridView.FromGridCoordinates(CanvasY);
+            Viewmodel.LocationX = UcGridView.FromGridCoordinates(CanvasX);
+            Viewmodel.LocationY = UcGridView.FromGridCoordinates(CanvasY);
         }
 
         public void ResetCanvasPosition()
         {
-            CanvasX = UcGridView.ToGridCoordinates(LocationX);
-            CanvasY = UcGridView.ToGridCoordinates(LocationY);
+            CanvasX = UcGridView.ToGridCoordinates(Viewmodel.LocationX);
+            CanvasY = UcGridView.ToGridCoordinates(Viewmodel.LocationY);
         }
 
 
         private void GrabGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if(_gridView == null)
+            {
+                throw new InvalidOperationException();
+            }
+
             if (e.ChangedButton != MouseButton.Left)
             {
                 return;
             }
 
-            GridView.DragNodePosition = e.GetPosition(GridView);
+            _gridView.DragNodePosition = e.GetPosition(_gridView);
         }
 
         private void GrabGrid_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            if (_gridView == null)
+            {
+                throw new InvalidOperationException();
+            }
+
             if (e.ChangedButton != MouseButton.Left)
             {
                 return;
             }
 
-            if (GridView.DragNodePosition != null)
+            if (_gridView.DragNodePosition != null)
             {
-                if (!GridView.IsDraggingNodes)
+                if (!_gridView.IsDraggingNodes)
                 {
                     Select();
                 }
 
-                GridView.DropSelect(false);
+                _gridView.DropSelect(false);
             }
         }
 
         private void GrabGrid_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (GridView.DragNodePosition != null && !GridView.IsDraggingNodes)
+            if (_gridView == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            if (_gridView.DragNodePosition != null && !_gridView.IsDraggingNodes)
             {
                 Select();
 
-                GridView.InitMoveSelected();
+                _gridView.InitMoveSelected();
             }
         }
     }

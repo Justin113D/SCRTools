@@ -12,12 +12,25 @@ using System.Collections.ObjectModel;
 
 namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
 {
+    public class NodeControlNotGeneratedException : Exception
+    {
+        public ContentPresenter Content { get; }
+
+        public NodeControlNotGeneratedException(ContentPresenter content) : base()
+        {
+            Content = content;
+        }
+    }
+
 
     /// <summary>
     /// Interaction logic for UcGridView.xaml
     /// </summary>
     public partial class UcGridView : UserControl
     {
+        public delegate void NodesGeneratedEventHandler();
+        public event NodesGeneratedEventHandler? NodesGenerated;
+
         public const int brushDim = 50;
         public const int halfBrushDim = brushDim / 2;
 
@@ -121,7 +134,25 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
                 }
             };
 
+            DataContextChanged += UcGridView_DataContextChanged;
+
             InitializeComponent();
+
+            NodesDisplay.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
+        }
+
+        private void UcGridView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            NodeConnections.Items.Clear();
+        }
+
+        private void ItemContainerGenerator_StatusChanged(object? sender, EventArgs e)
+        {
+            if(NodesDisplay.ItemContainerGenerator.Status ==
+                System.Windows.Controls.Primitives.GeneratorStatus.ContainersGenerated)
+            {
+                NodesGenerated?.Invoke();
+            }
         }
 
         private void UpdateBackground()
@@ -132,9 +163,16 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
 
         public UcNode GetNodeControl(VmNode viewmodel)
         {
-            return (UcNode)VisualTreeHelper.GetChild(
-                    NodesDisplay.ItemContainerGenerator.ContainerFromItem(viewmodel),
-                    0);
+            ContentPresenter content = (ContentPresenter)NodesDisplay.ItemContainerGenerator.ContainerFromItem(viewmodel);
+            
+            if(VisualTreeHelper.GetChildrenCount(content) == 0)
+            {
+                throw new NodeControlNotGeneratedException(content);
+            }
+            else
+            {
+                return (UcNode)VisualTreeHelper.GetChild(content, 0);
+            }
         }
 
         #region Space conversion

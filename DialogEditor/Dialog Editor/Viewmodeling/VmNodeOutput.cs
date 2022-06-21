@@ -160,11 +160,6 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         public VmNode? Connected
         {
             get => _connected;
-            set
-            {
-                // the viewmodel gets updated via event
-                Data.SetOutput(value?.Data);
-            }
         }
 
         #endregion
@@ -233,16 +228,17 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             TrackValueChange(
                 (v) => _connected = v, _connected, vmNode);
 
+            Connected?.AddInput(this);
+
             TrackNotifyProperty(nameof(Connected));
 
-            Connected?.AddInput(this);
 
             EndChangeGroup();
         }
 
         public void Disconnect()
         {
-            Connected = null;
+            Data.Disconnect();
         }
     
         public void Delete()

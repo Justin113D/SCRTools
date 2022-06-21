@@ -60,6 +60,7 @@
             <ucGrid:UcGridView 
                 x:Name="Gridview"
                 Grid.Column="2" 
+                GridTile="{DynamicResource BG2}"
                 DataContext="{Binding Dialog}"/>
                 
             <GridSplitter 

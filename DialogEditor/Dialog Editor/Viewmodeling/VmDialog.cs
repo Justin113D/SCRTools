@@ -182,19 +182,16 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             VmNode[] selectedNodes = Selected.ToArray();
             foreach (VmNode node in selectedNodes)
             {   
-                node.Disconnect();
-
-                _nodes.Remove(node);
-                _nodeTable.Remove(node.Data);
-                Data.RemoveNode(node.Data);
-
                 TrackChange(
-                    () => { },
-                    () =>
-                    {
+                    () => {
                         node.Active = false;
                         node.Selected = false;
-                    });
+                    },
+                    () => { });
+
+                Data.RemoveNode(node.Data);
+                _nodes.Remove(node);
+                _nodeTable.Remove(node.Data);
             }
 
             EndChangeGroup();

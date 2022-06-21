@@ -12,13 +12,6 @@
              d:DataContext="{x:Static wpf:DesignDataFactory.Node}"
              x:Name="NodeContainer">
 
-    <UserControl.Style>
-        <Style TargetType="{x:Type local:UcNode}">
-            <Setter Property="LocationX" Value="{Binding LocationX, Mode=TwoWay}"/>
-            <Setter Property="LocationY" Value="{Binding LocationY, Mode=TwoWay}"/>
-        </Style>
-    </UserControl.Style>
-    
     <UserControl.Resources>
         <converters:ColorToBrushConverter x:Key="ColorToBrush"/>
     </UserControl.Resources>

@@ -16,12 +16,6 @@
     Focusable="True"
     Background="{DynamicResource BG4}">
 
-    <UserControl.Style>
-        <Style TargetType="{x:Type local:UcGridView}">
-            <Setter Property="GridTile" Value="{DynamicResource BG2}"/>
-        </Style>
-    </UserControl.Style>
-
     <UserControl.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="A">
             <KeyBinding.Command>
@@ -85,9 +79,7 @@
 
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type vm:VmNode}">
-                            <local:UcNode 
-                                DataContext="{Binding }"
-                                GridView="{Binding ElementName=GridViewContainer, Path=.}"/>
+                            <local:UcNode DataContext="{Binding }"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

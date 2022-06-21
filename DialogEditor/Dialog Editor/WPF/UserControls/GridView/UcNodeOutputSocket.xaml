@@ -11,12 +11,6 @@
     d:DataContext="{x:Static wpf:DesignDataFactory.Output}"
     d:DesignHeight="50" d:DesignWidth="100">
 
-    <UserControl.Style>
-        <Style TargetType="{x:Type local:UcNodeOutputSocket}">
-            <Setter Property="Connected" Value="{Binding Connected}"/>
-        </Style>
-    </UserControl.Style>
-
     <UserControl.Resources>
         <converters:ColorToBrushConverter x:Key="ColorToBrush"/>
         <converters:VisibilityConverter x:Key="NullToCollapsed" InvisibleType="Collapsed"/>

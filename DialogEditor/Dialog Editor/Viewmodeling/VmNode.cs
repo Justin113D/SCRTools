@@ -202,10 +202,9 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
             BeginChangeGroup();
 
-            vmOutput.Disconnect();
+            Data.RemoveOutput(vmOutput.Data);
             _outputs.Remove(vmOutput);
 
-            Data.RemoveOutput(vmOutput.Data);
             TrackNotifyProperty(nameof(InOutInfo));
 
             EndChangeGroup();

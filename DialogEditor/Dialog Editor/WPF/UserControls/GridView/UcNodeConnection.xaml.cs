@@ -12,8 +12,6 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
     /// </summary>
     public partial class UcNodeConnection : UserControl
     {
-        private readonly UcNodeOutputSocket _socket;
-
         public double CanvasX
         {
             get => Canvas.GetLeft(this);
@@ -28,9 +26,8 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
 
         private Point _canvasEndPosition = default;
 
-        public UcNodeConnection(UcNodeOutputSocket socket)
+        public UcNodeConnection()
         {
-            _socket = socket;
             InitializeComponent();
         }
 

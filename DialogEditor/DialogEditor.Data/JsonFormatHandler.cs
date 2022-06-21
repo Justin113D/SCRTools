@@ -56,7 +56,7 @@ namespace SCR.Tools.DialogEditor.Data
             jsonWriter.WriteNumber(nameof(Node.LocationY), node.LocationY);
             jsonWriter.WriteBoolean(nameof(Node.RightPortrait), node.RightPortrait);
 
-            jsonWriter.WriteStartArray(nameof(Dialog.Nodes));
+            jsonWriter.WriteStartArray(nameof(Node.Outputs));
 
             foreach (NodeOutput output in node.Outputs)
             {
@@ -132,6 +132,10 @@ namespace SCR.Tools.DialogEditor.Data
                     ReadNode(jsonNode ?? throw new InvalidDataException("Jsonnode is null!"), node, outputMap);
                 }
             }
+            else
+            {
+                throw new InvalidDataException("No nodes in dialog!");
+            }
 
             // assigning the outputs
             foreach(KeyValuePair<NodeOutput, int> pair in outputMap)
@@ -156,6 +160,10 @@ namespace SCR.Tools.DialogEditor.Data
                     NodeOutput nOut = output.CreateOutput();
                     ReadNodeOutput(jsonNode ?? throw new InvalidDataException("Jsonnode is null!"), nOut, outputMap);
                 }
+            }
+            else
+            {
+                throw new InvalidDataException("One or more nodes have no output!");
             }
 
             // removing the automatically created output
