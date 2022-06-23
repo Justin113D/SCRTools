@@ -1,0 +1,271 @@
+﻿<UserControl x:Class="SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls.UcNode"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:wpf="clr-namespace:SCR.Tools.TranslationEditor.FormatEditor.WPF"
+             mc:Ignorable="d" 
+             d:DesignHeight="60" d:DesignWidth="800" d:DataContext="{x:Static wpf:DesignDataFactory.Node}"
+             x:Name="Container">
+
+    <UserControl.Resources>
+        <wpf:OffsetWidthConverter x:Key="OffsetWidthConverter"/>
+    </UserControl.Resources>
+
+    <Border IsHitTestVisible="True"
+        Padding="{Binding ElementName=Container, Path=TreePadding}"
+            MouseDown="Border_MouseDown">
+
+        <!-- Adding highlight color when hovering above the node -->
+        <Border.Style>
+            <Style TargetType="{x:Type Border}">
+                <Setter Property="Background" Value="Transparent"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource HighlightedBG}"/>
+                    </Trigger>
+                    <DataTrigger Binding="{Binding Active}" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource HighlightedBG}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Selected}" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource SelectedBG}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+
+        <Grid>
+            <Grid Margin="1">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition>
+                        <ColumnDefinition.Style>
+                            <Style TargetType="{x:Type ColumnDefinition}">
+                                <Setter Property="Width">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource OffsetWidthConverter}">
+                                            <Binding ElementName="Container" Path="NameWidth"/>
+                                            <Binding ElementName="Container" Path="TreePadding"/>
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ColumnDefinition.Style>
+                    </ColumnDefinition>
+
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="{Binding ElementName=Container, Path=DescriptionWidth}"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Grab surface -->
+
+                    <Rectangle
+                        Margin="3" 
+                        IsHitTestVisible="False"
+                        SnapsToDevicePixels="True" 
+                        UseLayoutRounding="True">
+
+                        <Rectangle.Style>
+                            <Style TargetType="{x:Type Rectangle}">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Active}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Rectangle.Style>
+
+                        <Rectangle.Fill>
+                            <VisualBrush
+                                TileMode="Tile" 
+                                Viewport="0,0,4,4" 
+                                ViewportUnits="Absolute" 
+                                Viewbox="0,0,4,4" 
+                                ViewboxUnits="Absolute" 
+                                RenderOptions.BitmapScalingMode="NearestNeighbor">
+
+                                <VisualBrush.Visual>
+                                    <Path Fill="{DynamicResource Green.Highlighted}">
+                                        <Path.Data>
+                                            <GeometryGroup>
+                                                <RectangleGeometry Rect="2,0,1,1"/>
+                                                <RectangleGeometry Rect="0,2,1,1"/>
+                                            </GeometryGroup>
+                                        </Path.Data>
+                                    </Path>
+                                </VisualBrush.Visual>
+
+                            </VisualBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <Rectangle 
+                        x:Name="GrabSurface" 
+                        Margin="3" 
+                        Cursor="Hand" 
+                        IsHitTestVisible="True"
+                        SnapsToDevicePixels="True" 
+                        UseLayoutRounding="True"
+                        MouseDown="GrabSurface_MouseDown"
+                        MouseUp="GrabSurface_MouseUp"
+                        MouseLeave="GrabSurface_MouseLeave">
+                        <Rectangle.Fill>
+                            <VisualBrush 
+                                TileMode="Tile" 
+                                Viewport="0,0,4,4" 
+                                ViewportUnits="Absolute" 
+                                Viewbox="0,0,4,4" 
+                                ViewboxUnits="Absolute" 
+                                RenderOptions.BitmapScalingMode="NearestNeighbor">
+                                <VisualBrush.Visual>
+                                    <Path Fill="{DynamicResource HintFontBrush}">
+                                        <Path.Data>
+                                            <GeometryGroup>
+                                                <RectangleGeometry Rect="0,0,1,1"/>
+                                                <RectangleGeometry Rect="2,2,1,1"/>
+                                            </GeometryGroup>
+                                        </Path.Data>
+                                    </Path>
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+
+                    <!-- Button for Expanding and collapsing the children of a node -->
+                    <ToggleButton 
+                        Grid.Column="1"
+                        Width="20"
+                        IsChecked="{Binding Expanded, Mode=TwoWay}"
+                        ClickMode="Press"
+                        Click="Event_DeselectAll"
+                        Focusable="False">
+
+                        <ToggleButton.Style>
+                            <Style TargetType="{x:Type ToggleButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CanExpand}" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ToggleButton.Style>
+
+                        <ToggleButton.Template>
+                            <ControlTemplate TargetType="ToggleButton">
+                                <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" MinWidth="20">
+                                    <TextBlock
+                                        Style="{DynamicResource AppTextBlock}"
+                                        x:Name="ExpandSymbol"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Margin="1"
+                                        Text="▸"/>
+                                </Grid>
+
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsChecked" Value="True">
+                                        <Setter Property="Text" TargetName="ExpandSymbol" Value="▾"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </ToggleButton.Template>
+
+                    </ToggleButton>
+
+                    <!-- Node Name -->
+                    <TextBox
+                        Grid.Column="2"
+                        Style="{DynamicResource TextBoxUndo}"
+                        Margin="4"
+                        Text="{Binding Name}"
+                        VerticalAlignment="Center"
+                        GotFocus="Event_DeselectAll"/>
+                </Grid>
+
+                <ContentPresenter
+                    Grid.Column="1" 
+                    Content="{Binding ElementName=Container, Path=InnerContent}"/>
+
+                <!-- Node Description -->
+                <Grid Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox 
+                        Grid.Column="0" 
+                        Style="{DynamicResource TextBoxUndo}"
+                        Text="{Binding Description}"
+                        Foreground="{DynamicResource HintFontBrush}"
+                        VerticalAlignment="Center"
+                        Margin="6"
+                        GotFocus="Event_DeselectAll"/>
+
+                    <Button
+                        Grid.Column="1"
+                        Style="{DynamicResource RedButton}"
+                        Padding="5 0"
+                        Margin="2 0"
+                        Content="X"
+                        Command="{Binding CmdRemove}"/>
+                </Grid>
+
+            </Grid>
+
+            <Grid x:Name="Insert" 
+                  IsHitTestVisible="{Binding ElementName=Container, Path=DragHighlights}" 
+                  Background="Transparent" 
+                  Margin="0 -2" 
+                  MouseEnter="Insert_MouseEnter">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border x:Name="_insertAbove" Grid.Row="0" MouseUp="InsertAbove_MouseUp" IsHitTestVisible="True" Background="Transparent"/>
+                <Border x:Name="_insertBelow" Grid.Row="1" MouseUp="InsertBelow_MouseUp" IsHitTestVisible="True" Background="Transparent"/>
+
+                <Border x:Name="InsertAboveDisplay" IsHitTestVisible="False" Grid.Row="0" BorderThickness="0 4 0 0">
+                    <Border.Style>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=_insertAbove, Path=IsMouseOver}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                </Border>
+                    
+                <Border x:Name="InsertBelowDisplay" IsHitTestVisible="False" Grid.Row="1" BorderThickness="0 0 0 4">
+                    <Border.Style>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Expanded}" Value="True">
+                                    <Setter Property="Margin" Value="20 0 0 0"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ElementName=_insertBelow, Path=IsMouseOver}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                </Border>
+
+
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

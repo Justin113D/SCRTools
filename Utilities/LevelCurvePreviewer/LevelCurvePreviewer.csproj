@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<OutputType>WinExe</OutputType>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<UseWPF>true</UseWPF>
+		<DebugType>embedded</DebugType>
+		<AssemblyName>SCR.Tools.LevelCurvePreviewer</AssemblyName>
+		<RootNamespace>SCR.Tools.LevelCurvePreviewer</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="OxyPlot.Wpf" Version="2.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Libraries\WPF\WPF.csproj" />
+	</ItemGroup>
+
+</Project>

@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace>SCR.Tools.DialogEditor.Data</RootNamespace>
+    <AssemblyName>DialogEditor.Data</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\UndoRedo\UndoRedo.csproj" />
+  </ItemGroup>
+
+</Project>

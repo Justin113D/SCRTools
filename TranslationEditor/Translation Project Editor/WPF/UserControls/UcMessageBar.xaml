@@ -1,0 +1,87 @@
+﻿<UserControl x:Class="SCR.Tools.TranslationEditor.ProjectEditor.WPF.UserControls.UcMessageBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:wpf="clr-namespace:SCR.Tools.TranslationEditor.ProjectEditor.WPF"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="400"
+             d:DataContext="{x:Static wpf:DesignDataFactory.Main}">
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Border>
+            <Border.Style>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="Background" Value="Transparent"/>
+                    
+                    <Style.Triggers>
+
+                        <DataTrigger Binding="{Binding DisplayMessage, NotifyOnTargetUpdated=True}" Value="1">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetProperty="Background.Color" From="#c9f0ad" To="#78b14e" Duration="0:0:0.2" />
+                                        <ColorAnimation Storyboard.TargetProperty="Background.Color" To="#0078b14e" Duration="0:0:1" BeginTime="0:0:2" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+
+                        <DataTrigger Binding="{Binding DisplayMessage, NotifyOnTargetUpdated=True}" Value="2">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetProperty="Background.Color" From="#ffb5be" To="#dd2e44" Duration="0:0:0.2" />
+                                        <ColorAnimation Storyboard.TargetProperty="Background.Color" To="#00dd2e44" Duration="0:0:1" BeginTime="0:0:2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+
+                    </Style.Triggers>
+
+                </Style>
+            </Border.Style>
+
+            <TextBlock 
+                Padding="15, 3" 
+                Background="Transparent" 
+                Foreground="#FFF" 
+                FontWeight="Bold" 
+                Text="{Binding Message, NotifyOnTargetUpdated=True}">
+
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource AppTextBlock}">
+                        <Style.Triggers>
+                            <EventTrigger RoutedEvent="Binding.TargetUpdated">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetProperty="Foreground.Color" To="#EEE" Duration="0" />
+                                        <ColorAnimation Storyboard.TargetProperty="Foreground.Color" To="#0EEE" Duration="0:0:1" BeginTime="0:0:2" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Border>
+
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="10, 3, 3, 3" DataContext="{Binding Format}">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource AppTextBlock}"/>
+            </StackPanel.Resources>
+            
+            <TextBlock Text="{Binding UntranslatedNodes}" Foreground="{DynamicResource Red}"/>
+            <TextBlock Text=" / " />
+            <TextBlock Text="{Binding OutdatedNodes}" Foreground="{DynamicResource Yellow}"/>
+            <TextBlock Text=" / " />
+            <TextBlock Text="{Binding TranslatedNodes}" Foreground="{DynamicResource Green}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

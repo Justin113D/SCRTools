@@ -1,0 +1,129 @@
+﻿<styling:Window 
+    x:Class="SCR.Tools.DialogEditor.WPF.Windows.WndDialogOptions"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:SCR.Tools.DialogEditor.WPF.Windows"
+    xmlns:styling="clr-namespace:SCR.Tools.WPF.Styling;assembly=SCR.Tools.Wpf"
+    xmlns:uc="clr-namespace:SCR.Tools.DialogEditor.WPF.UserControls"
+    xmlns:wpf="clr-namespace:SCR.Tools.DialogEditor.WPF"
+    xmlns:baseVM="clr-namespace:SCR.Tools.Viewmodeling;assembly=SCR.Tools.WPF"
+    mc:Ignorable="d"
+    Title="Dialog Options" Height="600" Width="800"
+    d:DataContext="{x:Static wpf:DesignDataFactory.Options}"
+    Style="{DynamicResource WindowStyle}">
+
+    <styling:Window.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="N">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_New"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+        <KeyBinding Modifiers="Ctrl" Key="O">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_Open"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+        <KeyBinding Modifiers="Ctrl" Key="S">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_Save"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+        <KeyBinding Modifiers="Ctrl+Shift" Key="S">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_SaveAs"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+
+        <KeyBinding Modifiers="Ctrl" Key="Z">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_Undo"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+
+        <KeyBinding Modifiers="Ctrl" Key="Y">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_Redo"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+    </styling:Window.InputBindings>
+
+    <Grid Background="{DynamicResource BG1}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" SnapsToDevicePixels="True" Background="{DynamicResource BG2}">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type Image}">
+                    <Setter Property="Height" Value="16"/>
+                    <Setter Property="Width" Value="16"/>
+                    <Setter Property="SnapsToDevicePixels" Value="True"/>
+                </Style>
+
+                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                    <Setter Property="Padding" Value="4 8"/>
+                </Style>
+            </StackPanel.Resources>
+
+            <Button ToolTip="New (Ctrl+N)" Click="MenuItem_NewFile">
+                <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/NewFile.png" Width="16"/>
+            </Button>
+
+            <Button ToolTip="Open (Ctrl+O)" Click="MenuItem_OpenFile">
+                <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/OpenFolder.png" Width="16"/>
+            </Button>
+
+            <Button ToolTip="Save (Ctrl+S)" Click="MenuItem_Save">
+                <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/Save.png" Width="16"/>
+            </Button>
+
+            <Button ToolTip="Save as (Ctrl+Alt+S)" Click="MenuItem_SaveAs">
+                <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/SaveAs.png" Width="16"/>
+            </Button>
+
+            <Button ToolTip="Undo (Ctrl+Z)" Click="MenuItem_Undo" Margin="20 0 0 0">
+                <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/Undo.png" Width="16"/>
+            </Button>
+
+            <Button ToolTip="Redo (Ctrl+Y)" Click="MenuItem_Redo">
+                <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/Redo.png" Width="16"/>
+            </Button>
+        </StackPanel>
+
+        <Grid Grid.Row="1" Margin="10">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Characters" TextAlignment="Center" Padding="0, 0, 0, 5"/>
+            <TextBlock Grid.Column="1" Text="Expressions" TextAlignment="Center"/>
+            <TextBlock Grid.Column="2" Text="Icons" TextAlignment="Center"/>
+
+            <uc:UcNodeOptions 
+                Grid.Row="1"  
+                DataContext="{Binding CharacterOptions}"/>
+
+            <uc:UcNodeOptions  
+                Grid.Row="1"  
+                Grid.Column="1" 
+                DataContext="{Binding ExpressionOptions}" 
+                Margin="5 0"/>
+
+            <uc:UcNodeIcons
+                Grid.Row="1" 
+                Grid.Column="2" 
+                DataContext="{Binding NodeIcons}"/>
+        </Grid>
+    </Grid>
+</styling:Window>

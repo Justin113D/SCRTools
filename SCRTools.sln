@@ -3,25 +3,39 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DialogEditor", "DialogEditor\DialogEditor.csproj", "{31C68FA6-A020-466D-A58D-49BEC711227A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UndoRedo", "Libraries\UndoRedo\UndoRedo.csproj", "{BA69D113-9A94-4DE0-BEF1-E113648B035C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TranslationEditor", "TranslationEditor\TranslationEditor.csproj", "{D0D4E997-FDC3-4718-A50D-1D84A35EA2E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPF", "Libraries\WPF\WPF.csproj", "{68546D13-C066-4BA1-8BBF-069DFF65E982}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{F0EE3117-EF36-42FD-8BC2-9341246C49E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Libraries\Common\Common.csproj", "{6562BC8C-3866-428B-A636-D880F7EFFF64}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TranslationDemo", "TranslationDemo\TranslationDemo.csproj", "{0BC8ABCB-A381-47DC-A57E-099BBF1282CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TranslationEditor.Data.Tests", "TranslationEditor\TranslationEditorTests\TranslationEditor.Data.Tests.csproj", "{C7D4585B-F20B-4268-B2BC-2496C75C42F9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LevelCurvePreviewer", "LevelCurvePreviewer\LevelCurvePreviewer.csproj", "{B1651F73-D4D9-4A1C-A2E8-6D053BDDEA91}"
-	ProjectSection(ProjectDependencies) = postProject
-		{F0EE3117-EF36-42FD-8BC2-9341246C49E0} = {F0EE3117-EF36-42FD-8BC2-9341246C49E0}
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TranslationEditor.Data", "TranslationEditor\TranslationEditor.Data\TranslationEditor.Data.csproj", "{AB1AB0BB-3BDD-4E4A-979A-4595162E919A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicDataExpression", "DynamicDataExpression\DynamicDataExpression.csproj", "{630B81B1-9292-4403-9E89-E250F8C5886E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TranslationDemo", "Utilities\TranslationDemo\TranslationDemo.csproj", "{0BC8ABCB-A381-47DC-A57E-099BBF1282CE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicDataExpressionTester", "DynamicDataExpressionTester\DynamicDataExpressionTester.csproj", "{E9A9E114-6C67-448B-972D-9360C88B762F}"
-	ProjectSection(ProjectDependencies) = postProject
-		{630B81B1-9292-4403-9E89-E250F8C5886E} = {630B81B1-9292-4403-9E89-E250F8C5886E}
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LevelCurvePreviewer", "Utilities\LevelCurvePreviewer\LevelCurvePreviewer.csproj", "{B1651F73-D4D9-4A1C-A2E8-6D053BDDEA91}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicDataExpression", "Utilities\DynamicDataExpression\DynamicDataExpression.csproj", "{630B81B1-9292-4403-9E89-E250F8C5886E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicDataExpressionTester", "Utilities\DynamicDataExpressionTester\DynamicDataExpressionTester.csproj", "{E9A9E114-6C67-448B-972D-9360C88B762F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{882C8D5D-E122-4DAA-A1C5-DD3F6246D762}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TranslationEditor", "TranslationEditor", "{66918D1F-8361-4ACD-AEC9-BEBF48433D73}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{DC839CAB-96F8-4966-8660-6A0B3969B7AA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Translation Project Editor", "TranslationEditor\Translation Project Editor\Translation Project Editor.csproj", "{E9A7434D-6473-4BEA-B69B-65BBCDBCA2A2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Translation Format Editor", "TranslationEditor\Translation Format Editor\Translation Format Editor.csproj", "{8ACDA7B0-3494-464A-BF2D-EBA49BF6E1A1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DialogEditor", "DialogEditor", "{07DF4345-0CCE-4936-BE14-61C1FCEF4742}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dialog Editor", "DialogEditor\Dialog Editor\Dialog Editor.csproj", "{CD052FBD-092D-4635-ACBB-91832E6A67E3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DialogEditor.Data", "DialogEditor\DialogEditor.Data\DialogEditor.Data.csproj", "{A64D07EF-81C8-47CB-9402-AD964DAC101A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,18 +43,26 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{31C68FA6-A020-466D-A58D-49BEC711227A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{31C68FA6-A020-466D-A58D-49BEC711227A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{31C68FA6-A020-466D-A58D-49BEC711227A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{31C68FA6-A020-466D-A58D-49BEC711227A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D0D4E997-FDC3-4718-A50D-1D84A35EA2E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D0D4E997-FDC3-4718-A50D-1D84A35EA2E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D0D4E997-FDC3-4718-A50D-1D84A35EA2E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D0D4E997-FDC3-4718-A50D-1D84A35EA2E4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F0EE3117-EF36-42FD-8BC2-9341246C49E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F0EE3117-EF36-42FD-8BC2-9341246C49E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F0EE3117-EF36-42FD-8BC2-9341246C49E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F0EE3117-EF36-42FD-8BC2-9341246C49E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA69D113-9A94-4DE0-BEF1-E113648B035C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA69D113-9A94-4DE0-BEF1-E113648B035C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA69D113-9A94-4DE0-BEF1-E113648B035C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA69D113-9A94-4DE0-BEF1-E113648B035C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68546D13-C066-4BA1-8BBF-069DFF65E982}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68546D13-C066-4BA1-8BBF-069DFF65E982}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68546D13-C066-4BA1-8BBF-069DFF65E982}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68546D13-C066-4BA1-8BBF-069DFF65E982}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6562BC8C-3866-428B-A636-D880F7EFFF64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6562BC8C-3866-428B-A636-D880F7EFFF64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6562BC8C-3866-428B-A636-D880F7EFFF64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6562BC8C-3866-428B-A636-D880F7EFFF64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7D4585B-F20B-4268-B2BC-2496C75C42F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7D4585B-F20B-4268-B2BC-2496C75C42F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7D4585B-F20B-4268-B2BC-2496C75C42F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7D4585B-F20B-4268-B2BC-2496C75C42F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB1AB0BB-3BDD-4E4A-979A-4595162E919A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB1AB0BB-3BDD-4E4A-979A-4595162E919A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB1AB0BB-3BDD-4E4A-979A-4595162E919A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB1AB0BB-3BDD-4E4A-979A-4595162E919A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0BC8ABCB-A381-47DC-A57E-099BBF1282CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0BC8ABCB-A381-47DC-A57E-099BBF1282CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BC8ABCB-A381-47DC-A57E-099BBF1282CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -57,9 +79,40 @@ Global
 		{E9A9E114-6C67-448B-972D-9360C88B762F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9A9E114-6C67-448B-972D-9360C88B762F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9A9E114-6C67-448B-972D-9360C88B762F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9A7434D-6473-4BEA-B69B-65BBCDBCA2A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9A7434D-6473-4BEA-B69B-65BBCDBCA2A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9A7434D-6473-4BEA-B69B-65BBCDBCA2A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9A7434D-6473-4BEA-B69B-65BBCDBCA2A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8ACDA7B0-3494-464A-BF2D-EBA49BF6E1A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ACDA7B0-3494-464A-BF2D-EBA49BF6E1A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ACDA7B0-3494-464A-BF2D-EBA49BF6E1A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ACDA7B0-3494-464A-BF2D-EBA49BF6E1A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD052FBD-092D-4635-ACBB-91832E6A67E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD052FBD-092D-4635-ACBB-91832E6A67E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD052FBD-092D-4635-ACBB-91832E6A67E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD052FBD-092D-4635-ACBB-91832E6A67E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A64D07EF-81C8-47CB-9402-AD964DAC101A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A64D07EF-81C8-47CB-9402-AD964DAC101A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A64D07EF-81C8-47CB-9402-AD964DAC101A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A64D07EF-81C8-47CB-9402-AD964DAC101A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BA69D113-9A94-4DE0-BEF1-E113648B035C} = {882C8D5D-E122-4DAA-A1C5-DD3F6246D762}
+		{68546D13-C066-4BA1-8BBF-069DFF65E982} = {882C8D5D-E122-4DAA-A1C5-DD3F6246D762}
+		{6562BC8C-3866-428B-A636-D880F7EFFF64} = {882C8D5D-E122-4DAA-A1C5-DD3F6246D762}
+		{C7D4585B-F20B-4268-B2BC-2496C75C42F9} = {66918D1F-8361-4ACD-AEC9-BEBF48433D73}
+		{AB1AB0BB-3BDD-4E4A-979A-4595162E919A} = {66918D1F-8361-4ACD-AEC9-BEBF48433D73}
+		{0BC8ABCB-A381-47DC-A57E-099BBF1282CE} = {DC839CAB-96F8-4966-8660-6A0B3969B7AA}
+		{B1651F73-D4D9-4A1C-A2E8-6D053BDDEA91} = {DC839CAB-96F8-4966-8660-6A0B3969B7AA}
+		{630B81B1-9292-4403-9E89-E250F8C5886E} = {DC839CAB-96F8-4966-8660-6A0B3969B7AA}
+		{E9A9E114-6C67-448B-972D-9360C88B762F} = {DC839CAB-96F8-4966-8660-6A0B3969B7AA}
+		{E9A7434D-6473-4BEA-B69B-65BBCDBCA2A2} = {66918D1F-8361-4ACD-AEC9-BEBF48433D73}
+		{8ACDA7B0-3494-464A-BF2D-EBA49BF6E1A1} = {66918D1F-8361-4ACD-AEC9-BEBF48433D73}
+		{CD052FBD-092D-4635-ACBB-91832E6A67E3} = {07DF4345-0CCE-4936-BE14-61C1FCEF4742}
+		{A64D07EF-81C8-47CB-9402-AD964DAC101A} = {07DF4345-0CCE-4936-BE14-61C1FCEF4742}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {04263B8F-90D7-4A04-901D-0D7106F1EE48}

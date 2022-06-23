@@ -1,0 +1,189 @@
+﻿<UserControl x:Class="SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls.UcNodeViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls"
+             xmlns:converters="clr-namespace:SCR.Tools.WPF.Converters;assembly=SCR.Tools.WPF"
+             xmlns:wpf="clr-namespace:SCR.Tools.TranslationEditor.FormatEditor.WPF"
+             xmlns:vm="clr-namespace:SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{x:Static wpf:DesignDataFactory.Format}"
+             x:Name="NodeViewer">
+
+    <UserControl.InputBindings>
+        <KeyBinding Key="Esc" Command="{Binding CmdDeselectAll}"/>
+        <KeyBinding Key="Delete" Command="{Binding CmdRemoveSelected}"/>
+        <KeyBinding Key="X" Modifiers="Ctrl" Command="{Binding CmdRemoveSelected}"/>
+        <KeyBinding Key="C" Modifiers="Ctrl" Command="{Binding CmdCopySelected}"/>
+        <KeyBinding Key="V" Modifiers="Ctrl" Command="{Binding CmdPasteSelected}"/>
+    </UserControl.InputBindings>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Name/Value/Description Resize slider -->
+        <Grid Height="16" Margin="0, 4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" MinWidth="200"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="4*" MinWidth="200"/>
+            </Grid.ColumnDefinitions>
+
+            <Rectangle    Grid.Column="0" Height="4" Fill="{DynamicResource BG1}" x:Name="NameWidth"/>
+            <GridSplitter Grid.Column="1" Width="6" VerticalAlignment="Stretch" HorizontalAlignment="Center"/>
+            <Rectangle    Grid.Column="2" Height="4" Fill="{DynamicResource BG3}"/>
+            <GridSplitter Grid.Column="3" Width="6" VerticalAlignment="Stretch" HorizontalAlignment="Center"/>
+            <Rectangle    Grid.Column="4" Height="4" Fill="{DynamicResource BG1}" x:Name="DescriptionWidth"/>
+        </Grid>
+
+        <TreeView Grid.Row="1" ItemsSource="{Binding Nodes}" MouseDown="TreeView_MouseDown">
+
+            <TreeView.Resources>
+                <!--Used for calculating the offset of the left margin-->
+                <converters:LeftMarginMultiplierConverter x:Key="LeftMarginMultiplierConverter" Length="20"/>
+            </TreeView.Resources>
+
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
+                    <Setter Property="IsExpanded" Value="{Binding Expanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type TreeViewItem}">
+                                <StackPanel MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}">
+
+                                    <local:UcNode 
+                                        DataContext="{Binding}" 
+                                        TreePadding="{Binding 
+                                            Converter={StaticResource LeftMarginMultiplierConverter},
+                                            RelativeSource={RelativeSource TemplatedParent}}"
+                                        NameWidth="{Binding ElementName=NameWidth, Path=ActualWidth}"
+                                        DescriptionWidth="{Binding ElementName=DescriptionWidth, Path=ActualWidth}"
+                                        DragHighlights="{Binding ElementName=NodeViewer, Path=Dragging, Mode=TwoWay}">
+
+                                        <ContentPresenter
+                                            Margin="3 0 0 0" 
+                                            MinHeight="19" 
+                                            HorizontalAlignment="Stretch" 
+                                            ContentSource="Header"/>
+
+                                    </local:UcNode>
+
+                                    <!-- Node Children -->
+                                    <Border>
+                                        <Border.Style>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" Value="false">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <ItemsPresenter/>
+                                    </Border>
+
+                                </StackPanel>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TreeView.ItemContainerStyle>
+
+            <!-- Templates for both node types-->
+            <TreeView.ItemTemplateSelector>
+                <wpf:NodeTemplateSelector>
+
+                    <!-- Parent Node-->
+                    <wpf:NodeTemplateSelector.ParentTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type vm:VmParentNode}" ItemsSource="{Binding ChildNodes}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Button
+                                    Grid.Column="1"
+                                    Style="{DynamicResource BlueButton}"
+                                    Content="Add Category"
+                                    VerticalAlignment="Center"
+                                    Margin="2 0"
+                                    Padding="10, 5"
+                                    Command="{Binding CmdAddNewParentNode}"
+                                    Click="Event_DeselectAll"/>
+                                
+                                <Button
+                                    Grid.Column="2"
+                                    Style="{DynamicResource GreenButton}"
+                                    Content="Add String"
+                                    VerticalAlignment="Center"
+                                    Padding="10, 5"
+                                    Command="{Binding CmdAddNewStringNode}"
+                                    Click="Event_DeselectAll"/>
+
+                            </Grid>
+                        </HierarchicalDataTemplate>
+                    </wpf:NodeTemplateSelector.ParentTemplate>
+
+                    <!-- String Node-->
+                    <wpf:NodeTemplateSelector.StringTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type vm:VmStringNode}">
+                            <TextBox 
+                                Style="{DynamicResource TextBoxUndo}"
+                                Text="{Binding DefaultValue, Mode=TwoWay}" 
+                                AcceptsReturn="True" 
+                                Padding="5" 
+                                Background="{DynamicResource BG3}"
+                                VerticalAlignment="Stretch"
+                                GotFocus="Event_DeselectAll"/>
+                        </HierarchicalDataTemplate>
+                    </wpf:NodeTemplateSelector.StringTemplate>
+                </wpf:NodeTemplateSelector>
+            </TreeView.ItemTemplateSelector>
+
+            <TreeView.Template>
+                <ControlTemplate TargetType="{x:Type TreeView}">
+                    <ScrollViewer 
+                        Focusable="False"
+                        CanContentScroll="False"
+                        Padding="4" Background="{DynamicResource BG1}">
+                        
+                        <StackPanel>
+                            <ItemsPresenter />
+                            <Grid Margin="5, 20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Column="1" 
+                                        Style="{DynamicResource BlueButton}" 
+                                        Content="Add Category" 
+                                        Margin="4 0"
+                                        Command="{Binding CmdAddNewParentNode}"
+                                        Click="Event_DeselectAll"/>
+                                
+                                <Button Grid.Column="2" 
+                                        Style="{DynamicResource GreenButton}" 
+                                        Content="Add String" 
+                                        Command="{Binding CmdAddNewStringNode}"
+                                        Click="Event_DeselectAll"/>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </ControlTemplate>
+            </TreeView.Template>
+        </TreeView>
+
+    </Grid>
+</UserControl>

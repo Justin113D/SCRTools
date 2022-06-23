@@ -1,0 +1,163 @@
+﻿<UserControl x:Class="SCR.Tools.TranslationEditor.ProjectEditor.WPF.UserControls.UcNodeViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SCR.Tools.TranslationEditor.ProjectEditor.WPF.UserControls"
+             xmlns:converters="clr-namespace:SCR.Tools.WPF.Converters;assembly=SCR.Tools.WPF"
+             xmlns:wpf="clr-namespace:SCR.Tools.TranslationEditor.ProjectEditor.WPF"
+             xmlns:vm="clr-namespace:SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling"
+             xmlns:data="clr-namespace:SCR.Tools.TranslationEditor.Data;assembly=SCR.Tools.TranslationEditor.Data"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             x:Name="NodeViewer"
+             d:DataContext="{x:Static wpf:DesignDataFactory.Project}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Name/Value/Description Resize slider -->
+        <Grid Height="16" Margin="0, 4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" MinWidth="200"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="4*" MinWidth="200"/>
+            </Grid.ColumnDefinitions>
+
+            <Rectangle    Grid.Column="0" Height="4" Fill="{DynamicResource BG1}" x:Name="NameWidth"/>
+            <GridSplitter Grid.Column="1" Width="6" VerticalAlignment="Stretch" HorizontalAlignment="Center"/>
+            <Rectangle    Grid.Column="2" Height="4" Fill="{DynamicResource BG3}"/>
+            <GridSplitter Grid.Column="3" Width="6" VerticalAlignment="Stretch" HorizontalAlignment="Center"/>
+            <Rectangle    Grid.Column="4" Height="4" Fill="{DynamicResource BG1}" x:Name="DescriptionWidth"/>
+        </Grid>
+
+        <!-- Node Viewer -->
+        <TreeView Grid.Row="1" ItemsSource="{Binding Nodes}">
+
+            <TreeView.Resources>
+                <!--Used for calculating the offset of the left margin-->
+                <converters:LeftMarginMultiplierConverter x:Key="LeftMarginMultiplierConverter" Length="20"/>
+
+                <!--Base node template for all nodes-->
+                <ControlTemplate x:Key="TreeViewItemTemplate" TargetType="{x:Type TreeViewItem}">
+                    <StackPanel MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}">
+
+                        <local:UcNode 
+                            x:Name="NodeDisplay"
+                            DataContext="{Binding}" 
+                            TreePadding="{Binding 
+                                Converter={StaticResource LeftMarginMultiplierConverter},
+                                RelativeSource={RelativeSource TemplatedParent}}"
+                            NameWidth="{Binding ElementName=NameWidth, Path=ActualWidth}"
+                            DescriptionWidth="{Binding ElementName=DescriptionWidth, Path=ActualWidth}"
+                            IsExpanded="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}">
+
+                            <ContentPresenter
+                                Margin="3 0 0 0" 
+                                MinHeight="19" 
+                                HorizontalAlignment="Stretch" 
+                                ContentSource="Header"/>
+
+                        </local:UcNode>
+
+                        <!-- Node Children -->
+                        <Border x:Name="ItemsHost">
+                            <ItemsPresenter/>
+                        </Border>
+
+                    </StackPanel>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded" Value="false">
+                            <Setter TargetName="ItemsHost" Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </TreeView.Resources>
+
+
+            <!-- Using the teomplate from the resources -->
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
+                    <Setter Property="IsExpanded" Value="{Binding Expanded, Mode=TwoWay}"/>
+                    <Setter Property="Template" Value="{StaticResource TreeViewItemTemplate}"/>
+                </Style>
+            </TreeView.ItemContainerStyle>
+
+
+            <!-- Templates for both node types-->
+            <TreeView.ItemTemplateSelector>
+                <wpf:NodeTemplateSelector>
+
+                    <!-- Parent Node-->
+                    <wpf:NodeTemplateSelector.ParentTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type vm:VmParentNode}" ItemsSource="{Binding ChildNodes}"/>
+                    </wpf:NodeTemplateSelector.ParentTemplate>
+
+                    <!-- String Node-->
+                    <wpf:NodeTemplateSelector.StringTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type vm:VmStringNode}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox 
+                                    Text="{Binding NodeValue, Mode=TwoWay}" 
+                                    AcceptsReturn="True" 
+                                    Padding="5" 
+                                    Background="{DynamicResource BG3}"
+                                    VerticalAlignment="Stretch"
+                                    IsReadOnly="{Binding KeepDefault}">
+
+                                    <TextBox.Style>
+                                        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxUndo}">
+                                            <Setter Property="Foreground" Value="{DynamicResource FontBrush}"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding KeepDefault}" Value="True">
+                                                    <Setter Property="Foreground" Value="{DynamicResource HintFontBrush}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBox.Style>
+
+                                    <TextBox.InputBindings>
+                                        <KeyBinding Modifiers="Ctrl" Key="R" Command="{Binding CmdReset}"/>
+                                    </TextBox.InputBindings>
+                                </TextBox>
+
+                                <CheckBox 
+                                    Grid.Column="1"
+                                    Margin="5, 0"
+                                    FontSize="{DynamicResource AppFontSize}"
+                                    IsChecked="{Binding KeepDefault}">
+                                    <CheckBox.Style>
+                                        <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource {x:Type CheckBox}}">
+                                            <Setter Property="Foreground" Value="{DynamicResource FontBrush}"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding State}" Value="{x:Static data:NodeState.Outdated}">
+                                                    <Setter Property="Foreground" Value="{DynamicResource Yellow}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </CheckBox.Style>
+                                    <CheckBox.ToolTip>
+                                        <TextBlock Text="Keep default value for translation" Foreground="Black"/>
+                                    </CheckBox.ToolTip>
+                                </CheckBox>
+                            </Grid>
+                        </HierarchicalDataTemplate>
+                    </wpf:NodeTemplateSelector.StringTemplate>
+                </wpf:NodeTemplateSelector>
+            </TreeView.ItemTemplateSelector>
+        </TreeView>
+
+    </Grid>
+</UserControl>

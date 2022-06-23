@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>SCR.Tools.WPF</AssemblyName>
+    <RootNamespace>SCR.Tools</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="Gu.Wpf.NumericInput" Version="0.5.5" />
+	  <PackageReference Include="PropertyChanged.Fody" Version="3.4.1" PrivateAssets="none" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <Page Remove="WPF\Styling\Window.xaml" />
+	  <EmbeddedResource Include="WPF\Styling\Window.xaml" />
+	  <Resource Include="Icons\*.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UndoRedo\UndoRedo.csproj" />
+  </ItemGroup>
+
+</Project>
