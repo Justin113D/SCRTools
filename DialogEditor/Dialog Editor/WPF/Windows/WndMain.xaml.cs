@@ -54,22 +54,62 @@ namespace SCR.Tools.DialogEditor.WPF.Windows
 
         private void IB_New(object sender, object e)
         {
+            if (Gridview.ConnectingSocket != null)
+            {
+                return;
+            }
+
             MenuBar.NewDialog(sender, new());
         }
 
         private void IB_Open(object sender, object e)
         {
+            if (Gridview.ConnectingSocket != null)
+            {
+                return;
+            }
+
             MenuBar.LoadDialog(sender, new());
         }
 
         private void IB_Save(object sender, object e)
         {
+            if (Gridview.ConnectingSocket != null)
+            {
+                return;
+            }
+
             MenuBar.SaveDialog(sender, new());
         }
 
         private void IB_SaveAs(object sender, object e)
         {
+            if (Gridview.ConnectingSocket != null)
+            {
+                return;
+            }
+
             MenuBar.SaveDialogAs(sender, new());
+        }
+
+        private void IB_Undo(object sender, object e)
+        {
+            if(Gridview.ConnectingSocket != null)
+            {
+                return;
+            }
+
+            ((VmMain)DataContext).CmdUndo.Execute(null);
+        }
+
+        private void IB_Redo(object sender, object e)
+        {
+            if (Gridview.ConnectingSocket != null)
+            {
+                return;
+            }
+
+            ((VmMain)DataContext).CmdRedo.Execute(null);
         }
     }
 }

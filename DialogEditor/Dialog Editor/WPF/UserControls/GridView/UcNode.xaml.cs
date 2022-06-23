@@ -15,7 +15,7 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
     /// </summary>
     public partial class UcNode : UserControl
     {
-        public UcGridView? _gridView;
+        public UcGridView? GridView;
 
         private ContentPresenter CanvasController
             => (ContentPresenter)VisualParent;
@@ -93,6 +93,9 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
 
         private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
+            // not using direct bindings to prevent access after unloading
+            // (because apparently that can happen and caused me a huge headache)
+
             if (e.PropertyName == nameof(VmNode.LocationX))
             {
                 CanvasX = UcGridView.ToGridCoordinates(Viewmodel.LocationX);
@@ -113,7 +116,7 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
         {
             base.OnVisualParentChanged(oldParent);
 
-            if (_gridView != null)
+            if (GridView != null)
             {
                 throw new InvalidOperationException();
             }
@@ -123,7 +126,7 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
             {
                 element = VisualTreeHelper.GetParent(element);
             }
-            _gridView = (UcGridView)element;
+            GridView = (UcGridView)element;
         }
         
         private void ItemContainerGenerator_StatusChanged(object? sender, EventArgs e)
@@ -218,7 +221,7 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
 
         private void GrabGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(_gridView == null)
+            if(GridView == null)
             {
                 throw new InvalidOperationException();
             }
@@ -228,12 +231,12 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
                 return;
             }
 
-            _gridView.DragNodePosition = e.GetPosition(_gridView);
+            GridView.DragNodePosition = e.GetPosition(GridView);
         }
 
         private void GrabGrid_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (_gridView == null)
+            if (GridView == null)
             {
                 throw new InvalidOperationException();
             }
@@ -243,30 +246,31 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
                 return;
             }
 
-            if (_gridView.DragNodePosition != null)
+            if (GridView.DragNodePosition != null)
             {
-                if (!_gridView.IsDraggingNodes)
+                if (!GridView.IsDraggingNodes)
                 {
                     Select();
                 }
 
-                _gridView.DropSelect(false);
+                GridView.DropSelect(false);
             }
         }
 
         private void GrabGrid_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (_gridView == null)
+            if (GridView == null)
             {
                 throw new InvalidOperationException();
             }
 
-            if (_gridView.DragNodePosition != null && !_gridView.IsDraggingNodes)
+            if (GridView.DragNodePosition != null && !GridView.IsDraggingNodes)
             {
                 Select();
 
-                _gridView.InitMoveSelected();
+                GridView.InitMoveSelected();
             }
         }
+
     }
 }

@@ -1,9 +1,7 @@
-﻿using SCR.Tools.DialogEditor.Viewmodeling;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
 {

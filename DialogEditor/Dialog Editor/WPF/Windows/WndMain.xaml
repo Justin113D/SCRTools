@@ -35,8 +35,16 @@
             </KeyBinding.Command>
         </KeyBinding>
 
-        <KeyBinding Modifiers="Ctrl" Key="Z" Command="{Binding CmdUndo}"/>
-        <KeyBinding Modifiers="Ctrl" Key="Y" Command="{Binding CmdRedo}"/>
+        <KeyBinding Modifiers="Ctrl" Key="Z">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_Undo"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+        <KeyBinding Modifiers="Ctrl" Key="Y">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_Redo"/>
+            </KeyBinding.Command>
+        </KeyBinding>
     </styling:Window.InputBindings>
 
     <Grid>

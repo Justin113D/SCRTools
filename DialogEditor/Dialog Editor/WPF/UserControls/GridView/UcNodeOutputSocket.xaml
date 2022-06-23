@@ -51,7 +51,9 @@
             Width="20"
             Height="20"
             HorizontalAlignment="Right"
-            VerticalAlignment="Center">
+            VerticalAlignment="Center"
+            MouseDown="Socket_MouseDown"
+            MouseLeave="Socket_MouseLeave">
 
             <Border.Style>
                 <Style TargetType="{x:Type Border}">

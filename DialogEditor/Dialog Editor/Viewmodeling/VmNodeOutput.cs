@@ -160,6 +160,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         public VmNode? Connected
         {
             get => _connected;
+            set => Data.SetOutput(value?.Data);
         }
 
         #endregion

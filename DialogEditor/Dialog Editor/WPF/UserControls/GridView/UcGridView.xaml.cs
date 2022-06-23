@@ -101,6 +101,8 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
         public bool IsDraggingNodes
             => _selectedNodes != null;
 
+        public UcNodeOutputSocket? ConnectingSocket { get; private set; }
+
         #region Commands
 
         public RelayCommand CmdRecenterView
@@ -173,6 +175,20 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
             {
                 return (UcNode)VisualTreeHelper.GetChild(content, 0);
             }
+        }
+
+        private UcNode? GetMouseOverUcNode()
+        {
+            for (int i = 0; i < NodesDisplay.ItemContainerGenerator.Items.Count; i++)
+            {
+                ContentPresenter presenter = (ContentPresenter)NodesDisplay.ItemContainerGenerator.ContainerFromIndex(i);
+                if (presenter.IsMouseOver)
+                {
+                    return (UcNode)VisualTreeHelper.GetChild(presenter, 0);
+                }
+            }
+
+            return null;
         }
 
         #region Space conversion
@@ -269,6 +285,11 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
 
         private void RecenterView()
         {
+            if(ConnectingSocket != null)
+            {
+                return;
+            }
+
             Matrix m = GridTransform.Matrix;
             m.OffsetX = 0;
             m.OffsetY = 0;
@@ -278,6 +299,11 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
 
         private void FocusNode(VmNode node)
         {
+            if (ConnectingSocket != null)
+            {
+                return;
+            }
+
             FrameworkElement obj = (FrameworkElement)NodesDisplay.ItemContainerGenerator.ContainerFromItem(node);
 
             Point GridLoc = new(
@@ -449,6 +475,11 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
 
         private void CreateNode(Point gridPos)
         {
+            if (ConnectingSocket != null)
+            {
+                return;
+            }
+
             int locationX = FromGridCoordinates(gridPos.X);
             int locationY = FromGridCoordinates(gridPos.Y);
 
@@ -464,6 +495,42 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
 
         #endregion
 
+        #region Node connection dragging
+
+        public void SetDraggedConnection(UcNodeOutputSocket? socket)
+        {
+            ConnectingSocket = socket;
+        }
+
+        private void MoveDraggingConnection(Point mousePos)
+        {
+            UcNode? ucNode = GetMouseOverUcNode();
+            if(ucNode != null)
+            {
+                ConnectingSocket?.SetEndPosition(new(ucNode.CanvasX, ucNode.CanvasY));
+            }
+            else
+            {
+                Point gridMousePos = ConvertToGridSpace(mousePos);
+                ConnectingSocket?.SetEndPosition(gridMousePos, false);
+            }
+        }
+
+        private void DropDraggingConnection()
+        {
+            UcNode? ucNode = GetMouseOverUcNode();
+            if (ucNode != null)
+            {
+                ConnectingSocket?.DropConnection(ucNode.Viewmodel);
+            }
+            else
+            {
+                ConnectingSocket?.DropConnection(null);
+            }
+        }
+
+        #endregion
+
         #region events
 
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
@@ -472,7 +539,7 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
             // interact with input bindings
             Focus(); 
 
-            if (DragNodePosition != null)
+            if (DragNodePosition != null || ConnectingSocket != null)
             {
                 return;
             }
@@ -492,6 +559,11 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
 
         private void GridCanvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            if(ConnectingSocket != null && e.ChangedButton == MouseButton.Left)
+            {
+                DropDraggingConnection();
+            }
+
             if(_previousMousePos != null && e.ChangedButton == MouseButton.Middle)
             {
                 EndPanGrid();
@@ -510,6 +582,11 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
 
         private void Grid_MouseWheel(object sender, MouseWheelEventArgs e)
         {
+            if (ConnectingSocket != null || DragNodePosition != null)
+            {
+                return;
+            }
+
             double newScale = GridTransform.Matrix.M11 + e.Delta * 0.0005d;
 
             newScale = Math.Clamp(newScale, 0.1, 1);
@@ -534,13 +611,26 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
         {
             Point mousePos = e.GetPosition(this);
 
-            PanGrid(mousePos, e.MiddleButton == MouseButtonState.Pressed);
-            DragSelectBox(mousePos, e.LeftButton == MouseButtonState.Pressed);
-            MoveSelected(mousePos, e.LeftButton == MouseButtonState.Pressed);
+            if(ConnectingSocket == null)
+            {
+                PanGrid(mousePos, e.MiddleButton == MouseButtonState.Pressed);
+                DragSelectBox(mousePos, e.LeftButton == MouseButtonState.Pressed);
+                MoveSelected(mousePos, e.LeftButton == MouseButtonState.Pressed);
+            }
+            else
+            {
+                MoveDraggingConnection(mousePos);
+            }
+
         }
 
         private void Grid_MouseLeave(object sender, MouseEventArgs e)
         {
+            if(ConnectingSocket != null)
+            {
+                ConnectingSocket.DropConnection(null);
+            }
+
             if (_previousMousePos != null)
             {
                 if (e.MiddleButton != MouseButtonState.Pressed)
