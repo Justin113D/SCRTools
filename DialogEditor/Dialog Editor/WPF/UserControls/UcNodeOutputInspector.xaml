@@ -10,11 +10,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="320" d:DesignWidth="250"
              d:DataContext="{x:Static wpf:DesignDataFactory.Output}"
-             x:Name="Container">
+             x:Name="OutputInspectorContainer">
     
     <UserControl.Resources>
         <converters:VisibilityConverter x:Key="NullToCollapsed" InvisibleType="Collapsed"/>
         <converters:ColorToBrushConverter x:Key="ColorToBrush"/>
+        <wpf:PortraitExistsConverter x:Key="PortraitExists"/>
     </UserControl.Resources>
     
     <Grid>
@@ -120,14 +121,31 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="10"/>
                                     <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="8"/>
                                 </Grid.ColumnDefinitions>
                                 <Border 
                                     Background="{Binding Value, Converter={StaticResource ColorToBrush}}"
                                     CornerRadius="3"/>
-                                <TextBlock Margin="5 2 2 2" Grid.Column="1" Text="{Binding Name}"/>
+                                
+                                <TextBlock Margin="5 2" Grid.Column="1" Text="{Binding Name}"/>
+                                
+                                <Border 
+                                    Grid.Column="2"
+                                    Height="8"
+                                    VerticalAlignment="Center"
+                                    CornerRadius="4">
+                                    <Border.Background>
+                                        <MultiBinding Converter="{StaticResource PortraitExists}">
+                                            <Binding ElementName="OutputInspectorContainer" Path="DataContext.Options.PortraitsPath"/>
+                                            <Binding ElementName="OutputInspectorContainer" Path="DataContext.Character"/>
+                                            <Binding />
+                                        </MultiBinding>
+                                    </Border.Background>
+                                </Border>
                             </Grid>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
+
                 </ComboBox>
 
                 <!-- Character Selection Combobox -->
@@ -141,11 +159,28 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="10"/>
                                     <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="8"/>
                                 </Grid.ColumnDefinitions>
+                                
                                 <Border 
                                     Background="{Binding Value, Converter={StaticResource ColorToBrush}}"
                                     CornerRadius="3"/>
+                                
                                 <TextBlock Margin="5 2 2 2" Grid.Column="1" Text="{Binding Name}"/>
+
+                                <Border 
+                                    Grid.Column="2"
+                                    Height="8"
+                                    VerticalAlignment="Center"
+                                    CornerRadius="4">
+                                    <Border.Background>
+                                        <MultiBinding Converter="{StaticResource PortraitExists}">
+                                            <Binding ElementName="OutputInspectorContainer" Path="DataContext.Options.PortraitsPath"/>
+                                            <Binding />
+                                            <Binding ElementName="OutputInspectorContainer" Path="DataContext.Expression"/>
+                                        </MultiBinding>
+                                    </Border.Background>
+                                </Border>
                             </Grid>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
@@ -274,7 +309,7 @@
                         VerticalAlignment="Center"
                         VerticalContentAlignment="Center"
                         Visibility="{Binding Connected, Converter={StaticResource NullToCollapsed}}"
-                        Command="{Binding ElementName=Container, Path=CmdFocusNode}"
+                        Command="{Binding ElementName=OutputInspectorContainer, Path=CmdFocusNode}"
                         CommandParameter="{Binding Connected}">
                         <Button.Content>
                             <TextBlock 
