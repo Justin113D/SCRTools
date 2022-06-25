@@ -138,9 +138,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             BeginChangeGroup();
 
             Data.Sort();
-
             _nodes.Clear();
-
             _nodes.AddRange(Data.Nodes.Select(x => _nodeTable[x]));
 
             EndChangeGroup();
@@ -200,7 +198,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
         private void OrganizeNodes()
         {
-            if (Nodes.Count == 0)
+            if (Nodes.Count == 0 || Data.StartNode == null)
                 return;
 
             BeginChangeGroup();

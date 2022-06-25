@@ -29,6 +29,8 @@ namespace SCR.Tools.DialogEditor.Data
         private Node? _connected;
         #endregion
 
+        public Node Parent { get; }
+
         public OutputConnectionChangedEventHandler? ConnectionChanged { get; set; }
 
         /// <summary>
@@ -157,8 +159,10 @@ namespace SCR.Tools.DialogEditor.Data
         }
 
 
-        public NodeOutput()
+        public NodeOutput(Node parent)
         {
+            Parent = parent;
+
             _expression = "";
             _character = "";
             _icon = "";

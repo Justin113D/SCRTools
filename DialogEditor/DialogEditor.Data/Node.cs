@@ -81,7 +81,7 @@ namespace SCR.Tools.DialogEditor.Data
         {
             _outputs = new()
             {
-                new()
+                new(this)
             };
             _inputs = new();
 
@@ -116,7 +116,7 @@ namespace SCR.Tools.DialogEditor.Data
         /// <returns></returns>
         public NodeOutput CreateOutput()
         {
-            NodeOutput result = new()
+            NodeOutput result = new(this)
             {
                 Expression = Outputs[0].Expression,
                 Character = Outputs[0].Character

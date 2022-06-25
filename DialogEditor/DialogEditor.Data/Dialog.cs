@@ -110,43 +110,77 @@ namespace SCR.Tools.DialogEditor.Data
             EndChangeGroup();
         }
 
-        /// <summary>
-        ///  (Somewhat) Sorts the nodes
-        /// </summary>
         public void Sort()
         {
+            BeginChangeGroup();
+
             List<Node> sorted = new();
 
-            Queue<Node> nodeQueue = new();
-            while(sorted.Count < _nodes.Count)
+            Queue<Node> multiOutputQueue = new();
+            Queue<Node> multiInputQueue = new();
+
+            while (sorted.Count < _nodes.Count)
             {
-                Node? next = _nodes.Find(x => x.Inputs.Count == 0 && !sorted.Contains(x));
-                if(next == null)
-                    next = _nodes.Find(x => !sorted.Contains(x));
-
-                while(nodeQueue.Count > 0 || next != null)
+                Node? next = _nodes.Find(x => x.Outputs.Any(y => y.Connected == null) && !sorted.Contains(x));
+                if (next == null)
                 {
-                    Node q = next ?? nodeQueue.Dequeue();
-                    next = null;
+                    next = _nodes.Find(x => !sorted.Contains(x));
+                }
 
-                    if(sorted.Contains(q))
-                        continue;
+                while (multiOutputQueue.Count > 0
+                    || multiInputQueue.Count > 0
+                    || next != null)
+                {
 
-                    sorted.Add(q);
-                    if(q.Outputs.Count == 1)
-                        next = q.Outputs[0].Connected;
-                    else
+                    if(next != null)
                     {
-                        foreach(NodeOutput o in q.Outputs)
+                        Node q = next;
+                        next = null;
+
+                        if (sorted.Contains(q))
                         {
-                            nodeQueue.Enqueue(o.Connected ?? throw new InvalidOperationException());
+                            continue;
                         }
+
+                        if(q.Outputs.Count > 1 && multiInputQueue.Count > 0)
+                        {
+                            multiOutputQueue.Enqueue(q);
+                            continue;
+                        }
+
+                        sorted.Add(q);
+
+                        if (q.Inputs.Count > 1)
+                        {
+                            foreach(NodeOutput input in q.Inputs)
+                            {
+                                multiInputQueue.Enqueue(input.Parent);
+                            }
+                        }
+                        else if(q.Inputs.Count == 1)
+                        {
+                            next = q.Inputs[0].Parent;
+                            continue;
+                        }
+                    }
+
+                    if(multiInputQueue.Count > 0)
+                    {
+                        next = multiInputQueue.Dequeue();
+                    }
+                    else if (multiOutputQueue.Count > 0)
+                    {
+                        next = multiOutputQueue.Dequeue();
                     }
                 }
             }
 
+            sorted.Reverse();
+
             _nodes.Clear();
             _nodes.AddRange(sorted);
+
+            EndChangeGroup();
         }
 
 
