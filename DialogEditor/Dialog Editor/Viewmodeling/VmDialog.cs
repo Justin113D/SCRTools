@@ -140,9 +140,8 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             Data.Sort();
 
             _nodes.Clear();
-            _nodes.AddRange(
-                Nodes.OrderBy(x => Data.Nodes.IndexOf(x.Data))
-                );
+
+            _nodes.AddRange(Data.Nodes.Select(x => _nodeTable[x]));
 
             EndChangeGroup();
         }
