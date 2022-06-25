@@ -20,6 +20,15 @@ namespace SCR.Tools.DialogEditor.Properties
 
         [UserScopedSetting()]
         [DebuggerNonUserCode()]
+        [DefaultSettingValue("True")]
+        public bool JsonIndenting
+        {
+            get => (bool)this[nameof(JsonIndenting)];
+            set => this[nameof(JsonIndenting)] = value;
+        }
+
+        [UserScopedSetting()]
+        [DebuggerNonUserCode()]
         [DefaultSettingValue("")]
         public string DefaultDialogOptionsPath
         {

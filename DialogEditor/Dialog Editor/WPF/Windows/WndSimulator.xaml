@@ -1,0 +1,34 @@
+﻿<styling:Window 
+    x:Class="SCR.Tools.DialogEditor.WPF.Windows.WndSimulator"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:SCR.Tools.DialogEditor.WPF.Windows"
+    xmlns:styling="clr-namespace:SCR.Tools.WPF.Styling;assembly=SCR.Tools.WPF"
+    xmlns:wpf="clr-namespace:SCR.Tools.DialogEditor.WPF"
+    xmlns:vm="clr-namespace:SCR.Tools.DialogEditor.Viewmodeling.Simulator"
+    xmlns:uc="clr-namespace:SCR.Tools.DialogEditor.WPF.UserControls.Simulator"
+    mc:Ignorable="d"
+    Height="450" Width="800"
+    MinimizeButton="Collapsed"
+    MaximizeButton="Collapsed"
+    Title="Simulator"
+    d:DataContext="{x:Static wpf:DesignDataFactory.Simulator}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <uc:UcSimulatorTable
+            Grid.Column="0"
+            DataContext="{Binding }"/>
+
+        <uc:UcSimulatorView
+            Margin="5 0 0 0"
+            Grid.Column="1"
+            DataContext="{Binding }"/>
+    </Grid>
+</styling:Window>

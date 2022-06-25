@@ -4,6 +4,7 @@ using SCR.Tools.WPF.IO;
 using System.Windows;
 using Window = SCR.Tools.WPF.Styling.Window;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
+using Ookii.Dialogs.Wpf;
 
 namespace SCR.Tools.DialogEditor.WPF.Windows
 {
@@ -88,6 +89,18 @@ namespace SCR.Tools.DialogEditor.WPF.Windows
         private void MenuItem_Redo(object sender, RoutedEventArgs e)
         {
             RedoChange();
+        }
+
+        private void PortraitsPathDialog(object sender, RoutedEventArgs e)
+        {
+            VistaFolderBrowserDialog ofd = new();
+
+            if (ofd.ShowDialog() != true)
+            {
+                return;
+            }
+
+            ((VmDialogOptions)DataContext).PortraitsPath = ofd.SelectedPath;
         }
     }
 }

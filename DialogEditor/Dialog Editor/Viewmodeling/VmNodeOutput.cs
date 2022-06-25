@@ -136,6 +136,11 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             get => Data.Text;
             set
             {
+                if(Text == value)
+                {
+                    return;
+                }
+
                 BeginChangeGroup();
 
                 Data.Text = value;
@@ -145,14 +150,31 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             }
         }
 
-        public bool KeepEnabled
+        public bool DisableReuse
         {
-            get => Data.KeepEnabled;
+            get => Data.DisableReuse;
             set
             {
                 BeginChangeGroup();
-                Data.KeepEnabled = value;
-                TrackNotifyProperty(nameof(KeepEnabled));
+                Data.DisableReuse = value;
+                TrackNotifyProperty(nameof(DisableReuse));
+                EndChangeGroup();
+            }
+        }
+
+        public int SharedDisabledIndex
+        {
+            get => Data.SharedDisabledIndex;
+            set
+            {
+                if (SharedDisabledIndex == value)
+                {
+                    return;
+                }
+
+                BeginChangeGroup();
+                Data.SharedDisabledIndex = value;
+                TrackNotifyProperty(nameof(SharedDisabledIndex));
                 EndChangeGroup();
             }
         }
@@ -160,7 +182,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         public VmNode? Connected
         {
             get => _connected;
-            set => Data.SetOutput(value?.Data);
+            set => Data.Connect(value?.Data);
         }
 
         #endregion
@@ -205,9 +227,9 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
                 throw new InvalidOperationException("Already initiated node output!");
             }
 
-            _connected = Data.Output == null
+            _connected = Data.Connected == null
                 ? null
-                : Parent.Dialog.GetViewmodel(Data.Output);
+                : Parent.Dialog.GetViewmodel(Data.Connected);
 
             OnPropertyChanged(nameof(Connected));
 

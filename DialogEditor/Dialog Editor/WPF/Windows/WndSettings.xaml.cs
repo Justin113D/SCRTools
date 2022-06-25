@@ -16,15 +16,10 @@ namespace SCR.Tools.DialogEditor.WPF.Windows
         public WndSettings()
         {
             InitializeComponent();
-            FontSizeField.Text = Properties.Settings.Default.Fontsize.ToString();
             ThemeCombobox.ItemsSource = Enum.GetValues(typeof(Theme));
             ThemeCombobox.SelectedItem = BaseStyle.Theme;
             DefaultPathTextBox.Text = Properties.Settings.Default.DefaultDialogOptionsPath;
-        }
-
-        private void FontSizeField_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            e.Handled = !double.TryParse(e.Text, out _);
+            JsonIndentingCheckbox.IsChecked = Properties.Settings.Default.JsonIndenting;
         }
 
         private void ThemeCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -38,14 +33,8 @@ namespace SCR.Tools.DialogEditor.WPF.Windows
 
         private void CloseSettings(object sender, RoutedEventArgs e)
         {
-            double fs = double.Parse(FontSizeField.Text);
-            if (Properties.Settings.Default.Fontsize != fs)
-            {
-                Properties.Settings.Default.Fontsize = fs;
-                ((App)Application.Current).AppFontSize = fs;
-            }
-
             Properties.Settings.Default.DefaultDialogOptionsPath = DefaultPathTextBox.Text;
+            Properties.Settings.Default.JsonIndenting = JsonIndentingCheckbox.IsChecked ?? false;
 
             Properties.Settings.Default.Save();
             Close();

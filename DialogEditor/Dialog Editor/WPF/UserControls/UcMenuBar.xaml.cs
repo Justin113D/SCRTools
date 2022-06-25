@@ -1,6 +1,7 @@
 ﻿using SCR.Tools.DialogEditor.Viewmodeling;
 using SCR.Tools.Viewmodeling;
 using SCR.Tools.WPF.IO;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -104,9 +105,14 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
             _viewModel.DialogTracker.Use();
         }
 
-        private void EventCommand_Executed(object sender, object e)
+        private void OpenSimulator(object sender, RoutedEventArgs e)
         {
+            if (_viewModel == null)
+            {
+                return;
+            }
 
+            Windows.WndSimulator.RunSimulator(_viewModel.Dialog.Data, _viewModel.DialogOptions.Data);
         }
     }
 }

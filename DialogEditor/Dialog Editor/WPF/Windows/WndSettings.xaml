@@ -21,7 +21,7 @@
                         <Setter Property="Orientation" Value="Horizontal"/>
                         <Setter Property="Margin" Value="0 5 0 5"/>
                     </Style>
-                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource AppTextBlock}">
+                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
                         <Setter Property="VerticalAlignment" Value="Center"/>
                         <Setter Property="MinWidth" Value="140"/>
                     </Style>
@@ -35,20 +35,13 @@
                         MinWidth="100" 
                         HorizontalAlignment="Left" 
                         Foreground="Black" 
-                        FontSize="{DynamicResource AppFontSize}"
                         SelectionChanged="ThemeCombobox_SelectionChanged"/>
                 </StackPanel>
 
-                <!-- Font Size -->
+                <!-- Json indenting -->
                 <StackPanel>
-                    <TextBlock Text="Fontsize"/>
-                    <TextBox 
-                        x:Name="FontSizeField" 
-                        Style="{DynamicResource AppTextBox}" 
-                        Background="{DynamicResource BG2}" 
-                        MinWidth="40" 
-                        PreviewTextInput="FontSizeField_PreviewTextInput" 
-                        TextAlignment="Right"/>
+                    <TextBlock Text="Json Indenting"/>
+                    <CheckBox x:Name="JsonIndentingCheckbox"/>
                 </StackPanel>
 
                 <!-- Default options filepath-->

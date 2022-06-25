@@ -1,4 +1,5 @@
 ﻿using SCR.Tools.UndoRedo.Collections;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Drawing;
 
 namespace SCR.Tools.DialogEditor.Data
@@ -8,6 +9,8 @@ namespace SCR.Tools.DialogEditor.Data
     /// </summary>
     public class DialogOptions
     {
+        private string? _portraitsPath;
+
         /// <summary>
         /// All available character options
         /// </summary>
@@ -22,6 +25,16 @@ namespace SCR.Tools.DialogEditor.Data
         /// available node icons
         /// </summary>
         public TrackDictionary<string, string> NodeIcons { get; }
+
+        public string? PortraitsPath
+        {
+            get => _portraitsPath;
+            set
+            {
+                TrackValueChange(
+                    (v) => _portraitsPath = v, _portraitsPath, value);
+            }
+        }
 
         public DialogOptions()
         {

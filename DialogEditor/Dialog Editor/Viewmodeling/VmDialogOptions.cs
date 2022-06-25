@@ -18,6 +18,25 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
         public VmNodeOptions<string> NodeIcons { get; private set; }
 
+        public string? PortraitsPath
+        {
+            get => Data.PortraitsPath;
+            set
+            {
+                if(value == PortraitsPath)
+                {
+                    return;
+                }
+
+                BeginChangeGroup();
+
+                Data.PortraitsPath = value;
+                TrackNotifyProperty(nameof(PortraitsPath));
+
+                EndChangeGroup();
+            }
+        }
+
         public VmDialogOptions()
         {
             DialogOptionsTracker = new();
@@ -39,7 +58,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
         public string Write(string? path)
         {
-            return Data.WriteDialogOptions(false, path);
+            return Data.WriteDialogOptions(Properties.Settings.Default.JsonIndenting, path);
         }
 
         public void Reset()

@@ -14,8 +14,6 @@
                 <styling:BaseStyle/>
 
                 <ResourceDictionary>
-                    <sys:Double x:Key="AppFontSize">15</sys:Double>
-
                     <InputBindingCollection x:Key="TextboxInputs">
                         <KeyBinding Modifiers="Ctrl" Key="Z">
                             <KeyBinding.Command>
@@ -29,15 +27,7 @@
                         </KeyBinding>
                     </InputBindingCollection>
 
-                    <Style x:Key="AppTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
-                        <Setter Property="FontSize" Value="{DynamicResource AppFontSize}"/>
-                    </Style>
-
-                    <Style x:Key="AppTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
-                        <Setter Property="FontSize" Value="{DynamicResource AppFontSize}"/>
-                    </Style>
-
-                    <Style x:Key="TextBoxUndo" TargetType="{x:Type TextBox}" BasedOn="{StaticResource AppTextBox}">
+                    <Style x:Key="TextBoxUndo" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
                         <EventSetter Event="GotFocus" Handler="GotFocus"/>
                         <Setter Property="scrWPF:InputBindingAttach.InputBindings" Value="{StaticResource TextboxInputs}"/>
                     </Style>

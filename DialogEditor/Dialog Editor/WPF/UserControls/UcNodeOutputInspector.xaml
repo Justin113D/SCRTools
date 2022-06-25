@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:SCR.Tools.DialogEditor.WPF.UserControls"
              xmlns:wpf="clr-namespace:SCR.Tools.DialogEditor.WPF"
              xmlns:converters="clr-namespace:SCR.Tools.WPF.Converters;assembly=SCR.Tools.WPF"
+             xmlns:num="http://gu.se/NumericInput"
              mc:Ignorable="d" 
              d:DesignHeight="320" d:DesignWidth="250"
              d:DataContext="{x:Static wpf:DesignDataFactory.Output}"
@@ -93,7 +94,7 @@
                         <Setter Property="Margin" Value="0 0 0 5"/>
                         <Setter Property="Padding" Value="3"/>
                     </Style>
-                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxUndo}">
                         <Setter Property="Background" Value="{DynamicResource BG2}"/>
                         <Setter Property="TextWrapping" Value="Wrap"/>
                         <Setter Property="Padding" Value="4"/>
@@ -209,15 +210,34 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock 
-                        Text="Keep Enabled on Return" 
+                        Text="Disable after using" 
                         FontWeight="Bold"
                         VerticalAlignment="Center"/>
                     <CheckBox 
                         Grid.Column="1"
                         Margin="0 3"
                         Padding="4"
-                        IsChecked="{Binding KeepEnabled, Mode=TwoWay}"/>
+                        IsChecked="{Binding DisableReuse, Mode=TwoWay}"/>
 
+                </Grid>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock 
+                        Text="Shared Disable Index" 
+                        FontWeight="Bold"
+                        VerticalAlignment="Center"/>
+
+                    <num:IntBox
+                        Grid.Column="1"
+                        MinWidth="60"
+                        Margin="2 0"
+                        Value="{Binding SharedDisabledIndex, Mode=TwoWay}"
+                        Style="{StaticResource {x:Type TextBox}}"/>
                 </Grid>
 
                 <Border/>

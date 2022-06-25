@@ -1,5 +1,4 @@
-﻿using SCR.Tools.UndoRedo;
-using SCR.Tools.UndoRedo.Collections;
+﻿using SCR.Tools.UndoRedo.Collections;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System;
 using System.Collections.Generic;
@@ -30,7 +29,7 @@ namespace SCR.Tools.DialogEditor.Data
         /// <summary>
         /// Starter Node
         /// </summary>
-        public Node StartNode => _nodes.First(x => x.Inputs.Count == 0);
+        public Node? StartNode => _nodes.FirstOrDefault(x => x.Inputs.Count == 0);
 
         /// <summary>
         /// Node Contents
@@ -135,12 +134,12 @@ namespace SCR.Tools.DialogEditor.Data
 
                     sorted.Add(q);
                     if(q.Outputs.Count == 1)
-                        next = q.Outputs[0].Output;
+                        next = q.Outputs[0].Connected;
                     else
                     {
                         foreach(NodeOutput o in q.Outputs)
                         {
-                            nodeQueue.Enqueue(o.Output ?? throw new InvalidOperationException());
+                            nodeQueue.Enqueue(o.Connected ?? throw new InvalidOperationException());
                         }
                     }
                 }

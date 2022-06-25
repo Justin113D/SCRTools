@@ -18,13 +18,15 @@ namespace SCR.Tools.DialogEditor.Data
 
         private string _text;
 
-        private bool _keepEnabled;
+        private bool _disableReuse;
+
+        private int _sharedDisabledIndex = -1;
+
+        private bool _fallback;
 
         private string _condition;
 
-        private int _event;
-
-        private Node? _output;
+        private Node? _connected;
         #endregion
 
         public OutputConnectionChangedEventHandler? ConnectionChanged { get; set; }
@@ -82,15 +84,41 @@ namespace SCR.Tools.DialogEditor.Data
         }
 
         /// <summary>
-        /// Whether output should still be available after returning to the node
+        /// Whether output should be disabled upon using
         /// </summary>
-        public bool KeepEnabled
+        public bool DisableReuse
         {
-            get => _keepEnabled;
+            get => _disableReuse;
             set
             {
                 BlankValueChange(
-                    (v) => _keepEnabled = v, _keepEnabled, value);
+                    (v) => _disableReuse = v, _disableReuse, value);
+            }
+        }
+
+        /// <summary>
+        /// Used to share the disabled state among outputs
+        /// </summary>
+        public int SharedDisabledIndex
+        {
+            get => _sharedDisabledIndex;
+            set
+            {
+                BlankValueChange(
+                    (v) => _sharedDisabledIndex = v, _sharedDisabledIndex, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets enabled when all other nodes are disabled
+        /// </summary>
+        public bool Fallback
+        {
+            get => _fallback;
+            set
+            {
+                BlankValueChange(
+                    (v) => _fallback = v, _fallback, value);
             }
         }
 
@@ -100,7 +128,7 @@ namespace SCR.Tools.DialogEditor.Data
         public string Condition
         {
             get => _condition;
-            private set
+            set
             {
                 BlankValueChange(
                     (v) => _condition = v, _condition, value);
@@ -108,34 +136,21 @@ namespace SCR.Tools.DialogEditor.Data
         }
 
         /// <summary>
-        /// Event id to trigger
-        /// </summary>
-        public int Event
-        {
-            get => _event;
-            set
-            {
-                BlankValueChange(
-                    (v) => _event = v, _event, value);
-            }
-        }
-
-        /// <summary>
         /// The followup node
         /// </summary>
-        public Node? Output
+        public Node? Connected
         {
-            get => _output;
+            get => _connected;
             private set
             {
-                if(value == _output)
+                if(value == _connected)
                 {
                     BlankChange();
                 }
                 else
                 {
                     TrackValueChange(
-                        (v) => _output = v, _output, value);
+                        (v) => _connected = v, _connected, value);
                 }
                 
             }
@@ -151,41 +166,23 @@ namespace SCR.Tools.DialogEditor.Data
             _condition = "";
         }
 
-
-        /// <summary>
-        /// Sets the condition
-        /// </summary>
-        /// <param name="condition">New Condition</param>
-        /// <returns>Whether the condition is valid</returns>
-        public bool SetCondition(string condition)
-        {
-            if (string.IsNullOrWhiteSpace(condition))
-            {
-                Condition = "";
-                return true;
-            }
-
-            Condition = condition;
-            return true;
-        }
-
         /// <summary>
         /// Sets the node output
         /// </summary>
         /// <param name="node">New output</param>
         /// <returns></returns>
-        public bool SetOutput(Node? node)
+        public bool Connect(Node? node)
         {
             if (node?.Outputs.Contains(this) == true)
                 return false;
 
             BeginChangeGroup();
 
-            Node? oldConnection = Output;
+            Node? oldConnection = Connected;
 
-            Output?.RemoveInput(this);
-            Output = node;
-            Output?.AddInput(this);
+            Connected?.RemoveInput(this);
+            Connected = node;
+            Connected?.AddInput(this);
 
             ConnectionChanged?.Invoke(this, new(oldConnection, node));
 
@@ -199,7 +196,7 @@ namespace SCR.Tools.DialogEditor.Data
         /// </summary>
         public void Disconnect()
         {
-            SetOutput(null);
+            Connect(null);
         }
 
         public override string ToString()

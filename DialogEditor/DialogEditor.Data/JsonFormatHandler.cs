@@ -54,7 +54,11 @@ namespace SCR.Tools.DialogEditor.Data
 
             jsonWriter.WriteNumber(nameof(Node.LocationX), node.LocationX);
             jsonWriter.WriteNumber(nameof(Node.LocationY), node.LocationY);
-            jsonWriter.WriteBoolean(nameof(Node.RightPortrait), node.RightPortrait);
+
+            if(node.RightPortrait)
+            {
+                jsonWriter.WriteBoolean(nameof(Node.RightPortrait), node.RightPortrait);
+            }
 
             jsonWriter.WriteStartArray(nameof(Node.Outputs));
 
@@ -71,15 +75,42 @@ namespace SCR.Tools.DialogEditor.Data
         {
             jsonWriter.WriteStartObject();
 
-            jsonWriter.WriteString(nameof(NodeOutput.Expression), output.Expression);
-            jsonWriter.WriteString(nameof(NodeOutput.Character), output.Character);
-            jsonWriter.WriteString(nameof(NodeOutput.Icon), output.Icon);
+            if(!string.IsNullOrWhiteSpace(output.Expression))
+            {
+                jsonWriter.WriteString(nameof(NodeOutput.Expression), output.Expression);
+            }
+
+            if (!string.IsNullOrWhiteSpace(output.Character))
+            {
+                jsonWriter.WriteString(nameof(NodeOutput.Character), output.Character);
+            }
+
+            if (!string.IsNullOrWhiteSpace(output.Icon))
+            {
+                jsonWriter.WriteString(nameof(NodeOutput.Icon), output.Icon);
+            }
+
             jsonWriter.WriteString(nameof(NodeOutput.Text), output.Text);
-            jsonWriter.WriteBoolean(nameof(NodeOutput.KeepEnabled), output.KeepEnabled);
-            jsonWriter.WriteString(nameof(NodeOutput.Condition), output.Condition);
-            jsonWriter.WriteNumber(nameof(NodeOutput.Event), output.Event);
-            jsonWriter.WriteNumber(nameof(NodeOutput.Output),
-                output.Output == null ? -1 : dialog.Nodes.IndexOf(output.Output));
+
+            if(output.DisableReuse)
+            {
+                jsonWriter.WriteBoolean(nameof(NodeOutput.DisableReuse), output.DisableReuse);
+            }
+
+            if (output.SharedDisabledIndex >= 0)
+            {
+                jsonWriter.WriteNumber(nameof(NodeOutput.SharedDisabledIndex), output.SharedDisabledIndex);
+            }
+
+            if (!string.IsNullOrWhiteSpace(output.Condition))
+            {
+                jsonWriter.WriteString(nameof(NodeOutput.Condition), output.Condition);
+            }
+
+            if(output.Connected != null)
+            {
+                jsonWriter.WriteNumber(nameof(NodeOutput.Connected), dialog.Nodes.IndexOf(output.Connected));
+            }
 
             jsonWriter.WriteEndObject();
         }
@@ -142,7 +173,7 @@ namespace SCR.Tools.DialogEditor.Data
             {
                 if(pair.Value >= 0)
                 {
-                    pair.Key.SetOutput(output.Nodes[pair.Value]);
+                    pair.Key.Connect(output.Nodes[pair.Value]);
                 }
             }
         }
@@ -176,16 +207,11 @@ namespace SCR.Tools.DialogEditor.Data
             output.Character = json[nameof(NodeOutput.Character)]?.GetValue<string>() ?? "";
             output.Icon = json[nameof(NodeOutput.Icon)]?.GetValue<string>() ?? "";
             output.Text = json[nameof(NodeOutput.Text)]?.GetValue<string>() ?? "";
-            output.KeepEnabled = json[nameof(NodeOutput.KeepEnabled)]?.GetValue<bool>() ?? false;
-            output.Event = json[nameof(NodeOutput.Event)]?.GetValue<int>() ?? 0;
+            output.DisableReuse = json[nameof(NodeOutput.DisableReuse)]?.GetValue<bool>() ?? false;
+            output.SharedDisabledIndex = json[nameof(NodeOutput.SharedDisabledIndex)]?.GetValue<int>() ?? -1;
+            output.Condition = json[nameof(NodeOutput.Condition)]?.GetValue<string>() ?? "";
 
-            string condition = json[nameof(NodeOutput.Condition)]?.GetValue<string>() ?? "";
-            if(!output.SetCondition(condition))
-            {
-                throw new InvalidDataException($"Output condition \"{condition}\" invalid!");
-            }
-
-            int outIndex = json[nameof(NodeOutput.Output)]?.GetValue<int>() ?? -1;
+            int outIndex = json[nameof(NodeOutput.Connected)]?.GetValue<int>() ?? -1;
             outputMap.Add(output, outIndex);
         }
 
@@ -202,6 +228,15 @@ namespace SCR.Tools.DialogEditor.Data
             });
 
             jsonWriter.WriteStartObject();
+
+            string? portraitPath = options.PortraitsPath;
+
+            if (basePath != null && portraitPath != null)
+            {
+                portraitPath = Path.GetRelativePath(basePath, portraitPath);
+            }
+
+            jsonWriter.WriteString(nameof(DialogOptions.PortraitsPath), portraitPath);
 
             WriteDialogNodeOptions(jsonWriter, nameof(DialogOptions.CharacterOptions), options.CharacterOptions);
             WriteDialogNodeOptions(jsonWriter, nameof(DialogOptions.ExpressionOptions), options.ExpressionOptions);
@@ -266,6 +301,15 @@ namespace SCR.Tools.DialogEditor.Data
                 {
                     throw new ArgumentException("Format not a valid json object");
                 }
+
+                string? portraitsPath = json[nameof(DialogOptions.PortraitsPath)]?.GetValue<string?>();
+
+                if(portraitsPath != null && basePath != null)
+                {
+                    portraitsPath = Path.GetFullPath(portraitsPath, basePath);
+                }
+
+                result.PortraitsPath = portraitsPath;
 
                 if(json[nameof(DialogOptions.CharacterOptions)] is JsonNode options)
                 {

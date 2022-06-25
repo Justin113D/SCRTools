@@ -112,7 +112,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
         public string WriteDialog()
         {
-            string result = Dialog.Data.WriteDialog(true);
+            string result = Dialog.Data.WriteDialog(Properties.Settings.Default.JsonIndenting);
             SetMessage("Saved Dialog", false);
             return result;
         }
