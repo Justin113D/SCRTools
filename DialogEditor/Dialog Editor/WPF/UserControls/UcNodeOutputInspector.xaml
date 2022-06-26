@@ -84,7 +84,7 @@
             Grid.Row="1" 
             Margin="4"
             Padding="6"
-            Background="{DynamicResource HighlightedBG}"
+            Background="{DynamicResource BG1}"
             Visibility="{Binding IsExpanded, Converter={StaticResource NullToCollapsed}}">
 
             <StackPanel>

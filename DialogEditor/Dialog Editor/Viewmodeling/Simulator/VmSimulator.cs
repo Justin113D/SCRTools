@@ -188,6 +188,42 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
             EndChangeGroup();
         }
 
+        public void Jump(VmSimulatorNode node)
+        {
+            if(ActiveNode == node)
+            {
+                return;
+            }
+
+            BeginChangeGroup();
+
+            VmSimulatorOutput? previousLeft = LeftPortrait;
+            VmSimulatorOutput? previousRight = RightPortrait;
+
+            ActiveNode = node;
+
+            if (ActiveNode.Data.RightPortrait)
+            {
+                TrackChange(
+                    () => { },
+                    () =>
+                    {
+                        RightPortrait = previousRight;
+                    });
+            }
+            else
+            {
+                TrackChange(
+                    () => { },
+                    () =>
+                    {
+                        LeftPortrait = previousLeft;
+                    });
+            }
+
+            EndChangeGroup();
+        }
+
         private void Reset()
         {
             foreach(VmSimulatorNode vmNode in Nodes)

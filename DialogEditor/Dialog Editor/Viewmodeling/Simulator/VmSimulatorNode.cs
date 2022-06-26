@@ -28,7 +28,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
             => Outputs[0].Name;
 
         public string OutInfo
-            => $"[ {Outputs.Count} ]";
+            => Outputs.Count > 1 ? $"[ {Outputs.Count} ]" : "";
 
         public int CameBy
         {

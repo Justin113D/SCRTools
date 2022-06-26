@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SCR.Tools.DialogEditor.Viewmodeling.Simulator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,22 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.Simulator
     /// </summary>
     public partial class UcSimulatorTable : UserControl
     {
+        public VmSimulator ViewModel
+            => (VmSimulator)DataContext;
+
         public UcSimulatorTable()
         {
             InitializeComponent();
+        }
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(((ListBox)sender).SelectedValue is not VmSimulatorNode node)
+            {
+                return;
+            }
+
+            ViewModel.Jump(node);
         }
     }
 }

@@ -26,7 +26,8 @@
             
             <ListBox 
                 ItemsSource="{Binding Nodes}" 
-                SelectedItem="{Binding ActiveNode, Mode=TwoWay}"
+                SelectedItem="{Binding ActiveNode, Mode=OneWay}"
+                SelectionChanged="ListBox_SelectionChanged"
                 Background="Transparent" 
                 BorderThickness="0" 
                 HorizontalContentAlignment="Stretch"
