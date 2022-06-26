@@ -80,6 +80,8 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
                 {
                     Simulator.LeftPortrait = _activeOutput;
                 }
+
+                Simulator.RefreshHasNextNode();
             }
         }
 

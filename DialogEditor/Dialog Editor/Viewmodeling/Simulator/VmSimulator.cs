@@ -136,6 +136,10 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
             EntryNode.InitActive();
         }
     
+        public void RefreshHasNextNode()
+        {
+            OnPropertyChanged(nameof(HasNextNode));
+        }
 
         private void InitActiveNode()
         {

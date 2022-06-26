@@ -115,16 +115,34 @@ namespace SCR.Tools.DialogEditor.Data
             BeginChangeGroup();
 
             List<Node> sorted = new();
+            HashSet<Node> sortedHashMap = new();
 
-            Queue<Node> multiOutputQueue = new();
+            Queue<(Node, int)> multiOutputQueue = new();
             Queue<Node> multiInputQueue = new();
+
+            Queue<Node> DisconnectedOutputs = new(_nodes
+                .FindAll(x => x.Outputs.Any(y => y.Connected == null))
+                .OrderBy(x => x.Outputs.Count(y => y.Connected == null)));
+
 
             while (sorted.Count < _nodes.Count)
             {
-                Node? next = _nodes.Find(x => x.Outputs.Any(y => y.Connected == null) && !sorted.Contains(x));
+                Node? next = null;
+                while (DisconnectedOutputs.Count > 0)
+                {
+                    next = DisconnectedOutputs.Dequeue();
+
+                    if (!sortedHashMap.Contains(next))
+                    {
+                        break;
+                    }
+
+                    next = null;
+                }
+
                 if (next == null)
                 {
-                    next = _nodes.Find(x => !sorted.Contains(x));
+                    next = _nodes.Find(x => !sortedHashMap.Contains(x));
                 }
 
                 while (multiOutputQueue.Count > 0
@@ -132,45 +150,50 @@ namespace SCR.Tools.DialogEditor.Data
                     || next != null)
                 {
 
-                    if(next != null)
+                    if (next != null)
                     {
                         Node q = next;
                         next = null;
 
-                        if (sorted.Contains(q))
+                        if (sortedHashMap.Contains(q))
                         {
                             continue;
                         }
 
-                        if(q.Outputs.Count > 1 && multiInputQueue.Count > 0)
+                        if (q.Outputs.Count > 1
+                            && (multiInputQueue.Count > 0
+                            || multiOutputQueue.Peek().Item2 < sorted.Count))
                         {
-                            multiOutputQueue.Enqueue(q);
+                            multiOutputQueue.Enqueue((q, sorted.Count));
                             continue;
                         }
+
+
 
                         sorted.Add(q);
+                        sortedHashMap.Add(q);
 
                         if (q.Inputs.Count > 1)
                         {
-                            foreach(NodeOutput input in q.Inputs)
+                            foreach (NodeOutput input in q.Inputs)
                             {
                                 multiInputQueue.Enqueue(input.Parent);
                             }
                         }
-                        else if(q.Inputs.Count == 1)
+                        else if (q.Inputs.Count == 1)
                         {
                             next = q.Inputs[0].Parent;
                             continue;
                         }
                     }
 
-                    if(multiInputQueue.Count > 0)
+                    if (multiInputQueue.Count > 0)
                     {
                         next = multiInputQueue.Dequeue();
                     }
                     else if (multiOutputQueue.Count > 0)
                     {
-                        next = multiOutputQueue.Dequeue();
+                        next = multiOutputQueue.Dequeue().Item1;
                     }
                 }
             }

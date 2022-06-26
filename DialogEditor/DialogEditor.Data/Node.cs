@@ -162,6 +162,6 @@ namespace SCR.Tools.DialogEditor.Data
             => _inputs.Remove(nodeOutput);
 
         public override string ToString()
-            => $"Loc ({LocationX}, {LocationY}); Out: {_outputs.Count}, In: {_inputs.Count}";
+            => $"{Outputs[0].Expression} {Outputs[0].Character}; Out: {_outputs.Count}, In: {_inputs.Count}";
     }
 }
