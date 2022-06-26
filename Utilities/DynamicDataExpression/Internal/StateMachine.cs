@@ -14,10 +14,9 @@ namespace SCR.Tools.DynamicDataExpression.Internal
         // null = nothing
         // false = add to values
         // true = add to operators
-        // string = error message
-        public object operation;
+        public bool? operation;
 
-        public State(string conditions, int nextState, object operation)
+        public State(string conditions, int nextState, bool? operation)
         {
             this.conditions = conditions;
             this.nextState = nextState;
@@ -33,11 +32,11 @@ namespace SCR.Tools.DynamicDataExpression.Internal
             {
                 // Common post-operator //
                 new("(", 0, true),
-                new("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 2, true),
+                new("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 2, true),
                 new("0123456789", 7, true),
                 new("!-#", 6, true),
 
-                new(null, -1, "Expected value expression")
+                new("Expected value expression", -1, null)
             },
             new State[] // 1: Closed bracket ")"
             {
@@ -47,11 +46,11 @@ namespace SCR.Tools.DynamicDataExpression.Internal
                 new("<>", 4, false),
                 new("!", 5, false),
 
-                new(null, -1, "Expected operator expression")
+                new("Expected operator expression", -1, null)
             },
             new State[] // 2: Value expression (Key)
             {
-                new("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 1, null),
+                new("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 2, null),
                 new("0123456789", 2, null),
 
                 // Common pre-operator //
@@ -60,7 +59,7 @@ namespace SCR.Tools.DynamicDataExpression.Internal
                 new("<>", 4, false),
                 new("!", 5, false),
 
-                new(null, -1, "Expected value or operator expression")
+                new("Expected value or operator expression", -1, null)
             },
             new State[] // 3: Value expression (ID)
             {
@@ -72,33 +71,33 @@ namespace SCR.Tools.DynamicDataExpression.Internal
                 new("<>", 4, false),
                 new("!", 5, false),
 
-                new(null, -1, "Expected value or operator expression")
+                new("Expected value or operator expression", -1, null)
             },
             new State[] // 4: Smaller "<", Greater ">"
             {
                 // Common post-operator //
                 new("(", 0, true),
-                new("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 2, true),
+                new("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 2, true),
                 new("0123456789", 7, true),
                 new("!-#", 6, true),
                 //////////////////////////
                 
                 new("=", 0, null),
 
-                new(null, -1, "Expected value expression or \"=\"")
+                new("Expected value expression or \"=\"", -1, null)
             },
             new State[] // 5: Unequals Start "!"
             {
                 new("=", 0, null),
-                new(null, -1, "Expected \"=\"")
+                new("Expected \"=\"", -1, null)
             },
             new State[] // 6: Inverted "-", "!", "#"
             {
                 new("(", 0, null),
-                new("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 2, null),
+                new("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 2, null),
                 new("0123456789", 7, null),
 
-                new(null, -1, "Expected value expression")
+                new("Expected value expression", -1, null)
             },
             new State[] // 7: (floating point) Number, pre point
             {
@@ -111,12 +110,12 @@ namespace SCR.Tools.DynamicDataExpression.Internal
                 new("<>", 4, false),
                 new("!", 5, false),
 
-                new(null, -1, "Expected value or operator expression")
+                new("Expected value or operator expression", -1, null)
             },
             new State[] // 8: (floating point) Number, present point
             {
                 new("0123456789", 9, null),
-                new(null, -1, "Expected a digit")
+                new("Expected a digit", -1, null)
             },
             new State[] // 9: (floating point) Number, post point
             {
@@ -128,7 +127,7 @@ namespace SCR.Tools.DynamicDataExpression.Internal
                 new("<>", 4, false),
                 new("!", 5, false),
 
-                new(null, -1, "Expected value or operator expression")
+                new("Expected value or operator expression", -1, null)
             }
         };
 
@@ -148,15 +147,12 @@ namespace SCR.Tools.DynamicDataExpression.Internal
             for(int i = 0; i < currentStates.Length; i++)
             {
                 State state = currentStates[i];
-                if(state.conditions == null)
-                    throw new DynamicDataExpressionException($"Unexpected character: \"{c}\"\n {state.operation}", index);
+                if(state.nextState == -1)
+                    throw new DynamicDataExpressionException($"Unexpected character: \"{c}\"\n {state.conditions}", index);
                 else if(state.conditions.Contains(c))
                 {
                     _currentState = state.nextState;
-                    if(state.operation == null)
-                        return null;
-                    else
-                        return (bool)state.operation;
+                    return state.operation;
                 }
             }
 
@@ -171,6 +167,6 @@ namespace SCR.Tools.DynamicDataExpression.Internal
             => _currentState is >= 1 and <= 3 or 7 or 9;
 
         public string GetCurrentErrorMessage()
-            => (string)_states[_currentState][^1].operation;
+            => _states[_currentState][^1].conditions;
     }
 }

@@ -179,6 +179,23 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
             }
         }
 
+        public string Condition
+        {
+            get => Data.Condition;
+            set
+            {
+                if (Condition == value)
+                {
+                    return;
+                }
+
+                BeginChangeGroup();
+                Data.Condition = value;
+                TrackNotifyProperty(nameof(Condition));
+                EndChangeGroup();
+            }
+        }
+
         public VmNode? Connected
         {
             get => _connected;

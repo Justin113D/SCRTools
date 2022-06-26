@@ -19,6 +19,7 @@
 		<ProjectReference Include="..\..\Libraries\Common\Common.csproj" />
 		<ProjectReference Include="..\..\Libraries\UndoRedo\UndoRedo.csproj" />
 		<ProjectReference Include="..\..\Libraries\WPF\WPF.csproj" />
+		<ProjectReference Include="..\..\Utilities\DynamicDataExpression\DynamicDataExpression.csproj" />
 		<ProjectReference Include="..\DialogEditor.Data\DialogEditor.Data.csproj" />
 	</ItemGroup>
 </Project>

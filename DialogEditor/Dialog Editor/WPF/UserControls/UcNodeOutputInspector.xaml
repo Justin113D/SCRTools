@@ -8,7 +8,7 @@
              xmlns:converters="clr-namespace:SCR.Tools.WPF.Converters;assembly=SCR.Tools.WPF"
              xmlns:num="http://gu.se/NumericInput"
              mc:Ignorable="d" 
-             d:DesignHeight="320" d:DesignWidth="250"
+             d:DesignHeight="415" d:DesignWidth="250"
              d:DataContext="{x:Static wpf:DesignDataFactory.Output}"
              x:Name="OutputInspectorContainer">
     
@@ -274,6 +274,49 @@
                         Value="{Binding SharedDisabledIndex, Mode=TwoWay}"
                         Style="{StaticResource {x:Type TextBox}}"/>
                 </Grid>
+
+                <TextBlock 
+                    Margin="0 10 0 5"
+                    Text="Enabled Condition" 
+                    FontWeight="Bold"
+                    VerticalAlignment="Center"/>
+
+                <Grid>
+                    
+                    <TextBox
+                        x:Name="ConditionExpression"
+                        Text="{Binding Condition, Mode=TwoWay}"
+                        Margin="0"
+                        AcceptsReturn="False"
+                        TextWrapping="Wrap"
+                        FontFamily="Consolas"
+                        PreviewKeyDown="TextBox_PreviewKeyDown"/>
+
+                    <TextBlock 
+                        Name="syntaxHighlighting" 
+                        FontFamily="Consolas" 
+                        Text="" 
+                        Foreground="Red" 
+                        Padding="7, 10, 4, 4" 
+                        Margin="0"
+                        IsHitTestVisible="False"/>
+
+
+                </Grid>
+
+                <TextBlock
+                    x:Name="SyntaxError"  
+                    Margin="0 5">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
 
                 <Border/>
 

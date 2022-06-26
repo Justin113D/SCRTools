@@ -1,10 +1,40 @@
 ﻿using SCR.Tools.DynamicDataExpression.Internal;
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace SCR.Tools.DynamicDataExpression
 {
+    public sealed class DataExpression
+    {
+        /// <summary>
+        /// Checks if the expression is valid. <br/>
+        /// Throws a <see cref="DynamicDataExpressionException"/> if not
+        /// </summary>
+        /// <param name="expression"></param>
+        public static void ValidateExpression(string expression)
+        {
+            if (string.IsNullOrWhiteSpace(expression))
+                throw new ArgumentException("Expression cannot be empty!", nameof(expression));
+
+            StateMachine sm = new();
+
+            for (int i = 0; i < expression.Length; i++)
+            {
+                char c = expression[i];
+
+                if (c == ' ')
+                    continue;
+
+                sm.NextState(c, i);
+            }
+
+            if (!sm.IsExitState())
+            {
+                throw new DynamicDataExpressionException($"Expression ends invalid! {sm.GetCurrentErrorMessage()}", expression.Length);
+            }
+        }
+    }
+
     public sealed class DataExpression<T>
     {
         #region Regular Expressions
@@ -49,7 +79,7 @@ namespace SCR.Tools.DynamicDataExpression
         public static DataExpression<T> ParseExpression(string expression, IDataAccess<T> accessor)
         {
             if(string.IsNullOrWhiteSpace(expression))
-                throw new ArgumentNullException(nameof(expression), "Expression cannot be null or whitespace!");
+                throw new ArgumentException("Expression cannot be empty!", nameof(expression));
             
             if(accessor == null)
                 throw new ArgumentNullException(nameof(accessor), "Accessor cannot be null!");

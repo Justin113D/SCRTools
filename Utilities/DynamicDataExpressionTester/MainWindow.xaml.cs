@@ -136,7 +136,7 @@ namespace SCR.Tools.DynamicDataExpressionTester
                 if(string.IsNullOrWhiteSpace(exp))
                 {
                     result += "-\n";
-                    _syntaxErrors.Add(new());
+                    _syntaxErrors.Add(default);
                     continue;
                 }
 
@@ -144,7 +144,7 @@ namespace SCR.Tools.DynamicDataExpressionTester
                 {
                     var t = DataExpression<MockSCRData>.ParseExpression(exp, DataAccessor.DA);
                     result += $"{t.Evaluate(testData)}\n";
-                    _syntaxErrors.Add(new());
+                    _syntaxErrors.Add(default);
                 }
                 catch(DynamicDataExpressionException d)
                 {

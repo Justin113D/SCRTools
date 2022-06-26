@@ -232,7 +232,11 @@
             </Setter.Value>
         </Setter>
     </Style>
-
+    <Style TargetType="{x:Type ToolTip}">
+        <Setter Property="Background" Value="{DynamicResource BG2}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BG1}"/>
+    </Style>
+    
     <!--Modified template for menu item menus-->
     <Geometry x:Key="Checkmark">M 0,5.1 L 1.7,5.2 L 3.4,7.1 L 8,0.4 L 9.2,0 L 3.3,10.8 Z</Geometry>
     <Geometry x:Key="UpArrow">M 0,4 L 3.5,0 L 7,4 Z</Geometry>

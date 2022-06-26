@@ -51,10 +51,25 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="1" Name="expressions" Text="test" FontFamily="Consolas" VerticalScrollBarVisibility="Disabled"
-                             HorizontalScrollBarVisibility="Auto" AcceptsReturn="True" Background="Transparent" ToolTipService.IsEnabled="false" MouseMove="expressions_MouseMove"/>
+                    <TextBox 
+                        Grid.Column="1" 
+                        Name="expressions" 
+                        Text="test"
+                        FontFamily="Consolas" 
+                        VerticalScrollBarVisibility="Disabled"
+                        HorizontalScrollBarVisibility="Auto" 
+                        AcceptsReturn="True" 
+                        Background="Transparent" 
+                        ToolTipService.IsEnabled="false" />
 
-                    <TextBlock Grid.Column="1"  Name="syntaxHighlighting" FontFamily="Consolas" Text="~~~" Foreground="Red" Padding="3, 6" IsHitTestVisible="False"/>
+                    <TextBlock 
+                        Grid.Column="1"  
+                        Name="syntaxHighlighting" 
+                        FontFamily="Consolas" 
+                        Text="~~~" 
+                        Foreground="Red" 
+                        Padding="3, 6" 
+                        IsHitTestVisible="False"/>
 
                     <TextBox Padding="5, 0" Name="results" IsReadOnly="True" VerticalScrollBarVisibility="Disabled" FontFamily="Consolas"/>
                 </Grid>
