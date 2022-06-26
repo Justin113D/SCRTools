@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.DialogEditor.WPF.UserControls.Simulator
 {
@@ -27,12 +28,12 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls.Simulator
 
         private void Button_Undo(object sender, RoutedEventArgs e)
         {
-
+            UndoChange();
         }
 
         private void Button_Redo(object sender, RoutedEventArgs e)
         {
-
+            RedoChange();
         }
     }
 }

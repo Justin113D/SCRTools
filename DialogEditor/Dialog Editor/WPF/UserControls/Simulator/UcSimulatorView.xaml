@@ -31,10 +31,10 @@
                     VerticalAlignment="Center">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
-                            <Setter Property="Visibility" Value="Visible"/>
+                            <Setter Property="Visibility" Value="Collapsed"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding LeftPortrait.PortraitPath}" Value="{x:Null}">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -56,10 +56,10 @@
                     VerticalAlignment="Center">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
-                            <Setter Property="Visibility" Value="Visible"/>
+                            <Setter Property="Visibility" Value="Collapsed"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding RightPortrait.PortraitPath}" Value="{x:Null}">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>

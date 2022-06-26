@@ -1,6 +1,7 @@
 ﻿using SCR.Tools.DialogEditor.Data;
 using SCR.Tools.DialogEditor.Viewmodeling.Simulator;
 using SCR.Tools.UndoRedo;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System;
 using System.Windows;
 using Window = SCR.Tools.WPF.Styling.Window;
@@ -44,6 +45,16 @@ namespace SCR.Tools.DialogEditor.WPF.Windows
             }
 
             new WndSimulator(viewmodel).ShowDialog();
+        }
+
+        private void IB_Undo(object sender, object e)
+        {
+            UndoChange();
+        }
+
+        private void IB_Redo(object sender, object e)
+        {
+            RedoChange();
         }
     }
 }

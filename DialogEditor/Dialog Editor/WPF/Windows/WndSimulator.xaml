@@ -9,12 +9,27 @@
     xmlns:wpf="clr-namespace:SCR.Tools.DialogEditor.WPF"
     xmlns:vm="clr-namespace:SCR.Tools.DialogEditor.Viewmodeling.Simulator"
     xmlns:uc="clr-namespace:SCR.Tools.DialogEditor.WPF.UserControls.Simulator"
+    xmlns:baseVM="clr-namespace:SCR.Tools.Viewmodeling;assembly=SCR.Tools.WPF"
     mc:Ignorable="d"
     Height="450" Width="800"
     MinimizeButton="Collapsed"
     MaximizeButton="Collapsed"
     Title="Simulator"
     d:DataContext="{x:Static wpf:DesignDataFactory.Simulator}">
+
+    <styling:Window.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="Z">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_Undo"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+
+        <KeyBinding Modifiers="Ctrl" Key="Y">
+            <KeyBinding.Command>
+                <baseVM:EventCommand Executed="IB_Redo"/>
+            </KeyBinding.Command>
+        </KeyBinding>
+    </styling:Window.InputBindings>
 
     <Grid>
         <Grid.ColumnDefinitions>

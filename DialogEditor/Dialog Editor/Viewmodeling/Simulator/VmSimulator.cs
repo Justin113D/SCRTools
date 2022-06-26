@@ -12,8 +12,6 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
     public class VmSimulator : BaseViewModel
     {
         private VmSimulatorNode _activeNode;
-        private VmSimulatorOutput? _leftPortrait;
-        private VmSimulatorOutput? _rightPortrait;
         private bool _rightPortraitActive;
 
 
@@ -47,7 +45,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
                     (v) => _activeNode = v, _activeNode, value);
                 TrackNotifyProperty(nameof(ActiveNode));
 
-                PostChangeGroupAction(_activeNode.InitActive);
+                PostChangeGroupAction(InitActiveNode);
 
                 TrackNotifyProperty(nameof(HasNextNode));
                 RightPortraitActive = value.Data.RightPortrait;
@@ -56,45 +54,9 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
             }
         }
 
-        public VmSimulatorOutput? LeftPortrait
-        {
-            get => _leftPortrait;
-            set
-            {
-                if (_leftPortrait == value)
-                {
-                    return;
-                }
-
-                BeginChangeGroup();
-
-                TrackValueChange(
-                    (v) => _leftPortrait = v, _leftPortrait, value);
-                TrackNotifyProperty(nameof(LeftPortrait));
-
-                EndChangeGroup();
-            }
-        }
+        public VmSimulatorOutput? LeftPortrait { get; set; }
         
-        public VmSimulatorOutput? RightPortrait
-        {
-            get => _rightPortrait;
-            set
-            {
-                if (_rightPortrait == value)
-                {
-                    return;
-                }
-
-                BeginChangeGroup();
-
-                TrackValueChange(
-                    (v) => _rightPortrait = v, _rightPortrait, value);
-                TrackNotifyProperty(nameof(RightPortrait));
-
-                EndChangeGroup();
-            }
-        }
+        public VmSimulatorOutput? RightPortrait { get; set; }
 
         public bool RightPortraitActive
         {
@@ -168,15 +130,20 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
             VmSimulatorOutput activeOutput = EntryNode.Outputs[0];
             if(EntryNode.Data.RightPortrait)
             {
-                _rightPortrait = activeOutput;
+                RightPortrait = activeOutput;
                 _rightPortraitActive = true;
             }
             else
             {
-                _leftPortrait = activeOutput;
+                LeftPortrait = activeOutput;
             }
         }
     
+        private void InitActiveNode()
+        {
+            ActiveNode.InitActive();
+        }
+
         public void Next()
         {
             VmSimulatorNode? nextNode = ActiveNode.ActiveOutput.Connected;
@@ -193,7 +160,30 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
                 output.Enabled = false;
             }
 
+
+            VmSimulatorOutput? previousLeft = LeftPortrait;
+            VmSimulatorOutput? previousRight = RightPortrait;
+
             ActiveNode = nextNode;
+
+            if (ActiveNode.Data.RightPortrait)
+            {
+                TrackChange(
+                    () => { },
+                    () =>
+                    {
+                        RightPortrait = previousRight;
+                    });
+            }
+            else
+            {
+                TrackChange(
+                    () => { },
+                    () =>
+                    {
+                        LeftPortrait = previousLeft;
+                    });
+            }
 
             EndChangeGroup();
         }
