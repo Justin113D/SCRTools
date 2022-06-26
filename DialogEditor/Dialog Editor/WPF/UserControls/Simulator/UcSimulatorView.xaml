@@ -9,6 +9,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{x:Static wpf:DesignDataFactory.Simulator}">
+    <UserControl.Resources>
+        <wpf:OutputNumConverter x:Key="OutputNumToColor"/>
+    </UserControl.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -134,6 +138,8 @@
                                 <ControlTemplate TargetType="{x:Type ListBoxItem}">
                                     <Border
                                         x:Name="bg"
+                                        BorderThickness="3"
+                                        BorderBrush="{Binding Connected.OutputNumber, Converter={StaticResource OutputNumToColor}}"
                                         Background="{DynamicResource BG1}">
                                         <ContentPresenter/>
                                     </Border>
@@ -141,6 +147,7 @@
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsSelected" Value="True">
                                             <Setter TargetName="bg" Property="Background" Value="{DynamicResource HighlightedBG}"/>
+                                            <Setter TargetName="bg" Property="BorderThickness" Value="5"/>
                                         </Trigger>
                                         <Trigger Property="IsMouseOver" Value="True">
                                             <Setter TargetName="bg" Property="Background" Value="{DynamicResource SelectedBG}"/>

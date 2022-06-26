@@ -11,7 +11,7 @@
     xmlns:uc="clr-namespace:SCR.Tools.DialogEditor.WPF.UserControls.Simulator"
     xmlns:baseVM="clr-namespace:SCR.Tools.Viewmodeling;assembly=SCR.Tools.WPF"
     mc:Ignorable="d"
-    Height="450" Width="800"
+    Height="600" Width="800"
     MinimizeButton="Collapsed"
     MaximizeButton="Collapsed"
     Title="Simulator"

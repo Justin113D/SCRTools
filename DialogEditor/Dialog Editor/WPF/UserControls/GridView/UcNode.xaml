@@ -28,7 +28,7 @@
                 <Grid ClipToBounds="False">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="25"/>
-                        <RowDefinition Height="120" MinHeight="120"/>
+                        <RowDefinition MinHeight="120"/>
                     </Grid.RowDefinitions>
 
                     <Grid 

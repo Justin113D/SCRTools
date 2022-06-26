@@ -11,6 +11,10 @@
     d:DesignHeight="450" d:DesignWidth="200"
     d:DataContext="{x:Static wpf:DesignDataFactory.Simulator}">
 
+    <UserControl.Resources>
+        <wpf:OutputNumConverter x:Key="OutputNumToColor"/>
+    </UserControl.Resources>
+    
     <ScrollViewer
         VerticalScrollBarVisibility="Auto"
         HorizontalScrollBarVisibility="Disabled"
@@ -40,6 +44,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="10"/>
                             </Grid.ColumnDefinitions>
 
                             <TextBlock 
@@ -50,7 +55,13 @@
 
                             <TextBlock 
                                 Grid.Column="1" 
-                                Text="{Binding OutInfo}"/>
+                                Text="{Binding OutInfo}"
+                                Margin="5 0"/>
+
+                            <Border
+                                Grid.Column="2"
+                                Background="{Binding OutputNumber, Converter={StaticResource OutputNumToColor}}"
+                                CornerRadius="3"/>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

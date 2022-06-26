@@ -4,6 +4,7 @@ using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using PropertyChanged;
+using System.Linq;
 
 namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
 {
@@ -47,6 +48,19 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
                 TrackNotifyProperty(nameof(CameBy));
 
                 EndChangeGroup();
+            }
+        }
+
+        public int OutputNumber
+        {
+            get
+            {
+                if(Simulator.OutputNumbers.TryGetValue(this, out int result))
+                {
+                    return result;
+                }
+
+                return 0;
             }
         }
 
@@ -121,6 +135,24 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
         {
             ValidOutputs = GetValidOutputs();
             OnPropertyChanged(nameof(DisplayOutputs));
+
+            VmSimulatorNode[] outputNumNodes = Simulator.OutputNumbers.Keys.ToArray();
+            Simulator.OutputNumbers.Clear();
+            foreach (VmSimulatorNode outputNumNode in outputNumNodes)
+            {
+                outputNumNode.OnPropertyChanged(nameof(OutputNumber));
+            }
+
+            int i = 1;
+            foreach(VmSimulatorOutput output in ValidOutputs)
+            {
+                if(output.Connected != null)
+                {
+                    Simulator.OutputNumbers.Add(output.Connected, i);
+                    output.Connected.OnPropertyChanged(nameof(OutputNumber));
+                    i++;
+                }
+            }
 
             ActiveOutput = ValidOutputs[0];
         }

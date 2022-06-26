@@ -29,6 +29,9 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
 
         public TrackCollection<int> SharedDisabledIndices { get; }
 
+        public Dictionary<VmSimulatorNode, int> OutputNumbers { get; }
+
+
         public VmSimulatorNode ActiveNode
         {
             get => _activeNode;
@@ -81,11 +84,13 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
         public bool HasNextNode
             => ActiveNode.ActiveOutput.Connected != null;
 
+
         public RelayCommand CmdReset
             => new(Reset);
 
         public RelayCommand CmdNext
             => new(Next);
+
 
         public VmSimulator(Dialog data, DialogOptions options)
         {
@@ -94,6 +99,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
             Options = options;
 
             SharedDisabledIndices = new(new HashSet<int>());
+            OutputNumbers = new();
 
             Node? entryNode = data.StartNode;
             if (entryNode == null)
@@ -127,18 +133,10 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
                 }
             }
 
-            VmSimulatorOutput activeOutput = EntryNode.Outputs[0];
-            if(EntryNode.Data.RightPortrait)
-            {
-                RightPortrait = activeOutput;
-                _rightPortraitActive = true;
-            }
-            else
-            {
-                LeftPortrait = activeOutput;
-            }
+            EntryNode.InitActive();
         }
     
+
         private void InitActiveNode()
         {
             ActiveNode.InitActive();
