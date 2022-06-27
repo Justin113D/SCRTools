@@ -115,7 +115,7 @@
                 </ListBox.Style>
 
                 <ListBox.ItemTemplate>
-                    <DataTemplate DataType="{x:Type vm:VmSimulatorOutput}">
+                    <DataTemplate DataType="{x:Type vm:VmNodeOutput}">
 
                         <Image
                             Margin="5"

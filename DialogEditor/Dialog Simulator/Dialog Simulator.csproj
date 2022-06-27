@@ -22,41 +22,4 @@
 		<ProjectReference Include="..\DialogEditor.Data\Dialog.Data.csproj" />
 	</ItemGroup>
 	
-	<ItemGroup>
-	  <Page Update="WPF\App.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	  </Page>
-	  <Page Update="WPF\UserControls\UcMockDataEditor.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
-	  <Page Update="WPF\UserControls\UcSimulatorTable.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
-	  <Page Update="WPF\UserControls\UcSimulatorView.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
-	  <Page Update="WPF\Windows\WndSimulatorDialog.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
-	</ItemGroup>
-	
-	<ItemGroup>
-	  <Compile Update="WPF\UserControls\UcMockDataEditor.xaml.cs">
-	    <SubType>Code</SubType>
-	  </Compile>
-	  <Compile Update="WPF\UserControls\UcSimulatorTable.xaml.cs">
-	    <SubType>Code</SubType>
-	  </Compile>
-	  <Compile Update="WPF\UserControls\UcSimulatorView.xaml.cs">
-	    <SubType>Code</SubType>
-	  </Compile>
-	  <Compile Update="WPF\Windows\WndSimulatorDialog.xaml.cs">
-	    <SubType>Code</SubType>
-	  </Compile>
-	</ItemGroup>
-
 </Project>

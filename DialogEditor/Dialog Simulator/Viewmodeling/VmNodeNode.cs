@@ -7,9 +7,9 @@ using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 {
-    public class VmSimulatorNode : BaseViewModel
+    public class VmNode : BaseViewModel
     {
-        private VmSimulatorOutput _activeOutput;
+        private VmNodeOutput _activeOutput;
 
         private int _cameBy;
 
@@ -17,9 +17,9 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 
         public Node Data { get; }
 
-        public ReadOnlyObservableCollection<VmSimulatorOutput> Outputs { get; }
+        public ReadOnlyObservableCollection<VmNodeOutput> Outputs { get; }
 
-        public VmSimulatorOutput[] ValidOutputs { get; private set; }
+        public VmNodeOutput[] ValidOutputs { get; private set; }
 
         public bool DisplayOutputs
             => ValidOutputs.Length > 1;
@@ -63,7 +63,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
             }
         }
 
-        public VmSimulatorOutput ActiveOutput
+        public VmNodeOutput ActiveOutput
         {
             get => _activeOutput;
             set
@@ -83,12 +83,12 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
             }
         }
 
-        public VmSimulatorNode(VmSimulator simulator, Node data)
+        public VmNode(VmSimulator simulator, Node data)
         {
             Simulator = simulator;
             Data = data;
 
-            ObservableCollection<VmSimulatorOutput> outputs = new();
+            ObservableCollection<VmNodeOutput> outputs = new();
 
             foreach (NodeOutput output in Data.Outputs)
             {
@@ -100,11 +100,11 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
             _activeOutput = outputs[0];
         }
 
-        private VmSimulatorOutput[] GetValidOutputs()
+        private VmNodeOutput[] GetValidOutputs()
         {
-            List<VmSimulatorOutput> result = new();
+            List<VmNodeOutput> result = new();
 
-            foreach (VmSimulatorOutput output in Outputs)
+            foreach (VmNodeOutput output in Outputs)
             {
                 if (output.ConditionValid && output.Enabled && !output.Data.Fallback)
                 {
@@ -118,7 +118,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 
             if (result.Count == 0)
             {
-                foreach (VmSimulatorOutput output in Outputs)
+                foreach (VmNodeOutput output in Outputs)
                 {
                     if (output.ConditionValid && output.Enabled && output.Data.Fallback)
                     {
@@ -136,15 +136,15 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
             ValidOutputs = GetValidOutputs();
             OnPropertyChanged(nameof(DisplayOutputs));
 
-            VmSimulatorNode[] outputNumNodes = Simulator.OutputNumbers.Keys.ToArray();
+            VmNode[] outputNumNodes = Simulator.OutputNumbers.Keys.ToArray();
             Simulator.OutputNumbers.Clear();
-            foreach (VmSimulatorNode outputNumNode in outputNumNodes)
+            foreach (VmNode outputNumNode in outputNumNodes)
             {
                 outputNumNode.OnPropertyChanged(nameof(OutputNumber));
             }
 
             int i = 1;
-            foreach (VmSimulatorOutput output in ValidOutputs)
+            foreach (VmNodeOutput output in ValidOutputs)
             {
                 if (output.Connected != null)
                 {

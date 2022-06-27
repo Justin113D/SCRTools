@@ -40,7 +40,7 @@
                 Template="{DynamicResource BasicListControl}">
 
                 <ListBox.ItemTemplate>
-                    <DataTemplate DataType="{x:Type vm:VmSimulatorNode}">
+                    <DataTemplate DataType="{x:Type vm:VmNode}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>

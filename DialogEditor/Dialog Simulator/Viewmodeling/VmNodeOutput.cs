@@ -7,15 +7,15 @@ using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 {
-    public class VmSimulatorOutput : BaseViewModel
+    public class VmNodeOutput : BaseViewModel
     {
         private bool _enabled = true;
 
-        public VmSimulatorNode Parent { get; }
+        public VmNode Parent { get; }
 
         public NodeOutput Data { get; }
 
-        public VmSimulatorNode? Connected { get; set; }
+        public VmNode? Connected { get; set; }
 
         public bool Enabled
         {
@@ -99,7 +99,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 
         public DataExpression<ConditionData>? DDXCondition { get; }
 
-        public VmSimulatorOutput(VmSimulatorNode parent, NodeOutput data)
+        public VmNodeOutput(VmNode parent, NodeOutput data)
         {
             Parent = parent;
             Data = data;
