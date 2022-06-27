@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace SCR.Tools.DialogEditor.Data
+namespace SCR.Tools.Dialog.Data
 {
     /// <summary>
     /// Complete Dialog that encapsulates all nodes

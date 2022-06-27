@@ -1,9 +1,9 @@
-﻿using SCR.Tools.DialogEditor.Data;
+﻿using SCR.Tools.Dialog.Data;
 using SCR.Tools.UndoRedo;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using SCR.Tools.Viewmodeling;
 
-namespace SCR.Tools.DialogEditor.Viewmodeling
+namespace SCR.Tools.Dialog.Editor.Viewmodeling
 {
     public class VmMain : BaseViewModel
     {
@@ -98,7 +98,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
         {
             try
             {
-                Dialog dialog = JsonFormatHandler.ReadDialog(data);
+                Data.Dialog dialog = JsonFormatHandler.ReadDialog(data);
                 Dialog = new VmDialog(this, dialog);
                 ResetTracker();
                 SetMessage("Loaded Dialog", false);

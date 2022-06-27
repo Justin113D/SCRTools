@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SCR.Tools.DynamicDataExpression
 {
-    public sealed class DataExpression
+    public static class DataExpression
     {
         /// <summary>
         /// Checks if the expression is valid. <br/>
@@ -52,11 +52,11 @@ namespace SCR.Tools.DynamicDataExpression
 
         #endregion
 
-        private IDataAccess<T> _dataAccessor;
+        private readonly IDataAccess<T> _dataAccessor;
 
-        private IStackBlock<T>[] _calcStack;
+        private readonly IStackBlock<T>[] _calcStack;
 
-        private int _valueStackSize;
+        private readonly int _valueStackSize;
 
         private DataExpression(IStackBlock<T>[] calcStack, int valueStackSize, IDataAccess<T> dataAccessor)
         {
@@ -109,9 +109,7 @@ namespace SCR.Tools.DynamicDataExpression
         /// Splits the expression into its components
         /// </summary>
         /// <param name="expression"></param>
-        /// <param name="valueBlocks"></param>
-        /// <param name="operatorBlocks"></param>
-        /// <param name="bracketBlocks"></param>
+        /// <param name="blocks"></param>
         /// <param name="accessor"></param>
         private static void SplitExpression( string expression,  List<ISplitBlock> blocks, IDataAccess<T> accessor)
         {

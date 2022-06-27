@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace SCR.Tools.DialogEditor.WPF
+namespace SCR.Tools.Dialog.Editor.WPF
 {
     /// <summary>
     /// Interaction logic for App.xaml
@@ -29,11 +29,6 @@ namespace SCR.Tools.DialogEditor.WPF
         {
             App app = new();
             app.Run();
-        }
-
-        private void Application_Startup(object sender, StartupEventArgs e)
-        {
-            AppFontSize = DialogEditor.Properties.Settings.Default.Fontsize;
         }
 
         private void OnRedo(object sender, object e)

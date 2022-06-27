@@ -1,10 +1,10 @@
-﻿using SCR.Tools.DialogEditor.Viewmodeling;
+﻿using SCR.Tools.Dialog.Editor.Viewmodeling;
 using System;
 using System.IO;
 using System.Windows;
 using Window = SCR.Tools.WPF.Styling.Window;
 
-namespace SCR.Tools.DialogEditor.WPF.Windows
+namespace SCR.Tools.Dialog.Editor.WPF.Windows
 {
     /// <summary>
     /// Interaction logic for WndMain.xaml

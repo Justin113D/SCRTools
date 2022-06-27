@@ -1,9 +1,8 @@
-﻿using SCR.Tools.DialogEditor.Data;
-using SCR.Tools.DialogEditor.Viewmodeling;
-using SCR.Tools.DialogEditor.Viewmodeling.Simulator;
+﻿using SCR.Tools.Dialog.Data;
+using SCR.Tools.Dialog.Editor.Viewmodeling;
 using System.Drawing;
 
-namespace SCR.Tools.DialogEditor.WPF
+namespace SCR.Tools.Dialog.Editor.WPF
 {
     internal static class DesignDataFactory
     {
@@ -22,8 +21,6 @@ namespace SCR.Tools.DialogEditor.WPF
             Options.Read(TestDialogOptions, null);
             NodeOptions = Options.CharacterOptions;
             NodeIcons = Options.NodeIcons;
-
-            Simulator = new(Dialog.Data, Options.Data);
         }
 
         public static VmMain Main { get; }
@@ -39,7 +36,5 @@ namespace SCR.Tools.DialogEditor.WPF
         public static VmNodeOptions<Color> NodeOptions { get; }
 
         public static VmNodeOptions<string> NodeIcons { get; }
-
-        public static VmSimulator Simulator { get; }
     }
 }

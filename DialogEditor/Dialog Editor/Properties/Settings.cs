@@ -1,7 +1,7 @@
 ﻿using System.Configuration;
 using System.Diagnostics;
 
-namespace SCR.Tools.DialogEditor.Properties
+namespace SCR.Tools.Dialog.Editor.Properties
 {
     internal class Settings : ApplicationSettingsBase
     {

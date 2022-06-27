@@ -3,7 +3,7 @@ using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace SCR.Tools.DialogEditor.Data
+namespace SCR.Tools.Dialog.Data
 {
     /// <summary>
     /// Single node of a dialog

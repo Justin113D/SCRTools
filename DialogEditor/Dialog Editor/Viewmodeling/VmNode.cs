@@ -1,4 +1,4 @@
-﻿using SCR.Tools.DialogEditor.Data;
+﻿using SCR.Tools.Dialog.Data;
 using SCR.Tools.UndoRedo.Collections;
 using SCR.Tools.Viewmodeling;
 using System.Collections.ObjectModel;
@@ -6,7 +6,7 @@ using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System;
 using System.Collections.Generic;
 
-namespace SCR.Tools.DialogEditor.Viewmodeling
+namespace SCR.Tools.Dialog.Editor.Viewmodeling
 {
     public class VmNode : BaseViewModel
     {

@@ -1,14 +1,12 @@
-﻿using SCR.Tools.DialogEditor.Data;
-using SCR.Tools.UndoRedo;
+﻿using SCR.Tools.Dialog.Data;
 using SCR.Tools.UndoRedo.Collections;
 using SCR.Tools.Viewmodeling;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Collections.Generic;
-using System.Drawing;
 
-namespace SCR.Tools.DialogEditor.Viewmodeling
+namespace SCR.Tools.Dialog.Editor.Viewmodeling
 {
     public class VmDialog : BaseViewModel
     {
@@ -19,7 +17,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
         public VmMain Main { get; }
 
-        public Dialog Data { get; }
+        public Data.Dialog Data { get; }
 
 
         #region Wrapper Properties
@@ -105,7 +103,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling
 
         #endregion
 
-        public VmDialog(VmMain mainVM, Dialog dialog)
+        public VmDialog(VmMain mainVM, Data.Dialog dialog)
         {
             Main = mainVM;
             Data = dialog;

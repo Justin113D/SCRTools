@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace SCR.Tools.DialogEditor.WPF.UserControls
+namespace SCR.Tools.Dialog.Editor.WPF.UserControls
 {
     /// <summary>
     /// Interaction logic for UcMessageBar.xaml

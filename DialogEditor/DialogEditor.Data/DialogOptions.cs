@@ -2,7 +2,7 @@
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Drawing;
 
-namespace SCR.Tools.DialogEditor.Data
+namespace SCR.Tools.Dialog.Data
 {
     /// <summary>
     /// Dialog options

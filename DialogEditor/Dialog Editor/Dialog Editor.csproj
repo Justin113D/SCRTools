@@ -7,7 +7,7 @@
 		<UseWPF>true</UseWPF>
 		<RootNamespace>SCR.Tools.DialogEditor</RootNamespace>
 		<AssemblyName>Dialog Editor</AssemblyName>
-		<StartupObject>SCR.Tools.DialogEditor.WPF.App</StartupObject>
+		<StartupObject>SCR.Tools.Dialog.Editor.WPF.App</StartupObject>
 		<ApplicationIcon>Icon.ico</ApplicationIcon>
 	</PropertyGroup>
 
@@ -17,9 +17,10 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Libraries\Common\Common.csproj" />
+		<ProjectReference Include="..\..\Libraries\DynamicDataExpression\DynamicDataExpression.csproj" />
 		<ProjectReference Include="..\..\Libraries\UndoRedo\UndoRedo.csproj" />
 		<ProjectReference Include="..\..\Libraries\WPF\WPF.csproj" />
-		<ProjectReference Include="..\..\Utilities\DynamicDataExpression\DynamicDataExpression.csproj" />
-		<ProjectReference Include="..\DialogEditor.Data\DialogEditor.Data.csproj" />
+		<ProjectReference Include="..\Dialog Simulator\Dialog Simulator.csproj" />
+		<ProjectReference Include="..\DialogEditor.Data\Dialog.Data.csproj" />
 	</ItemGroup>
 </Project>

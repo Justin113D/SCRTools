@@ -1,11 +1,11 @@
-﻿using SCR.Tools.DialogEditor.Viewmodeling;
+﻿using SCR.Tools.Dialog.Editor.Viewmodeling;
 using SCR.Tools.Viewmodeling;
 using SCR.Tools.WPF.IO;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace SCR.Tools.DialogEditor.WPF.UserControls
+namespace SCR.Tools.Dialog.Editor.WPF.UserControls
 {
     /// <summary>
     /// Interaction logic for UcMenuBar.xaml
@@ -112,7 +112,23 @@ namespace SCR.Tools.DialogEditor.WPF.UserControls
                 return;
             }
 
-            Windows.WndSimulator.RunSimulator(_viewModel.Dialog.Data, _viewModel.DialogOptions.Data);
+            try
+            {
+                Simulator.WPF.Windows.WndSimulatorDialog.RunSimulator(_viewModel.Dialog.Data, _viewModel.DialogOptions.Data);
+            }
+            catch(Simulator.Data.SimulatorException sx)
+            {
+                if(sx.Node != null)
+                {
+                    VmNode vmNode = _viewModel.Dialog.GetViewmodel(sx.Node);
+                    vmNode.Select(false, true);
+
+                    foreach(var t in vmNode.Outputs)
+                    {
+                        t.IsExpanded = sx.Output == t.Data;
+                    }
+                }
+            }
         }
     }
 }

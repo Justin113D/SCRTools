@@ -5,12 +5,12 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Runtime.InteropServices;
-using SCR.Tools.DialogEditor.Viewmodeling;
+using SCR.Tools.Dialog.Editor.Viewmodeling;
 using System.Collections.Generic;
 using SCR.Tools.Viewmodeling;
 using System.Collections.ObjectModel;
 
-namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
+namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
 {
     public class NodeControlNotGeneratedException : Exception
     {

@@ -12,28 +12,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
-namespace SCR.Tools.DialogEditor.WPF.UserControls.Simulator
+namespace SCR.Tools.Dialog.Simulator.WPF.UserControls
 {
     /// <summary>
-    /// Interaction logic for UcSimulatorView.xaml
+    /// Interaction logic for UcMockDataEditor.xaml
     /// </summary>
-    public partial class UcSimulatorView : UserControl
+    internal partial class UcMockDataEditor : UserControl
     {
-        public UcSimulatorView()
+        public UcMockDataEditor()
         {
             InitializeComponent();
-        }
-
-        private void Button_Undo(object sender, RoutedEventArgs e)
-        {
-            UndoChange();
-        }
-
-        private void Button_Redo(object sender, RoutedEventArgs e)
-        {
-            RedoChange();
         }
     }
 }

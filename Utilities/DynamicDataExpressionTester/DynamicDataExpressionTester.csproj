@@ -11,8 +11,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\Libraries\DynamicDataExpression\DynamicDataExpression.csproj" />
 		<ProjectReference Include="..\..\Libraries\WPF\WPF.csproj" />
-		<ProjectReference Include="..\DynamicDataExpression\DynamicDataExpression.csproj" />
 	</ItemGroup>
 
 </Project>

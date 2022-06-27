@@ -1,12 +1,11 @@
-﻿using SCR.Tools.DialogEditor.Data;
+﻿using SCR.Tools.Dialog.Data;
 using SCR.Tools.Viewmodeling;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
-using PropertyChanged;
 using System.Linq;
 
-namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
+namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 {
     public class VmSimulatorNode : BaseViewModel
     {
@@ -64,7 +63,6 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
             }
         }
 
-        [DoNotCheckEquality]
         public VmSimulatorOutput ActiveOutput
         {
             get => _activeOutput;
@@ -108,7 +106,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
 
             foreach (VmSimulatorOutput output in Outputs)
             {
-                if (output.Enabled && !output.Data.Fallback)
+                if (output.ConditionValid && output.Enabled  && !output.Data.Fallback)
                 {
                     result.Add(output);
                     if (result.Count == 4)
@@ -122,7 +120,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
             {
                 foreach (VmSimulatorOutput output in Outputs)
                 {
-                    if (output.Enabled && output.Data.Fallback)
+                    if (output.ConditionValid && output.Enabled && output.Data.Fallback)
                     {
                         result.Add(output);
                         break;

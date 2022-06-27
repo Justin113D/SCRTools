@@ -1,13 +1,14 @@
-﻿using SCR.Tools.DialogEditor.Data;
+﻿using SCR.Tools.Viewmodeling;
+using SCR.Tools.Dialog.Data;
+using SCR.Tools.Dialog.Simulator.Data;
 using SCR.Tools.UndoRedo;
+using SCR.Tools.UndoRedo.Collections;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
-using SCR.Tools.Viewmodeling;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using SCR.Tools.UndoRedo.Collections;
 
-namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
+namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 {
     public class VmSimulator : BaseViewModel
     {
@@ -17,7 +18,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
 
         public ChangeTracker SimulatorTracker { get; }
 
-        public Dialog Data { get; }
+        public Dialog.Data.Dialog Data { get; }
 
         public DialogOptions Options { get; }
 
@@ -27,10 +28,11 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
 
         public ReadOnlyDictionary<Node, VmSimulatorNode> NodeViewmodelLUT { get; }
 
-        public TrackCollection<int> SharedDisabledIndices { get; }
+        public TrackSet<int> SharedDisabledIndices { get; }
 
         public Dictionary<VmSimulatorNode, int> OutputNumbers { get; }
 
+        public ConditionData ConditionData { get; }
 
         public VmSimulatorNode ActiveNode
         {
@@ -92,14 +94,15 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
             => new(Next);
 
 
-        public VmSimulator(Dialog data, DialogOptions options)
+        public VmSimulator(Dialog.Data.Dialog data, DialogOptions options)
         {
             SimulatorTracker = new();
             Data = data;
             Options = options;
 
-            SharedDisabledIndices = new(new HashSet<int>());
+            SharedDisabledIndices = new();
             OutputNumbers = new();
+            ConditionData = new();
 
             Node? entryNode = data.StartNode;
             if (entryNode == null)

@@ -1,4 +1,4 @@
-﻿using SCR.Tools.DialogEditor.Viewmodeling;
+﻿using SCR.Tools.Dialog.Editor.Viewmodeling;
 using SCR.Tools.DynamicDataExpression;
 using SCR.Tools.Viewmodeling;
 using System;
@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace SCR.Tools.DialogEditor.WPF.UserControls
+namespace SCR.Tools.Dialog.Editor.WPF.UserControls
 {
     /// <summary>
     /// Interaction logic for UcNodeOutputInspector.xaml

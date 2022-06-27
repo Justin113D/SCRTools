@@ -1,4 +1,4 @@
-﻿using SCR.Tools.DialogEditor.Viewmodeling;
+﻿using SCR.Tools.Dialog.Editor.Viewmodeling;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System;
 using System.ComponentModel;
@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
+namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
 {
     /// <summary>
     /// Interaction logic for UcNodeOutputSocket.xaml

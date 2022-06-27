@@ -115,11 +115,7 @@ namespace SCR.Tools.DynamicDataExpression.Internal
                         value = -(double)value;
                         break;
                     case KeyType.NumberList:
-                        double sum = 0;
-                        double[] a = (double[])value;
-                        for(int i = 0; i < a.Length; i++)
-                            sum += a[i];
-                        value = sum;
+                        value = ((double[])value).Length;
                         break;
                 }
             }
@@ -151,63 +147,33 @@ namespace SCR.Tools.DynamicDataExpression.Internal
 
                 if(left is bool bl && right is bool br)
                 {
-                    switch(op)
+                    result = op switch
                     {
-                        case CheckOperator.Or:
-                            result = bl || br;
-                            break;
-                        case CheckOperator.And:
-                            result = bl && br;
-                            break;
-                        case CheckOperator.Equals:
-                            result = bl == br;
-                            break;
-                        case CheckOperator.Unequals:
-                            result = bl != br;
-                            break;
-                    }
+                        CheckOperator.Or        => bl || br,
+                        CheckOperator.And       => bl && br,
+                        CheckOperator.Equals    => bl == br,
+                        CheckOperator.Unequals  => bl != br,
+                        _ => throw new DynamicDataExpressionException("How did you even come across this? Contact the dev asap", -2),
+                    };
                 }
                 else if(left is double nl && right is double nr)
                 {
-                    switch(op)
+                    result = op switch
                     {
-                        case CheckOperator.Equals:
-                            result = nl == nr;
-                            break;
-                        case CheckOperator.Unequals:
-                            result = nl != nr;
-                            break;
-                        case CheckOperator.Greater:
-                            result = nl > nr;
-                            break;
-                        case CheckOperator.GreaterEquals:
-                            result = nl >= nr;
-                            break;
-                        case CheckOperator.Smaller:
-                            result = nl < nr;
-                            break;
-                        case CheckOperator.SmallerEquals:
-                            result = nl <= nr;
-                            break;
-                        case CheckOperator.Add:
-                            result = nl + nr;
-                            break;
-                        case CheckOperator.Subtract:
-                            result = nl - nr;
-                            break;
-                        case CheckOperator.Multiply:
-                            result = nl * nr;
-                            break;
-                        case CheckOperator.Divide:
-                            result = nl / nr;
-                            break;
-                        case CheckOperator.Modulo:
-                            result = nl % nr;
-                            break;
-                        case CheckOperator.Exponent:
-                            result = Math.Pow(nl, nr);
-                            break;
-                    }
+                        CheckOperator.Equals        => nl == nr,
+                        CheckOperator.Unequals      => nl != nr,
+                        CheckOperator.Greater       => nl > nr,
+                        CheckOperator.GreaterEquals => nl >= nr,
+                        CheckOperator.Smaller       => nl < nr,
+                        CheckOperator.SmallerEquals => nl <= nr,
+                        CheckOperator.Add           => nl + nr,
+                        CheckOperator.Subtract      => nl - nr,
+                        CheckOperator.Multiply      => nl * nr,
+                        CheckOperator.Divide        => nl / nr,
+                        CheckOperator.Modulo        => nl % nr,
+                        CheckOperator.Exponent      => Math.Pow(nl, nr),
+                        _ => throw new DynamicDataExpressionException("How did you even come across this? Contact the dev asap", -2),
+                    };
                 }
                 else if(left is double[] a && right is double n)
                 {

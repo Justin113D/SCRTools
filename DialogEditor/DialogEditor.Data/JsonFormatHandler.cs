@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace SCR.Tools.DialogEditor.Data
+namespace SCR.Tools.Dialog.Data
 {
     public static class JsonFormatHandler
     {

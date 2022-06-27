@@ -1,10 +1,10 @@
 ﻿using Microsoft.Win32;
-using SCR.Tools.DialogEditor.Viewmodeling;
+using SCR.Tools.Dialog.Editor.Viewmodeling;
 using SCR.Tools.Viewmodeling;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace SCR.Tools.DialogEditor.WPF.UserControls
+namespace SCR.Tools.Dialog.Editor.WPF.UserControls
 {
     /// <summary>
     /// Interaction logic for UcNodeIcons.xaml

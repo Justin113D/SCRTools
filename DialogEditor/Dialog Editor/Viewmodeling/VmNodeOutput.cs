@@ -1,5 +1,5 @@
-﻿using SCR.Tools.DialogEditor.Data;
-using SCR.Tools.DialogEditor.Data.Events;
+﻿using SCR.Tools.Dialog.Data;
+using SCR.Tools.Dialog.Data.Events;
 using SCR.Tools.Viewmodeling;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
-namespace SCR.Tools.DialogEditor.Viewmodeling
+namespace SCR.Tools.Dialog.Editor.Viewmodeling
 {
     public class VmNodeOutput : BaseViewModel
     {

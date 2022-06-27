@@ -1,10 +1,10 @@
-﻿using SCR.Tools.DialogEditor.Data;
+﻿using SCR.Tools.Dialog.Data;
 using SCR.Tools.Viewmodeling;
 using SCR.Tools.UndoRedo;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Drawing;
 
-namespace SCR.Tools.DialogEditor.Viewmodeling
+namespace SCR.Tools.Dialog.Editor.Viewmodeling
 {
     public class VmDialogOptions : BaseViewModel
     {

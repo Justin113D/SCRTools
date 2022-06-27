@@ -5,7 +5,7 @@ using System.Windows.Media;
 using WMColors = System.Windows.Media.Colors;
 using Colors = SCR.Tools.WPF.Styling.Colors;
 
-namespace SCR.Tools.DialogEditor.WPF
+namespace SCR.Tools.Dialog.Simulator.WPF
 {
     [ValueConversion(typeof(int), typeof(SolidColorBrush))]
     public class OutputNumConverter : IValueConverter

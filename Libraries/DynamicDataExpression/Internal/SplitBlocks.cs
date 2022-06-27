@@ -185,7 +185,7 @@ namespace SCR.Tools.DynamicDataExpression.Internal
             else
             {
                 if(invert == '#')
-                    throw new DynamicDataExpressionException("Sum operator can only directly be used with Number List Keys", index);
+                    throw new DynamicDataExpressionException("Count operator can only directly be used with Number List Keys", index);
                 Invert = new(invert == '!' ? CheckOperator.Invert : CheckOperator.Negate, index);
             }
         }

@@ -1,9 +1,9 @@
-﻿using SCR.Tools.DialogEditor.Viewmodeling;
+﻿using SCR.Tools.Dialog.Editor.Viewmodeling;
 using SCR.Tools.Viewmodeling;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace SCR.Tools.DialogEditor.WPF.UserControls
+namespace SCR.Tools.Dialog.Editor.WPF.UserControls
 {
     /// <summary>
     /// Interaction logic for UcDialogOverview.xaml

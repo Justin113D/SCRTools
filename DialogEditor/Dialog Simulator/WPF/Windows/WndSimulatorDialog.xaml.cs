@@ -1,27 +1,27 @@
-﻿using SCR.Tools.DialogEditor.Data;
-using SCR.Tools.DialogEditor.Viewmodeling.Simulator;
-using SCR.Tools.UndoRedo;
+﻿using SCR.Tools.UndoRedo;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System;
 using System.Windows;
 using Window = SCR.Tools.WPF.Styling.Window;
+using SCR.Tools.Dialog.Data;
+using SCR.Tools.Dialog.Simulator.Viewmodeling;
+using SCR.Tools.Dialog.Simulator.Data;
 
-namespace SCR.Tools.DialogEditor.WPF.Windows
+namespace SCR.Tools.Dialog.Simulator.WPF.Windows
 {
     /// <summary>
     /// Interaction logic for WndSimulator.xaml
     /// </summary>
-    public partial class WndSimulator : Window
+    public partial class WndSimulatorDialog : Window
     {
         private readonly ChangeTracker _previous;
 
-        private WndSimulator(VmSimulator vm)
+        private WndSimulatorDialog(VmSimulator vm)
         {
-            _previous = GlobalChangeTrackerC.GlobalChangeTracker;
+            _previous = GlobalChangeTracker;
             vm.SimulatorTracker.Use();
             DataContext = vm;
             InitializeComponent();
-
         }
 
         protected override void OnClosed(EventArgs e)
@@ -30,7 +30,7 @@ namespace SCR.Tools.DialogEditor.WPF.Windows
             base.OnClosed(e);
         }
 
-        public static void RunSimulator(Dialog data, DialogOptions options)
+        public static void RunSimulator(Dialog.Data.Dialog data, DialogOptions options)
         {
             VmSimulator? viewmodel;
 
@@ -38,13 +38,18 @@ namespace SCR.Tools.DialogEditor.WPF.Windows
             {
                 viewmodel = new(data, options);
             }
+            catch(SimulatorException sx)
+            {
+                MessageBox.Show(sx.Message, "Condition invalid", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw;
+            }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Dialog invalid", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            new WndSimulator(viewmodel).ShowDialog();
+            new WndSimulatorDialog(viewmodel).ShowDialog();
         }
 
         private void IB_Undo(object sender, object e)

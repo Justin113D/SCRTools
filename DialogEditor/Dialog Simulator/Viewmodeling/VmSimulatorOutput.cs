@@ -1,9 +1,11 @@
-﻿using SCR.Tools.DialogEditor.Data;
+﻿using SCR.Tools.Dialog.Data;
 using SCR.Tools.Viewmodeling;
+using SCR.Tools.DynamicDataExpression;
+using SCR.Tools.Dialog.Simulator.Data;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.IO;
 
-namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
+namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 {
     public class VmSimulatorOutput : BaseViewModel
     {
@@ -17,8 +19,8 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
 
         public bool Enabled
         {
-            get => Data.SharedDisabledIndex >= 0 
-                ? !Parent.Simulator.SharedDisabledIndices.Contains(Data.SharedDisabledIndex) 
+            get => Data.SharedDisabledIndex >= 0
+                ? !Parent.Simulator.SharedDisabledIndices.Contains(Data.SharedDisabledIndex)
                 : _enabled;
             set
             {
@@ -48,12 +50,12 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
                         (v) => _enabled = v, _enabled, value);
                 }
 
-
-                TrackNotifyProperty(nameof(Enabled));
-
                 EndChangeGroup();
             }
         }
+
+        public bool ConditionValid
+            => DDXCondition == null || DDXCondition.Evaluate(Parent.Simulator.ConditionData);
 
         /// <summary>
         /// Name of the output
@@ -65,7 +67,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
         {
             get
             {
-                if(Data.Expression == null 
+                if (Data.Expression == null
                     || Data.Character == null
                     || Parent.Simulator.Options.PortraitsPath == null)
                 {
@@ -82,7 +84,7 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
         {
             get
             {
-                if(string.IsNullOrWhiteSpace(Data.Icon) 
+                if (string.IsNullOrWhiteSpace(Data.Icon)
                     || !Parent.Simulator.Options.NodeIcons.TryGetValue(Data.Icon, out string? iconPath))
                 {
                     return null;
@@ -95,15 +97,24 @@ namespace SCR.Tools.DialogEditor.Viewmodeling.Simulator
         public string Text
             => Data.Text;
 
+        public DataExpression<ConditionData>? DDXCondition { get; }
+
         public VmSimulatorOutput(VmSimulatorNode parent, NodeOutput data)
         {
             Parent = parent;
             Data = data;
+            if (!string.IsNullOrWhiteSpace(data.Condition))
+            {
+                try
+                {
+                    DDXCondition = DataExpression<ConditionData>.ParseExpression(data.Condition, ConditionDataAccessor.DA);
+                }
+                catch(DynamicDataExpressionException e)
+                {
+                    throw new SimulatorException(e.Message, data.Parent, data);
+                }
+            }
         }
-    
-        public void Next()
-        {
 
-        }
     }
 }

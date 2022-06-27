@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace SCR.Tools.DialogEditor.WPF.UserControls.GridView
+namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
 {
     /// <summary>
     /// Interaction logic for UcNodeConnection.xaml

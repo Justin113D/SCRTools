@@ -1,12 +1,12 @@
 ﻿using SCR.Tools.WPF.Styling;
-using SCR.Tools.DialogEditor.Viewmodeling;
+using SCR.Tools.Dialog.Editor.Viewmodeling;
 using SCR.Tools.WPF.IO;
 using System.Windows;
 using Window = SCR.Tools.WPF.Styling.Window;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using Ookii.Dialogs.Wpf;
 
-namespace SCR.Tools.DialogEditor.WPF.Windows
+namespace SCR.Tools.Dialog.Editor.WPF.Windows
 {
     /// <summary>
     /// Interaction logic for DialogOptionsWindow.xaml

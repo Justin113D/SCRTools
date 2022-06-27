@@ -1,4 +1,4 @@
-﻿using SCR.Tools.DialogEditor.Viewmodeling;
+﻿using SCR.Tools.Dialog.Editor.Viewmodeling;
 using SCR.Tools.WPF.Styling;
 using System;
 using System.Globalization;
@@ -8,7 +8,7 @@ using System.Windows.Media;
 using Color = System.Drawing.Color;
 using Colors = SCR.Tools.WPF.Styling.Colors;
 
-namespace SCR.Tools.DialogEditor.WPF
+namespace SCR.Tools.Dialog.Editor.WPF
 {
     public class PortraitExistsConverter : IMultiValueConverter
     {

@@ -1,8 +1,8 @@
-﻿using SCR.Tools.DialogEditor.Data.Events;
+﻿using SCR.Tools.Dialog.Data.Events;
 using SCR.Tools.UndoRedo;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
-namespace SCR.Tools.DialogEditor.Data
+namespace SCR.Tools.Dialog.Data
 {
     /// <summary>
     /// Single Output for a Node

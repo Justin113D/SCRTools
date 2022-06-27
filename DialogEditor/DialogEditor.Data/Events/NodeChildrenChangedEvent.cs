@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SCR.Tools.DialogEditor.Data.Events
+namespace SCR.Tools.Dialog.Data.Events
 {
     public class OutputConnectionChangedEventArgs : EventArgs
     {

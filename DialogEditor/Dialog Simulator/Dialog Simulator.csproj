@@ -1,0 +1,62 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<OutputType>WinExe</OutputType>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<AssemblyName>Dialog Simulator</AssemblyName>
+		<RootNamespace>SCR.Tools.Dialog.Simulator</RootNamespace>
+		<StartupObject>SCR.Tools.Dialog.Simulator.WPF.App</StartupObject>
+		<ApplicationIcon>Icon.ico</ApplicationIcon>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Resource Include="Icon.ico" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<ProjectReference Include="..\..\Libraries\DynamicDataExpression\DynamicDataExpression.csproj" />
+		<ProjectReference Include="..\..\Libraries\UndoRedo\UndoRedo.csproj" />
+		<ProjectReference Include="..\..\Libraries\WPF\WPF.csproj" />
+		<ProjectReference Include="..\DialogEditor.Data\Dialog.Data.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <Page Update="WPF\App.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	  </Page>
+	  <Page Update="WPF\UserControls\UcMockDataEditor.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
+	  <Page Update="WPF\UserControls\UcSimulatorTable.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
+	  <Page Update="WPF\UserControls\UcSimulatorView.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
+	  <Page Update="WPF\Windows\WndSimulatorDialog.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <Compile Update="WPF\UserControls\UcMockDataEditor.xaml.cs">
+	    <SubType>Code</SubType>
+	  </Compile>
+	  <Compile Update="WPF\UserControls\UcSimulatorTable.xaml.cs">
+	    <SubType>Code</SubType>
+	  </Compile>
+	  <Compile Update="WPF\UserControls\UcSimulatorView.xaml.cs">
+	    <SubType>Code</SubType>
+	  </Compile>
+	  <Compile Update="WPF\Windows\WndSimulatorDialog.xaml.cs">
+	    <SubType>Code</SubType>
+	  </Compile>
+	</ItemGroup>
+
+</Project>
