@@ -1,9 +1,9 @@
 ﻿using SCR.Tools.Dialog.Data;
-using SCR.Tools.Viewmodeling;
-using SCR.Tools.DynamicDataExpression;
 using SCR.Tools.Dialog.Simulator.Data;
-using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
+using SCR.Tools.DynamicDataExpression;
+using SCR.Tools.Viewmodeling;
 using System.IO;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 {
@@ -109,7 +109,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
                 {
                     DDXCondition = DataExpression<ConditionData>.ParseExpression(data.Condition, ConditionDataAccessor.DA);
                 }
-                catch(DynamicDataExpressionException e)
+                catch (DynamicDataExpressionException e)
                 {
                     throw new SimulatorException(e.Message, data.Parent, data);
                 }

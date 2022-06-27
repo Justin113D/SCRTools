@@ -1,6 +1,6 @@
 ﻿using SCR.Tools.UndoRedo.Collections;
-using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Drawing;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Data
 {

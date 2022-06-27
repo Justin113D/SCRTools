@@ -94,7 +94,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.Windows
 
         private void IB_Undo(object sender, object e)
         {
-            if(Gridview.ConnectingSocket != null)
+            if (Gridview.ConnectingSocket != null)
             {
                 return;
             }

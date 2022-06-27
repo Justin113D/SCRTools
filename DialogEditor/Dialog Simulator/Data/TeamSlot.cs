@@ -1,5 +1,4 @@
 ﻿using SCR.Tools.UndoRedo.Collections;
-using System.Collections.Generic;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Simulator.Data

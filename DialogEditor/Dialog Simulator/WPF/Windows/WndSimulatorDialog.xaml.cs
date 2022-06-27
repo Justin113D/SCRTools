@@ -1,11 +1,11 @@
-﻿using SCR.Tools.UndoRedo;
-using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
+﻿using SCR.Tools.Dialog.Data;
+using SCR.Tools.Dialog.Simulator.Data;
+using SCR.Tools.Dialog.Simulator.Viewmodeling;
+using SCR.Tools.UndoRedo;
 using System;
 using System.Windows;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using Window = SCR.Tools.WPF.Styling.Window;
-using SCR.Tools.Dialog.Data;
-using SCR.Tools.Dialog.Simulator.Viewmodeling;
-using SCR.Tools.Dialog.Simulator.Data;
 
 namespace SCR.Tools.Dialog.Simulator.WPF.Windows
 {
@@ -30,7 +30,7 @@ namespace SCR.Tools.Dialog.Simulator.WPF.Windows
             base.OnClosed(e);
         }
 
-        public static void RunSimulator(Dialog.Data.Dialog data, DialogOptions options)
+        public static void RunSimulator(DialogContainer data, DialogOptions options)
         {
             VmSimulator? viewmodel;
 
@@ -38,7 +38,7 @@ namespace SCR.Tools.Dialog.Simulator.WPF.Windows
             {
                 viewmodel = new(data, options);
             }
-            catch(SimulatorException sx)
+            catch (SimulatorException sx)
             {
                 MessageBox.Show(sx.Message, "Condition invalid", MessageBoxButton.OK, MessageBoxImage.Error);
                 throw;

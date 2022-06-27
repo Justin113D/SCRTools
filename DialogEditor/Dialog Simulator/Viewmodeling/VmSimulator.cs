@@ -1,12 +1,12 @@
-﻿using SCR.Tools.Viewmodeling;
-using SCR.Tools.Dialog.Data;
+﻿using SCR.Tools.Dialog.Data;
 using SCR.Tools.Dialog.Simulator.Data;
 using SCR.Tools.UndoRedo;
 using SCR.Tools.UndoRedo.Collections;
-using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
+using SCR.Tools.Viewmodeling;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 {
@@ -18,7 +18,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 
         public ChangeTracker SimulatorTracker { get; }
 
-        public Dialog.Data.Dialog Data { get; }
+        public DialogContainer Data { get; }
 
         public DialogOptions Options { get; }
 
@@ -39,7 +39,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
             get => _activeNode;
             set
             {
-                if(_activeNode == value)
+                if (_activeNode == value)
                 {
                     return;
                 }
@@ -60,7 +60,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
         }
 
         public VmSimulatorOutput? LeftPortrait { get; set; }
-        
+
         public VmSimulatorOutput? RightPortrait { get; set; }
 
         public bool RightPortraitActive
@@ -94,7 +94,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
             => new(Next);
 
 
-        public VmSimulator(Dialog.Data.Dialog data, DialogOptions options)
+        public VmSimulator(DialogContainer data, DialogOptions options)
         {
             SimulatorTracker = new();
             Data = data;
@@ -112,8 +112,8 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 
             ObservableCollection<VmSimulatorNode> nodes = new();
             Dictionary<Node, VmSimulatorNode> nodeViewmodelLUT = new();
-            
-            foreach(Node node in data.Nodes)
+
+            foreach (Node node in data.Nodes)
             {
                 VmSimulatorNode vmNode = new(this, node);
                 nodes.Add(vmNode);
@@ -127,9 +127,9 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 
             foreach (VmSimulatorNode vmNode in nodes)
             {
-                foreach(VmSimulatorOutput vmOutput in vmNode.Outputs)
+                foreach (VmSimulatorOutput vmOutput in vmNode.Outputs)
                 {
-                    if(vmOutput.Data.Connected != null)
+                    if (vmOutput.Data.Connected != null)
                     {
                         vmOutput.Connected = NodeViewmodelLUT[vmOutput.Data.Connected];
                     }
@@ -138,7 +138,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 
             EntryNode.InitActive();
         }
-    
+
         public void RefreshHasNextNode()
         {
             OnPropertyChanged(nameof(HasNextNode));
@@ -152,7 +152,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
         public void Next()
         {
             VmSimulatorNode? nextNode = ActiveNode.ActiveOutput.Connected;
-            if(nextNode == null)
+            if (nextNode == null)
             {
                 return;
             }
@@ -160,7 +160,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
             BeginChangeGroup();
 
             VmSimulatorOutput output = ActiveNode.ActiveOutput;
-            if(output.Data.DisableReuse)
+            if (output.Data.DisableReuse)
             {
                 output.Enabled = false;
             }
@@ -195,7 +195,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 
         public void Jump(VmSimulatorNode node)
         {
-            if(ActiveNode == node)
+            if (ActiveNode == node)
             {
                 return;
             }
@@ -231,7 +231,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 
         private void Reset()
         {
-            foreach(VmSimulatorNode vmNode in Nodes)
+            foreach (VmSimulatorNode vmNode in Nodes)
             {
                 foreach (VmSimulatorOutput vmOutput in vmNode.Outputs)
                 {

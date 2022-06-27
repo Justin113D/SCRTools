@@ -3,7 +3,6 @@ using SCR.Tools.WPF.Styling;
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using Window = SCR.Tools.WPF.Styling.Window;
 
 namespace SCR.Tools.Dialog.Editor.WPF.Windows

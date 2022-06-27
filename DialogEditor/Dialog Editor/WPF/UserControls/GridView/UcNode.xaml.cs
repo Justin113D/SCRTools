@@ -1,12 +1,12 @@
 ﻿using SCR.Tools.Dialog.Editor.Viewmodeling;
 using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Controls.Primitives;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
 {
@@ -128,27 +128,27 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
             }
             GridView = (UcGridView)element;
         }
-        
+
         private void ItemContainerGenerator_StatusChanged(object? sender, EventArgs e)
         {
-            if(sender is not ItemContainerGenerator itemGen)
+            if (sender is not ItemContainerGenerator itemGen)
             {
                 throw new InvalidOperationException("Generating items error");
             }
 
             // preventing NAN
-            if(CanvasX != CanvasX || CanvasY != CanvasY)
+            if (CanvasX != CanvasX || CanvasY != CanvasY)
             {
                 return;
             }
 
-            if(itemGen.Status 
+            if (itemGen.Status
                 is GeneratorStatus.GeneratingContainers
                 or GeneratorStatus.NotStarted)
             {
                 _sockets = Array.Empty<UcNodeOutputSocket>();
             }
-            else if(OutputSockets.ItemContainerGenerator.Status
+            else if (OutputSockets.ItemContainerGenerator.Status
                 == GeneratorStatus.ContainersGenerated)
             {
                 _sockets = new UcNodeOutputSocket[OutputSockets.Items.Count];
@@ -176,7 +176,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
         private void UpdateSocketConnections()
         {
             Point canvasPos = new(CanvasX, CanvasY);
-            foreach(UcNodeOutputSocket socket in _sockets)
+            foreach (UcNodeOutputSocket socket in _sockets)
             {
                 socket.SetCanvasPosition(canvasPos);
             }
@@ -221,7 +221,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
 
         private void GrabGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(GridView == null)
+            if (GridView == null)
             {
                 throw new InvalidOperationException();
             }

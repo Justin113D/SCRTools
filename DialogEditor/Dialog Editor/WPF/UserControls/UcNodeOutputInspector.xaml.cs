@@ -56,12 +56,12 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls
             {
                 newINotify.PropertyChanged += PropertyChanged;
             }
-            
+
         }
 
         private void PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == nameof(VmNodeOutput.Condition))
+            if (e.PropertyName == nameof(VmNodeOutput.Condition))
             {
                 UpdateConditionErrorHighlight();
             }
@@ -77,12 +77,12 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls
 
             try
             {
-                if(!string.IsNullOrWhiteSpace(ViewModel.Condition))
+                if (!string.IsNullOrWhiteSpace(ViewModel.Condition))
                 {
                     DataExpression.ValidateExpression(ViewModel.Condition);
                 }
             }
-            catch(DynamicDataExpressionException e)
+            catch (DynamicDataExpressionException e)
             {
                 int index = 0;
                 int length = 1;
@@ -105,7 +105,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls
 
         private void TextBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if(e.Key == System.Windows.Input.Key.Enter)
+            if (e.Key == System.Windows.Input.Key.Enter)
             {
                 TextBox textbox = (TextBox)sender;
                 BindingExpression? binding = BindingOperations.GetBindingExpression(textbox, TextBox.TextProperty);

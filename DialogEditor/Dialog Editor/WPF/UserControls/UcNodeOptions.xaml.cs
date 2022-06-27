@@ -11,7 +11,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls
     /// </summary>
     public partial class UcNodeOptions : UserControl
     {
-        public VmNodeOptions<System.Drawing.Color> Viewmodel 
+        public VmNodeOptions<System.Drawing.Color> Viewmodel
             => (VmNodeOptions<System.Drawing.Color>)DataContext;
 
         public UcNodeOptions()
@@ -21,7 +21,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls
 
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Enter && !((TextBox)sender).AcceptsReturn)
+            if (e.Key == Key.Enter && !((TextBox)sender).AcceptsReturn)
             {
                 ((TextBox)sender).MoveFocus(new TraversalRequest(FocusNavigationDirection.Down));
             }
@@ -38,7 +38,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls
 
             ColorPicker.ShowAsDialog(ref color);
 
-            if(!color.Equals(previous))
+            if (!color.Equals(previous))
             {
                 displayBorder.Background = new SolidColorBrush(color);
             }
@@ -47,7 +47,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls
         private void TextBox_KeyUp(object sender, KeyEventArgs e)
         {
             TextBox textbox = (TextBox)sender;
-            if(e.Key == Key.Enter)
+            if (e.Key == Key.Enter)
             {
                 Viewmodel.AddOption(textbox.Text);
                 textbox.Text = "";

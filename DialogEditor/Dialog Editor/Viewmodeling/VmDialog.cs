@@ -1,10 +1,10 @@
 ﻿using SCR.Tools.Dialog.Data;
 using SCR.Tools.UndoRedo.Collections;
 using SCR.Tools.Viewmodeling;
-using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Collections.Generic;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Editor.Viewmodeling
 {
@@ -17,7 +17,7 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
 
         public VmMain Main { get; }
 
-        public Data.Dialog Data { get; }
+        public DialogContainer Data { get; }
 
 
         #region Wrapper Properties
@@ -103,7 +103,7 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
 
         #endregion
 
-        public VmDialog(VmMain mainVM, Data.Dialog dialog)
+        public VmDialog(VmMain mainVM, DialogContainer dialog)
         {
             Main = mainVM;
             Data = dialog;
@@ -167,7 +167,7 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
 
         private void DeleteSelectedNodes()
         {
-            if(Selected.Count == 0)
+            if (Selected.Count == 0)
             {
                 return;
             }
@@ -176,9 +176,10 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
 
             VmNode[] selectedNodes = Selected.ToArray();
             foreach (VmNode node in selectedNodes)
-            {   
+            {
                 TrackChange(
-                    () => {
+                    () =>
+                    {
                         node.Active = false;
                         node.Selected = false;
                     },

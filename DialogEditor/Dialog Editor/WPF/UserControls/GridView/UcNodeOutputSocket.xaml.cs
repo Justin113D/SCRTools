@@ -1,5 +1,4 @@
 ﻿using SCR.Tools.Dialog.Editor.Viewmodeling;
-using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System;
 using System.ComponentModel;
 using System.Windows;
@@ -46,7 +45,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if(e.OldValue != null)
+            if (e.OldValue != null)
             {
                 // unexpected behavior
                 throw new InvalidOperationException();
@@ -78,20 +77,20 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
         {
             base.OnVisualParentChanged(oldParent);
 
-            if(_parent != null)
+            if (_parent != null)
             {
                 throw new InvalidOperationException();
             }
 
             DependencyObject element = VisualParent;
-            while(element is not UcNode)
+            while (element is not UcNode)
             {
                 element = VisualTreeHelper.GetParent(element);
             }
             _parent = (UcNode)element;
             UpdateConnection();
         }
-        
+
         #endregion
 
         public void RecalculateNodeOffset(UcNode relativeTo)
@@ -112,7 +111,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
         public void SetEndPosition(Point canvasPos, bool addOffset = true)
         {
             // 38 is the exact y offset at which the center of the input socket lies
-            if(addOffset)
+            if (addOffset)
             {
                 canvasPos.Y += 38;
             }
@@ -133,7 +132,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
             {
                 _parent.GridView.NodeConnections.Items.Remove(_connectionControl);
             }
-            else if(!inConnections && Connected != null)
+            else if (!inConnections && Connected != null)
             {
                 _parent.GridView.NodeConnections.Items.Add(_connectionControl);
             }
@@ -152,9 +151,9 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
                     _connectedNode.ConnectedSockets.Add(this);
                     SetEndPosition(new(_connectedNode.CanvasX, _connectedNode.CanvasY));
                 }
-                catch(NodeControlNotGeneratedException e)
+                catch (NodeControlNotGeneratedException e)
                 {
-                    if(_subscribedEvent)
+                    if (_subscribedEvent)
                     {
                         throw;
                     }
@@ -169,7 +168,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
 
         private void Content_Loaded(object sender, RoutedEventArgs e)
         {
-            if(_parent == null || _parent.GridView == null || Connected == null)
+            if (_parent == null || _parent.GridView == null || Connected == null)
             {
                 throw new InvalidOperationException();
             }
@@ -201,7 +200,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
                 throw new InvalidOperationException();
             }
 
-            if(e.ChangedButton == MouseButton.Left)
+            if (e.ChangedButton == MouseButton.Left)
             {
                 _clickCheck = true;
             }
@@ -222,12 +221,12 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
             _clickCheck = false;
             _parent.GridView.SetDraggedConnection(this);
 
-            if(Connected == null)
+            if (Connected == null)
             {
                 _parent.GridView.NodeConnections.Items.Add(_connectionControl);
             }
         }
-    
+
         public void DropConnection(VmNode? node)
         {
             if (_parent?.GridView == null || _parent.GridView.ConnectingSocket != this)
@@ -244,7 +243,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
                     _parent.GridView.NodeConnections.Items.Remove(_connectionControl);
                 }
                 else
-                { 
+                {
                     Viewmodel.Disconnect();
                 }
             }

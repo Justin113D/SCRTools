@@ -1,5 +1,4 @@
 ﻿using SCR.Tools.Dialog.Data.Events;
-using SCR.Tools.UndoRedo;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Data
@@ -145,7 +144,7 @@ namespace SCR.Tools.Dialog.Data
             get => _connected;
             private set
             {
-                if(value == _connected)
+                if (value == _connected)
                 {
                     BlankChange();
                 }
@@ -154,7 +153,7 @@ namespace SCR.Tools.Dialog.Data
                     TrackValueChange(
                         (v) => _connected = v, _connected, value);
                 }
-                
+
             }
         }
 

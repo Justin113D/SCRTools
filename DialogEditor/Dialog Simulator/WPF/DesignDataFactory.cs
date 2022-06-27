@@ -10,7 +10,7 @@ namespace SCR.Tools.Dialog.Simulator.WPF
 
         static DesignDataFactory()
         {
-            Dialog.Data.Dialog dialog = JsonFormatHandler.ReadDialog(TestDialog);
+            DialogContainer dialog = JsonFormatHandler.ReadDialog(TestDialog);
             DialogOptions options = JsonFormatHandler.ReadDialogOptions(TestDialogOptions);
 
             Simulator = new(dialog, options);

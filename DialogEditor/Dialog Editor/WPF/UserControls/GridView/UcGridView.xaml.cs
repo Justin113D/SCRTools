@@ -1,14 +1,13 @@
-﻿using System;
+﻿using SCR.Tools.Dialog.Editor.Viewmodeling;
+using SCR.Tools.Viewmodeling;
+using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Runtime.InteropServices;
-using SCR.Tools.Dialog.Editor.Viewmodeling;
-using System.Collections.Generic;
-using SCR.Tools.Viewmodeling;
-using System.Collections.ObjectModel;
 
 namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
 {
@@ -150,7 +149,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
 
         private void ItemContainerGenerator_StatusChanged(object? sender, EventArgs e)
         {
-            if(NodesDisplay.ItemContainerGenerator.Status ==
+            if (NodesDisplay.ItemContainerGenerator.Status ==
                 System.Windows.Controls.Primitives.GeneratorStatus.ContainersGenerated)
             {
                 NodesGenerated?.Invoke();
@@ -166,8 +165,8 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
         public UcNode GetNodeControl(VmNode viewmodel)
         {
             ContentPresenter content = (ContentPresenter)NodesDisplay.ItemContainerGenerator.ContainerFromItem(viewmodel);
-            
-            if(VisualTreeHelper.GetChildrenCount(content) == 0)
+
+            if (VisualTreeHelper.GetChildrenCount(content) == 0)
             {
                 throw new NodeControlNotGeneratedException(content);
             }
@@ -193,10 +192,10 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
 
         #region Space conversion
 
-        public static double ToGridCoordinates(int value) 
+        public static double ToGridCoordinates(int value)
             => (value * brushDim) + halfBrushDim;
 
-        public static int FromGridCoordinates(double value) 
+        public static int FromGridCoordinates(double value)
             => ((int)value - (halfBrushDim * (value < 0 ? 2 : 0))) / brushDim;
 
         public Point ConvertToGridSpace(Point point)
@@ -259,7 +258,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
 
         private void PanGrid(Point mousePos, bool active)
         {
-            if(_previousMousePos == null || !active)
+            if (_previousMousePos == null || !active)
             {
                 return;
             }
@@ -273,7 +272,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
             GridTransform.Matrix = m;
 
             UpdateBackground();
-            
+
             _previousMousePos = mousePos;
         }
 
@@ -285,7 +284,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
 
         private void RecenterView()
         {
-            if(ConnectingSocket != null)
+            if (ConnectingSocket != null)
             {
                 return;
             }
@@ -355,7 +354,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
                     SelectBlock.Width,
                     SelectBlock.Height);
 
-                if(!Keyboard.IsKeyDown(Key.LeftShift) && !Keyboard.IsKeyDown(Key.RightShift))
+                if (!Keyboard.IsKeyDown(Key.LeftShift) && !Keyboard.IsKeyDown(Key.RightShift))
                 {
                     Viewmodel.DeselectAll();
                 }
@@ -366,7 +365,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
                         NodesDisplay.ItemContainerGenerator.ContainerFromIndex(i),
                         0);
 
-                    if (selectRect.IntersectsWith(ucNode.SelectRect) 
+                    if (selectRect.IntersectsWith(ucNode.SelectRect)
                         && !ucNode.Viewmodel.Selected)
                     {
                         ucNode.Viewmodel.Select(true, false);
@@ -383,7 +382,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
 
         public void InitMoveSelected()
         {
-            if(DragNodePosition == null)
+            if (DragNodePosition == null)
             {
                 throw new InvalidOperationException("Nodeclickcheck has to be set!");
             }
@@ -408,12 +407,12 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
 
         private void MoveSelected(Point mousePos, bool active)
         {
-            if(_selectedNodes == null || !active)
+            if (_selectedNodes == null || !active)
             {
                 return;
             }
 
-            if(DragNodePosition == null)
+            if (DragNodePosition == null)
             {
                 throw new InvalidOperationException("Click check is null!");
             }
@@ -425,7 +424,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
                (gridMousePos.X - DragNodePosition?.X) ?? 0,
                (gridMousePos.Y - DragNodePosition?.Y) ?? 0);
 
-            foreach(UcNode t in _selectedNodes)
+            foreach (UcNode t in _selectedNodes)
             {
                 t.SetDragOffset(dif);
             }
@@ -433,7 +432,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
 
         public void DropSelect(bool revert)
         {
-            if(_selectedNodes == null)
+            if (_selectedNodes == null)
             {
                 DragNodePosition = null;
                 return;
@@ -444,7 +443,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
                 throw new InvalidOperationException("Clickcheck or selectednodes are null!");
             }
 
-            if(revert)
+            if (revert)
             {
                 foreach (UcNode node in _selectedNodes)
                 {
@@ -505,7 +504,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
         private void MoveDraggingConnection(Point mousePos)
         {
             UcNode? ucNode = GetMouseOverUcNode();
-            if(ucNode != null)
+            if (ucNode != null)
             {
                 ConnectingSocket?.SetEndPosition(new(ucNode.CanvasX, ucNode.CanvasY));
             }
@@ -537,7 +536,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
         {
             // needed for being able to
             // interact with input bindings
-            Focus(); 
+            Focus();
 
             if (DragNodePosition != null || ConnectingSocket != null)
             {
@@ -550,7 +549,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
                 SelectBlock.Width = 0;
                 SelectBlock.Height = 0;
             }
-            else if(e.ChangedButton == MouseButton.Middle)
+            else if (e.ChangedButton == MouseButton.Middle)
             {
                 _previousMousePos = e.GetPosition(this);
                 Mouse.OverrideCursor = Cursors.SizeAll;
@@ -559,22 +558,22 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
 
         private void GridCanvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if(ConnectingSocket != null && e.ChangedButton == MouseButton.Left)
+            if (ConnectingSocket != null && e.ChangedButton == MouseButton.Left)
             {
                 DropDraggingConnection();
             }
 
-            if(_previousMousePos != null && e.ChangedButton == MouseButton.Middle)
+            if (_previousMousePos != null && e.ChangedButton == MouseButton.Middle)
             {
                 EndPanGrid();
             }
 
-            if(SelectBoxStartGridPos != null && e.ChangedButton == MouseButton.Left)
+            if (SelectBoxStartGridPos != null && e.ChangedButton == MouseButton.Left)
             {
                 EndSelectBox(true);
             }
 
-            if(_selectedNodes != null && e.ChangedButton == MouseButton.Left)
+            if (_selectedNodes != null && e.ChangedButton == MouseButton.Left)
             {
                 DropSelect(false);
             }
@@ -611,7 +610,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
         {
             Point mousePos = e.GetPosition(this);
 
-            if(ConnectingSocket == null)
+            if (ConnectingSocket == null)
             {
                 PanGrid(mousePos, e.MiddleButton == MouseButtonState.Pressed);
                 DragSelectBox(mousePos, e.LeftButton == MouseButtonState.Pressed);
@@ -626,7 +625,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
 
         private void Grid_MouseLeave(object sender, MouseEventArgs e)
         {
-            if(ConnectingSocket != null)
+            if (ConnectingSocket != null)
             {
                 ConnectingSocket.DropConnection(null);
             }
@@ -644,12 +643,12 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
                 }
             }
 
-            if(SelectBoxStartGridPos != null)
+            if (SelectBoxStartGridPos != null)
             {
                 EndSelectBox(false);
             }
 
-            if(DragNodePosition != null)
+            if (DragNodePosition != null)
             {
                 DropSelect(true);
             }

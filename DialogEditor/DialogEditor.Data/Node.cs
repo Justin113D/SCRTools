@@ -1,7 +1,7 @@
 ﻿using SCR.Tools.UndoRedo.Collections;
-using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Collections.ObjectModel;
 using System.Linq;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Data
 {

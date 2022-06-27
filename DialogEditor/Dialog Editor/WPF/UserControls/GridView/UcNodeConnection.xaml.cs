@@ -60,7 +60,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls.GridView
                 _canvasEndPosition.X - CanvasX,
                 _canvasEndPosition.Y - CanvasY);
 
-            if(relativeEndPos.X < Math.Abs(relativeEndPos.Y * 0.2))
+            if (relativeEndPos.X < Math.Abs(relativeEndPos.Y * 0.2))
             {
                 LinePath.Data = GenerateDisconnected(relativeEndPos);
             }

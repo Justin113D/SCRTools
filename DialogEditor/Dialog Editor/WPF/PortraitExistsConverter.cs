@@ -1,5 +1,4 @@
 ﻿using SCR.Tools.Dialog.Editor.Viewmodeling;
-using SCR.Tools.WPF.Styling;
 using System;
 using System.Globalization;
 using System.IO;
@@ -22,7 +21,7 @@ namespace SCR.Tools.Dialog.Editor.WPF
             VmNodeOption<Color>? character = (VmNodeOption<Color>?)values[1];
             VmNodeOption<Color>? expression = (VmNodeOption<Color>?)values[2];
 
-            if(folder == null || character == null || expression == null)
+            if (folder == null || character == null || expression == null)
             {
                 return Transparent;
             }

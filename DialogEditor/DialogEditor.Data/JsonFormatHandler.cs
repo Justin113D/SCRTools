@@ -1,5 +1,4 @@
 ﻿using SCR.Tools.UndoRedo;
-using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -7,6 +6,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Data
 {
@@ -14,7 +14,7 @@ namespace SCR.Tools.Dialog.Data
     {
         #region Dialog To Json
 
-        public static string WriteDialog(this Dialog dialog, bool indenting)
+        public static string WriteDialog(this DialogContainer dialog, bool indenting)
         {
             using MemoryStream stream = new();
             using Utf8JsonWriter jsonWriter = new(stream, new()
@@ -29,15 +29,15 @@ namespace SCR.Tools.Dialog.Data
             return Encoding.UTF8.GetString(stream.ToArray());
         }
 
-        private static void WriteDialogContents(Utf8JsonWriter jsonWriter, Dialog dialog)
+        private static void WriteDialogContents(Utf8JsonWriter jsonWriter, DialogContainer dialog)
         {
             jsonWriter.WriteStartObject();
 
-            jsonWriter.WriteString(nameof(Dialog.Author), dialog.Author);
-            jsonWriter.WriteString(nameof(Dialog.Name), dialog.Name);
-            jsonWriter.WriteString(nameof(Dialog.Description), dialog.Description);
+            jsonWriter.WriteString(nameof(DialogContainer.Author), dialog.Author);
+            jsonWriter.WriteString(nameof(DialogContainer.Name), dialog.Name);
+            jsonWriter.WriteString(nameof(DialogContainer.Description), dialog.Description);
 
-            jsonWriter.WriteStartArray(nameof(Dialog.Nodes));
+            jsonWriter.WriteStartArray(nameof(DialogContainer.Nodes));
 
             foreach (Node node in dialog.Nodes)
             {
@@ -48,14 +48,14 @@ namespace SCR.Tools.Dialog.Data
             jsonWriter.WriteEndObject();
         }
 
-        private static void WriteNode(Utf8JsonWriter jsonWriter, Node node, Dialog dialog)
+        private static void WriteNode(Utf8JsonWriter jsonWriter, Node node, DialogContainer dialog)
         {
             jsonWriter.WriteStartObject();
 
             jsonWriter.WriteNumber(nameof(Node.LocationX), node.LocationX);
             jsonWriter.WriteNumber(nameof(Node.LocationY), node.LocationY);
 
-            if(node.RightPortrait)
+            if (node.RightPortrait)
             {
                 jsonWriter.WriteBoolean(nameof(Node.RightPortrait), node.RightPortrait);
             }
@@ -71,11 +71,11 @@ namespace SCR.Tools.Dialog.Data
             jsonWriter.WriteEndObject();
         }
 
-        private static void WriteNodeOutputs(Utf8JsonWriter jsonWriter, NodeOutput output, Dialog dialog)
+        private static void WriteNodeOutputs(Utf8JsonWriter jsonWriter, NodeOutput output, DialogContainer dialog)
         {
             jsonWriter.WriteStartObject();
 
-            if(!string.IsNullOrWhiteSpace(output.Expression))
+            if (!string.IsNullOrWhiteSpace(output.Expression))
             {
                 jsonWriter.WriteString(nameof(NodeOutput.Expression), output.Expression);
             }
@@ -92,7 +92,7 @@ namespace SCR.Tools.Dialog.Data
 
             jsonWriter.WriteString(nameof(NodeOutput.Text), output.Text);
 
-            if(output.DisableReuse)
+            if (output.DisableReuse)
             {
                 jsonWriter.WriteBoolean(nameof(NodeOutput.DisableReuse), output.DisableReuse);
             }
@@ -107,7 +107,7 @@ namespace SCR.Tools.Dialog.Data
                 jsonWriter.WriteString(nameof(NodeOutput.Condition), output.Condition);
             }
 
-            if(output.Connected != null)
+            if (output.Connected != null)
             {
                 jsonWriter.WriteNumber(nameof(NodeOutput.Connected), dialog.Nodes.IndexOf(output.Connected));
             }
@@ -119,14 +119,14 @@ namespace SCR.Tools.Dialog.Data
 
         #region Json To Dialog
 
-        public static Dialog ReadDialog(string text)
+        public static DialogContainer ReadDialog(string text)
         {
             ChangeTracker prev = GlobalChangeTracker;
 
             new ChangeTracker().Use();
             BeginChangeGroup();
 
-            Dialog result = new();
+            DialogContainer result = new();
 
             try
             {
@@ -147,17 +147,17 @@ namespace SCR.Tools.Dialog.Data
             return result;
         }
 
-        private static void ReadDialogContents(JsonNode json, Dialog output)
+        private static void ReadDialogContents(JsonNode json, DialogContainer output)
         {
-            output.Author = json[nameof(Dialog.Author)]?.GetValue<string>() ?? "";
-            output.Name = json[nameof(Dialog.Name)]?.GetValue<string>() ?? "";
-            output.Description = json[nameof(Dialog.Description)]?.GetValue<string>() ?? "";
+            output.Author = json[nameof(DialogContainer.Author)]?.GetValue<string>() ?? "";
+            output.Name = json[nameof(DialogContainer.Name)]?.GetValue<string>() ?? "";
+            output.Description = json[nameof(DialogContainer.Description)]?.GetValue<string>() ?? "";
 
             Dictionary<NodeOutput, int> outputMap = new();
 
-            if (json[nameof(Dialog.Nodes)] is JsonArray jsonNodes)
+            if (json[nameof(DialogContainer.Nodes)] is JsonArray jsonNodes)
             {
-                foreach(JsonNode? jsonNode in jsonNodes)
+                foreach (JsonNode? jsonNode in jsonNodes)
                 {
                     Node node = output.CreateNode();
                     ReadNode(jsonNode ?? throw new InvalidDataException("Jsonnode is null!"), node, outputMap);
@@ -169,9 +169,9 @@ namespace SCR.Tools.Dialog.Data
             }
 
             // assigning the outputs
-            foreach(KeyValuePair<NodeOutput, int> pair in outputMap)
+            foreach (KeyValuePair<NodeOutput, int> pair in outputMap)
             {
-                if(pair.Value >= 0)
+                if (pair.Value >= 0)
                 {
                     pair.Key.Connect(output.Nodes[pair.Value]);
                 }
@@ -253,7 +253,7 @@ namespace SCR.Tools.Dialog.Data
         {
             jsonWriter.WriteStartObject(name);
 
-            foreach(KeyValuePair<string, Color> option in options)
+            foreach (KeyValuePair<string, Color> option in options)
             {
                 string colorHex = option.Value.ToArgb().ToString("X8");
                 jsonWriter.WriteString(option.Key, colorHex);
@@ -270,7 +270,7 @@ namespace SCR.Tools.Dialog.Data
             {
                 string path = icon.Value;
 
-                if(basePath != null)
+                if (basePath != null)
                 {
                     path = Path.GetRelativePath(basePath, path);
                 }
@@ -304,14 +304,14 @@ namespace SCR.Tools.Dialog.Data
 
                 string? portraitsPath = json[nameof(DialogOptions.PortraitsPath)]?.GetValue<string?>();
 
-                if(portraitsPath != null && basePath != null)
+                if (portraitsPath != null && basePath != null)
                 {
                     portraitsPath = Path.GetFullPath(portraitsPath, basePath);
                 }
 
                 result.PortraitsPath = portraitsPath;
 
-                if(json[nameof(DialogOptions.CharacterOptions)] is JsonNode options)
+                if (json[nameof(DialogOptions.CharacterOptions)] is JsonNode options)
                 {
                     ReadDialogNodeOptions(options, result.CharacterOptions);
                 }
@@ -337,10 +337,10 @@ namespace SCR.Tools.Dialog.Data
 
         private static void ReadDialogNodeOptions(JsonNode json, IDictionary<string, Color> output)
         {
-            foreach(KeyValuePair<string, JsonNode?> p in json.AsObject())
+            foreach (KeyValuePair<string, JsonNode?> p in json.AsObject())
             {
                 string? colorHex = p.Value?.GetValue<string>();
-                if(colorHex == null)
+                if (colorHex == null)
                 {
                     throw new InvalidDataException("Color not valid");
                 }
@@ -363,7 +363,7 @@ namespace SCR.Tools.Dialog.Data
                     throw new InvalidDataException("Path not valid");
                 }
 
-                if(basepath != null)
+                if (basepath != null)
                 {
                     path = Path.GetFullPath(path, basepath);
                 }

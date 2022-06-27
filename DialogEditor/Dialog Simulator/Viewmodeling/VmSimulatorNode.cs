@@ -1,9 +1,9 @@
 ﻿using SCR.Tools.Dialog.Data;
 using SCR.Tools.Viewmodeling;
-using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 {
@@ -35,7 +35,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
             get => _cameBy;
             set
             {
-                if(value == _cameBy)
+                if (value == _cameBy)
                 {
                     return;
                 }
@@ -54,7 +54,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
         {
             get
             {
-                if(Simulator.OutputNumbers.TryGetValue(this, out int result))
+                if (Simulator.OutputNumbers.TryGetValue(this, out int result))
                 {
                     return result;
                 }
@@ -70,7 +70,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
             {
                 _activeOutput = value;
 
-                if(Data.RightPortrait)
+                if (Data.RightPortrait)
                 {
                     Simulator.RightPortrait = _activeOutput;
                 }
@@ -90,7 +90,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 
             ObservableCollection<VmSimulatorOutput> outputs = new();
 
-            foreach(NodeOutput output in Data.Outputs)
+            foreach (NodeOutput output in Data.Outputs)
             {
                 outputs.Add(new(this, output));
             }
@@ -106,7 +106,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 
             foreach (VmSimulatorOutput output in Outputs)
             {
-                if (output.ConditionValid && output.Enabled  && !output.Data.Fallback)
+                if (output.ConditionValid && output.Enabled && !output.Data.Fallback)
                 {
                     result.Add(output);
                     if (result.Count == 4)
@@ -144,9 +144,9 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
             }
 
             int i = 1;
-            foreach(VmSimulatorOutput output in ValidOutputs)
+            foreach (VmSimulatorOutput output in ValidOutputs)
             {
-                if(output.Connected != null)
+                if (output.Connected != null)
                 {
                     Simulator.OutputNumbers.Add(output.Connected, i);
                     output.Connected.OnPropertyChanged(nameof(OutputNumber));

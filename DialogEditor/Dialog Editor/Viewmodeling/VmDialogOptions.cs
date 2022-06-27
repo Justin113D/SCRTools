@@ -1,8 +1,8 @@
 ﻿using SCR.Tools.Dialog.Data;
-using SCR.Tools.Viewmodeling;
 using SCR.Tools.UndoRedo;
-using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
+using SCR.Tools.Viewmodeling;
 using System.Drawing;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Editor.Viewmodeling
 {
@@ -23,7 +23,7 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
             get => Data.PortraitsPath;
             set
             {
-                if(value == PortraitsPath)
+                if (value == PortraitsPath)
                 {
                     return;
                 }

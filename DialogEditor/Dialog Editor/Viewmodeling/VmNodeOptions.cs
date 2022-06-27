@@ -1,11 +1,10 @@
 ﻿
-using SCR.Tools.Viewmodeling;
 using SCR.Tools.Common;
 using SCR.Tools.UndoRedo.Collections;
-using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
-using System.Collections.ObjectModel;
-using System.Linq;
+using SCR.Tools.Viewmodeling;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Editor.Viewmodeling
 {
@@ -29,7 +28,7 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
             Dictionary<string, VmNodeOption<T>> internalLut = new();
             ObservableCollection<VmNodeOption<T>> internalOptions = new();
 
-            foreach(KeyValuePair<string, T> option in _rawOptions)
+            foreach (KeyValuePair<string, T> option in _rawOptions)
             {
                 VmNodeOption<T> vmOption = new(this, option.Key);
 
@@ -70,7 +69,7 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
 
         public void AddOption(string name)
         {
-            if(string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 return;
             }
@@ -86,10 +85,10 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
 
             EndChangeGroup();
         }
-        
+
         public VmNodeOption<T>? GetOption(string name)
         {
-            if(!_lut.TryGetValue(name, out VmNodeOption<T>? result))
+            if (!_lut.TryGetValue(name, out VmNodeOption<T>? result))
             {
                 return null;
             }
@@ -109,7 +108,7 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
             get => _name;
             set
             {
-                if(string.IsNullOrWhiteSpace(value) || _name == value)
+                if (string.IsNullOrWhiteSpace(value) || _name == value)
                     return;
 
                 BeginChangeGroup();
@@ -131,7 +130,7 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
             set
             {
                 BeginChangeGroup();
-                
+
                 _parent[Name] = value;
                 TrackNotifyProperty(nameof(Value));
 

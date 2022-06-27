@@ -18,7 +18,7 @@ namespace SCR.Tools.Dialog.Simulator.WPF.UserControls
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(((ListBox)sender).SelectedValue is not VmSimulatorNode node)
+            if (((ListBox)sender).SelectedValue is not VmSimulatorNode node)
             {
                 return;
             }

@@ -1,16 +1,15 @@
 ﻿using SCR.Tools.UndoRedo.Collections;
-using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Data
 {
     /// <summary>
     /// Complete Dialog that encapsulates all nodes
     /// </summary>
-    public class Dialog
+    public class DialogContainer
     {
         #region Private field
         /// <summary>
@@ -77,7 +76,7 @@ namespace SCR.Tools.Dialog.Data
             }
         }
 
-        public Dialog()
+        public DialogContainer()
         {
             _name = "";
             _description = "";

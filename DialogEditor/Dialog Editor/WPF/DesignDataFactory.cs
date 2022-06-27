@@ -1,5 +1,4 @@
-﻿using SCR.Tools.Dialog.Data;
-using SCR.Tools.Dialog.Editor.Viewmodeling;
+﻿using SCR.Tools.Dialog.Editor.Viewmodeling;
 using System.Drawing;
 
 namespace SCR.Tools.Dialog.Editor.WPF

@@ -2,8 +2,6 @@
 using SCR.Tools.Dialog.Data.Events;
 using SCR.Tools.Viewmodeling;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Drawing;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
@@ -136,7 +134,7 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
             get => Data.Text;
             set
             {
-                if(Text == value)
+                if (Text == value)
                 {
                     return;
                 }
@@ -239,7 +237,7 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
 
         public void InitConnection()
         {
-            if(_initiatedConnection)
+            if (_initiatedConnection)
             {
                 throw new InvalidOperationException("Already initiated node output!");
             }
@@ -261,8 +259,8 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
 
             _connected?.RemoveInput(this);
 
-            VmNode? vmNode = args.NewNode == null 
-                ? null 
+            VmNode? vmNode = args.NewNode == null
+                ? null
                 : Parent.Dialog.GetViewmodel(args.NewNode);
 
             TrackValueChange(
@@ -280,7 +278,7 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
         {
             Data.Disconnect();
         }
-    
+
         public void Delete()
         {
             Parent.DeleteOutput(this);

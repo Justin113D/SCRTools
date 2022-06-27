@@ -1,7 +1,6 @@
 ﻿using SCR.Tools.Dialog.Editor.Viewmodeling;
 using SCR.Tools.Viewmodeling;
 using SCR.Tools.WPF.IO;
-using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -48,11 +47,11 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls
             {
                 _viewModel = vm;
                 _dialogFileHandler = new(
-                    "Dialog File (.json)|*.json", 
-                    "Dialog Json File", 
+                    "Dialog File (.json)|*.json",
+                    "Dialog Json File",
                     vm.DialogTracker,
-                    (path) => vm.WriteDialog(), 
-                    (format, path) => vm.LoadDialog(format), 
+                    (path) => vm.WriteDialog(),
+                    (format, path) => vm.LoadDialog(format),
                     vm.NewDialog);
 
                 _dialogOptionsFileHandler = new(
@@ -95,7 +94,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls
 
         private void OpenDialogOptions(object sender, RoutedEventArgs e)
         {
-            if(_viewModel == null || _dialogOptionsFileHandler == null)
+            if (_viewModel == null || _dialogOptionsFileHandler == null)
             {
                 return;
             }
@@ -116,14 +115,14 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls
             {
                 Simulator.WPF.Windows.WndSimulatorDialog.RunSimulator(_viewModel.Dialog.Data, _viewModel.DialogOptions.Data);
             }
-            catch(Simulator.Data.SimulatorException sx)
+            catch (Simulator.Data.SimulatorException sx)
             {
-                if(sx.Node != null)
+                if (sx.Node != null)
                 {
                     VmNode vmNode = _viewModel.Dialog.GetViewmodel(sx.Node);
                     vmNode.Select(false, true);
 
-                    foreach(var t in vmNode.Outputs)
+                    foreach (var t in vmNode.Outputs)
                     {
                         t.IsExpanded = sx.Output == t.Data;
                     }

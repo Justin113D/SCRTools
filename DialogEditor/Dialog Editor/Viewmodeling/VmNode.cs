@@ -1,10 +1,9 @@
 ﻿using SCR.Tools.Dialog.Data;
 using SCR.Tools.UndoRedo.Collections;
 using SCR.Tools.Viewmodeling;
+using System;
 using System.Collections.ObjectModel;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
-using System;
-using System.Collections.Generic;
 
 namespace SCR.Tools.Dialog.Editor.Viewmodeling
 {
@@ -43,7 +42,7 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
             get => Data.RightPortrait;
             set
             {
-                if(value == RightPortrait)
+                if (value == RightPortrait)
                 {
                     return;
                 }
@@ -62,7 +61,7 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
             get => Data.LocationX;
             set
             {
-                if(LocationX == value)
+                if (LocationX == value)
                 {
                     return;
                 }
@@ -107,12 +106,12 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
             get => Dialog.ActiveNode == this;
             set
             {
-                if(value == Active)
+                if (value == Active)
                 {
                     return;
                 }
 
-                if(value)
+                if (value)
                 {
                     Selected = true;
                     Dialog.ActiveNode = this;
@@ -130,12 +129,12 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
             get => Dialog.Selected.Contains(this);
             set
             {
-                if(Selected == value)
+                if (Selected == value)
                 {
                     return;
                 }
 
-                if(value)
+                if (value)
                 {
                     Dialog.Selected.Add(this);
                 }
@@ -146,7 +145,7 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
             }
         }
 
-        
+
 
         public RelayCommand CmdAddOutput
             => new(AddOutput);
@@ -173,7 +172,7 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
 
         public void InitConnections()
         {
-            foreach(VmNodeOutput output in Outputs)
+            foreach (VmNodeOutput output in Outputs)
             {
                 output.InitConnection();
             }
@@ -213,7 +212,7 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
 
         public void AddInput(VmNodeOutput vmInput)
         {
-            if(vmInput.Connected != this)
+            if (vmInput.Connected != this)
             {
                 throw new ArgumentException("Input invalid!", nameof(vmInput));
             }
@@ -256,7 +255,7 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
                 Selected = !Selected;
             }
 
-            if(allowActive)
+            if (allowActive)
             {
                 Active = true;
             }
