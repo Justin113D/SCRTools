@@ -1,14 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <RootNamespace>SCR.Tools.Dialog.Data</RootNamespace>
-    <AssemblyName>Dialog.Data</AssemblyName>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<DebugType>embedded</DebugType>
+		<RootNamespace>SCR.Tools.Dialog.Data</RootNamespace>
+		<AssemblyName>Dialog.Data</AssemblyName>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\UndoRedo\UndoRedo.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Libraries\Common\Common.csproj" />
+		<ProjectReference Include="..\..\Libraries\UndoRedo\UndoRedo.csproj" />
+	</ItemGroup>
 
 </Project>

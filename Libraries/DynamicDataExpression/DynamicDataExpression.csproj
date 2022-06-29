@@ -2,8 +2,8 @@
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-		<RootNamespace>SCR.Tools.DynamicDataExpression</RootNamespace>
-		<Authors>SonicChroniclesReimagined</Authors>
+		<Nullable>enable</Nullable>
+		<DebugType>embedded</DebugType>
 		<RootNamespace>SCR.Tools.DynamicDataExpression</RootNamespace>
 		<AssemblyName>SCR.Tools.DynamicDataExpression</AssemblyName>
 	</PropertyGroup>

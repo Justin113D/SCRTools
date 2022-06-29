@@ -45,6 +45,19 @@ namespace SCR.Tools.Dialog.Data
             }
 
             jsonWriter.WriteEndArray();
+
+            if (dialog.ConditionData.Count > 0)
+            {
+                jsonWriter.WriteStartArray(nameof(DialogContainer.ConditionData));
+
+                foreach (Condition.ReadOnly.ReadOnlyConditionData? t in dialog.ConditionData)
+                {
+                    Condition.JsonFormatHandler.WriteConditionDataContents(jsonWriter, t);
+                }
+
+                jsonWriter.WriteEndArray();
+            }
+
             jsonWriter.WriteEndObject();
         }
 
@@ -174,6 +187,16 @@ namespace SCR.Tools.Dialog.Data
                 if (pair.Value >= 0)
                 {
                     pair.Key.Connect(output.Nodes[pair.Value]);
+                }
+            }
+
+            if (json[nameof(DialogContainer.ConditionData)] is JsonArray jsonConditions)
+            {
+                foreach (JsonNode? jsonNode in jsonConditions)
+                {
+                    output.ConditionData.Add(
+                        Condition.JsonFormatHandler.ReadConditionData(
+                            jsonNode ?? throw new InvalidDataException("Jsonnode is null!")));
                 }
             }
         }

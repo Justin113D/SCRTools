@@ -1,4 +1,5 @@
 ﻿using SCR.Tools.Dialog.Editor.Viewmodeling;
+using SCR.Tools.Dialog.Simulator.Viewmodeling;
 using SCR.Tools.Viewmodeling;
 using SCR.Tools.WPF.IO;
 using System.Windows;
@@ -115,7 +116,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls
             {
                 Simulator.WPF.Windows.WndSimulatorDialog.RunSimulator(_viewModel.Dialog.Data, _viewModel.DialogOptions.Data);
             }
-            catch (Simulator.Data.SimulatorException sx)
+            catch (SimulatorException sx)
             {
                 if (sx.Node != null)
                 {

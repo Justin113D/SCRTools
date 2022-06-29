@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace SCR.Tools.UndoRedo.Collections
 {
-    public class TrackDictionary<TKey, TValue> : IDictionary<TKey, TValue> where TKey : notnull
+    public class TrackDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue> where TKey : notnull
     {
         private readonly IDictionary<TKey, TValue> _dictionary;
 
@@ -34,6 +34,12 @@ namespace SCR.Tools.UndoRedo.Collections
 
         public bool IsReadOnly 
             => _dictionary.IsReadOnly;
+
+        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys 
+            => Keys;
+
+        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values 
+            => Values;
 
         public TrackDictionary()
         {

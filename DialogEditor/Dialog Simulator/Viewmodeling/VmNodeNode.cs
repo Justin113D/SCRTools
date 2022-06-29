@@ -7,7 +7,7 @@ using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 {
-    public class VmNode : BaseViewModel
+    internal class VmNode : BaseViewModel
     {
         private VmNodeOutput _activeOutput;
 
@@ -133,7 +133,9 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 
         public void InitActive()
         {
-            ValidOutputs = GetValidOutputs();
+            VmNodeOutput[] outputs = GetValidOutputs();
+            ActiveOutput = outputs[0];
+            ValidOutputs = outputs;
             OnPropertyChanged(nameof(DisplayOutputs));
 
             VmNode[] outputNumNodes = Simulator.OutputNumbers.Keys.ToArray();
@@ -154,7 +156,6 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
                 }
             }
 
-            ActiveOutput = ValidOutputs[0];
         }
     }
 }

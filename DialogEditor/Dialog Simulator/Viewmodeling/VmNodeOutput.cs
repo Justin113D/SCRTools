@@ -1,5 +1,6 @@
 ﻿using SCR.Tools.Dialog.Data;
-using SCR.Tools.Dialog.Simulator.Data;
+using SCR.Tools.Dialog.Data.Condition;
+using SCR.Tools.Dialog.Simulator.Viewmodeling.Condition;
 using SCR.Tools.DynamicDataExpression;
 using SCR.Tools.Viewmodeling;
 using System.IO;
@@ -7,7 +8,7 @@ using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 {
-    public class VmNodeOutput : BaseViewModel
+    internal class VmNodeOutput : BaseViewModel
     {
         private bool _enabled = true;
 
@@ -55,7 +56,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
         }
 
         public bool ConditionValid
-            => DDXCondition == null || DDXCondition.Evaluate(Parent.Simulator.ConditionData);
+            => DDXCondition == null || DDXCondition.Evaluate(Parent.Simulator.ConditionData.Data);
 
         /// <summary>
         /// Name of the output

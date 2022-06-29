@@ -2,19 +2,13 @@
 
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
-		<OutputType>WinExe</OutputType>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
-		<AssemblyName>Dialog Simulator</AssemblyName>
+		<DebugType>embedded</DebugType>
+		<AssemblyName>SCR.Tools.Dialog.Simulator</AssemblyName>
 		<RootNamespace>SCR.Tools.Dialog.Simulator</RootNamespace>
-		<StartupObject>SCR.Tools.Dialog.Simulator.WPF.App</StartupObject>
-		<ApplicationIcon>Icon.ico</ApplicationIcon>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<Resource Include="Icon.ico" />
-	</ItemGroup>
-	
 	<ItemGroup>
 		<ProjectReference Include="..\..\Libraries\DynamicDataExpression\DynamicDataExpression.csproj" />
 		<ProjectReference Include="..\..\Libraries\UndoRedo\UndoRedo.csproj" />

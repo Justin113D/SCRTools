@@ -1,5 +1,5 @@
 ﻿using SCR.Tools.Dialog.Data;
-using SCR.Tools.Dialog.Simulator.Data;
+using SCR.Tools.Dialog.Simulator.Viewmodeling.Condition;
 using SCR.Tools.UndoRedo;
 using SCR.Tools.UndoRedo.Collections;
 using SCR.Tools.Viewmodeling;
@@ -10,7 +10,7 @@ using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 {
-    public class VmSimulator : BaseViewModel
+    internal class VmSimulator : BaseViewModel
     {
         private VmNode _activeNode;
         private bool _rightPortraitActive;
@@ -32,7 +32,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 
         public Dictionary<VmNode, int> OutputNumbers { get; }
 
-        public ConditionData ConditionData { get; }
+        public VmConditionData ConditionData { get; }
 
         public VmNode ActiveNode
         {
@@ -102,7 +102,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 
             SharedDisabledIndices = new();
             OutputNumbers = new();
-            ConditionData = new();
+            ConditionData = new(new());
 
             Node? entryNode = data.StartNode;
             if (entryNode == null)

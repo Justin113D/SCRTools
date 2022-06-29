@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace SCR.Tools.UndoRedo
 {
+    [DebuggerStepThrough]
     public static class GlobalChangeTrackerC
     {
         public static ChangeTracker GlobalChangeTracker { get; internal set; } = new();

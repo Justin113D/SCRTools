@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace SCR.Tools.UndoRedo.Collections
 {
-    public class TrackCollection<T> : ICollection<T>
+    public class TrackCollection<T> : ICollection<T>, IReadOnlyCollection<T>
     {
         private readonly ICollection<T> _collection;
 

@@ -1,8 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<DebugType>embedded</DebugType>
+		<AssemblyName>SCR.Tools.Common</AssemblyName>
+		<RootNamespace>SCR.Tools.Common</RootNamespace>
+	</PropertyGroup>
 
 </Project>

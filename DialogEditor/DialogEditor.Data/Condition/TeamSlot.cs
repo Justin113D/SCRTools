@@ -1,9 +1,12 @@
-﻿using SCR.Tools.UndoRedo.Collections;
+﻿using SCR.Tools.Dialog.Data.Condition.ReadOnly;
+using SCR.Tools.UndoRedo.Collections;
+using System.Collections.Generic;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
+using System.Linq;
 
-namespace SCR.Tools.Dialog.Simulator.Data
+namespace SCR.Tools.Dialog.Data.Condition
 {
-    public class TeamSlot
+    public class TeamSlot : IReadOnlyTeamSlot
     {
         private int _level;
         private int _health;
@@ -44,9 +47,24 @@ namespace SCR.Tools.Dialog.Simulator.Data
 
         public TrackSet<int> Equipment { get; }
 
+        IReadOnlySet<int> IReadOnlyTeamSlot.Equipment 
+            => Equipment;
+
         public TeamSlot()
         {
             Equipment = new();
+        }
+
+        public TeamSlot(IReadOnlyTeamSlot slot)
+        {
+            HashSet<int> internalEquipment = new(slot.Equipment);
+            Equipment = new(internalEquipment);
+
+            _level = slot.Level;
+            _health = slot.Health;
+            _maxHealth = slot.MaxHealth;
+            _powerPoints = slot.PowerPoints;
+            _maxHealth = slot.MaxPowerPoints;
         }
     }
 }

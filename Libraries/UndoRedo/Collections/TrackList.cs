@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace SCR.Tools.UndoRedo.Collections
 {
-    public class TrackList<T> : IList<T>
+    public class TrackList<T> : IList<T>, IReadOnlyList<T>
     {
         private readonly IList<T> _list;
 

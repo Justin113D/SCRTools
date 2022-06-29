@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SCR.Tools.UndoRedo.Collections
 {
-    public class TrackSet<T> : ISet<T>
+    public class TrackSet<T> : ISet<T>, IReadOnlySet<T>
     {
         private readonly ISet<T> _set;
 

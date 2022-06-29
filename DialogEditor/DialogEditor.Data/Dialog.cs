@@ -1,4 +1,5 @@
-﻿using SCR.Tools.UndoRedo.Collections;
+﻿using SCR.Tools.Dialog.Data.Condition.ReadOnly;
+using SCR.Tools.UndoRedo.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -76,6 +77,8 @@ namespace SCR.Tools.Dialog.Data
             }
         }
 
+        public TrackSet<ReadOnlyConditionData> ConditionData { get; }
+
         public DialogContainer()
         {
             _name = "";
@@ -84,6 +87,8 @@ namespace SCR.Tools.Dialog.Data
 
             _nodes = new();
             Nodes = new(_nodes);
+
+            ConditionData = new();
         }
 
         /// <summary>

@@ -1,10 +1,11 @@
-﻿using SCR.Tools.DynamicDataExpression;
+﻿using SCR.Tools.Dialog.Data.Condition;
+using SCR.Tools.DynamicDataExpression;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace SCR.Tools.Dialog.Simulator.Data
+namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
 {
     public sealed class ConditionDataAccessor : IDataAccess<ConditionData>
     {

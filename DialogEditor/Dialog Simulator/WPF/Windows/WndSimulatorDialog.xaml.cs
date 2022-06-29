@@ -1,5 +1,4 @@
 ﻿using SCR.Tools.Dialog.Data;
-using SCR.Tools.Dialog.Simulator.Data;
 using SCR.Tools.Dialog.Simulator.Viewmodeling;
 using SCR.Tools.UndoRedo;
 using System;

@@ -1,8 +1,9 @@
-﻿using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
+﻿using SCR.Tools.Dialog.Data.Condition.ReadOnly;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
-namespace SCR.Tools.Dialog.Simulator.Data
+namespace SCR.Tools.Dialog.Data.Condition
 {
-    public class ChaoSlot
+    public class ChaoSlot : IReadOnlyChaoSlot
     {
         private int _count;
         private int _level;
@@ -19,10 +20,15 @@ namespace SCR.Tools.Dialog.Simulator.Data
             set => BlankValueChange((v) => _level = v, _level, value);
         }
 
-        public ChaoSlot(int count, int level)
+        public ChaoSlot()
         {
-            _count = count;
-            _level = level;
+
+        }
+
+        public ChaoSlot(IReadOnlyChaoSlot slot)
+        {
+            _count = slot.Count;
+            _level = slot.Level;
         }
     }
 }

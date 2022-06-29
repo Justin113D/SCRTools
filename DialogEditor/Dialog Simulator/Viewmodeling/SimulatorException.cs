@@ -1,7 +1,7 @@
 ﻿using SCR.Tools.Dialog.Data;
 using System;
 
-namespace SCR.Tools.Dialog.Simulator.Data
+namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 {
     public class SimulatorException : Exception
     {
