@@ -3,10 +3,11 @@ using SCR.Tools.UndoRedo.Collections;
 using System.Collections.Generic;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Linq;
+using System;
 
 namespace SCR.Tools.Dialog.Data.Condition
 {
-    public class TeamSlot : IReadOnlyTeamSlot
+    public class TeamSlot : IReadOnlyTeamSlot, ICloneable
     {
         private int _level;
         private int _health;
@@ -47,7 +48,7 @@ namespace SCR.Tools.Dialog.Data.Condition
 
         public TrackSet<int> Equipment { get; }
 
-        IReadOnlySet<int> IReadOnlyTeamSlot.Equipment 
+        IReadOnlySet<int> IReadOnlyTeamSlot.Equipment
             => Equipment;
 
         public TeamSlot()
@@ -66,5 +67,8 @@ namespace SCR.Tools.Dialog.Data.Condition
             _powerPoints = slot.PowerPoints;
             _maxHealth = slot.MaxPowerPoints;
         }
+
+        public object Clone()
+            => new TeamSlot(this);
     }
 }

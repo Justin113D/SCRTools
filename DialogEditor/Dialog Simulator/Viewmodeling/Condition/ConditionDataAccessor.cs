@@ -7,16 +7,16 @@ using System.Linq;
 
 namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
 {
-    public sealed class ConditionDataAccessor : IDataAccess<ConditionData>
+    public sealed class ConditionDataAccessor : IDataAccess<IReadOnlyConditionData>
     {
         public static readonly ConditionDataAccessor DA = new();
 
-        public ReadOnlyDictionary<string, DataKey<ConditionData>> DataKeys { get; }
+        public ReadOnlyDictionary<string, DataKey<IReadOnlyConditionData>> DataKeys { get; }
 
         private ConditionDataAccessor()
         {
             #pragma warning disable IDE0055
-            Dictionary<string, DataKey<ConditionData>> dataKeys = new()
+            Dictionary<string, DataKey<IReadOnlyConditionData>> dataKeys = new()
             {
                 { "F",  new("Flag",         KeyType.Boolean,    KeyType.None,       GetFlag) }, // From flag storage
                 { "D",  new("Dynamic Flag", KeyType.Boolean,    KeyType.None,       GetDynamicFlag) }, // Flag functions
@@ -28,7 +28,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
                 { "I",  new("Item",         KeyType.Number,     KeyType.Number,     GetItem) }, // Item Count
 
                 { "T",  new("Team Member",  KeyType.Boolean,     KeyType.Number,    GetTeamMember) }, // Whether team member is acquired / acquired team member count
-                { "P",  new("Party Member", KeyType.Boolean,     KeyType.Number,    GetPartyMember) }, // Whether team member is in party / Party size
+                { "P",  new("Party Member", KeyType.Number,     KeyType.NumberList,    GetPartyMember) }, // Party member at index / Party member array
                 { "E",  new("Equipped",     KeyType.NumberList, KeyType.NumberList, GetEquipped) }, // ID-less returns party equipment
                 { "EC", new("Equipped Count", KeyType.Number,   KeyType.Number,     GetEquippedCount) }, // ID-less returns party equipment count
                 { "L",  new("Level",        KeyType.Number,     KeyType.None,       GetLevel)},
@@ -40,7 +40,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
             DataKeys = new(dataKeys);
         }
 
-        private object GetFlag(double? id, ConditionData data)
+        private object GetFlag(double? id, IReadOnlyConditionData data)
         {
             if (id == null)
             {
@@ -50,7 +50,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
             return data.Flags.TryGetValue((int)id.Value, out bool result) && result;
         }
 
-        private object GetDynamicFlag(double? id, ConditionData data)
+        private object GetDynamicFlag(double? id, IReadOnlyConditionData data)
         {
             if (id == null)
             {
@@ -60,7 +60,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
             return false;
         }
 
-        private object GetRings(double? id, ConditionData data)
+        private object GetRings(double? id, IReadOnlyConditionData data)
         {
             if (id != null)
             {
@@ -70,7 +70,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
             return data.Rings;
         }
 
-        private object GetChao(double? id, ConditionData data)
+        private object GetChao(double? id, IReadOnlyConditionData data)
         {
             if (id != null)
                 return data.Chao.TryGetValue((int)id.Value, out var t) ? t.Count : 0;
@@ -78,7 +78,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
                 return data.Chao.Count;
         }
 
-        private object GetChaoLevel(double? id, ConditionData data)
+        private object GetChaoLevel(double? id, IReadOnlyConditionData data)
         {
             if (id == null)
             {
@@ -88,7 +88,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
             return data.Chao.TryGetValue((int)id.Value, out var t) ? t.Level : 0;
         }
 
-        private object GetCard(double? id, ConditionData data)
+        private object GetCard(double? id, IReadOnlyConditionData data)
         {
             if (id != null)
                 return data.Cards.Contains((int)id.Value);
@@ -96,7 +96,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
                 return data.Cards.Count;
         }
 
-        private object GetItem(double? id, ConditionData data)
+        private object GetItem(double? id, IReadOnlyConditionData data)
         {
             if (id != null)
                 return data.Items.TryGetValue((int)id.Value, out int result) ? result : 0;
@@ -104,7 +104,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
                 return data.Items.Count;
         }
 
-        private object GetTeamMember(double? id, ConditionData data)
+        private object GetTeamMember(double? id, IReadOnlyConditionData data)
         {
             if (id != null)
                 return data.TeamMembers.ContainsKey((int)id.Value);
@@ -112,47 +112,54 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
                 return data.TeamMembers.Count;
         }
 
-        private object GetPartyMember(double? id, ConditionData data)
+        private object GetPartyMember(double? id, IReadOnlyConditionData data)
         {
             if (id != null)
-                return data.PartyMembers.Contains((int)id.Value);
+            {
+                int index = (int)id;
+                if(index >= data.PartyMembers.Count)
+                {
+                    return -1;
+                }
+                return data.PartyMembers[index];
+            }
             else
-                return data.PartyMembers.Count;
+                return data.PartyMembers.ToArray();
         }
-        private object GetEquipped(double? id, ConditionData data)
+        private object GetEquipped(double? id, IReadOnlyConditionData data)
         {
             if (id != null)
-                return data.TeamMembers.TryGetValue((int)id.Value, out TeamSlot? ts) ? ts.Equipment : Array.Empty<int>();
+                return data.TeamMembers.TryGetValue((int)id.Value, out IReadOnlyTeamSlot? ts) ? ts.Equipment : Array.Empty<int>();
             else
-                return data.PartyMembers.SelectMany(x => data.TeamMembers.TryGetValue(x, out TeamSlot? ts) ? ts.Equipment.ToArray() : Array.Empty<int>()).ToArray();
+                return data.PartyMembers.SelectMany(x => data.TeamMembers.TryGetValue(x, out IReadOnlyTeamSlot? ts) ? ts.Equipment.ToArray() : Array.Empty<int>()).ToArray();
         }
 
-        private object GetEquippedCount(double? id, ConditionData data)
+        private object GetEquippedCount(double? id, IReadOnlyConditionData data)
         {
             return ((int[])GetEquipped(id, data)).Length;
         }
 
-        private object GetLevel(double? id, ConditionData data)
+        private object GetLevel(double? id, IReadOnlyConditionData data)
         {
             if (id == null)
             {
                 throw new InvalidOperationException();
             }
 
-            return data.TeamMembers.TryGetValue((int)id.Value, out TeamSlot? t) ? t.Level : 0;
+            return data.TeamMembers.TryGetValue((int)id.Value, out IReadOnlyTeamSlot? t) ? t.Level : 0;
         }
 
-        private object GetHealthPoints(double? id, ConditionData data)
+        private object GetHealthPoints(double? id, IReadOnlyConditionData data)
         {
             if (id != null)
-                return data.TeamMembers.TryGetValue((int)id.Value, out TeamSlot? ts) ? (long)(ts.Health / (double)ts.MaxHealth * 100) : 0;
+                return data.TeamMembers.TryGetValue((int)id.Value, out IReadOnlyTeamSlot? ts) ? (long)(ts.Health / (double)ts.MaxHealth * 100) : 0;
             else
             {
                 long maxHealth = 0;
                 long health = 0;
                 foreach (var t in data.PartyMembers)
                 {
-                    if (data.TeamMembers.TryGetValue(t, out TeamSlot? ts))
+                    if (data.TeamMembers.TryGetValue(t, out IReadOnlyTeamSlot? ts))
                     {
                         maxHealth += ts.MaxHealth;
                         health += ts.Health;

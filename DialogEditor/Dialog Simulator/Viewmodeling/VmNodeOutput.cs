@@ -98,7 +98,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
         public string Text
             => Data.Text;
 
-        public DataExpression<ConditionData>? DDXCondition { get; }
+        public DataExpression<IReadOnlyConditionData>? DDXCondition { get; }
 
         public VmNodeOutput(VmNode parent, NodeOutput data)
         {
@@ -108,7 +108,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
             {
                 try
                 {
-                    DDXCondition = DataExpression<ConditionData>.ParseExpression(data.Condition, ConditionDataAccessor.DA);
+                    DDXCondition = DataExpression<IReadOnlyConditionData>.ParseExpression(data.Condition, ConditionDataAccessor.DA);
                 }
                 catch (DynamicDataExpressionException e)
                 {

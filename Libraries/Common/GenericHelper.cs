@@ -55,5 +55,19 @@ namespace SCR.Tools.Common
 
             return newName;
         }
+    
+        public static int FindNextFreeKey<T>(this IDictionary<int, T> dict, int key, bool allowNegative = false)
+        {
+            if(!allowNegative && key < 0)
+            {
+                key = 0;
+            }
+
+            while(dict.ContainsKey(key))
+            {
+                key++;
+            }
+            return key;
+        }
     }
 }

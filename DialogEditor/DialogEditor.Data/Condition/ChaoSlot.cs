@@ -1,9 +1,9 @@
-﻿using SCR.Tools.Dialog.Data.Condition.ReadOnly;
+﻿using System;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Data.Condition
 {
-    public class ChaoSlot : IReadOnlyChaoSlot
+    public class ChaoSlot : IReadOnlyChaoSlot, ICloneable
     {
         private int _count;
         private int _level;
@@ -30,5 +30,8 @@ namespace SCR.Tools.Dialog.Data.Condition
             _count = slot.Count;
             _level = slot.Level;
         }
+
+        public object Clone()
+            => new ChaoSlot(this);
     }
 }

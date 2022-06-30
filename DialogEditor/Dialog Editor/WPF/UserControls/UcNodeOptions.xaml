@@ -31,33 +31,45 @@
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="20"/>
                     </Grid.ColumnDefinitions>
 
                     <TextBox
                         Style="{StaticResource TextBoxUndo}"
                         Text="{Binding Name, Mode=TwoWay}"
-                        KeyDown="TextBox_KeyDown"/>
+                        KeyDown="TextBox_KeyDown"
+                        VerticalAlignment="Center"/>
 
                     <Border 
                         Grid.Column="1"  
-                        Background="{Binding Value, Converter={StaticResource ColorToBrush}, Mode=TwoWay}"/>
+                        Width="50"
+                        Margin="10 0"
+                        CornerRadius="5"
+                        Background="{Binding Value, Converter={StaticResource ColorToBrush}, Mode=TwoWay}">
+                        
+                        <Button 
+                            Click="ColorButton_Click">
+                            <Button.Style>
+                                <Style 
+                                    TargetType="{x:Type Button}" 
+                                    BasedOn="{StaticResource {x:Type Button}}">
+                                    <Style.Resources>
+                                        <SolidColorBrush x:Key="Default"  Color="Transparent"/>
+                                        <SolidColorBrush x:Key="Hover"    Color="#8FFF"/>
+                                        <SolidColorBrush x:Key="Clicked"  Color="#8888"/>
+                                    </Style.Resources>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </Border>
 
                     <Button 
-                        Grid.Column="1"
-                        Click="ColorButton_Click">
-                        <Button.Style>
-                            <Style 
-                                TargetType="{x:Type Button}" 
-                                BasedOn="{StaticResource {x:Type Button}}">
-                                <Style.Resources>
-                                    <SolidColorBrush x:Key="Default"  Color="Transparent"/>
-                                    <SolidColorBrush x:Key="Hover"    Color="#8FFF"/>
-                                    <SolidColorBrush x:Key="Clicked"  Color="#8888"/>
-                                </Style.Resources>
-                            </Style>
-                        </Button.Style>
-                    </Button>
+                        Grid.Column="2"
+                        Style="{DynamicResource RedButton}"
+                        Content="X"
+                        FontWeight="Bold"
+                        Command="{Binding CmdRemove}"/>
 
                 </Grid>
             </DataTemplate>

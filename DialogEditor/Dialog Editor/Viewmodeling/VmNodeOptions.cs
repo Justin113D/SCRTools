@@ -86,6 +86,17 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
             EndChangeGroup();
         }
 
+        public void RemoveOption(VmNodeOption<T> option)
+        {
+            BeginChangeGroup();
+
+            _rawOptions.Remove(option.Name);
+            _lut.Remove(option.Name);
+            _options.Remove(option);
+
+            EndChangeGroup();
+        }
+
         public VmNodeOption<T>? GetOption(string name)
         {
             if (!_lut.TryGetValue(name, out VmNodeOption<T>? result))
@@ -138,11 +149,17 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
             }
         }
 
+        public RelayCommand CmdRemove
+            => new(Remove);
+
         public VmNodeOption(VmNodeOptions<T> parent, string name)
         {
             _parent = parent;
             _name = name;
         }
+
+        public void Remove()
+            => _parent.RemoveOption(this);
 
         public override string ToString()
             => Name;
