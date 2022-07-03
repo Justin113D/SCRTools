@@ -19,14 +19,6 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls
             InitializeComponent();
         }
 
-        private void TextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter && !((TextBox)sender).AcceptsReturn)
-            {
-                ((TextBox)sender).MoveFocus(new TraversalRequest(FocusNavigationDirection.Down));
-            }
-        }
-
         private void ColorButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Button button = (Button)sender;

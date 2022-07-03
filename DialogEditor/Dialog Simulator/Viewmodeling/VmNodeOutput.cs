@@ -56,7 +56,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
         }
 
         public bool ConditionValid
-            => DDXCondition == null || DDXCondition.Evaluate(Parent.Simulator.ConditionData.Data);
+            => DDXCondition == null || DDXCondition.Evaluate(Parent.Simulator.ConditionData);
 
         /// <summary>
         /// Name of the output
@@ -98,7 +98,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
         public string Text
             => Data.Text;
 
-        public DataExpression<IReadOnlyConditionData>? DDXCondition { get; }
+        public DataExpression<VmConditionData>? DDXCondition { get; }
 
         public VmNodeOutput(VmNode parent, NodeOutput data)
         {
@@ -108,7 +108,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
             {
                 try
                 {
-                    DDXCondition = DataExpression<IReadOnlyConditionData>.ParseExpression(data.Condition, ConditionDataAccessor.DA);
+                    DDXCondition = DataExpression<VmConditionData>.ParseExpression(data.Condition, VmConditionDataAccessor.DA);
                 }
                 catch (DynamicDataExpressionException e)
                 {

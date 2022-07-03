@@ -30,34 +30,15 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 
         public TrackSet<int> SharedDisabledIndices { get; }
 
+        /// <summary>
+        /// Used to color code the current outputs in the node table
+        /// </summary>
         public Dictionary<VmNode, int> OutputNumbers { get; }
 
         public VmConditionData ConditionData { get; }
 
         public VmNode ActiveNode
-        {
-            get => _activeNode;
-            set
-            {
-                if (_activeNode == value)
-                {
-                    return;
-                }
-
-                BeginChangeGroup();
-
-                TrackValueChange(
-                    (v) => _activeNode = v, _activeNode, value);
-                TrackNotifyProperty(nameof(ActiveNode));
-
-                PostChangeGroupAction(InitActiveNode);
-
-                TrackNotifyProperty(nameof(HasNextNode));
-                RightPortraitActive = value.Data.RightPortrait;
-
-                EndChangeGroup();
-            }
-        }
+            => _activeNode;
 
         public VmNodeOutput? LeftPortrait { get; set; }
 
@@ -139,6 +120,43 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
             EntryNode.InitActive();
         }
 
+        private void SetActiveNode(VmNode node)
+        {
+
+            VmNodeOutput? previousLeft = LeftPortrait;
+            VmNodeOutput? previousRight = RightPortrait;
+            bool previousSide = ActiveNode.Data.RightPortrait;
+
+            BeginChangeGroup();
+
+            TrackValueChange(
+                (v) => _activeNode = v, _activeNode, node);
+            TrackNotifyProperty(nameof(ActiveNode));
+
+            PostChangeGroupAction(InitActiveNode);
+
+            TrackNotifyProperty(nameof(HasNextNode));
+            RightPortraitActive = node.Data.RightPortrait;
+
+            if (previousSide != ActiveNode.Data.RightPortrait)
+            {
+                if (ActiveNode.Data.RightPortrait)
+                {
+                    TrackChange(
+                        () => { },
+                        () => RightPortrait = previousRight);
+                }
+                else
+                {
+                    TrackChange(
+                        () => { },
+                        () => LeftPortrait = previousLeft);
+                }
+            }
+
+            EndChangeGroup();
+        }
+
         public void RefreshHasNextNode()
         {
             OnPropertyChanged(nameof(HasNextNode));
@@ -165,30 +183,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
                 output.Enabled = false;
             }
 
-
-            VmNodeOutput? previousLeft = LeftPortrait;
-            VmNodeOutput? previousRight = RightPortrait;
-
-            ActiveNode = nextNode;
-
-            if (ActiveNode.Data.RightPortrait)
-            {
-                TrackChange(
-                    () => { },
-                    () =>
-                    {
-                        RightPortrait = previousRight;
-                    });
-            }
-            else
-            {
-                TrackChange(
-                    () => { },
-                    () =>
-                    {
-                        LeftPortrait = previousLeft;
-                    });
-            }
+            SetActiveNode(nextNode);
 
             EndChangeGroup();
         }
@@ -200,37 +195,13 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
                 return;
             }
 
-            BeginChangeGroup();
-
-            VmNodeOutput? previousLeft = LeftPortrait;
-            VmNodeOutput? previousRight = RightPortrait;
-
-            ActiveNode = node;
-
-            if (ActiveNode.Data.RightPortrait)
-            {
-                TrackChange(
-                    () => { },
-                    () =>
-                    {
-                        RightPortrait = previousRight;
-                    });
-            }
-            else
-            {
-                TrackChange(
-                    () => { },
-                    () =>
-                    {
-                        LeftPortrait = previousLeft;
-                    });
-            }
-
-            EndChangeGroup();
+            SetActiveNode(node);
         }
 
         private void Reset()
         {
+            BeginChangeGroup();
+
             foreach (VmNode vmNode in Nodes)
             {
                 foreach (VmNodeOutput vmOutput in vmNode.Outputs)
@@ -239,10 +210,20 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
                 }
             }
 
-            _activeNode = EntryNode;
-            _activeNode.InitActive();
+            SharedDisabledIndices.Clear();
 
-            ResetTracker();
+            SetActiveNode(EntryNode);
+
+            if (ActiveNode.Data.RightPortrait)
+            {
+                TrackValueChange((v) => LeftPortrait = v, LeftPortrait, null);
+            }
+            else
+            {
+                TrackValueChange((v) => RightPortrait = v, RightPortrait, null);
+            }
+
+            EndChangeGroup();
         }
     }
 }

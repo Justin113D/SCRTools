@@ -143,7 +143,7 @@ namespace SCR.Tools.DynamicDataExpression.Internal
                 stackPointer--;
                 object left = stack[stackPointer];
                 object right = stack[stackPointer - 1];
-                object result = null;
+                object? result = null;
 
                 if(left is bool bl && right is bool br)
                 {
@@ -199,6 +199,10 @@ namespace SCR.Tools.DynamicDataExpression.Internal
                     }
 
                     result = op == CheckOperator.Unequals ? !contains : contains;
+                }
+                else
+                {
+                    throw new InvalidOperationException();
                 }
 
                 stack[stackPointer - 1] = result;

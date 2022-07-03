@@ -5,7 +5,6 @@
 		<OutputType>WinExe</OutputType>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
-		<DebugType>embedded</DebugType>
 		<RootNamespace>SCR.Tools.TranslationEditor.ProjectEditor</RootNamespace>
 		<AssemblyName>Translation Editor</AssemblyName>
 		<StartupObject>SCR.Tools.TranslationEditor.ProjectEditor.WPF.App</StartupObject>

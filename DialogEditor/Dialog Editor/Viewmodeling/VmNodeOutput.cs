@@ -148,6 +148,18 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
             }
         }
 
+        public bool FallBack
+        {
+            get => Data.Fallback;
+            set
+            {
+                BeginChangeGroup();
+                Data.Fallback = value;
+                TrackNotifyProperty(nameof(FallBack));
+                EndChangeGroup();
+            }
+        }
+
         public bool DisableReuse
         {
             get => Data.DisableReuse;

@@ -5,8 +5,6 @@
 		<OutputType>WinExe</OutputType>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
-		<DebugType>embedded</DebugType>
-		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
 		<RootNamespace>SCR.Tools.DialogEditor</RootNamespace>
 		<AssemblyName>Dialog Editor</AssemblyName>
 		<StartupObject>SCR.Tools.Dialog.Editor.WPF.App</StartupObject>

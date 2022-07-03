@@ -5,13 +5,12 @@
 		<OutputType>WinExe</OutputType>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
-		<DebugType>embedded</DebugType>
 		<RootNamespace>SCR.Tools.TranslationEditor.FormatEditor</RootNamespace>
 		<AssemblyName>Translation Format Editor</AssemblyName>
 		<StartupObject>SCR.Tools.TranslationEditor.FormatEditor.WPF.App</StartupObject>
 		<ApplicationIcon>Icon.ico</ApplicationIcon>
 	</PropertyGroup>
-
+	
 	<ItemGroup>
 		<Resource Include="Icon.ico" />
 	</ItemGroup>

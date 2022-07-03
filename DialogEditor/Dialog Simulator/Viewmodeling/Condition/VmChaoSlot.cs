@@ -29,6 +29,8 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
             }
         }
 
+        public bool Expanded { get; set; }
+
         public VmChaoSlot(VmSlotDictionary<ChaoSlot, VmChaoSlot> parent, int index) : base(parent, index)
         {
             

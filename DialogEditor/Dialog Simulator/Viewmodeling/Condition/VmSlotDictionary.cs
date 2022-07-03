@@ -20,6 +20,8 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
 
         private readonly Func<VmSlotDictionary<T, vmT>, int, vmT> _createSlot;
 
+        public bool Expanded { get; set; }
+
         public ReadOnlyObservableCollection<vmT> Slots { get; }
 
         public T this[int index]

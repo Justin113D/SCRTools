@@ -3,9 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<OutputType>WinExe</OutputType>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<UseWPF>true</UseWPF>
-		<DebugType>embedded</DebugType>
 		<AssemblyName>SCR.Tools.LevelCurvePreviewer</AssemblyName>
 		<RootNamespace>SCR.Tools.LevelCurvePreviewer</RootNamespace>
 	</PropertyGroup>

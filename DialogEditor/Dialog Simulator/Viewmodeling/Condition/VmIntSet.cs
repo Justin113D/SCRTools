@@ -16,6 +16,11 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
 
         public ReadOnlyObservableCollection<int> Values { get; }
 
+        public bool Expanded { get; set; }
+
+        public RelayCommand<int> CmdRemove
+            => new(RemoveValue);
+
         public VmIntSet(ISet<int> source)
         {
             _source = source;
@@ -37,6 +42,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
                 if (_values[i] > value)
                 {
                     _values.Insert(i, value);
+                    EndChangeGroup();
                     return;
                 }
             }

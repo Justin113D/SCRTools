@@ -38,7 +38,6 @@
                     <TextBox
                         Style="{StaticResource TextBoxUndo}"
                         Text="{Binding Name, Mode=TwoWay}"
-                        KeyDown="TextBox_KeyDown"
                         VerticalAlignment="Center"/>
 
                     <Border 

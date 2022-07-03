@@ -3,9 +3,12 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
-		<DebugType>embedded</DebugType>
 		<AssemblyName>SCR.Tools.UndoRedo</AssemblyName>
 		<RootNamespace>SCR.Tools.UndoRedo</RootNamespace>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<DebugType>embedded</DebugType>
 	</PropertyGroup>
 
 </Project>

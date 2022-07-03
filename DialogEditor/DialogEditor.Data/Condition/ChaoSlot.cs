@@ -3,7 +3,7 @@ using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Data.Condition
 {
-    public class ChaoSlot : IReadOnlyChaoSlot, ICloneable
+    public class ChaoSlot : ICloneable
     {
         private int _count;
         private int _level;
@@ -25,13 +25,17 @@ namespace SCR.Tools.Dialog.Data.Condition
 
         }
 
-        public ChaoSlot(IReadOnlyChaoSlot slot)
+        private ChaoSlot(ChaoSlot slot)
         {
             _count = slot.Count;
             _level = slot.Level;
         }
 
-        public object Clone()
-            => new ChaoSlot(this);
+        public ChaoSlot Clone()
+            => new(this);
+
+
+        object ICloneable.Clone()
+            => Clone();
     }
 }

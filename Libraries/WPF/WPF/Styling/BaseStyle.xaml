@@ -236,7 +236,37 @@
         <Setter Property="Background" Value="{DynamicResource BG2}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BG1}"/>
     </Style>
-    
+
+    <Style x:Key="ExpandToggle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="ClickMode" Value="Press"/>
+        <Setter Property="MinWidth" Value="20"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Grid 
+                        VerticalAlignment="{TemplateBinding VerticalAlignment}" 
+                        HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
+                        Background="{TemplateBinding Background}" 
+                        MinWidth="{TemplateBinding MinWidth}">
+                        <TextBlock
+                            x:Name="ExpandSymbol"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Margin="1"
+                            Text="▸"/>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Text" TargetName="ExpandSymbol" Value="▾"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!--Modified template for menu item menus-->
     <Geometry x:Key="Checkmark">M 0,5.1 L 1.7,5.2 L 3.4,7.1 L 8,0.4 L 9.2,0 L 3.3,10.8 Z</Geometry>
     <Geometry x:Key="UpArrow">M 0,4 L 3.5,0 L 7,4 Z</Geometry>
@@ -926,4 +956,42 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
     </Style>
+    
+    <!-- Tab Control style-->
+
+    <Style TargetType="{x:Type TabControl}">
+        <Setter Property="Background" Value="{DynamicResource BG1}"/>
+        <Setter Property="Padding" Value="2"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
+    <Style TargetType="{x:Type TabItem}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabItem}">
+                    <Border 
+                        x:Name="border" 
+                        Background="{DynamicResource BG3}"
+                        BorderBrush="{DynamicResource Outline}"
+                        BorderThickness="2 2 2 0">
+                        <ContentPresenter 
+                            x:Name="ContentSite" 
+                            VerticalAlignment="Center" 
+                            HorizontalAlignment="Center" 
+                            ContentSource="Header"
+                            Margin="12,2,12,2" 
+                            RecognizesAccessKey="True" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Panel.ZIndex" Value="100" />
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource BG1}"/>
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource OutlineHG}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
 </ResourceDictionary>

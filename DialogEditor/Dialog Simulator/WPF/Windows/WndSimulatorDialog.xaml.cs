@@ -13,20 +13,10 @@ namespace SCR.Tools.Dialog.Simulator.WPF.Windows
     /// </summary>
     public partial class WndSimulatorDialog : Window
     {
-        private readonly ChangeTracker _previous;
-
         private WndSimulatorDialog(VmSimulator vm)
         {
-            _previous = GlobalChangeTracker;
-            vm.SimulatorTracker.Use();
             DataContext = vm;
             InitializeComponent();
-        }
-
-        protected override void OnClosed(EventArgs e)
-        {
-            _previous.Use();
-            base.OnClosed(e);
         }
 
         public static void RunSimulator(DialogContainer data, DialogOptions options)
@@ -48,7 +38,12 @@ namespace SCR.Tools.Dialog.Simulator.WPF.Windows
                 return;
             }
 
+            ChangeTracker previous = GlobalChangeTracker;
+            viewmodel.SimulatorTracker.Use();
+
             new WndSimulatorDialog(viewmodel).ShowDialog();
+
+            previous.Use();
         }
 
         private void IB_Undo(object sender, object e)

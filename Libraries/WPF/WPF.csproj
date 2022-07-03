@@ -4,9 +4,12 @@
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
-		<DebugType>embedded</DebugType>
 		<AssemblyName>SCR.Tools.WPF</AssemblyName>
 		<RootNamespace>SCR.Tools</RootNamespace>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<DebugType>embedded</DebugType>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -50,7 +50,7 @@ namespace SCR.Tools.Dialog.Data
             {
                 jsonWriter.WriteStartArray(nameof(DialogContainer.ConditionData));
 
-                foreach (Condition.ReadOnly.ReadOnlyConditionData? t in dialog.ConditionData)
+                foreach (Condition.ConditionData? t in dialog.ConditionData)
                 {
                     Condition.JsonFormatHandler.WriteConditionDataContents(jsonWriter, t);
                 }
@@ -104,6 +104,11 @@ namespace SCR.Tools.Dialog.Data
             }
 
             jsonWriter.WriteString(nameof(NodeOutput.Text), output.Text);
+
+            if (output.Fallback)
+            {
+                jsonWriter.WriteBoolean(nameof(NodeOutput.Fallback), output.Fallback);
+            }
 
             if (output.DisableReuse)
             {
@@ -230,6 +235,7 @@ namespace SCR.Tools.Dialog.Data
             output.Character = json[nameof(NodeOutput.Character)]?.GetValue<string>() ?? "";
             output.Icon = json[nameof(NodeOutput.Icon)]?.GetValue<string>() ?? "";
             output.Text = json[nameof(NodeOutput.Text)]?.GetValue<string>() ?? "";
+            output.Fallback = json[nameof(NodeOutput.Fallback)]?.GetValue<bool>() ?? false;
             output.DisableReuse = json[nameof(NodeOutput.DisableReuse)]?.GetValue<bool>() ?? false;
             output.SharedDisabledIndex = json[nameof(NodeOutput.SharedDisabledIndex)]?.GetValue<int>() ?? -1;
             output.Condition = json[nameof(NodeOutput.Condition)]?.GetValue<string>() ?? "";

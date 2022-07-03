@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using SCR.Tools.Common;
 using SCR.Tools.Viewmodeling;
+using System.Linq;
 
 namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
 {
@@ -14,6 +15,8 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
         private readonly TrackList<VmValueDictionaryItem<T>> _values;
 
         private readonly T _defaultValue;
+
+        public bool Expanded { get; set; }
 
         public ReadOnlyObservableCollection<VmValueDictionaryItem<T>> Values { get; }
 
@@ -30,43 +33,42 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
 
             ObservableCollection<VmValueDictionaryItem<T>> internalValues = new();
 
-            foreach(KeyValuePair<int, T> pair in source)
+            foreach(int id in source.Keys.OrderBy(x => x))
             {
-                VmValueDictionaryItem<T> viewmodel = new(this, pair.Key);
-                internalValues.Add(viewmodel);
+                internalValues.Add(new(this, id));
             }
 
             _values = new(internalValues);
             Values = new(internalValues);
         }
 
-        public int ChangeKey(int oldID, int newID)
+        public bool AddValue(int id)
         {
-            int key = _source.FindNextFreeKey(newID);
-
-            T TValue = _source[oldID];
+            if(_source.ContainsKey(id))
+            {
+                return false;
+            }
 
             BeginChangeGroup();
 
-            _source.Remove(oldID);
-            _source.Add(key, TValue);
+            _source.Add(id, _defaultValue);
+
+            VmValueDictionaryItem<T> vmOption = new(this, id);
+
+            int i = 0;
+            for(; i < _values.Count; i++)
+            {
+                if(id < _values[i].ID)
+                {
+                    break;
+                }
+            }
+
+            _values.Insert(i, vmOption);
 
             EndChangeGroup();
 
-            return key;
-        }
-
-        public void AddValue(int id)
-        {
-            BeginChangeGroup();
-            int freeKey = _source.FindNextFreeKey(id);
-
-            _source.Add(freeKey, _defaultValue);
-
-            VmValueDictionaryItem<T> vmOption = new(this, freeKey);
-            _values.Add(vmOption);
-
-            EndChangeGroup();
+            return true;
         }
 
         public void RemoveValue(VmValueDictionaryItem<T> value)
@@ -84,28 +86,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
     {
         private readonly VmValueDictionary<T> _parent;
 
-        private int _id;
-
-        public int ID
-        {
-            get => _id;
-            set
-            {
-                if (_id == value)
-                    return;
-
-                BeginChangeGroup();
-
-                int newKey = _parent.ChangeKey(_id, value);
-
-                TrackValueChange(
-                    (v) => _id = v, _id, newKey);
-
-                TrackNotifyProperty(nameof(ID));
-
-                EndChangeGroup();
-            }
-        }
+        public int ID { get; }
 
         public T Value
         {
@@ -127,7 +108,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
         public VmValueDictionaryItem(VmValueDictionary<T> parent, int index)
         {
             _parent = parent;
-            _id = index;
+            ID = index;
         }
 
         public void Remove()

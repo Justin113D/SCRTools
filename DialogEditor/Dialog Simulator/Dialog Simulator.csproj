@@ -4,9 +4,12 @@
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
-		<DebugType>embedded</DebugType>
 		<AssemblyName>SCR.Tools.Dialog.Simulator</AssemblyName>
 		<RootNamespace>SCR.Tools.Dialog.Simulator</RootNamespace>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<DebugType>embedded</DebugType>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -14,6 +17,13 @@
 		<ProjectReference Include="..\..\Libraries\UndoRedo\UndoRedo.csproj" />
 		<ProjectReference Include="..\..\Libraries\WPF\WPF.csproj" />
 		<ProjectReference Include="..\DialogEditor.Data\Dialog.Data.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="Properties\DesignTimeResources.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
 	</ItemGroup>
 	
 </Project>

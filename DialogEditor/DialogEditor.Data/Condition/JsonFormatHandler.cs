@@ -1,5 +1,4 @@
-﻿using SCR.Tools.Dialog.Data.Condition.ReadOnly;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
@@ -11,27 +10,27 @@ namespace SCR.Tools.Dialog.Data.Condition
     {
         #region Condition Data to Json
 
-        internal static void WriteConditionDataContents(Utf8JsonWriter jsonWriter, IReadOnlyConditionData data)
+        internal static void WriteConditionDataContents(Utf8JsonWriter jsonWriter, ConditionData data)
         {
             jsonWriter.WriteStartObject();
 
             if (data.Rings > 0)
             {
-                jsonWriter.WriteNumber(nameof(IReadOnlyConditionData.Rings), data.Rings);
+                jsonWriter.WriteNumber(nameof(ConditionData.Rings), data.Rings);
             }
 
-            WriteFlags(jsonWriter, nameof(IReadOnlyConditionData.Flags), data.Flags);
-            WriteFlags(jsonWriter, nameof(IReadOnlyConditionData.DynamicFlags), data.DynamicFlags);
+            WriteFlags(jsonWriter, nameof(ConditionData.Flags), data.Flags);
+            WriteFlags(jsonWriter, nameof(ConditionData.DynamicFlags), data.DynamicFlags);
             WriteItems(jsonWriter, data.Items);
             WriteChao(jsonWriter, data.Chao);
-            WriteIntCollection(jsonWriter, nameof(IReadOnlyConditionData.Cards), data.Cards);
+            WriteIntCollection(jsonWriter, nameof(ConditionData.Cards), data.Cards);
             WriteTeamMembers(jsonWriter, data.TeamMembers);
-            WriteIntCollection(jsonWriter, nameof(IReadOnlyConditionData.PartyMembers), data.PartyMembers);
+            WriteIntCollection(jsonWriter, nameof(ConditionData.PartyMembers), data.PartyMembers);
 
             jsonWriter.WriteEndObject();
         }
 
-        private static void WriteFlags(Utf8JsonWriter jsonWriter, string name, IReadOnlyDictionary<int, bool> flags)
+        private static void WriteFlags(Utf8JsonWriter jsonWriter, string name, IDictionary<int, bool> flags)
         {
             if (flags.Count == 0)
             {
@@ -48,14 +47,14 @@ namespace SCR.Tools.Dialog.Data.Condition
             jsonWriter.WriteEndObject();
         }
 
-        private static void WriteItems(Utf8JsonWriter jsonWriter, IReadOnlyDictionary<int, int> items)
+        private static void WriteItems(Utf8JsonWriter jsonWriter, IDictionary<int, int> items)
         {
             if (items.Count == 0)
             {
                 return;
             }
 
-            jsonWriter.WriteStartObject(nameof(IReadOnlyConditionData.Items));
+            jsonWriter.WriteStartObject(nameof(ConditionData.Items));
 
             foreach (KeyValuePair<int, int> flag in items)
             {
@@ -65,21 +64,21 @@ namespace SCR.Tools.Dialog.Data.Condition
             jsonWriter.WriteEndObject();
         }
 
-        private static void WriteChao(Utf8JsonWriter jsonWriter, IReadOnlyDictionary<int, IReadOnlyChaoSlot> chao)
+        private static void WriteChao(Utf8JsonWriter jsonWriter, IDictionary<int, ChaoSlot> chao)
         {
             if (chao.Count == 0)
             {
                 return;
             }
 
-            jsonWriter.WriteStartObject(nameof(IReadOnlyConditionData.Chao));
+            jsonWriter.WriteStartObject(nameof(ConditionData.Chao));
 
-            foreach (KeyValuePair<int, IReadOnlyChaoSlot> slot in chao)
+            foreach (KeyValuePair<int, ChaoSlot> slot in chao)
             {
                 jsonWriter.WriteStartObject(slot.Key.ToString());
 
-                jsonWriter.WriteNumber(nameof(IReadOnlyChaoSlot.Count), slot.Value.Count);
-                jsonWriter.WriteNumber(nameof(IReadOnlyChaoSlot.Level), slot.Value.Level);
+                jsonWriter.WriteNumber(nameof(ChaoSlot.Count), slot.Value.Count);
+                jsonWriter.WriteNumber(nameof(ChaoSlot.Level), slot.Value.Level);
 
                 jsonWriter.WriteEndObject();
             }
@@ -87,26 +86,26 @@ namespace SCR.Tools.Dialog.Data.Condition
             jsonWriter.WriteEndObject();
         }
 
-        private static void WriteTeamMembers(Utf8JsonWriter jsonWriter, IReadOnlyDictionary<int, IReadOnlyTeamSlot> teamMembers)
+        private static void WriteTeamMembers(Utf8JsonWriter jsonWriter, IDictionary<int, TeamSlot> teamMembers)
         {
             if (teamMembers.Count == 0)
             {
                 return;
             }
 
-            jsonWriter.WriteStartObject(nameof(IReadOnlyConditionData.TeamMembers));
+            jsonWriter.WriteStartObject(nameof(ConditionData.TeamMembers));
 
-            foreach (KeyValuePair<int, IReadOnlyTeamSlot> slot in teamMembers)
+            foreach (KeyValuePair<int, TeamSlot> slot in teamMembers)
             {
                 jsonWriter.WriteStartObject(slot.Key.ToString());
 
-                jsonWriter.WriteNumber(nameof(IReadOnlyTeamSlot.Level), slot.Value.Level);
-                jsonWriter.WriteNumber(nameof(IReadOnlyTeamSlot.Health), slot.Value.Health);
-                jsonWriter.WriteNumber(nameof(IReadOnlyTeamSlot.MaxHealth), slot.Value.MaxHealth);
-                jsonWriter.WriteNumber(nameof(IReadOnlyTeamSlot.PowerPoints), slot.Value.PowerPoints);
-                jsonWriter.WriteNumber(nameof(IReadOnlyTeamSlot.MaxPowerPoints), slot.Value.MaxPowerPoints);
+                jsonWriter.WriteNumber(nameof(TeamSlot.Level), slot.Value.Level);
+                jsonWriter.WriteNumber(nameof(TeamSlot.Health), slot.Value.Health);
+                jsonWriter.WriteNumber(nameof(TeamSlot.MaxHealth), slot.Value.MaxHealth);
+                jsonWriter.WriteNumber(nameof(TeamSlot.PowerPoints), slot.Value.PowerPoints);
+                jsonWriter.WriteNumber(nameof(TeamSlot.MaxPowerPoints), slot.Value.MaxPowerPoints);
 
-                WriteIntCollection(jsonWriter, nameof(IReadOnlyTeamSlot.Equipment), slot.Value.Equipment);
+                WriteIntCollection(jsonWriter, nameof(TeamSlot.Equipment), slot.Value.Equipment);
 
                 jsonWriter.WriteEndObject();
             }
@@ -114,7 +113,7 @@ namespace SCR.Tools.Dialog.Data.Condition
             jsonWriter.WriteEndObject();
         }
 
-        private static void WriteIntCollection(Utf8JsonWriter jsonWriter, string name, IReadOnlyCollection<int> collection)
+        private static void WriteIntCollection(Utf8JsonWriter jsonWriter, string name, ICollection<int> collection)
         {
             bool notEmpty = false;
             foreach (int i in collection)
@@ -141,20 +140,20 @@ namespace SCR.Tools.Dialog.Data.Condition
 
         #region Json to ConditionData
 
-        internal static ReadOnlyConditionData ReadConditionData(JsonNode node)
+        internal static ConditionData ReadConditionData(JsonNode node)
         {
-            ReadOnlyConditionData result = new()
+            ConditionData result = new()
             {
-                Rings = node[nameof(IReadOnlyConditionData.Rings)]?.GetValue<int>() ?? 0
+                Rings = node[nameof(ConditionData.Rings)]?.GetValue<int>() ?? 0
             };
 
-            ReadFlags(node, nameof(IReadOnlyConditionData.Flags), result._flags);
-            ReadFlags(node, nameof(IReadOnlyConditionData.DynamicFlags), result._dynamicFlags);
+            ReadFlags(node, nameof(ConditionData.Flags), result.Flags);
+            ReadFlags(node, nameof(ConditionData.DynamicFlags), result.DynamicFlags);
             ReadItems(node, result);
             ReadChao(node, result);
-            ReadIntCollection(node, nameof(IReadOnlyConditionData.Cards), result._cards);
+            ReadIntCollection(node, nameof(ConditionData.Cards), result.Cards);
             ReadTeamMembers(node, result);
-            ReadIntCollection(node, nameof(IReadOnlyConditionData.PartyMembers), result._partyMembers);
+            ReadIntCollection(node, nameof(ConditionData.PartyMembers), result.PartyMembers);
 
             return result;
         }
@@ -200,48 +199,48 @@ namespace SCR.Tools.Dialog.Data.Condition
             }
         }
 
-        private static void ReadFlags(JsonNode parent, string name, Dictionary<int, bool> output)
+        private static void ReadFlags(JsonNode parent, string name, IDictionary<int, bool> output)
         {
             LoopJsonDictionary(parent, name, (id, node) =>
                 output.Add(id, node.GetValue<bool>()));
         }
 
-        private static void ReadItems(JsonNode parent, ReadOnlyConditionData output)
+        private static void ReadItems(JsonNode parent, ConditionData output)
         {
-            LoopJsonDictionary(parent, nameof(IReadOnlyConditionData.Items), (id, node) =>
-                output._items.Add(id, node.GetValue<int>()));
+            LoopJsonDictionary(parent, nameof(ConditionData.Items), (id, node) =>
+                output.Items.Add(id, node.GetValue<int>()));
         }
 
-        private static void ReadChao(JsonNode parent, ReadOnlyConditionData output)
+        private static void ReadChao(JsonNode parent, ConditionData output)
         {
-            LoopJsonDictionary(parent, nameof(IReadOnlyConditionData.Chao), (id, node) =>
+            LoopJsonDictionary(parent, nameof(ConditionData.Chao), (id, node) =>
             {
-                ReadOnlyChaoSlot slot = new()
+                ChaoSlot slot = new()
                 {
-                    Count = node[nameof(IReadOnlyChaoSlot.Count)]?.GetValue<int>() ?? 0,
-                    Level = node[nameof(IReadOnlyChaoSlot.Level)]?.GetValue<int>() ?? 0
+                    Count = node[nameof(ChaoSlot.Count)]?.GetValue<int>() ?? 0,
+                    Level = node[nameof(ChaoSlot.Level)]?.GetValue<int>() ?? 0
                 };
 
-                output._chao.Add(id, slot);
+                output.Chao.Add(id, slot);
             });
         }
 
-        private static void ReadTeamMembers(JsonNode parent, ReadOnlyConditionData output)
+        private static void ReadTeamMembers(JsonNode parent, ConditionData output)
         {
-            LoopJsonDictionary(parent, nameof(IReadOnlyConditionData.TeamMembers), (id, node) =>
+            LoopJsonDictionary(parent, nameof(ConditionData.TeamMembers), (id, node) =>
             {
-                ReadOnlyTeamSlot slot = new()
+                TeamSlot slot = new()
                 {
-                    Level = node[nameof(IReadOnlyTeamSlot.Level)]?.GetValue<int>() ?? 0,
-                    Health = node[nameof(IReadOnlyTeamSlot.Health)]?.GetValue<int>() ?? 0,
-                    MaxHealth = node[nameof(IReadOnlyTeamSlot.MaxHealth)]?.GetValue<int>() ?? 0,
-                    PowerPoints = node[nameof(IReadOnlyTeamSlot.PowerPoints)]?.GetValue<int>() ?? 0,
-                    MaxPowerPoints = node[nameof(IReadOnlyTeamSlot.MaxPowerPoints)]?.GetValue<int>() ?? 0,
+                    Level = node[nameof(TeamSlot.Level)]?.GetValue<int>() ?? 0,
+                    Health = node[nameof(TeamSlot.Health)]?.GetValue<int>() ?? 0,
+                    MaxHealth = node[nameof(TeamSlot.MaxHealth)]?.GetValue<int>() ?? 0,
+                    PowerPoints = node[nameof(TeamSlot.PowerPoints)]?.GetValue<int>() ?? 0,
+                    MaxPowerPoints = node[nameof(TeamSlot.MaxPowerPoints)]?.GetValue<int>() ?? 0,
                 };
 
-                ReadIntCollection(node, nameof(IReadOnlyTeamSlot.Equipment), slot._equipment);
+                ReadIntCollection(node, nameof(TeamSlot.Equipment), slot.Equipment);
 
-                output._teamMembers.Add(id, slot);
+                output.TeamMembers.Add(id, slot);
             });
         }
 

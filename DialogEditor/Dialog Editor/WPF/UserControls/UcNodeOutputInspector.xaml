@@ -245,6 +245,25 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock 
+                        Text="Fallback" 
+                        FontWeight="Bold"
+                        VerticalAlignment="Center"/>
+                    
+                    <CheckBox 
+                        Grid.Column="1"
+                        Margin="0 3"
+                        Padding="4"
+                        IsChecked="{Binding FallBack, Mode=TwoWay}"/>
+
+                </Grid>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock 
                         Text="Disable after using" 
                         FontWeight="Bold"
                         VerticalAlignment="Center"/>

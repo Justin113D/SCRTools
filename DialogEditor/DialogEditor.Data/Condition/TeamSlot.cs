@@ -1,13 +1,11 @@
-﻿using SCR.Tools.Dialog.Data.Condition.ReadOnly;
-using SCR.Tools.UndoRedo.Collections;
+﻿using SCR.Tools.UndoRedo.Collections;
 using System.Collections.Generic;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
-using System.Linq;
 using System;
 
 namespace SCR.Tools.Dialog.Data.Condition
 {
-    public class TeamSlot : IReadOnlyTeamSlot, ICloneable
+    public class TeamSlot : ICloneable
     {
         private int _level;
         private int _health;
@@ -48,15 +46,12 @@ namespace SCR.Tools.Dialog.Data.Condition
 
         public TrackSet<int> Equipment { get; }
 
-        IReadOnlySet<int> IReadOnlyTeamSlot.Equipment
-            => Equipment;
-
         public TeamSlot()
         {
             Equipment = new();
         }
 
-        public TeamSlot(IReadOnlyTeamSlot slot)
+        private TeamSlot(TeamSlot slot)
         {
             HashSet<int> internalEquipment = new(slot.Equipment);
             Equipment = new(internalEquipment);
@@ -68,7 +63,10 @@ namespace SCR.Tools.Dialog.Data.Condition
             _maxHealth = slot.MaxPowerPoints;
         }
 
-        public object Clone()
-            => new TeamSlot(this);
+        public TeamSlot Clone()
+            => new(this);
+
+        object ICloneable.Clone() 
+            => Clone();
     }
 }

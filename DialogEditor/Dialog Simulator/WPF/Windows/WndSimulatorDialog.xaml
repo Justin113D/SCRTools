@@ -18,6 +18,8 @@
     d:DataContext="{x:Static wpf:DesignDataFactory.Simulator}">
 
     <styling:Window.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="R" Command="{Binding CmdReset}"/>
+
         <KeyBinding Modifiers="Ctrl" Key="Z">
             <KeyBinding.Command>
                 <baseVM:EventCommand Executed="IB_Undo"/>
@@ -33,14 +35,22 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="210"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <uc:UcSimulatorTable
-            Grid.Column="0"
-            DataContext="{Binding }"/>
+        <TabControl Grid.Column="0">
 
+            <TabItem Header="Nodes">
+                <uc:UcSimulatorTable DataContext="{Binding }"/>
+            </TabItem>
+
+            <TabItem Header="Condition Data">
+                <uc:UcConditionDataEditor DataContext="{Binding ConditionData}"/>
+            </TabItem>
+            
+        </TabControl>
+        
         <uc:UcSimulatorView
             Margin="5 0 0 0"
             Grid.Column="1"

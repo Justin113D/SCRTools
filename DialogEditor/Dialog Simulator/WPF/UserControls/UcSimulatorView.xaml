@@ -186,7 +186,15 @@
 
         <Grid Grid.Row="2">
 
+            <Grid.Resources>
+                <Style x:Key="IconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource TransparentButton}">
+                    <Setter Property="Margin" Value="0 0 5 0"/>
+                    <Setter Property="Padding" Value="8 0"/>
+                </Style>
+            </Grid.Resources>
+
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
@@ -194,26 +202,31 @@
 
             <Button 
                 Grid.Column="0"
-                Style="{StaticResource TransparentButton}"
+                Style="{StaticResource IconButton}"
                 ToolTip="Undo (Ctrl+Z)" 
-                Click="Button_Undo"
-                Margin="0, 0, 5, 0"
-                Padding="8 0">
+                Click="Button_Undo">
                 <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/Undo.png" Width="16"/>
             </Button>
 
             <Button 
                 Grid.Column="1"
-                Style="{StaticResource TransparentButton}"
+                Style="{StaticResource IconButton}"
                 ToolTip="Redo (Ctrl+Y)" 
-                Click="Button_Redo"
-                Padding="8 0">
+                Click="Button_Redo">
                 <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/Redo.png" Width="16"/>
+            </Button>
+
+            <Button 
+                Grid.Column="2"
+                Style="{StaticResource IconButton}"
+                ToolTip="Reset (Ctrl+R)" 
+                Command="{Binding CmdReset}">
+                <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/Refresh.png" Width="16"/>
             </Button>
 
             <Button
                 HorizontalAlignment="Right"
-                Grid.Column="2"
+                Grid.Column="3"
                 Padding="30 5"
                 Content="Next"
                 FontWeight="Bold"

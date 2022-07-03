@@ -15,6 +15,8 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
 
         public ReadOnlyObservableCollection<VmIntListItem> Items { get; }
 
+        public bool Expanded { get; set; }
+
         public VmIntList(IList<int> source)
         {
             _source = source;
@@ -98,9 +100,17 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
             }
         }
 
+        public RelayCommand CmdRemove
+            => new(Remove);
+
         public VmIntListItem(VmIntList parent)
         {
             _parent = parent;
+        }
+    
+        private void Remove()
+        {
+            _parent.Remove(this);
         }
     }
 }

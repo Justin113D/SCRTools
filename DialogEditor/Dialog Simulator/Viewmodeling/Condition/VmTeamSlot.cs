@@ -67,6 +67,8 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
 
         public VmIntSet Equipment { get; }
 
+        public bool Expanded { get; set; }
+
         public VmTeamSlot(VmSlotDictionary<TeamSlot, VmTeamSlot> parent, int index) : base(parent, index)
         {
             Equipment = new(Slot.Equipment);

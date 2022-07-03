@@ -37,7 +37,7 @@ namespace SCR.Tools.DynamicDataExpression
     /// </summary>
     public struct DataKey<T>
     {
-        public static readonly DataKey<T> NumberDataKey = new("Number", KeyType.Number, KeyType.None, (id, _) => id);
+        public static readonly DataKey<T> NumberDataKey = new("Number", KeyType.Number, KeyType.None, (id, _) => id ?? 0);
             
         /// <summary>
         /// Name of the Key
