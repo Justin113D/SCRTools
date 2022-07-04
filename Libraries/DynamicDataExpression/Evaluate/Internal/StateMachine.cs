@@ -41,10 +41,10 @@ namespace SCR.Tools.DynamicDataExpression.Internal
             new State[] // 1: Closed bracket ")"
             {
                 // Common pre-operator //
-                new("=+-*/%^|&", 0, false),
+                new("+-*/%^|&", 0, false),
                 new(")", 1, false),
                 new("<>", 4, false),
-                new("!", 5, false),
+                new("!=", 5, false),
 
                 new("Expected operator expression", -1, null)
             },
@@ -54,10 +54,10 @@ namespace SCR.Tools.DynamicDataExpression.Internal
                 new("0123456789", 2, null),
 
                 // Common pre-operator //
-                new("=+-*/%^|&", 0, false),
+                new("+-*/%^|&", 0, false),
                 new(")", 1, false),
                 new("<>", 4, false),
-                new("!", 5, false),
+                new("!=", 5, false),
 
                 new("Expected value or operator expression", -1, null)
             },
@@ -66,10 +66,10 @@ namespace SCR.Tools.DynamicDataExpression.Internal
                 new("0123456789", 2, null),
 
                 // Common pre-operator //
-                new("=+-*/%^|&", 0, false),
+                new("+-*/%^|&", 0, false),
                 new(")", 1, false),
                 new("<>", 4, false),
-                new("!", 5, false),
+                new("!=", 5, false),
 
                 new("Expected value or operator expression", -1, null)
             },
@@ -86,7 +86,7 @@ namespace SCR.Tools.DynamicDataExpression.Internal
 
                 new("Expected value expression or \"=\"", -1, null)
             },
-            new State[] // 5: Unequals Start "!"
+            new State[] // 5: Unequals and Equals Start "!" "="
             {
                 new("=", 0, null),
                 new("Expected \"=\"", -1, null)
@@ -105,10 +105,10 @@ namespace SCR.Tools.DynamicDataExpression.Internal
                 new(".", 8, null),
 
                 // Common pre-operator //
-                new("=+-*/%^|&", 0, false),
+                new("+-*/%^|&", 0, false),
                 new(")", 1, false),
                 new("<>", 4, false),
-                new("!", 5, false),
+                new("!=", 5, false),
 
                 new("Expected value or operator expression", -1, null)
             },
@@ -122,10 +122,10 @@ namespace SCR.Tools.DynamicDataExpression.Internal
                 new("0123456789", 9, null),
 
                 // Common pre-operator //
-                new("=+-*/%^|&", 0, false),
+                new("+-*/%^|&", 0, false),
                 new(")", 1, false),
                 new("<>", 4, false),
-                new("!", 5, false),
+                new("!=", 5, false),
 
                 new("Expected value or operator expression", -1, null)
             }

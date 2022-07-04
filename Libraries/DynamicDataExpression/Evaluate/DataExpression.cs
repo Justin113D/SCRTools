@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SCR.Tools.DynamicDataExpression
+namespace SCR.Tools.DynamicDataExpression.Evaluate
 {
     public static class DataExpression
     {
@@ -46,7 +46,7 @@ namespace SCR.Tools.DynamicDataExpression
         static DataExpression()
         {
             _legalCharsMap = new HashSet<char>();
-            for(int i = 0; i < _legalChars.Length; i++)
+            for (int i = 0; i < _legalChars.Length; i++)
                 _legalCharsMap.Add(_legalChars[i]);
         }
 
@@ -70,7 +70,7 @@ namespace SCR.Tools.DynamicDataExpression
             object[] stack = new object[_valueStackSize];
             int stackPointer = 0;
 
-            for(int i = 0; i < _calcStack.Length; i++)
+            for (int i = 0; i < _calcStack.Length; i++)
                 stackPointer = _calcStack[i].Evaluate(data, _dataAccessor, stack, stackPointer);
 
             return (bool)stack[0];
@@ -78,15 +78,15 @@ namespace SCR.Tools.DynamicDataExpression
 
         public static DataExpression<T> ParseExpression(string expression, IDataAccess<T> accessor)
         {
-            if(string.IsNullOrWhiteSpace(expression))
+            if (string.IsNullOrWhiteSpace(expression))
                 throw new ArgumentException("Expression cannot be empty!", nameof(expression));
-            
-            if(accessor == null)
+
+            if (accessor == null)
                 throw new ArgumentNullException(nameof(accessor), "Accessor cannot be null!");
 
-            for(int i = 0; i < expression.Length; i++)
+            for (int i = 0; i < expression.Length; i++)
             {
-                if(!_legalCharsMap.Contains(expression[i]))
+                if (!_legalCharsMap.Contains(expression[i]))
                 {
                     throw new DynamicDataExpressionException($"Illegal character \"{expression[i]}\"", i);
                 }
@@ -111,7 +111,7 @@ namespace SCR.Tools.DynamicDataExpression
         /// <param name="expression"></param>
         /// <param name="blocks"></param>
         /// <param name="accessor"></param>
-        private static void SplitExpression( string expression,  List<ISplitBlock> blocks, IDataAccess<T> accessor)
+        private static void SplitExpression(string expression, List<ISplitBlock> blocks, IDataAccess<T> accessor)
         {
             StateMachine sm = new();
 
@@ -120,18 +120,18 @@ namespace SCR.Tools.DynamicDataExpression
 
             int bracketStackCount = 0;
 
-            for(int i = 0; i < expression.Length; i++)
+            for (int i = 0; i < expression.Length; i++)
             {
                 char c = expression[i];
 
-                if(c == ' ')
+                if (c == ' ')
                     continue;
 
                 bool? blockstate = sm.NextState(c, i);
 
-                if(blockstate.HasValue && current.Length > 0)
+                if (blockstate.HasValue && current.Length > 0)
                 {
-                    if(blockstate.Value) // is operation
+                    if (blockstate.Value) // is operation
                     {
                         blocks.Add(new OperatorBlock(current, currentIndex));
                     }
@@ -142,16 +142,16 @@ namespace SCR.Tools.DynamicDataExpression
                     current = "";
                 }
 
-                if(c == '(')
+                if (c == '(')
                 {
                     bracketStackCount++;
                     blocks.Add(new BracketBlock(false, current.Length > 0 ? current[0] : default, i));
                     current = "";
                 }
-                else if(c == ')')
+                else if (c == ')')
                 {
                     bracketStackCount--;
-                    if(bracketStackCount < 0)
+                    if (bracketStackCount < 0)
                     {
                         throw new DynamicDataExpressionException($"Unexpected closed bracket", i);
                     }
@@ -161,26 +161,26 @@ namespace SCR.Tools.DynamicDataExpression
                 else
                 {
                     current += c;
-                    if(current.Length == 1)
+                    if (current.Length == 1)
                         currentIndex = i;
                 }
             }
 
-            if(!sm.IsExitState())
+            if (!sm.IsExitState())
                 throw new DynamicDataExpressionException($"Expression ends invalid! {sm.GetCurrentErrorMessage()}", expression.Length);
 
-            if(current.Length > 0)
+            if (current.Length > 0)
             {
                 blocks.Add(new ValueBlock<T>(current, accessor, currentIndex));
             }
 
-            while(bracketStackCount > 0)
+            while (bracketStackCount > 0)
             {
                 blocks.Add(new BracketBlock(true, default, expression.Length));
                 bracketStackCount--;
             }
         }
-    
+
         /// <summary>
         /// Converts the infix list to a prefix list
         /// </summary>
@@ -191,36 +191,36 @@ namespace SCR.Tools.DynamicDataExpression
             List<ISplitBlock> result = new();
             Stack<ISplitBlock> operatorStack = new();
 
-            for(int i = infix.Count - 1; i >= 0; i--)
+            for (int i = infix.Count - 1; i >= 0; i--)
             {
                 ISplitBlock current = infix[i];
-                if(current is ValueBlock<T> v)
+                if (current is ValueBlock<T> v)
                 {
                     result.Add(v);
                     continue;
                 }
-                else if(current is BracketBlock b)
+                else if (current is BracketBlock b)
                 {
-                    if(b.Closed)
+                    if (b.Closed)
                     {
                         operatorStack.Push(b);
                         continue;
                     }
 
                     ISplitBlock ob = operatorStack.Pop();
-                    while(ob is not BracketBlock)
+                    while (ob is not BracketBlock)
                     {
                         result.Add(ob);
                         ob = operatorStack.Pop();
                     }
 
-                    if(b.Invert.HasValue)
+                    if (b.Invert.HasValue)
                         operatorStack.Push(b.Invert.Value);
                 }
-                else if(current is OperatorBlock o)
+                else if (current is OperatorBlock o)
                 {
-                    while(operatorStack.Count > 0 
-                        && operatorStack.Peek() is OperatorBlock ob 
+                    while (operatorStack.Count > 0
+                        && operatorStack.Peek() is OperatorBlock ob
                         && o.OP.HasLowerPrecedence(ob.OP))
                     {
                         result.Add(operatorStack.Pop());
@@ -230,16 +230,16 @@ namespace SCR.Tools.DynamicDataExpression
                 }
             }
 
-            while(operatorStack.Count > 0)
+            while (operatorStack.Count > 0)
             {
                 ISplitBlock block = operatorStack.Pop();
-                if(block is OperatorBlock)
+                if (block is OperatorBlock)
                     result.Add(block);
             }
 
             return result;
         }
-    
+
         /// <summary>
         /// Throws an error if any component of the calculation doesnt work out and returns the required stack size
         /// </summary>
@@ -249,23 +249,23 @@ namespace SCR.Tools.DynamicDataExpression
             Stack<KeyType> valueStack = new();
             int stackMax = 0;
 
-            foreach(var b in prefix)
+            foreach (var b in prefix)
             {
-                if(b is ValueBlock<T> v)
+                if (b is ValueBlock<T> v)
                 {
                     valueStack.Push(v.RealType);
-                    if(valueStack.Count > stackMax)
+                    if (valueStack.Count > stackMax)
                         stackMax = valueStack.Count;
                 }
-                else if(b is OperatorBlock o)
+                else if (b is OperatorBlock o)
                 {
-                    if(o.OP.Needs2Operands())
+                    if (o.OP.Needs2Operands())
                     {
                         KeyType left = valueStack.Pop();
                         KeyType right = valueStack.Pop();
                         KeyType r = o.OP.EvalType(left, right);
 
-                        if(r == KeyType.None)
+                        if (r == KeyType.None)
                         {
                             throw new DynamicDataExpressionException($"Operator \"{o.OP}\" cannot be applied to types {left} and {right}", o.Index);
                         }
@@ -277,7 +277,7 @@ namespace SCR.Tools.DynamicDataExpression
                         KeyType keytype = valueStack.Pop();
                         KeyType r = o.OP.EvalType(keytype);
 
-                        if(r == KeyType.None)
+                        if (r == KeyType.None)
                         {
                             throw new DynamicDataExpressionException($"Operator \"{o.OP}\" cannot be applied to the type {keytype}", o.Index);
                         }
@@ -289,26 +289,26 @@ namespace SCR.Tools.DynamicDataExpression
 
             KeyType result = valueStack.Pop();
 
-            if(result != KeyType.Boolean)
+            if (result != KeyType.Boolean)
             {
                 throw new DynamicDataExpressionException($"Resulting type of the expression is {result}, expecting boolean!", -1);
             }
 
             return stackMax;
         }
-    
+
         private static IStackBlock<T>[] GetCalcStack(List<ISplitBlock> prefix)
         {
             IStackBlock<T>[] result = new IStackBlock<T>[prefix.Count];
 
-            for(int i = 0; i < prefix.Count; i++)
+            for (int i = 0; i < prefix.Count; i++)
             {
                 ISplitBlock block = prefix[i];
-                if(block is OperatorBlock o)
+                if (block is OperatorBlock o)
                 {
                     result[i] = new StackOperatorBlock<T>(o.OP);
                 }
-                else if(block is ValueBlock<T> v)
+                else if (block is ValueBlock<T> v)
                 {
                     result[i] = new StackValueBlock<T>(v.Handle, v.ID, v.Invert);
                 }

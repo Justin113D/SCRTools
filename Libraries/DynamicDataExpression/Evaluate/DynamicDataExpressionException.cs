@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SCR.Tools.DynamicDataExpression
+namespace SCR.Tools.DynamicDataExpression.Evaluate
 {
     public sealed class DynamicDataExpressionException : Exception
     {

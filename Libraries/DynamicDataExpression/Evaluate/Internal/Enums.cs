@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SCR.Tools.DynamicDataExpression.Evaluate;
+using System;
 using System.Collections.Generic;
 
 namespace SCR.Tools.DynamicDataExpression.Internal
@@ -48,7 +49,7 @@ namespace SCR.Tools.DynamicDataExpression.Internal
             {
                 "|" => CheckOperator.Or,
                 "&" => CheckOperator.And,
-                "=" => CheckOperator.Equals,
+                "==" => CheckOperator.Equals,
                 "!=" => CheckOperator.Unequals,
                 ">" => CheckOperator.Greater,
                 ">=" => CheckOperator.GreaterEquals,
@@ -70,7 +71,7 @@ namespace SCR.Tools.DynamicDataExpression.Internal
             {
                 CheckOperator.Or => "|",
                 CheckOperator.And => "&",
-                CheckOperator.Equals => "=",
+                CheckOperator.Equals => "==",
                 CheckOperator.Unequals => "!=",
                 CheckOperator.Greater => ">",
                 CheckOperator.GreaterEquals => ">=",

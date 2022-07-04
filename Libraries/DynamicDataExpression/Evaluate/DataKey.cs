@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SCR.Tools.DynamicDataExpression
+namespace SCR.Tools.DynamicDataExpression.Evaluate
 {
     /// <summary>
     /// Key return type
@@ -38,7 +38,7 @@ namespace SCR.Tools.DynamicDataExpression
     public struct DataKey<T>
     {
         public static readonly DataKey<T> NumberDataKey = new("Number", KeyType.Number, KeyType.None, (id, _) => id ?? 0);
-            
+
         /// <summary>
         /// Name of the Key
         /// </summary>
