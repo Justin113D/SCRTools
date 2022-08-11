@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SCR.Tools.DynamicDataExpression.Evaluate
+namespace SCR.Tools.DynamicDataExpression
 {
     public sealed class DynamicDataExpressionException : Exception
     {

@@ -1,9 +1,6 @@
-﻿using SCR.Tools.DynamicDataExpression.Evaluate;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace SCR.Tools.DynamicDataExpression.Internal
+namespace SCR.Tools.DynamicDataExpression.Evaluate.Internal
 {
     internal interface ISplitBlock
     {
@@ -13,14 +10,14 @@ namespace SCR.Tools.DynamicDataExpression.Internal
     /// <summary>
     /// A value expression block
     /// </summary>
-    internal struct ValueBlock<T> : ISplitBlock
+    internal struct ValueBlock : ISplitBlock
     {
         public string Handle { get; }
 
         /// <summary>
         /// Key of the value
         /// </summary>
-        public DataKey<T> Key { get; }
+        public DataKey? Key { get; }
 
         /// <summary>
         /// ID of the key
@@ -40,81 +37,106 @@ namespace SCR.Tools.DynamicDataExpression.Internal
         /// <summary>
         /// Value type
         /// </summary>
-        public KeyType Type 
-            => ID == null ? Key.NoIDType : Key.IDType;
+        public KeyType Type
+        {
+            get
+            {
+                if(Key == null)
+                {
+                    return KeyType.Number;
+                }
 
-        public KeyType RealType 
+                return ID == null ? Key.Value.NoIDType : Key.Value.IDType;
+            }
+        }
+
+        public KeyType RealType
             => Type == KeyType.NumberList && Invert ? KeyType.Number : Type;
 
-        public ValueBlock(string value, IDataAccess<T> da, int index)
+        internal ValueBlock(string handle, DataKey? key, double? iD, bool invert, int index)
         {
+            Handle = handle;
+            Key = key;
+            ID = iD;
+            Invert = invert;
             Index = index;
+        }
 
+        public static ValueBlock Parse(string value, IReadOnlyDictionary<string, DataKey> accessorKeys, int index)
+        {
             char pre = default;
-            if(value[0] is '!' or '-' or '#')
+            if (value[0] is '!' or '-' or '#')
             {
                 pre = value[0];
                 value = value.Remove(0, 1);
             }
-            Invert = pre != default;
+            bool invert = pre != default;
 
             // Get the key
-            Handle = "";
-            while(value.Length > 0 && char.IsLetter(value[0]))
+            string handle = "";
+            while (value.Length > 0 && char.IsLetter(value[0]))
             {
-                Handle += value[0];
+                handle += value[0];
                 value = value.Remove(0, 1);
             }
 
-            if(string.IsNullOrWhiteSpace(Handle))
+            DataKey? key;
+            if (string.IsNullOrWhiteSpace(handle))
             {
                 // No key is equal to a regular number, which needs no special key
-                Key = DataKey<T>.NumberDataKey;
+                key = null;
             }
             else
             {
-                if(!da.DataKeys.TryGetValue(Handle, out DataKey<T> dKey))
+                if (!accessorKeys.TryGetValue(handle, out DataKey dKey))
                 {
-                    throw new DynamicDataExpressionException($"Key \"{Handle}\"does not exist in data accessor!", index);
+                    throw new DynamicDataExpressionException($"Key \"{handle}\"does not exist in data accessor!", index);
                 }
-                Key = dKey;
+                key = dKey;
             }
 
             // get the ID value
             KeyType type;
-            if(value.Length > 0)
+            double? id;
+            if (key == null)
             {
-                ID = double.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
-                type = Key.IDType;
-                if(type == KeyType.None)
-                    throw new DynamicDataExpressionException($"Key \"{Handle}\"does not support usage without Index!", index);
+                id = double.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
+                type = KeyType.Number;
+            }
+            else if (value.Length > 0)
+            {
+                id = double.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
+                type = key.Value.IDType;
+                if (type == KeyType.None)
+                    throw new DynamicDataExpressionException($"Key \"{handle}\"does not support usage without Index!", index);
             }
             else
             {
-                ID = null;
-                type = Key.NoIDType;
-                if(type == KeyType.None)
-                    throw new DynamicDataExpressionException($"Key \"{Handle}\" does not support usage with Index!", index);
+                id = null;
+                type = key.Value.NoIDType;
+                if (type == KeyType.None)
+                    throw new DynamicDataExpressionException($"Key \"{handle}\" does not support usage with Index!", index);
             }
 
-            if(Invert)
+            if (invert)
             {
-                if(type == KeyType.Number && pre != '-')
+                if (type == KeyType.Number && pre != '-')
                     throw new DynamicDataExpressionException($"Invalid value operator {pre}! Number values only allow \"-\".", index);
-                else if(type == KeyType.Boolean && pre != '!')
+                else if (type == KeyType.Boolean && pre != '!')
                     throw new DynamicDataExpressionException($"Invalid value operator {pre}! Boolean values only allow \"!\".", index);
-                else if(type == KeyType.NumberList && pre != '#')
+                else if (type == KeyType.NumberList && pre != '#')
                     throw new DynamicDataExpressionException($"Invalid value operator {pre}! Number lists only allow \"#\".", index);
             }
 
+            return new(handle, key, id, invert, index);
         }
-        
+
         public override string ToString()
         {
             string result = $"{Handle}{ID}";
-            if(Invert)
+            if (Invert)
             {
-                switch(Type)
+                switch (Type)
                 {
                     case KeyType.Boolean:
                         result = "!" + result;
@@ -181,11 +203,11 @@ namespace SCR.Tools.DynamicDataExpression.Internal
         {
             Closed = closed;
             Index = index;
-            if(invert == default)
+            if (invert == default)
                 Invert = null;
             else
             {
-                if(invert == '#')
+                if (invert == '#')
                     throw new DynamicDataExpressionException("Count operator can only directly be used with Number List Keys", index);
                 Invert = new(invert == '!' ? CheckOperator.Invert : CheckOperator.Negate, index);
             }

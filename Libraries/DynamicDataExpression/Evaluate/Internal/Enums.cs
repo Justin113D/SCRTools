@@ -1,8 +1,7 @@
-﻿using SCR.Tools.DynamicDataExpression.Evaluate;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace SCR.Tools.DynamicDataExpression.Internal
+namespace SCR.Tools.DynamicDataExpression.Evaluate.Internal
 {
     internal enum CheckOperator
     {
@@ -94,9 +93,9 @@ namespace SCR.Tools.DynamicDataExpression.Internal
 
         public static KeyType EvalType(this CheckOperator op, KeyType keytype)
         {
-            if(keytype == KeyType.Boolean && op == CheckOperator.Invert)
+            if (keytype == KeyType.Boolean && op == CheckOperator.Invert)
                 return KeyType.Boolean;
-            else if(keytype == KeyType.Number && op == CheckOperator.Negate)
+            else if (keytype == KeyType.Number && op == CheckOperator.Negate)
                 return KeyType.Number;
 
             return KeyType.None;
@@ -104,9 +103,9 @@ namespace SCR.Tools.DynamicDataExpression.Internal
 
         public static KeyType EvalType(this CheckOperator op, KeyType left, KeyType right)
         {
-            if(left == KeyType.Boolean && right == KeyType.Boolean)
+            if (left == KeyType.Boolean && right == KeyType.Boolean)
             {
-                switch(op)
+                switch (op)
                 {
                     case CheckOperator.Or:
                     case CheckOperator.And:
@@ -115,9 +114,9 @@ namespace SCR.Tools.DynamicDataExpression.Internal
                         return KeyType.Boolean;
                 }
             }
-            else if(left == KeyType.Number && right == KeyType.Number)
+            else if (left == KeyType.Number && right == KeyType.Number)
             {
-                switch(op)
+                switch (op)
                 {
                     case CheckOperator.Equals:
                     case CheckOperator.Unequals:
@@ -135,9 +134,9 @@ namespace SCR.Tools.DynamicDataExpression.Internal
                         return KeyType.Number;
                 }
             }
-            else if(left == KeyType.NumberList && right == KeyType.Number)
+            else if (left == KeyType.NumberList && right == KeyType.Number)
             {
-                switch(op)
+                switch (op)
                 {
                     case CheckOperator.Equals:
                     case CheckOperator.Unequals:
@@ -157,7 +156,7 @@ namespace SCR.Tools.DynamicDataExpression.Internal
             int rSign = OperatorSignificance[other];
 
             int result = lSign - rSign;
-            if(result == 0 && current == CheckOperator.Exponent)
+            if (result == 0 && current == CheckOperator.Exponent)
                 return true;
 
             return result < 0;

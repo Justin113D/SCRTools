@@ -10,5 +10,9 @@
 	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
 		<DebugType>embedded</DebugType>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Common\Common.csproj" />
+	</ItemGroup>
 	
 </Project>
