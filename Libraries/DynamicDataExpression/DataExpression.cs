@@ -54,7 +54,7 @@ namespace SCR.Tools.DynamicDataExpression
             return (double[])Evaluate(data);
         }
 
-        internal object Evaluate(IDataAccess data)
+        public object Evaluate(IDataAccess data)
         {
             object[] stack = new object[_valueStackSize];
             int stackPointer = 0;

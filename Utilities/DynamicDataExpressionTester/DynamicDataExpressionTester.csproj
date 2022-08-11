@@ -4,6 +4,7 @@
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<UseWPF>true</UseWPF>
+		<Nullable>enable</Nullable>
 		<StartupObject>SCR.Tools.DynamicDataExpressionTester.Program</StartupObject>
 		<RootNamespace>SCR.Tools.DynamicDataExpressionTester</RootNamespace>
 		<AssemblyName>SCR.Tools.DynamicDataExpressionTester</AssemblyName>

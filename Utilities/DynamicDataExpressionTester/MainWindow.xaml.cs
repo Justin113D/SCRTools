@@ -3,11 +3,11 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Text.Json;
-using SCR.Tools.DynamicDataExpression;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Linq;
 using SCR.Tools.Viewmodeling;
+using SCR.Tools.DynamicDataExpression;
 
 namespace SCR.Tools.DynamicDataExpressionTester
 {
@@ -142,7 +142,7 @@ namespace SCR.Tools.DynamicDataExpressionTester
 
                 try
                 {
-                    var t = DataExpression<MockSCRData>.ParseExpression(exp, DataAccessor.DA);
+                    var t = DataExpression.ParseExpression(exp, MockSCRData.AccessKeys, KeyType.None);
                     result += $"{t.Evaluate(testData)}\n";
                     _syntaxErrors.Add(default);
                 }

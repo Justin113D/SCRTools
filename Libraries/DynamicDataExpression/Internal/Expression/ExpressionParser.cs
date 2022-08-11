@@ -1,5 +1,4 @@
-﻿using SCR.Tools.DynamicDataExpression.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace SCR.Tools.DynamicDataExpression.Internal.Expression
@@ -9,11 +8,6 @@ namespace SCR.Tools.DynamicDataExpression.Internal.Expression
 
         public static DataExpression ParseExpression(string expression, IReadOnlyDictionary<string, DataKey> accessorKeys, KeyType expectedOutput, bool illegalCharsCheck)
         {
-            if (expectedOutput == KeyType.None)
-            {
-                throw new ArgumentException("Expected output cannot be None!", nameof(expectedOutput));
-            }
-
             if (string.IsNullOrWhiteSpace(expression))
             {
                 throw new ArgumentException("Expression cannot be empty!", nameof(expression));
@@ -36,11 +30,11 @@ namespace SCR.Tools.DynamicDataExpression.Internal.Expression
 
             blocks = ConvertToPrefix(blocks);
 
-            int valueStackSize = Validate(blocks, expectedOutput);
+            int valueStackSize = Validate(blocks, expectedOutput, out KeyType realOutput);
 
             IStackBlock[] result = GetCalcStack(blocks);
 
-            return new(result, valueStackSize, expectedOutput);
+            return new(result, valueStackSize, realOutput);
         }
 
         /// <summary>
@@ -221,7 +215,7 @@ namespace SCR.Tools.DynamicDataExpression.Internal.Expression
         /// Throws an error if any component of the calculation doesnt work out and returns the required stack size
         /// </summary>
         /// <param name="prefix"></param>
-        private static int Validate(List<ISplitBlock> prefix, KeyType expectedOutput)
+        private static int Validate(List<ISplitBlock> prefix, KeyType expectedOutput, out KeyType realOutpuot)
         {
             Stack<KeyType> valueStack = new();
             int stackMax = 0;
@@ -264,11 +258,11 @@ namespace SCR.Tools.DynamicDataExpression.Internal.Expression
                 }
             }
 
-            KeyType result = valueStack.Pop();
+            realOutpuot = valueStack.Pop();
 
-            if (result != expectedOutput)
+            if (expectedOutput != KeyType.None && realOutpuot != expectedOutput)
             {
-                throw new DynamicDataExpressionException($"Resulting type of the expression is {result}, expecting {expectedOutput}!", -1);
+                throw new DynamicDataExpressionException($"Resulting type of the expression is {realOutpuot}, expecting {expectedOutput}!", -1);
             }
 
             return stackMax;
