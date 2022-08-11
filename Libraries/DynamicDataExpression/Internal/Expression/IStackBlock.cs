@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace SCR.Tools.DynamicDataExpression.Evaluate.Internal
+namespace SCR.Tools.DynamicDataExpression.Internal.Expression
 {
     internal interface IStackBlock
     {
@@ -32,7 +32,7 @@ namespace SCR.Tools.DynamicDataExpression.Evaluate.Internal
             object value;
             if (string.IsNullOrWhiteSpace(key))
             {
-                if(id == null)
+                if (id == null)
                 {
                     // (hopefully) impossible to reach
                     throw new InvalidOperationException("ID was null");

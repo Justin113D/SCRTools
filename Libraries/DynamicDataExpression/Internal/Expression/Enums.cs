@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SCR.Tools.DynamicDataExpression.Evaluate.Internal
+namespace SCR.Tools.DynamicDataExpression.Internal.Expression
 {
     internal enum CheckOperator
     {

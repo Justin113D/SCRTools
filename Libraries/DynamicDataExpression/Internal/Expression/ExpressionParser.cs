@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SCR.Tools.DynamicDataExpression.Evaluate.Internal
+namespace SCR.Tools.DynamicDataExpression.Internal.Expression
 {
     internal static class ExpressionParser
     {
@@ -19,7 +19,7 @@ namespace SCR.Tools.DynamicDataExpression.Evaluate.Internal
                 throw new ArgumentException("Expression cannot be empty!", nameof(expression));
             }
 
-            if(illegalCharsCheck)
+            if (illegalCharsCheck)
             {
                 for (int i = 0; i < expression.Length; i++)
                 {

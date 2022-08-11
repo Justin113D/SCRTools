@@ -1,26 +1,20 @@
 ﻿using SCR.Tools.DynamicDataExpression;
-using SCR.Tools.DynamicDataExpression.Evaluate;
 using System.Collections.ObjectModel;
 
 namespace DynamicDataExpression.Tests
 {
-    public class TestData
+    public class TestData : IDataAccess
     {
+        public ReadOnlyDictionary<string, DataKey> DataAccessKeys { get; }
 
-    }
-
-    public class TestAccessor : IDataAccess<TestData>
-    {
-        public ReadOnlyDictionary<string, DataAccessKey<TestData>> DataAccessKeys { get; }
-
-        public TestAccessor()
+        public TestData()
         {
             #pragma warning disable IDE0055
-            Dictionary<string, DataAccessKey<TestData>> dataKeys = new()
+            Dictionary<string, DataKey> dataKeys = new()
             {
-                { "N", new("Number", KeyType.Number, KeyType.None, GetNumber) },
-                { "B", new("Boolean", KeyType.Boolean, KeyType.None, GetBoolean) },
-                { "L", new("List", KeyType.NumberList, KeyType.None, GetList) }
+                { "N", new("Number", KeyType.Number, KeyType.None) },
+                { "B", new("Boolean", KeyType.Boolean, KeyType.None) },
+                { "L", new("List", KeyType.NumberList, KeyType.None) }
             };
             #pragma warning restore IDE0055
 
@@ -28,40 +22,30 @@ namespace DynamicDataExpression.Tests
             DataAccessKeys = new(dataKeys);
         }
 
-        private object GetNumber(double? id, TestData data)
+        public object GetValue(string key, long? id)
         {
             if(id == null)
             {
                 return new InvalidOperationException();
             }
 
-            return id;
-        }
-
-        private object GetBoolean(double? id, TestData data)
-        {
-            if (id == null)
+            switch (key)
             {
-                return new InvalidOperationException();
+                case "N":
+                    return id;
+                case "B":
+                    return id > 0;
+                case "L":
+                    int length = (int)id;
+                    int[] result = new int[length];
+                    for (int i = 0; i < length; i++)
+                    {
+                        result[i] = i;
+                    }
+                    return result;
+                default:
+                    throw new InvalidOperationException();
             }
-
-            return id > 0;
-        }
-
-        private object GetList(double? id, TestData data)
-        {
-            if (id == null)
-            {
-                return new InvalidOperationException();
-            }
-
-            int length = (int)id;
-            int[] result = new int[length];
-            for (int i = 0; i < length; i++)
-            {
-                result[i] = i;
-            }
-            return result;
         }
     }
 }

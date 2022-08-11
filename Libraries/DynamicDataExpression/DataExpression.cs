@@ -1,8 +1,8 @@
-﻿using SCR.Tools.DynamicDataExpression.Evaluate.Internal;
+﻿using SCR.Tools.DynamicDataExpression.Internal.Expression;
 using System;
 using System.Collections.Generic;
 
-namespace SCR.Tools.DynamicDataExpression.Evaluate
+namespace SCR.Tools.DynamicDataExpression
 {
     public interface IDataAccess
     {

@@ -1,9 +1,8 @@
-﻿using SCR.Tools.DynamicDataExpression.Evaluate;
-using SCR.Tools.DynamicDataExpression.Evaluate.Internal;
-using SCR.Tools.DynamicDataExpression.Internal;
+﻿using SCR.Tools.DynamicDataExpression.Internal;
+using SCR.Tools.DynamicDataExpression.Internal.Expression;
 using System.Collections.Generic;
 
-namespace SCR.Tools.DynamicDataExpression.Instruct.Internal
+namespace SCR.Tools.DynamicDataExpression.Internal.Instruction
 {
     internal static class InstructionParser
     {
@@ -72,14 +71,14 @@ namespace SCR.Tools.DynamicDataExpression.Instruct.Internal
 
                 sm.NextState(c, i);
 
-                if(sm.IsExitState)
+                if (sm.IsExitState)
                 {
                     instructionLength = i + 1;
                     break;
                 }
             }
 
-            if(instructionLength == 0)
+            if (instructionLength == 0)
             {
                 throw new DynamicDataExpressionException("Invalid Instruction! Instruction must end with a \"=\", followed up by a data expression", -1);
             }
@@ -149,7 +148,7 @@ namespace SCR.Tools.DynamicDataExpression.Instruct.Internal
                 _ => InstructionType.set,
             };
         }
-    
+
 
     }
 }

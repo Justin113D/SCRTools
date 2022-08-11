@@ -1,6 +1,6 @@
 ﻿using SCR.Tools.DynamicDataExpression.Internal;
 
-namespace SCR.Tools.DynamicDataExpression.Instruct.Internal
+namespace SCR.Tools.DynamicDataExpression.Internal.Instruction
 {
     internal class InstructionStateMachine : StateMachine
     {

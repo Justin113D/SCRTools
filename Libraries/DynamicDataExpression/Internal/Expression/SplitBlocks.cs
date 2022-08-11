@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SCR.Tools.DynamicDataExpression.Evaluate.Internal
+namespace SCR.Tools.DynamicDataExpression.Internal.Expression
 {
     internal interface ISplitBlock
     {
@@ -41,7 +41,7 @@ namespace SCR.Tools.DynamicDataExpression.Evaluate.Internal
         {
             get
             {
-                if(Key == null)
+                if (Key == null)
                 {
                     return KeyType.Number;
                 }
@@ -179,7 +179,7 @@ namespace SCR.Tools.DynamicDataExpression.Evaluate.Internal
         }
 
         public override string ToString()
-            => EnumExtensions.ToStringExtension(OP);
+            => OP.ToStringExtension();
     }
 
     internal struct BracketBlock : ISplitBlock

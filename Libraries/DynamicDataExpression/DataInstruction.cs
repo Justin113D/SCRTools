@@ -1,10 +1,9 @@
-﻿using SCR.Tools.DynamicDataExpression.Evaluate;
-using SCR.Tools.DynamicDataExpression.Instruct.Internal;
-using SCR.Tools.DynamicDataExpression.Internal;
+﻿using SCR.Tools.DynamicDataExpression.Internal;
+using SCR.Tools.DynamicDataExpression.Internal.Instruction;
 using System;
 using System.Collections.Generic;
 
-namespace SCR.Tools.DynamicDataExpression.Instruct
+namespace SCR.Tools.DynamicDataExpression
 {
     public enum InstructionType
     {
@@ -29,7 +28,7 @@ namespace SCR.Tools.DynamicDataExpression.Instruct
         public string Key { get; }
 
         public long? ID { get; }
-        
+
         public InstructionType Type { get; }
 
         public DataExpression DataExpression { get; }
@@ -46,17 +45,17 @@ namespace SCR.Tools.DynamicDataExpression.Instruct
         {
             object value = DataExpression.Evaluate(data);
 
-            if(Type != InstructionType.set)
+            if (Type != InstructionType.set)
             {
                 object prevValue = data.GetValue(Key, ID);
 
-                if(Type is InstructionType.and or InstructionType.or)
+                if (Type is InstructionType.and or InstructionType.or)
                 {
                     bool bValue = (bool)value;
                     bool prevBValue = (bool)prevValue;
 
-                    value = Type == InstructionType.and 
-                        ? prevBValue && bValue 
+                    value = Type == InstructionType.and
+                        ? prevBValue && bValue
                         : prevBValue || bValue;
                 }
                 else
@@ -81,8 +80,8 @@ namespace SCR.Tools.DynamicDataExpression.Instruct
         }
 
         public DataInstruction ParseInstruction(
-            string instruction, 
-            IReadOnlyDictionary<string, DataKey> setterKeys, 
+            string instruction,
+            IReadOnlyDictionary<string, DataKey> setterKeys,
             IReadOnlyDictionary<string, DataKey> accessorKeys)
             => InstructionParser.ParseInstruction(instruction, setterKeys, accessorKeys);
 

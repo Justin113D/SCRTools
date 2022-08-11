@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SCR.Tools.DynamicDataExpression;
-using SCR.Tools.DynamicDataExpression.Evaluate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,22 +11,20 @@ namespace DynamicDataExpression.Tests
     [TestClass]
     public class ExpressionTests
     {
-        private static readonly TestAccessor Accessor = new();
-
         private static readonly TestData Data = new();
 
         private static void IntTestExpression(string expression, bool result)
         {
-            Assert.AreEqual(DataExpression<TestData>
-                .ParseExpression(expression, Accessor, KeyType.Boolean)
+            Assert.AreEqual(DataExpression
+                .ParseExpression(expression, Data.DataAccessKeys, KeyType.Boolean)
                 .EvaluateBoolean(Data),
                 result);
         }
 
         private static void IntTestExpression(string expression, int result)
         {
-            Assert.AreEqual(DataExpression<TestData>
-                            .ParseExpression(expression, Accessor, KeyType.Number)
+            Assert.AreEqual(DataExpression
+                            .ParseExpression(expression, Data.DataAccessKeys, KeyType.Number)
                             .EvaluateNumber(Data),
                             result);
         }
