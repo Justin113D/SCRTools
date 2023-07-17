@@ -1,22 +1,24 @@
-﻿<styling:Window x:Class="SCR.Tools.WPF.ColorPicker"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SCR.Tools.WPF"
-        xmlns:styling="clr-namespace:SCR.Tools.WPF.Styling"
-        xmlns:num="http://gu.se/NumericInput"
-        mc:Ignorable="d"
-        Title="Color Picker" WindowStartupLocation="CenterScreen" 
-        MinimizeButton="Collapsed"
-        MaximizeButton="Collapsed"
-        Width="600" Height="390" ResizeMode="NoResize" 
-        MouseUp="PickerBG_MouseUp"
-        MouseMove="PickerBG_MouseMove" 
-        MouseLeave="PickerBG_MouseLeave"
-        x:Name="Container">
+﻿<theme:ThemeWindow 
+    x:Class="SCR.Tools.WPF.ColorPicker"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:SCR.Tools.WPF.Controls"
+    xmlns:theme="clr-namespace:SCR.Tools.WPF.Theme"
+    xmlns:num="http://gu.se/NumericInput"
+    mc:Ignorable="d"
+    Title="Color Picker" 
+    WindowStartupLocation="CenterScreen" 
+    MinimizeButton="Collapsed"
+    MaximizeButton="Collapsed"
+    Width="600" Height="390" ResizeMode="NoResize" 
+    MouseUp="PickerBG_MouseUp"
+    MouseMove="PickerBG_MouseMove" 
+    MouseLeave="PickerBG_MouseLeave"
+    x:Name="Container">
 
-    <styling:Window.Resources>
+    <theme:ThemeWindow.Resources>
         <Style x:Key="ColorNameStyle" 
                TargetType="{x:Type TextBlock}" 
                BasedOn="{StaticResource {x:Type TextBlock}}">
@@ -36,7 +38,7 @@
         <Style TargetType="{x:Type num:DoubleBox}" BasedOn="{StaticResource {x:Type num:DoubleBox}}">
             <Setter Property="Background" Value="{DynamicResource BG2}"/>
         </Style>
-    </styling:Window.Resources>
+    </theme:ThemeWindow.Resources>
 
     <Grid DataContext="{Binding ElementName=Container, Path=.}"
           Background="{DynamicResource BG1}">
@@ -199,4 +201,4 @@
         </Grid>
 
     </Grid>
-</styling:Window>
+</theme:ThemeWindow>

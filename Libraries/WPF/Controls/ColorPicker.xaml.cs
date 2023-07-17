@@ -1,16 +1,17 @@
-﻿using System;
+﻿using SCR.Tools.WPF.Theme;
+using System;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using Window = SCR.Tools.WPF.Styling.Window;
+using Colors = System.Windows.Media.Colors;
 
 namespace SCR.Tools.WPF
 {
     /// <summary>
     /// Interaction logic for WndColorPicker.xaml
     /// </summary>
-    public partial class ColorPicker : Window
+    public partial class ColorPicker : ThemeWindow
     {
         public static DependencyProperty ColorProperty
             = DependencyProperty.Register(

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace SCR.Tools.Viewmodeling
+namespace SCR.Tools.WPF.Viewmodeling
 {
     public class EventCommand : ICommand
     {
         public event EventHandler<object?>? Executed;
 
-        #pragma warning disable 0067
+#pragma warning disable 0067
         public event EventHandler? CanExecuteChanged;
 
         public bool CanExecute(object? parameter)

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 
-namespace SCR.Tools.WPF
+namespace SCR.Tools.WPF.Utility
 {
     public class InputBindingAttach
     {

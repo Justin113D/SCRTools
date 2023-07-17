@@ -1,0 +1,195 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:SCR.Tools.WPF.Controls"
+    xmlns:num="http://gu.se/NumericInput">
+
+    <ControlTemplate x:Key="BasicListControl">
+        <ItemsPresenter/>
+    </ControlTemplate>
+
+    <Style x:Key="ListBoxItemDisableSelect" 
+        TargetType="{x:Type ListBoxItem}">
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                    <ContentPresenter 
+                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type Menu}">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="2"/>
+        <Setter Property="Background" Value="{DynamicResource BG2}"/>
+    </Style>
+    
+    <Style TargetType="{x:Type TreeView}">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="{DynamicResource BG1}"/>
+    </Style>
+    
+    <Style TargetType="{x:Type TextBlock}">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource FontBrush}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <Style TargetType="{x:Type TextBox}">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="FontSize" Value="15"/>
+        <!--<Setter Property="Background" Value="{DynamicResource BG3}"/>-->
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource FontBrush}"/>
+        <Setter Property="IsUndoEnabled" Value="False"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <Style TargetType="{x:Type controls:ByteBox}" BasedOn="{StaticResource {x:Type TextBox}}"/>
+
+    <Style TargetType="{x:Type num:DoubleBox}" BasedOn="{StaticResource {x:Type TextBox}}"/>
+
+    <Style TargetType="{x:Type ScrollBar}">
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
+    <Style TargetType="{x:Type CheckBox}">
+        <Setter Property="Foreground" Value="{DynamicResource FontBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource BG2}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BG3}"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CheckBox}">
+                    <BulletDecorator Background="Transparent" VerticalAlignment="{TemplateBinding VerticalAlignment}">
+                        <BulletDecorator.Bullet>
+                            <Border x:Name="Border"
+                                MinWidth="{TemplateBinding Width}" 
+                                MinHeight="{TemplateBinding Height}" 
+                                CornerRadius="0" 
+                                Background="{TemplateBinding Background}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush="{TemplateBinding BorderBrush}">
+                                <TextBlock 
+                                    x:Name="CheckMark"
+                                    Text="✔"
+                                    FontSize="{TemplateBinding FontSize}"
+                                    Foreground="{TemplateBinding Foreground}"/>
+                            </Border>
+                        </BulletDecorator.Bullet>
+                        <ContentPresenter Margin="4,0,0,0"
+                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                          RecognizesAccessKey="True"/>
+                    </BulletDecorator>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="false">
+                            <Setter TargetName="CheckMark" Property="Visibility" Value="Hidden"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource HighlightedBG}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource PressedBG}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource OutlineHG}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource DisabledBG}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource DisabledBG}" />
+                            <Setter Property="Foreground" Value="#888888"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style TargetType="{x:Type ToolTip}">
+        <Setter Property="Background" Value="{DynamicResource BG2}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BG1}"/>
+    </Style>
+
+    <Style x:Key="ExpandToggle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="ClickMode" Value="Press"/>
+        <Setter Property="MinWidth" Value="20"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Grid 
+                        VerticalAlignment="{TemplateBinding VerticalAlignment}" 
+                        HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
+                        Background="{TemplateBinding Background}" 
+                        MinWidth="{TemplateBinding MinWidth}">
+                        <TextBlock
+                            x:Name="ExpandSymbol"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Margin="1"
+                            Text="▸"/>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Text" TargetName="ExpandSymbol" Value="▾"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type Separator}">
+        <Setter Property="Background" Value="{DynamicResource BG3}"/>
+    </Style>
+
+    <Style TargetType="{x:Type ListBox}">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BG3}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    </Style>
+
+    <Style TargetType="{x:Type TabControl}">
+        <Setter Property="Background" Value="{DynamicResource BG1}"/>
+        <Setter Property="Padding" Value="2"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
+    <Style TargetType="{x:Type TabItem}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabItem}">
+                    <Border 
+                        x:Name="border" 
+                        Background="{DynamicResource BG3}"
+                        BorderBrush="{DynamicResource Outline}"
+                        BorderThickness="2 2 2 0">
+                        <ContentPresenter 
+                            x:Name="ContentSite" 
+                            VerticalAlignment="Center" 
+                            HorizontalAlignment="Center" 
+                            ContentSource="Header"
+                            Margin="12,2,12,2" 
+                            RecognizesAccessKey="True" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Panel.ZIndex" Value="100" />
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource BG1}"/>
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource OutlineHG}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

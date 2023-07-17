@@ -5,7 +5,7 @@
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<AssemblyName>SCR.Tools.WPF</AssemblyName>
-		<RootNamespace>SCR.Tools</RootNamespace>
+		<RootNamespace>SCR.Tools.WPF</RootNamespace>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
@@ -19,11 +19,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Page Remove="WPF\Styling\Window.xaml" />
-		<EmbeddedResource Include="WPF\Styling\Window.xaml" />
+		<Page Remove="Theme\Styles\Window.xaml" />
+		<Page Remove="Theme\Window.xaml" />
 		<Resource Include="Icons\*.png">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Resource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Theme\Styles\Window.xaml">
+	    <SubType>Designer</SubType>
+	    <Generator></Generator>
+	  </EmbeddedResource>
 	</ItemGroup>
 
 	<ItemGroup>

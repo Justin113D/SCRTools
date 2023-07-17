@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SCR.Tools.WPF.Utility;
+using System;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Interop;
 using System.Windows.Markup;
 using System.Windows.Shell;
 
-namespace SCR.Tools.WPF.Styling
+namespace SCR.Tools.WPF.Theme
 {
-    public class Window : System.Windows.Window
+    public class ThemeWindow : Window
     {
         public static readonly DependencyProperty MinimizeButtonProperty
             = DependencyProperty.Register(
@@ -67,16 +66,14 @@ namespace SCR.Tools.WPF.Styling
 
         private Button? _maximizeButton;
 
-        static Window()
+        static ThemeWindow()
         {
-            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SCR.Tools.WPF.Styling.Window.xaml");
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SCR.Tools.WPF.Theme.Styles.Window.xaml");
             _template = (ControlTemplate)XamlReader.Load(stream);
         }
 
-        public Window()
+        public ThemeWindow()
         {
-            BaseStyle.Init(Application.Current);
-
             StateChanged += OnStateChanged;
             Loaded += OnLoaded;
 
@@ -123,7 +120,9 @@ namespace SCR.Tools.WPF.Styling
         /// <param name="e"></param>
         private void Maximize(object sender, RoutedEventArgs e)
         {
-            WindowState = WindowState != WindowState.Maximized ? WindowState.Maximized : WindowState.Normal;
+            WindowState = WindowState != WindowState.Maximized
+                ? WindowState.Maximized
+                : WindowState.Normal;
         }
 
         /// <summary>
@@ -139,13 +138,13 @@ namespace SCR.Tools.WPF.Styling
 
         private void OnStateChanged(object? sender, EventArgs e)
         {
-            if(WindowState == WindowState.Maximized)
+            if (WindowState == WindowState.Maximized)
             {
                 ScreenBounds.GetScreenWorkWidthHeight(this, out double width, out double height);
                 MaxWidth = width + ShadowPadding.Left + ShadowPadding.Right;
                 MaxHeight = height + ShadowPadding.Top + ShadowPadding.Bottom;
                 if (_maximizeButton != null)
-                    _maximizeButton.Content =  "◱";
+                    _maximizeButton.Content = "◱";
             }
             else
             {
@@ -163,8 +162,6 @@ namespace SCR.Tools.WPF.Styling
             ((Button)Template.FindName("MinimizeButton", this)).Click += Minimize;
             _maximizeButton.Click += Maximize;
             ((Button)Template.FindName("CloseButton", this)).Click += Close;
-
         }
     }
-
 }

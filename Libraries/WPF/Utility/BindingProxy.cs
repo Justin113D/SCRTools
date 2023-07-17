@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace SCR.Tools.WPF
+namespace SCR.Tools.WPF.Utility
 {
     /// <summary>
     /// Used for "reusing" a Binding
@@ -9,7 +9,6 @@ namespace SCR.Tools.WPF
     {
         protected override Freezable CreateInstanceCore()
             => new BindingProxy();
-
 
         public object Data
         {

@@ -67,7 +67,7 @@ namespace SCR.Tools.WPF.IO
                     {
                         InternalSave(sfd.FileName);
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         MessageBox.Show($"Failed to load {_fileTypeName}:\n{e.Message}", "Failed to load file!", MessageBoxButton.OK, MessageBoxImage.Error);
                         return false;

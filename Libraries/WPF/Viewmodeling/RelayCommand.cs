@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace SCR.Tools.Viewmodeling
+namespace SCR.Tools.WPF.Viewmodeling
 {
     /// <summary>
     /// A basic command that runs an Action with a specific parameter
@@ -40,7 +40,7 @@ namespace SCR.Tools.Viewmodeling
         /// <param name="parameter"></param>
         public void Execute(object? parameter)
         {
-            if(parameter is ParameterType p)
+            if (parameter is ParameterType p)
                 _action(p);
             else
                 throw new ArgumentException("Parameter of type " + parameter?.GetType() + ", but it should be " + typeof(ParameterType), nameof(parameter));

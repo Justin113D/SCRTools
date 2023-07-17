@@ -3,10 +3,8 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 
-namespace SCR.Tools.WPF
+namespace SCR.Tools.WPF.Utility
 {
-
-
     public static class ScreenBounds
     {
         private const int MONITOR_DEFAULTTONULL = 0x00000000;
@@ -41,7 +39,6 @@ namespace SCR.Tools.WPF
 
         public static bool GetScreenWorkWidthHeight(Window window, out double width, out double height)
         {
-            // default values
             width = 0;
             height = 0;
 
@@ -64,7 +61,6 @@ namespace SCR.Tools.WPF
             height = workArea.bottom - workArea.top;
 
             return true;
-
         }
     }
 }

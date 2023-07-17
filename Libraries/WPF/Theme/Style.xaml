@@ -1,0 +1,11 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/SCR.Tools.WPF;component/Theme/Styles/Brushes.xaml"/>
+        <ResourceDictionary Source="/SCR.Tools.WPF;component/Theme/Styles/Buttons.xaml"/>
+        <ResourceDictionary Source="/SCR.Tools.WPF;component/Theme/Styles/Miscellaneous.xaml"/>
+        <ResourceDictionary Source="/SCR.Tools.WPF;component/Theme/Styles/ItemMenu.xaml"/>
+        <ResourceDictionary Source="/SCR.Tools.WPF;component/Theme/Styles/ComboBox.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

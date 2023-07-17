@@ -2,7 +2,7 @@
 using System;
 using System.Globalization;
 
-namespace SCR.Tools.WPF
+namespace SCR.Tools.WPF.Controls
 {
     /// <summary>
     /// Byte short box

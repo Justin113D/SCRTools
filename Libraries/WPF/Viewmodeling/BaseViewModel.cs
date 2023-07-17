@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
-namespace SCR.Tools.Viewmodeling
+namespace SCR.Tools.WPF.Viewmodeling
 {
     public abstract class BaseViewModel : INotifyPropertyChanged
     {

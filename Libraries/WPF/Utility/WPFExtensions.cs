@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace SCR.Tools.WPF
+namespace SCR.Tools.WPF.Utility
 {
     public static class WPFExtensions
     {
@@ -30,9 +30,9 @@ namespace SCR.Tools.WPF
         public static int GetDepth(this TreeViewItem item)
         {
             TreeViewItem? parent = GetParent(item);
-            if(parent != null)
+            if (parent != null)
             {
-                return GetDepth(parent) + 1;
+                return parent.GetDepth() + 1;
             }
             return 0;
         }

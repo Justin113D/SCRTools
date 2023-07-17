@@ -1,0 +1,49 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:SCR.Tools.WPF.Theme">
+
+    <!-- Brushes based on the theme colors -->
+
+    <SolidColorBrush x:Key="FontBrush" Color="{DynamicResource FontColor}"/>
+    <SolidColorBrush x:Key="HintFontBrush" Color="{DynamicResource HintFontColor}"/>
+
+    <SolidColorBrush x:Key="BG1" Color="{DynamicResource BGCol1}"/>
+    <SolidColorBrush x:Key="BG2" Color="{DynamicResource BGCol2}"/>
+    <SolidColorBrush x:Key="BG3" Color="{DynamicResource BGCol3}"/>
+    <SolidColorBrush x:Key="BG4" Color="{DynamicResource BGCol4}"/>
+
+    <SolidColorBrush x:Key="Outline" Color="{DynamicResource OutlineCol}"/>
+    <SolidColorBrush x:Key="OutlineHG" Color="{DynamicResource OutlineHGCol}"/>
+
+    <SolidColorBrush x:Key="SelectedBG" Color="{DynamicResource SelectedCol}"/>
+    <SolidColorBrush x:Key="HighlightedBG" Color="{DynamicResource HighlightedCol}"/>
+    <SolidColorBrush x:Key="PressedBG" Color="{DynamicResource PressedCol}"/>
+    <SolidColorBrush x:Key="DisabledBG" Color="{DynamicResource DisabledCol}"/>
+
+    <!-- Red Colors-->
+    <SolidColorBrush x:Key="Red" Color="{x:Static local:Colors.Red}"/>
+    <SolidColorBrush x:Key="RedTransparent" Color="#00dd2e44"/>
+    <SolidColorBrush x:Key="Red.Disabled" Color="#813A43"/>
+    <SolidColorBrush x:Key="Red.Highlighted" Color="#FF3953"/>
+    <SolidColorBrush x:Key="Red.Selected" Color="#B00E25"/>
+
+    <!-- Blue Colors-->
+    <SolidColorBrush x:Key="Blue" Color="{x:Static local:Colors.Blue}"/>
+    <SolidColorBrush x:Key="BlueTransparent" Color="#0055acee"/>
+    <SolidColorBrush x:Key="Blue.Disabled" Color="#456379"/>
+    <SolidColorBrush x:Key="Blue.Highlighted" Color="#4DA2E5"/>
+    <SolidColorBrush x:Key="Blue.Selected" Color="#1472BA"/>
+
+    <!-- Green Colors -->
+    <SolidColorBrush x:Key="Green" Color="{x:Static local:Colors.Green}"/>
+    <SolidColorBrush x:Key="GreenTransparent" Color="#0078b14e"/>
+    <SolidColorBrush x:Key="Green.Disabled" Color="#677E5A"/>
+    <SolidColorBrush x:Key="Green.Highlighted" Color="#86C961"/>
+    <SolidColorBrush x:Key="Green.Selected" Color="#509826"/>
+
+    <!-- General Colors-->
+    <SolidColorBrush x:Key="Yellow" Color="{x:Static local:Colors.Yellow}"/>
+    <SolidColorBrush x:Key="YellowTransparent" Color="#00f4900c"/>
+
+</ResourceDictionary>
