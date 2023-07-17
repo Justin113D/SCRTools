@@ -34,7 +34,7 @@ namespace SCR.Tools.DynamicDataExpression.Internal.Expression
 
             IStackBlock[] result = GetCalcStack(blocks);
 
-            return new(result, valueStackSize, realOutput);
+            return new(expression, result, valueStackSize, realOutput);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace SCR.Tools.DynamicDataExpression.Internal.Expression
             {
                 char c = expression[i];
 
-                if (c == ' ')
+                if (char.IsWhiteSpace(c))
                     continue;
 
                 sm.NextState(c, i);
@@ -95,7 +95,7 @@ namespace SCR.Tools.DynamicDataExpression.Internal.Expression
             {
                 char c = expression[i];
 
-                if (c == ' ')
+                if (char.IsWhiteSpace(c))
                     continue;
 
                 bool? blockstate = sm.NextState(c, i);

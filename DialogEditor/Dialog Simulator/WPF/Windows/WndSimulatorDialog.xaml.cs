@@ -13,7 +13,7 @@ namespace SCR.Tools.Dialog.Simulator.WPF.Windows
     /// </summary>
     public partial class WndSimulatorDialog : Window
     {
-        private WndSimulatorDialog(VmSimulator vm)
+        private WndSimulatorDialog(VmMain vm)
         {
             DataContext = vm;
             InitializeComponent();
@@ -21,7 +21,7 @@ namespace SCR.Tools.Dialog.Simulator.WPF.Windows
 
         public static void RunSimulator(DialogContainer data, DialogOptions options)
         {
-            VmSimulator? viewmodel;
+            VmMain? viewmodel;
 
             try
             {

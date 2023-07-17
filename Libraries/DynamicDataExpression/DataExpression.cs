@@ -1,6 +1,7 @@
 ﻿using SCR.Tools.DynamicDataExpression.Internal.Expression;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace SCR.Tools.DynamicDataExpression
 {
@@ -11,14 +12,19 @@ namespace SCR.Tools.DynamicDataExpression
 
     public sealed class DataExpression
     {
+        private static readonly Regex sWhitespace = new Regex(@"\s+");
+
+        public string Expression { get; }
+
         private readonly IStackBlock[] _calcStack;
 
         private readonly int _valueStackSize;
 
         private readonly KeyType _outputType;
 
-        internal DataExpression(IStackBlock[] calcStack, int valueStackSize, KeyType outputType)
+        internal DataExpression(string expression, IStackBlock[] calcStack, int valueStackSize, KeyType outputType)
         {
+            Expression = expression;
             _calcStack = calcStack;
             _valueStackSize = valueStackSize;
             _outputType = outputType;
@@ -73,7 +79,16 @@ namespace SCR.Tools.DynamicDataExpression
         /// Throws a <see cref="DynamicDataExpressionException"/> if not
         /// </summary>
         /// <param name="expression"></param>
-        public static void ValidateExpression(string expression)
+        public static void Verify(string expression)
             => ExpressionParser.Verify(expression, true);
+
+        public static string FormatExpression(string expression)
+        {
+            string result = sWhitespace.Replace(expression, "");
+            return result;
+        }
+
+        public override string ToString()
+            => Expression;
     }
 }

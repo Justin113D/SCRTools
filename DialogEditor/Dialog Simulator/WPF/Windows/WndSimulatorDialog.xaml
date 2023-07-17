@@ -15,10 +15,10 @@
     MinimizeButton="Collapsed"
     MaximizeButton="Collapsed"
     Title="Simulator"
-    d:DataContext="{x:Static wpf:DesignDataFactory.Simulator}">
+    d:DataContext="{x:Static wpf:DesignDataFactory.Main}">
 
     <styling:Window.InputBindings>
-        <KeyBinding Modifiers="Ctrl" Key="R" Command="{Binding CmdReset}"/>
+        <KeyBinding Modifiers="Ctrl" Key="R" Command="{Binding Simulator.CmdReset}"/>
 
         <KeyBinding Modifiers="Ctrl" Key="Z">
             <KeyBinding.Command>
@@ -42,18 +42,22 @@
         <TabControl Grid.Column="0">
 
             <TabItem Header="Nodes">
-                <uc:UcSimulatorTable DataContext="{Binding }"/>
+                <uc:UcSimulatorTable DataContext="{Binding Simulator}"/>
             </TabItem>
 
             <TabItem Header="Condition Data">
                 <uc:UcConditionDataEditor DataContext="{Binding ConditionData}"/>
             </TabItem>
-            
+
+            <TabItem Header="Executed Instructions">
+                <uc:UcInstructionList DataContext="{Binding Simulator}"/>
+            </TabItem>
+
         </TabControl>
         
         <uc:UcSimulatorView
             Margin="5 0 0 0"
             Grid.Column="1"
-            DataContext="{Binding }"/>
+            DataContext="{Binding Simulator}"/>
     </Grid>
 </styling:Window>

@@ -7,12 +7,19 @@ namespace SCR.Tools.Dialog.Data.Condition
 {
     public class TeamSlot : ICloneable
     {
+        private bool _unlocked;
         private int _level;
         private int _health;
         private int _maxHealth;
         private int _powerPoints;
         private int _maxPowerPoints;
 
+
+        public bool Unlocked
+        {
+            get => _unlocked;
+            set => BlankValueChange((v) => _unlocked = v, _unlocked, value);
+        }
 
         public int Level
         {

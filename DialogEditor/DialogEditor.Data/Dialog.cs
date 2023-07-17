@@ -1,5 +1,6 @@
 ﻿using SCR.Tools.Dialog.Data.Condition;
 using SCR.Tools.UndoRedo.Collections;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -77,7 +78,7 @@ namespace SCR.Tools.Dialog.Data
             }
         }
 
-        public TrackSet<ConditionData> ConditionData { get; }
+        public TrackDictionary<string, ConditionData> ConditionData { get; }
 
         public DialogContainer()
         {
@@ -114,95 +115,66 @@ namespace SCR.Tools.Dialog.Data
             EndChangeGroup();
         }
 
+        public Node[][] FindGroups()
+        {
+            List<Node[]> result = new();
+            HashSet<Node> grouped = new();
+
+            while(grouped.Count < Nodes.Count)
+            {
+                HashSet<Node> group = new();
+                Queue<Node> queue = new();
+
+                Node? start = _nodes.Find(x => !grouped.Contains(x));
+                if(start == null)
+                {
+                    throw new InvalidOperationException("No remaining");
+                }
+                queue.Enqueue(start);
+
+                while(queue.Count > 0)
+                {
+                    Node dequeued = queue.Dequeue();
+                    if(grouped.Contains(dequeued))
+                    {
+                        continue;
+                    }
+
+                    grouped.Add(dequeued);
+                    group.Add(dequeued);
+
+                    foreach(NodeOutput input in dequeued.Inputs)
+                    {
+                        queue.Enqueue(input.Parent);
+                    }
+
+                    foreach (NodeOutput output in dequeued.Outputs)
+                    {
+                        if (output.Connected != null)
+                        {
+                            queue.Enqueue(output.Connected);
+                        }
+                    }
+                }
+
+                result.Add(group.ToArray());
+            }
+            
+            return result.ToArray();
+        }
+
         public void Sort()
         {
-            BeginChangeGroup();
-
             List<Node> sorted = new();
-            HashSet<Node> sortedHashMap = new();
 
-            Queue<(Node, int)> multiOutputQueue = new();
-            Queue<Node> multiInputQueue = new();
+            Node[][] nodeGroups = FindGroups();
 
-            Queue<Node> DisconnectedOutputs = new(_nodes
-                .FindAll(x => x.Outputs.Any(y => y.Connected == null))
-                .OrderBy(x => x.Outputs.Count(y => y.Connected == null)));
-
-
-            while (sorted.Count < _nodes.Count)
+            foreach (Node[] group in nodeGroups)
             {
-                Node? next = null;
-                while (DisconnectedOutputs.Count > 0)
-                {
-                    next = DisconnectedOutputs.Dequeue();
-
-                    if (!sortedHashMap.Contains(next))
-                    {
-                        break;
-                    }
-
-                    next = null;
-                }
-
-                if (next == null)
-                {
-                    next = _nodes.Find(x => !sortedHashMap.Contains(x));
-                }
-
-                while (multiOutputQueue.Count > 0
-                    || multiInputQueue.Count > 0
-                    || next != null)
-                {
-
-                    if (next != null)
-                    {
-                        Node q = next;
-                        next = null;
-
-                        if (sortedHashMap.Contains(q))
-                        {
-                            continue;
-                        }
-
-                        if (q.Outputs.Count > 1
-                            && (multiInputQueue.Count > 0
-                            || multiOutputQueue.Peek().Item2 < sorted.Count))
-                        {
-                            multiOutputQueue.Enqueue((q, sorted.Count));
-                            continue;
-                        }
-
-
-
-                        sorted.Add(q);
-                        sortedHashMap.Add(q);
-
-                        if (q.Inputs.Count > 1)
-                        {
-                            foreach (NodeOutput input in q.Inputs)
-                            {
-                                multiInputQueue.Enqueue(input.Parent);
-                            }
-                        }
-                        else if (q.Inputs.Count == 1)
-                        {
-                            next = q.Inputs[0].Parent;
-                            continue;
-                        }
-                    }
-
-                    if (multiInputQueue.Count > 0)
-                    {
-                        next = multiInputQueue.Dequeue();
-                    }
-                    else if (multiOutputQueue.Count > 0)
-                    {
-                        next = multiOutputQueue.Dequeue().Item1;
-                    }
-                }
+                sorted.AddRange(SortGroup(group));
             }
 
-            sorted.Reverse();
+            BeginChangeGroup();
 
             _nodes.Clear();
             _nodes.AddRange(sorted);
@@ -210,6 +182,87 @@ namespace SCR.Tools.Dialog.Data
             EndChangeGroup();
         }
 
+        public static Node[] SortGroup(Node[] group)
+        {
+            List<Node> sorted = new();
+            HashSet<Node> sortedHashMap = new();
+
+            // int is the amount of sorted nodes during which
+            // 
+            Queue<(Node node, int sortindex)> multiOutputQueue = new();
+            Queue<Node> multiInputQueue = new();
+
+            // sorting the first iteration (the branch endings
+            var starters = 
+                Array.FindAll(group, x => x.Outputs.Any(y => y.Connected == null))
+                .OrderBy(x => x.Outputs.Count(y => y.Connected == null)).ToArray();
+
+            foreach (Node node in starters)
+            {
+                multiInputQueue.Enqueue(node);
+                while (multiInputQueue.Count > 0)
+                {
+                    Node current = multiInputQueue.Dequeue();
+
+                    if (sortedHashMap.Contains(current))
+                        continue;
+
+                    if(current.Outputs.Count > 1)
+                    {
+                        multiOutputQueue.Enqueue((current, sorted.Count));
+                        continue;
+                    }
+
+                    sorted.Add(current);
+                    sortedHashMap.Add(current);
+
+                    foreach (NodeOutput input in current.Inputs)
+                    {
+                        multiInputQueue.Enqueue(input.Parent);
+                    }
+                }
+            }
+
+            while(sorted.Count < group.Length)
+            {
+                Node current;
+                if (multiInputQueue.Count > 0)
+                {
+                    current = multiInputQueue.Dequeue();
+                }
+                else if (multiOutputQueue.Count > 0)
+                {
+                    current = multiOutputQueue.Dequeue().node;
+                }
+                else
+                {
+                    throw new InvalidOperationException("No nodes left to sort, but not all nodes sorted?");
+                }
+
+                if (sortedHashMap.Contains(current))
+                    continue;
+
+                if (current.Outputs.Count > 1
+                    && (multiInputQueue.Count > 0
+                        || multiOutputQueue.Count > 0
+                        && multiOutputQueue.Peek().sortindex < sorted.Count))
+                {
+                    multiOutputQueue.Enqueue((current, sorted.Count));
+                    continue;
+                }
+
+                sorted.Add(current);
+                sortedHashMap.Add(current);
+
+                foreach (NodeOutput input in current.Inputs)
+                {
+                    multiInputQueue.Enqueue(input.Parent);
+                }
+            }
+
+            sorted.Reverse();
+            return sorted.ToArray();
+        }
 
         public override string ToString()
             => $"{Name} - {Description}";

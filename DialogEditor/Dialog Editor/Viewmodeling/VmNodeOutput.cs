@@ -1,7 +1,9 @@
 ﻿using SCR.Tools.Dialog.Data;
 using SCR.Tools.Dialog.Data.Events;
+using SCR.Tools.UndoRedo.Collections;
 using SCR.Tools.Viewmodeling;
 using System;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
@@ -12,6 +14,8 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
         private VmNode? _connected;
 
         private bool _initiatedConnection;
+
+        private readonly TrackList<VmInstruction> _instructions;
 
 
         /// <summary>
@@ -172,23 +176,6 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
             }
         }
 
-        public int SharedDisabledIndex
-        {
-            get => Data.SharedDisabledIndex;
-            set
-            {
-                if (SharedDisabledIndex == value)
-                {
-                    return;
-                }
-
-                BeginChangeGroup();
-                Data.SharedDisabledIndex = value;
-                TrackNotifyProperty(nameof(SharedDisabledIndex));
-                EndChangeGroup();
-            }
-        }
-
         public string Condition
         {
             get => Data.Condition;
@@ -205,6 +192,8 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
                 EndChangeGroup();
             }
         }
+
+        public ReadOnlyObservableCollection<VmInstruction> Instructions { get; }
 
         public VmNode? Connected
         {
@@ -236,6 +225,9 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
         public RelayCommand CmdDelete
             => new(Delete);
 
+        public RelayCommand CmdAddInstruction
+            => new(AddInstruction);
+
         #endregion
 
 
@@ -245,6 +237,15 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
             Data = data;
 
             data.ConnectionChanged += ConnectionChanged;
+
+            ObservableCollection<VmInstruction> internalInstructions = new();
+            for(int i = 0; i < data.Instructions.Count; i++)
+            {
+                internalInstructions.Add(new(this));
+            }
+
+            _instructions = new(internalInstructions);
+            Instructions = new(internalInstructions);
         }
 
         public void InitConnection()
@@ -294,6 +295,23 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
         public void Delete()
         {
             Parent.DeleteOutput(this);
+        }
+
+
+        public void AddInstruction()
+        {
+            BeginChangeGroup();
+            Data.Instructions.Add("");
+            _instructions.Add(new(this));
+            EndChangeGroup();
+        }
+
+        public void RemoveInstruction(int index)
+        {
+            BeginChangeGroup();
+            _instructions.RemoveAt(index);
+            Data.Instructions.RemoveAt(index);
+            EndChangeGroup();
         }
 
         public override string ToString()

@@ -27,7 +27,7 @@ namespace SCR.Tools.DynamicDataExpression.Internal.Expression
             this.type = type;
         }
 
-        public int Evaluate(IDataAccess accessor, object[] stack, int stackPointer)
+        public int Evaluate(IDataAccess data, object[] stack, int stackPointer)
         {
             object value;
             if (string.IsNullOrWhiteSpace(key))
@@ -41,7 +41,14 @@ namespace SCR.Tools.DynamicDataExpression.Internal.Expression
             }
             else
             {
-                value = accessor.GetValue(key, (long?)id);
+                try
+                {
+                    value = data.GetValue(key, (long?)id);
+                }
+                catch (Exception e)
+                {
+                    throw new InvalidOperationException($"Error getting {key} {id}: {e.GetType().Name}\n{e.Message}");
+                }
             }
 
 

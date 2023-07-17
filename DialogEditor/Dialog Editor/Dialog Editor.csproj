@@ -5,7 +5,7 @@
 		<OutputType>WinExe</OutputType>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
-		<RootNamespace>SCR.Tools.DialogEditor</RootNamespace>
+		<RootNamespace>SCR.Tools.Dialog.Editor</RootNamespace>
 		<AssemblyName>Dialog Editor</AssemblyName>
 		<StartupObject>SCR.Tools.Dialog.Editor.WPF.App</StartupObject>
 		<ApplicationIcon>Icon.ico</ApplicationIcon>

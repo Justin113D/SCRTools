@@ -1,13 +1,10 @@
 ﻿using SCR.Tools.Dialog.Data.Condition;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SCR.Tools.UndoRedo.Collections;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
 {
-    internal class VmConditionData
+    internal partial class VmConditionData
     {
         public ConditionData Data { get; }
 
@@ -25,9 +22,16 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
 
         public VmIntList PartyMembers { get; }
 
+        public TrackDictionary<int, double> LocalNumbers { get; }
+
+        public TrackDictionary<int, bool> LocalBooleans { get; }
+
         public VmConditionData(ConditionData data)
         {
             Data = data;
+
+            LocalNumbers = new();
+            LocalBooleans = new();
 
             Flags = new(Data.Flags, default);
             DynamicFlags = new(Data.DynamicFlags, default);
@@ -36,6 +40,16 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
             Cards = new(data.Cards);
             TeamMembers = new(data.TeamMembers, new(), (p, i) => new(p, i));
             PartyMembers = new(data.PartyMembers);
+        }
+
+        public void ResetLocal()
+        {
+            BeginChangeGroup();
+
+            LocalNumbers.Clear();
+            LocalBooleans.Clear();
+
+            EndChangeGroup();
         }
     }
 }

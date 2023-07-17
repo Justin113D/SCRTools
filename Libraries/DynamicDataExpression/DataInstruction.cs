@@ -20,7 +20,7 @@ namespace SCR.Tools.DynamicDataExpression
 
     public interface IDataSetter : IDataAccess
     {
-        public object SetValue(string key, long? id, object value);
+        public void SetValue(string key, long? id, object value);
     }
 
     public class DataInstruction
@@ -47,7 +47,7 @@ namespace SCR.Tools.DynamicDataExpression
 
             if (Type != InstructionType.set)
             {
-                object prevValue = data.GetValue(Key, ID);
+                object prevValue = GetValue(data);
 
                 if (Type is InstructionType.and or InstructionType.or)
                 {
@@ -76,10 +76,53 @@ namespace SCR.Tools.DynamicDataExpression
                 }
             }
 
-            data.SetValue(Key, ID, value);
+            try
+            {
+                data.SetValue(Key, ID, value);
+            }
+            catch(Exception e)
+            {
+                throw new InvalidOperationException($"Error setting {Key} {ID} to {value}: {e.GetType().Name}\n{e.Message}");
+            }
         }
 
-        public DataInstruction ParseInstruction(
+        public object GetValue(IDataSetter data)
+        {
+            try
+            {
+                return data.GetValue(Key, ID);
+            }
+            catch(Exception e)
+            {
+                throw new InvalidOperationException($"Error getting {Key} {ID}: {e.GetType().Name}\n{e.Message}");
+            }
+        }
+
+        public string GetInstructionString()
+        {
+            string result = Key;
+            if(ID != null)
+            {
+                result += ID;
+            }
+
+            result += Type switch
+            {
+                InstructionType.add => " +=",
+                InstructionType.subtract => " -=",
+                InstructionType.multiply => " *=",
+                InstructionType.divide => " /=",
+                InstructionType.modulo => " %=",
+                InstructionType.exponent => " ^=",
+                InstructionType.and => " &=",
+                InstructionType.or => " |=",
+                _ => " =",
+            };
+
+            return result;
+        }
+
+        public static DataInstruction ParseInstruction(
             string instruction,
             IReadOnlyDictionary<string, DataKey> setterKeys,
             IReadOnlyDictionary<string, DataKey> accessorKeys)
@@ -92,5 +135,8 @@ namespace SCR.Tools.DynamicDataExpression
         /// <param name="expression"></param>
         public static void Verify(string instruction)
             => InstructionParser.Verify(instruction);
+
+        public override string ToString()
+            => GetInstructionString() + " " + DataExpression.Expression;
     }
 }

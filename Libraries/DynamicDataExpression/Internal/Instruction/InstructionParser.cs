@@ -66,7 +66,7 @@ namespace SCR.Tools.DynamicDataExpression.Internal.Instruction
             {
                 char c = instruction[i];
 
-                if (c == ' ')
+                if (char.IsWhiteSpace(c))
                     continue;
 
                 sm.NextState(c, i);
@@ -96,6 +96,10 @@ namespace SCR.Tools.DynamicDataExpression.Internal.Instruction
             for (int i = 0; i < instructionPart.Length; i++)
             {
                 char c = instructionPart[i];
+
+                if (char.IsWhiteSpace(c))
+                    continue;
+
                 switch (mode)
                 {
                     case 0:

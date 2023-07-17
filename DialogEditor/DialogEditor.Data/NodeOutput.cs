@@ -1,4 +1,6 @@
 ﻿using SCR.Tools.Dialog.Data.Events;
+using SCR.Tools.UndoRedo.Collections;
+using System.Collections.Generic;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Data
@@ -10,21 +12,12 @@ namespace SCR.Tools.Dialog.Data
     {
         #region private fields
         private string _expression;
-
         private string _character;
-
         private string _icon;
-
         private string _text;
-
         private bool _disableReuse;
-
-        private int _sharedDisabledIndex = -1;
-
         private bool _fallback;
-
         private string _condition;
-
         private Node? _connected;
         #endregion
 
@@ -98,19 +91,6 @@ namespace SCR.Tools.Dialog.Data
         }
 
         /// <summary>
-        /// Used to share the disabled state among outputs
-        /// </summary>
-        public int SharedDisabledIndex
-        {
-            get => _sharedDisabledIndex;
-            set
-            {
-                BlankValueChange(
-                    (v) => _sharedDisabledIndex = v, _sharedDisabledIndex, value);
-            }
-        }
-
-        /// <summary>
         /// Gets enabled when all other nodes are disabled
         /// </summary>
         public bool Fallback
@@ -135,6 +115,12 @@ namespace SCR.Tools.Dialog.Data
                     (v) => _condition = v, _condition, value);
             }
         }
+
+        /// <summary>
+        /// Instructions to be executed when the node 
+        /// </summary>
+        public TrackList<string> Instructions { get; }
+
 
         /// <summary>
         /// The followup node
@@ -167,6 +153,7 @@ namespace SCR.Tools.Dialog.Data
             _icon = "";
             _text = "";
             _condition = "";
+            Instructions = new();
         }
 
         /// <summary>
@@ -200,6 +187,49 @@ namespace SCR.Tools.Dialog.Data
         public void Disconnect()
         {
             Connect(null);
+        }
+
+        internal string GetInstructionString()
+        {
+            string result = "";
+
+            foreach (string instruction in Instructions)
+            {
+                string trimmed = instruction.Trim();
+                if (trimmed.Length == 0)
+                {
+                    continue;
+                }
+                result += trimmed;
+                result += ";";
+            }
+
+            return result;
+        }
+
+        internal void InstructionsFromString(string instructions)
+        {
+            List<string> results = new();
+
+            string[] splits = instructions.Split(';');
+            foreach (string instruction in splits)
+            {
+                string trimmed = instruction.Trim();
+                if (trimmed.Length == 0)
+                {
+                    continue;
+                }
+
+                results.Add(trimmed);
+            }
+
+            if (results.Count > 0)
+            {
+                BeginChangeGroup();
+                Instructions.Clear();
+                Instructions.AddRange(results);
+                EndChangeGroup();
+            }
         }
 
         public override string ToString()

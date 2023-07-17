@@ -99,6 +99,7 @@ namespace SCR.Tools.Dialog.Data.Condition
             {
                 jsonWriter.WriteStartObject(slot.Key.ToString());
 
+                jsonWriter.WriteBoolean(nameof(TeamSlot.Unlocked), slot.Value.Unlocked);
                 jsonWriter.WriteNumber(nameof(TeamSlot.Level), slot.Value.Level);
                 jsonWriter.WriteNumber(nameof(TeamSlot.Health), slot.Value.Health);
                 jsonWriter.WriteNumber(nameof(TeamSlot.MaxHealth), slot.Value.MaxHealth);
@@ -231,6 +232,7 @@ namespace SCR.Tools.Dialog.Data.Condition
             {
                 TeamSlot slot = new()
                 {
+                    Unlocked = node[nameof(TeamSlot.Unlocked)]?.GetValue<bool>() ?? false,
                     Level = node[nameof(TeamSlot.Level)]?.GetValue<int>() ?? 0,
                     Health = node[nameof(TeamSlot.Health)]?.GetValue<int>() ?? 0,
                     MaxHealth = node[nameof(TeamSlot.MaxHealth)]?.GetValue<int>() ?? 0,

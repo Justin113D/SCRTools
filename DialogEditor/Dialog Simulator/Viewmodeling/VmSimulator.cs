@@ -1,6 +1,5 @@
 ﻿using SCR.Tools.Dialog.Data;
-using SCR.Tools.Dialog.Simulator.Viewmodeling.Condition;
-using SCR.Tools.UndoRedo;
+using SCR.Tools.DynamicDataExpression;
 using SCR.Tools.UndoRedo.Collections;
 using SCR.Tools.Viewmodeling;
 using System;
@@ -10,17 +9,33 @@ using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 {
+    internal struct ExecutedInstruction
+    {
+        public string Instruction { get; }
+
+        public object OldValue { get; }
+
+        public object NewValue { get; }
+
+        public ExecutedInstruction(string instruction, object oldValue, object newValue)
+        {
+            Instruction = instruction;
+            OldValue = oldValue;
+            NewValue = newValue;
+        }
+    }
+
     internal class VmSimulator : BaseViewModel
     {
         private VmNode _activeNode;
         private bool _rightPortraitActive;
 
+        private readonly TrackList<ExecutedInstruction> _executedInstructions;
 
-        public ChangeTracker SimulatorTracker { get; }
+        public VmMain Main { get; }
 
         public DialogContainer Data { get; }
 
-        public DialogOptions Options { get; }
 
         public VmNode EntryNode { get; }
 
@@ -28,14 +43,13 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 
         public ReadOnlyDictionary<Node, VmNode> NodeViewmodelLUT { get; }
 
-        public TrackSet<int> SharedDisabledIndices { get; }
-
         /// <summary>
         /// Used to color code the current outputs in the node table
         /// </summary>
         public Dictionary<VmNode, int> OutputNumbers { get; }
 
-        public VmConditionData ConditionData { get; }
+        public ReadOnlyCollection<ExecutedInstruction> ExecutedInstructions { get; }
+
 
         public VmNode ActiveNode
             => _activeNode;
@@ -67,23 +81,19 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
         public bool HasNextNode
             => ActiveNode.ActiveOutput.Connected != null;
 
+        public RelayCommand CmdNext
+            => new(Next);
 
         public RelayCommand CmdReset
             => new(Reset);
 
-        public RelayCommand CmdNext
-            => new(Next);
 
-
-        public VmSimulator(DialogContainer data, DialogOptions options)
+        public VmSimulator(VmMain main, DialogContainer data)
         {
-            SimulatorTracker = new();
+            Main = main;
             Data = data;
-            Options = options;
 
-            SharedDisabledIndices = new();
             OutputNumbers = new();
-            ConditionData = new(new());
 
             Node? entryNode = data.StartNode;
             if (entryNode == null)
@@ -118,6 +128,10 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
             }
 
             EntryNode.InitActive();
+
+            ObservableCollection<ExecutedInstruction> internalEI = new();
+            _executedInstructions = new(internalEI);
+            ExecutedInstructions = new(internalEI);
         }
 
         private void SetActiveNode(VmNode node)
@@ -183,6 +197,14 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
                 output.Enabled = false;
             }
 
+            foreach(DataInstruction instruction in output.DDXInstructions)
+            {
+                object oldValue = instruction.GetValue(Main.ConditionData);
+                instruction.Execute(Main.ConditionData);
+                object newValue = instruction.GetValue(Main.ConditionData);
+                _executedInstructions.Add(new(instruction.ToString(), oldValue, newValue));
+            }
+
             SetActiveNode(nextNode);
 
             EndChangeGroup();
@@ -198,7 +220,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
             SetActiveNode(node);
         }
 
-        private void Reset()
+        public void Reset()
         {
             BeginChangeGroup();
 
@@ -209,8 +231,6 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
                     vmOutput.Enabled = true;
                 }
             }
-
-            SharedDisabledIndices.Clear();
 
             SetActiveNode(EntryNode);
 

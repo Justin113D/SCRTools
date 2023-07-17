@@ -16,8 +16,9 @@ namespace SCR.Tools.Dialog.Simulator.WPF
             DialogContainer dialog = JsonFormatHandler.ReadDialog(TestDialog);
             DialogOptions options = JsonFormatHandler.ReadDialogOptions(TestDialogOptions);
 
-            Simulator = new(dialog, options);
-            ConditionData = Simulator.ConditionData;
+            Main = new(dialog, options);
+            Simulator = Main.Simulator;
+            ConditionData = Main.ConditionData;
 
             Flags = ConditionData.Flags;
             Items = ConditionData.Items;
@@ -25,6 +26,8 @@ namespace SCR.Tools.Dialog.Simulator.WPF
             Cards = ConditionData.Cards;
             PartyMembers = ConditionData.PartyMembers;
         }
+
+        public static VmMain Main { get; }
 
         public static VmSimulator Simulator { get; }
 

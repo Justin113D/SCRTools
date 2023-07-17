@@ -79,7 +79,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls
             {
                 if (!string.IsNullOrWhiteSpace(ViewModel.Condition))
                 {
-                    DataExpression.ValidateExpression(ViewModel.Condition);
+                    DataExpression.Verify(ViewModel.Condition);
                 }
             }
             catch (DynamicDataExpressionException e)

@@ -1,8 +1,9 @@
 ﻿using SCR.Tools.Dialog.Data;
-using SCR.Tools.Dialog.Data.Condition;
 using SCR.Tools.Dialog.Simulator.Viewmodeling.Condition;
 using SCR.Tools.DynamicDataExpression;
 using SCR.Tools.Viewmodeling;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
@@ -20,9 +21,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 
         public bool Enabled
         {
-            get => Data.SharedDisabledIndex >= 0
-                ? !Parent.Simulator.SharedDisabledIndices.Contains(Data.SharedDisabledIndex)
-                : _enabled;
+            get => _enabled;
             set
             {
                 if (value == Enabled)
@@ -32,31 +31,34 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 
                 BeginChangeGroup();
 
-                if (Data.SharedDisabledIndex >= 0)
-                {
-                    var collection = Parent.Simulator.SharedDisabledIndices;
-
-                    if (collection.Contains(Data.SharedDisabledIndex))
-                    {
-                        collection.Remove(Data.SharedDisabledIndex);
-                    }
-                    else
-                    {
-                        collection.Add(Data.SharedDisabledIndex);
-                    }
-                }
-                else
-                {
-                    TrackValueChange(
-                        (v) => _enabled = v, _enabled, value);
-                }
-
+                TrackValueChange(
+                    (v) => _enabled = v, _enabled, value);
+                
                 EndChangeGroup();
             }
         }
 
         public bool ConditionValid
-            => DDXCondition == null || DDXCondition.Evaluate(Parent.Simulator.ConditionData);
+        {
+            get
+            {
+                if(DDXCondition == null)
+                {
+                    return true;
+                }
+
+                try
+                {
+                    return DDXCondition.EvaluateBoolean(Parent.Simulator.Main.ConditionData);
+                }
+                catch(Exception e)
+                {
+                    throw new SimulatorException(e.Message, Data.Parent, Data);
+                }
+            }
+        }
+
+        
 
         /// <summary>
         /// Name of the output
@@ -70,12 +72,12 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
             {
                 if (Data.Expression == null
                     || Data.Character == null
-                    || Parent.Simulator.Options.PortraitsPath == null)
+                    || Parent.Simulator.Main.Options.PortraitsPath == null)
                 {
                     return null;
                 }
 
-                string portraitPath = Parent.Simulator.Options.PortraitsPath;
+                string portraitPath = Parent.Simulator.Main.Options.PortraitsPath;
                 portraitPath += $"\\{Data.Character}_{Data.Expression}.png";
                 return File.Exists(portraitPath) ? portraitPath : null;
             }
@@ -86,7 +88,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
             get
             {
                 if (string.IsNullOrWhiteSpace(Data.Icon)
-                    || !Parent.Simulator.Options.NodeIcons.TryGetValue(Data.Icon, out string? iconPath))
+                    || !Parent.Simulator.Main.Options.NodeIcons.TryGetValue(Data.Icon, out string? iconPath))
                 {
                     return null;
                 }
@@ -98,7 +100,9 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
         public string Text
             => Data.Text;
 
-        public DataExpression<VmConditionData>? DDXCondition { get; }
+        public DataExpression? DDXCondition { get; }
+
+        public DataInstruction[] DDXInstructions { get; }
 
         public VmNodeOutput(VmNode parent, NodeOutput data)
         {
@@ -108,13 +112,29 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
             {
                 try
                 {
-                    DDXCondition = DataExpression<VmConditionData>.ParseExpression(data.Condition, VmConditionDataAccessor.DA);
+                    DDXCondition = DataExpression.ParseExpression(data.Condition, VmConditionData.AccessKeys, KeyType.Boolean);
                 }
                 catch (DynamicDataExpressionException e)
                 {
                     throw new SimulatorException(e.Message, data.Parent, data);
                 }
             }
+
+            List<DataInstruction> instructions = new();
+            for(int i = 0; i < data.Instructions.Count; i++)
+            {
+                string instruction = data.Instructions[i];
+                try
+                {
+                    DataInstruction ddxInstruction = DataInstruction.ParseInstruction(instruction, VmConditionData.SetterKeys, VmConditionData.AccessKeys);
+                    instructions.Add(ddxInstruction);
+                }
+                catch (DynamicDataExpressionException e)
+                {
+                    throw new SimulatorException($"Instruction no. {i}:\n" + e.Message, data.Parent, data);
+                }
+            }
+            DDXInstructions = instructions.ToArray();
         }
 
     }

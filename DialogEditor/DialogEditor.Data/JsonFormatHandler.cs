@@ -48,11 +48,13 @@ namespace SCR.Tools.Dialog.Data
 
             if (dialog.ConditionData.Count > 0)
             {
-                jsonWriter.WriteStartArray(nameof(DialogContainer.ConditionData));
+                jsonWriter.WriteStartObject(nameof(DialogContainer.ConditionData));
 
-                foreach (Condition.ConditionData? t in dialog.ConditionData)
+                foreach (KeyValuePair<string, Condition.ConditionData> t in dialog.ConditionData)
                 {
-                    Condition.JsonFormatHandler.WriteConditionDataContents(jsonWriter, t);
+                    jsonWriter.WriteStartObject(t.Key);
+                    Condition.JsonFormatHandler.WriteConditionDataContents(jsonWriter, t.Value);
+                    jsonWriter.WriteEndObject();
                 }
 
                 jsonWriter.WriteEndArray();
@@ -115,14 +117,15 @@ namespace SCR.Tools.Dialog.Data
                 jsonWriter.WriteBoolean(nameof(NodeOutput.DisableReuse), output.DisableReuse);
             }
 
-            if (output.SharedDisabledIndex >= 0)
-            {
-                jsonWriter.WriteNumber(nameof(NodeOutput.SharedDisabledIndex), output.SharedDisabledIndex);
-            }
-
             if (!string.IsNullOrWhiteSpace(output.Condition))
             {
                 jsonWriter.WriteString(nameof(NodeOutput.Condition), output.Condition);
+            }
+
+            string instructions = output.GetInstructionString();
+            if (!string.IsNullOrWhiteSpace(instructions))
+            {
+                jsonWriter.WriteString(nameof(NodeOutput.Instructions), instructions);
             }
 
             if (output.Connected != null)
@@ -195,13 +198,16 @@ namespace SCR.Tools.Dialog.Data
                 }
             }
 
-            if (json[nameof(DialogContainer.ConditionData)] is JsonArray jsonConditions)
+            if (json[nameof(DialogContainer.ConditionData)] is JsonNode conditions)
             {
-                foreach (JsonNode? jsonNode in jsonConditions)
+                foreach (KeyValuePair<string, JsonNode?> entry in conditions.AsObject())
                 {
-                    output.ConditionData.Add(
-                        Condition.JsonFormatHandler.ReadConditionData(
-                            jsonNode ?? throw new InvalidDataException("Jsonnode is null!")));
+                    if (entry.Value == null)
+                    {
+                        throw new InvalidDataException("Jsonnode is null!");
+                    }
+
+                    output.ConditionData.Add(entry.Key, Condition.JsonFormatHandler.ReadConditionData(entry.Value));
                 }
             }
         }
@@ -237,8 +243,10 @@ namespace SCR.Tools.Dialog.Data
             output.Text = json[nameof(NodeOutput.Text)]?.GetValue<string>() ?? "";
             output.Fallback = json[nameof(NodeOutput.Fallback)]?.GetValue<bool>() ?? false;
             output.DisableReuse = json[nameof(NodeOutput.DisableReuse)]?.GetValue<bool>() ?? false;
-            output.SharedDisabledIndex = json[nameof(NodeOutput.SharedDisabledIndex)]?.GetValue<int>() ?? -1;
             output.Condition = json[nameof(NodeOutput.Condition)]?.GetValue<string>() ?? "";
+
+            string instructions = json[nameof(NodeOutput.Instructions)]?.GetValue<string>() ?? "";
+            output.InstructionsFromString(instructions);
 
             int outIndex = json[nameof(NodeOutput.Connected)]?.GetValue<int>() ?? -1;
             outputMap.Add(output, outIndex);

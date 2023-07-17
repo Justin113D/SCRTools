@@ -108,14 +108,14 @@ namespace SCR.Tools.DynamicDataExpression.Internal.Expression
                 id = double.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
                 type = key.Value.IDType;
                 if (type == KeyType.None)
-                    throw new DynamicDataExpressionException($"Key \"{handle}\"does not support usage without Index!", index);
+                    throw new DynamicDataExpressionException($"Key \"{handle}\"does not support usage with Index!", index);
             }
             else
             {
                 id = null;
                 type = key.Value.NoIDType;
                 if (type == KeyType.None)
-                    throw new DynamicDataExpressionException($"Key \"{handle}\" does not support usage with Index!", index);
+                    throw new DynamicDataExpressionException($"Key \"{handle}\" does not support usage without Index!", index);
             }
 
             if (invert)
