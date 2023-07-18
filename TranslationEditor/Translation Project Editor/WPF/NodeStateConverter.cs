@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
-using Colors = SCR.Tools.WPF.Styling.Colors;
+using Colors = SCR.Tools.WPF.Theme.Colors;
 
 namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF
 {

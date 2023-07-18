@@ -1,16 +1,16 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling;
 using SCR.Tools.UndoRedo;
-using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
+using SCR.Tools.WPF.Theme;
 using System.Windows;
-using Window = SCR.Tools.WPF.Styling.Window;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.Windows
 {
     /// <summary>
     /// Interaction logic for WndHelp.xaml
     /// </summary>
-    public partial class WndHelp : Window
+    public partial class WndHelp : ThemeWindow
     {
         private static bool _opened;
 

@@ -1,7 +1,6 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.TranslationEditor.Data.Events;
 using SCR.Tools.TranslationEditor.FormatEditor.CopyPasteData;
-using SCR.Tools.Viewmodeling;
 using SCR.Tools.UndoRedo;
 using SCR.Tools.UndoRedo.Collections;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
@@ -10,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using SCR.Tools.WPF.Viewmodeling;
 
 namespace SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling
 {

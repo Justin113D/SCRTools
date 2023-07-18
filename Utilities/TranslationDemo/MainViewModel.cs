@@ -1,4 +1,4 @@
-﻿using SCR.Tools.Viewmodeling;
+﻿using SCR.Tools.WPF.Viewmodeling;
 using System.Collections.ObjectModel;
 using System.IO;
 

@@ -1,10 +1,10 @@
 ﻿using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
-using SCR.Tools.Viewmodeling;
 using SCR.Tools.LevelCurvePreviewer.Data;
 using System;
 using System.Collections.ObjectModel;
+using SCR.Tools.WPF.Viewmodeling;
 
 namespace SCR.Tools.LevelCurvePreviewer.Viewmodel
 {

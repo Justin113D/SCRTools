@@ -1,8 +1,8 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
 using SCR.Tools.UndoRedo;
-using SCR.Tools.Viewmodeling;
-using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
+using SCR.Tools.WPF.Viewmodeling;
 using System.IO;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
 {
@@ -80,7 +80,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         /// </summary>
         private void Undo()
         {
-            if(UndoChange())
+            if (UndoChange())
             {
                 SetMessage("Performed Undo", false);
             }
@@ -91,7 +91,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
         /// </summary>
         private void Redo()
         {
-            if(RedoChange())
+            if (RedoChange())
             {
                 SetMessage("Performed Redo", false);
             }

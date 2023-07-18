@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SCR.Tools.WPF.Theme;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,7 +10,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : ThemeApplication
     {
         public double AppFontSize
         {
@@ -19,7 +20,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF
 
         private TextBox? _focused;
 
-        public App()
+        public App() : base()
         {
             InitializeComponent();
         }

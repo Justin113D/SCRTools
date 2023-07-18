@@ -1,8 +1,8 @@
-﻿<styling:Window 
+﻿<theme:ThemeWindow 
     x:Class="SCR.Tools.TranslationEditor.ProjectEditor.WPF.Windows.WndHelp"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:styling="clr-namespace:SCR.Tools.WPF.Styling;assembly=SCR.Tools.WPF"
+    xmlns:theme="clr-namespace:SCR.Tools.WPF.Theme;assembly=SCR.Tools.WPF"
     xmlns:uc="clr-namespace:SCR.Tools.TranslationEditor.ProjectEditor.WPF.UserControls"         
     Height="650" Width="800"
     MinWidth="600"
@@ -137,5 +137,5 @@
         </Grid>
         
     </StackPanel>
-</styling:Window>
+</theme:ThemeWindow>
 

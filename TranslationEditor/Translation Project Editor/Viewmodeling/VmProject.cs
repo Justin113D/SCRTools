@@ -1,9 +1,8 @@
 ﻿using SCR.Tools.TranslationEditor.Data;
-using SCR.Tools.UndoRedo;
-using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
-using SCR.Tools.Viewmodeling;
+using SCR.Tools.WPF.Viewmodeling;
 using System;
 using System.Collections.ObjectModel;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling
 {

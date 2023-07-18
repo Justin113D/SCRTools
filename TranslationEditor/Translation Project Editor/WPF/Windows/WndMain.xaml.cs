@@ -1,16 +1,16 @@
 ﻿using SCR.Tools.TranslationEditor.ProjectEditor.Viewmodeling;
+using SCR.Tools.WPF.Theme;
 using System;
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
-using Window = SCR.Tools.WPF.Styling.Window;
 
 namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.Windows
 {
     /// <summary>
     /// Interaction logic for WndMain.xaml
     /// </summary>
-    public partial class WndMain : Window
+    public partial class WndMain : ThemeWindow
     {
         public WndMain()
         {
@@ -20,7 +20,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.Windows
 
         protected override void Close(object sender, RoutedEventArgs e)
         {
-            if(MenuBar.CloseConfirmation())
+            if (MenuBar.CloseConfirmation())
             {
                 base.Close(sender, e);
             }
