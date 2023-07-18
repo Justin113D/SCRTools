@@ -1,17 +1,10 @@
-﻿using SCR.Tools.WPF.Theme;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Diagnostics;
 
-namespace SCR.Tools.WPF.Properties
+namespace SCR.Tools.WPF.Theme
 {
-    internal sealed class Settings : ApplicationSettingsBase
+    public abstract class ThemeAppSettings : ApplicationSettingsBase
     {
-
-        private static readonly Settings defaultInstance
-            = (Settings)Synchronized(new Settings());
-
-        public static Settings Default => defaultInstance;
-
         [UserScopedSetting()]
         [DebuggerNonUserCode()]
         [DefaultSettingValue("Dark")]
@@ -34,5 +27,6 @@ namespace SCR.Tools.WPF.Properties
             get => (double)this[nameof(Fontsize)];
             set => this[nameof(Fontsize)] = value;
         }
+
     }
 }

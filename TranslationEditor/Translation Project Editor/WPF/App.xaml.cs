@@ -8,6 +8,9 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF
     /// </summary>
     public partial class App : ThemeApplication
     {
+        public override ThemeAppSettings Settings
+            => ProjectEditor.Properties.Settings.Default;
+
         public App() : base()
         {
             InitializeComponent();

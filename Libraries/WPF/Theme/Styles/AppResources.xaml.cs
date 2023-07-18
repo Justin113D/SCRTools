@@ -26,14 +26,16 @@ namespace SCR.Tools.WPF.Theme.Styles
         {
             _app = null;
             InitializeComponent();
-            AppFontSize = Properties.Settings.Default.Fontsize;
         }
 
         public AppResources(Application app)
         {
             _app = app;
             InitializeComponent();
-            AppFontSize = Properties.Settings.Default.Fontsize;
+            if (_app is ThemeApplication themeApp)
+            {
+                AppFontSize = themeApp.Settings.Fontsize;
+            }
         }
 
         private void OnRedo(object sender, object e)

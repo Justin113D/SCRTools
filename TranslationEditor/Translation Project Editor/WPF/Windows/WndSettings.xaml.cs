@@ -20,7 +20,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.Windows
             InitializeComponent();
             FontSizeField.Text = Properties.Settings.Default.Fontsize.ToString();
             DefaultPathTextBox.Text = Properties.Settings.Default.DefaultFormatPath;
-            SkinCombobox.ItemsSource = Enum.GetValues(typeof(Skin));
+            SkinCombobox.ItemsSource = Enum.GetValues<Skin>();
             SkinCombobox.SelectedItem = App.Skin;
         }
 

@@ -4,12 +4,14 @@ using System.Windows;
 
 namespace SCR.Tools.WPF.Theme
 {
-    public class ThemeApplication : Application
+    public abstract class ThemeApplication : Application
     {
         private Skin _skin;
         private ResourceDictionary? _skinResources;
         private ResourceDictionary? _themeResources;
         private readonly AppResources _appResources;
+
+        public abstract ThemeAppSettings Settings { get; }
 
         public Skin Skin
         {
@@ -20,10 +22,7 @@ namespace SCR.Tools.WPF.Theme
                     return;
 
                 _skin = value;
-
-                var settings = WPF.Properties.Settings.Default;
-                settings.Skin = value;
-                settings.Save();
+                Settings.Skin = value;
 
                 ReloadSkin();
             }
@@ -37,7 +36,7 @@ namespace SCR.Tools.WPF.Theme
 
         public ThemeApplication() : base()
         {
-            _skin = WPF.Properties.Settings.Default.Skin;
+            _skin = Settings.Skin;
 
             ReloadSkin();
 
