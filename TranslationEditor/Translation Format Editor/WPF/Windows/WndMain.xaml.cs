@@ -1,13 +1,13 @@
 ﻿using SCR.Tools.TranslationEditor.FormatEditor.Viewmodeling;
+using SCR.Tools.WPF.Theme;
 using System.Windows;
-using Window = SCR.Tools.WPF.Styling.Window;
 
 namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.Windows
 {
     /// <summary>
     /// Interaction logic for WndMain.xaml
     /// </summary>
-    public partial class WndMain : Window
+    public partial class WndMain : ThemeWindow
     {
         public WndMain()
         {

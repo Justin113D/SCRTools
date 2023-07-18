@@ -31,7 +31,14 @@ namespace SCR.Tools.WPF.Theme
         public double AppFontSize
         {
             get => _appResources.AppFontSize;
-            set => _appResources.AppFontSize = value;
+            set
+            {
+                if (_appResources.AppFontSize == value)
+                    return;
+
+                _appResources.AppFontSize = value;
+                Settings.Fontsize = value;
+            }
         }
 
         public ThemeApplication() : base()

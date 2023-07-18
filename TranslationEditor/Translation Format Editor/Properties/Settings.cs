@@ -1,22 +1,14 @@
-﻿using System.Configuration;
+﻿using SCR.Tools.WPF.Theme;
+using System.Configuration;
 using System.Diagnostics;
 
 namespace SCR.Tools.TranslationEditor.FormatEditor.Properties
 {
-    internal class Settings : ApplicationSettingsBase
+    internal class Settings : ThemeAppSettings
     {
         private static readonly Settings _defaultInstance = (Settings)Synchronized(new Settings());
 
         public static Settings Default => _defaultInstance;
-
-        [UserScopedSetting()]
-        [DebuggerNonUserCode()]
-        [DefaultSettingValue("15")]
-        public double Fontsize
-        {
-            get => (double)this[nameof(Fontsize)];
-            set => this[nameof(Fontsize)] = value;
-        }
 
         [UserScopedSetting()]
         [DebuggerNonUserCode()]

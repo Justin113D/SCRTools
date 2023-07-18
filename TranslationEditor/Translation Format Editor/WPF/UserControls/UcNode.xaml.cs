@@ -13,9 +13,9 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
     [ContentProperty("InnerContent")]
     public partial class UcNode : UserControl
     {
-        static readonly SolidColorBrush Transparent = new(Colors.Transparent);
-        static readonly SolidColorBrush CanInsert = new(Tools.WPF.Styling.Colors.Green);
-        static readonly SolidColorBrush CannotInsert = new(Tools.WPF.Styling.Colors.Red);
+        private static readonly SolidColorBrush Transparent = new(Colors.Transparent);
+        private static readonly SolidColorBrush CanInsert = new(Tools.WPF.Theme.Colors.Green);
+        private static readonly SolidColorBrush CannotInsert = new(Tools.WPF.Theme.Colors.Red);
 
         public static readonly DependencyProperty InnerContentProperty =
             DependencyProperty.Register(

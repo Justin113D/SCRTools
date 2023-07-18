@@ -1,19 +1,20 @@
-﻿<styling:Window x:Class="SCR.Tools.TranslationEditor.FormatEditor.WPF.Windows.WndMain"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:styling="clr-namespace:SCR.Tools.WPF.Styling;assembly=SCR.Tools.WPF"
-        xmlns:baseVM ="clr-namespace:SCR.Tools.Viewmodeling;assembly=SCR.Tools.WPF"
-        xmlns:ucs="clr-namespace:SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls"
-        xmlns:wpf="clr-namespace:SCR.Tools.TranslationEditor.FormatEditor.WPF"
-        mc:Ignorable="d"
-        Title="Translation Format Editor" Height="450" Width="800"
-        MinWidth="600"
-        Icon="pack://application:,,,/SCR.Tools.WPF;component/Icons/Dictionary_32x.png"
-        d:DataContext="{x:Static wpf:DesignDataFactory.Main}">
+﻿<theme:ThemeWindow 
+    x:Class="SCR.Tools.TranslationEditor.FormatEditor.WPF.Windows.WndMain"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:theme="clr-namespace:SCR.Tools.WPF.Theme;assembly=SCR.Tools.WPF"
+    xmlns:baseVM ="clr-namespace:SCR.Tools.WPF.Viewmodeling;assembly=SCR.Tools.WPF"
+    xmlns:ucs="clr-namespace:SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls"
+    xmlns:wpf="clr-namespace:SCR.Tools.TranslationEditor.FormatEditor.WPF"
+    mc:Ignorable="d"
+    Title="Translation Format Editor" Height="450" Width="800"
+    MinWidth="600"
+    Icon="pack://application:,,,/SCR.Tools.WPF;component/Icons/Dictionary_32x.png"
+    d:DataContext="{x:Static wpf:DesignDataFactory.Main}">
 
-    <styling:Window.InputBindings>
+    <theme:ThemeWindow.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="N">
             <KeyBinding.Command>
                 <baseVM:EventCommand Executed="IB_New"/>
@@ -43,7 +44,7 @@
 
         <KeyBinding Modifiers="Ctrl" Key="Z" Command="{Binding CmdUndo}"/>
         <KeyBinding Modifiers="Ctrl" Key="Y" Command="{Binding CmdRedo}"/>
-    </styling:Window.InputBindings>
+    </theme:ThemeWindow.InputBindings>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -59,4 +60,4 @@
         <ucs:UcMessageBar Grid.Row="2" DataContext="{Binding}"/>
 
     </Grid>
-</styling:Window>
+</theme:ThemeWindow>
