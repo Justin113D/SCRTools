@@ -1,7 +1,7 @@
 ﻿using SCR.Tools.Dialog.Data;
 using SCR.Tools.DynamicDataExpression;
 using SCR.Tools.UndoRedo.Collections;
-using SCR.Tools.Viewmodeling;
+using SCR.Tools.WPF.Viewmodeling;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

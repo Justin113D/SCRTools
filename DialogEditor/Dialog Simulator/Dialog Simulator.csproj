@@ -18,12 +18,5 @@
 		<ProjectReference Include="..\..\Libraries\WPF\WPF.csproj" />
 		<ProjectReference Include="..\DialogEditor.Data\Dialog.Data.csproj" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Page Update="Properties\DesignTimeResources.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
-	</ItemGroup>
 	
 </Project>

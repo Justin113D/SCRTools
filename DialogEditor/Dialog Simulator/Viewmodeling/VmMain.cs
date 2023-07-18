@@ -1,7 +1,7 @@
 ﻿using SCR.Tools.Dialog.Data;
 using SCR.Tools.Dialog.Simulator.Viewmodeling.Condition;
 using SCR.Tools.UndoRedo;
-using SCR.Tools.Viewmodeling;
+using SCR.Tools.WPF.Viewmodeling;
 
 namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 {

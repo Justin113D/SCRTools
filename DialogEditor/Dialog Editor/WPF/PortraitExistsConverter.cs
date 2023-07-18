@@ -5,7 +5,7 @@ using System.IO;
 using System.Windows.Data;
 using System.Windows.Media;
 using Color = System.Drawing.Color;
-using Colors = SCR.Tools.WPF.Styling.Colors;
+using Colors = SCR.Tools.WPF.Theme.Colors;
 
 namespace SCR.Tools.Dialog.Editor.WPF
 {

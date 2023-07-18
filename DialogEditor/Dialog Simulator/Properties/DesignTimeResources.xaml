@@ -1,18 +1,9 @@
 ﻿<ResourceDictionary 
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:sys="clr-namespace:System;assembly=mscorlib"
-    xmlns:styling="clr-namespace:SCR.Tools.WPF.Styling;assembly=SCR.Tools.WPF">
+    xmlns:styles="clr-namespace:SCR.Tools.WPF.Theme.Styles;assembly=SCR.Tools.WPF">
 
     <ResourceDictionary.MergedDictionaries>
-        <styling:BaseStyle/>
-        <ResourceDictionary>
-
-            <Style 
-                x:Key="TextBoxUndo" 
-                TargetType="{x:Type TextBox}" 
-                BasedOn="{StaticResource {x:Type TextBox}}"/>
-
-        </ResourceDictionary>
+        <ResourceDictionary Source="/SCR.Tools.WPF;component/Theme/Style.xaml"/>
+        <styles:AppResources/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

@@ -1,17 +1,17 @@
 ﻿using SCR.Tools.Dialog.Data;
 using SCR.Tools.Dialog.Simulator.Viewmodeling;
 using SCR.Tools.UndoRedo;
+using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
+using SCR.Tools.WPF.Theme;
 using System;
 using System.Windows;
-using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
-using Window = SCR.Tools.WPF.Styling.Window;
 
 namespace SCR.Tools.Dialog.Simulator.WPF.Windows
 {
     /// <summary>
     /// Interaction logic for WndSimulator.xaml
     /// </summary>
-    public partial class WndSimulatorDialog : Window
+    public partial class WndSimulatorDialog : ThemeWindow
     {
         private WndSimulatorDialog(VmMain vm)
         {

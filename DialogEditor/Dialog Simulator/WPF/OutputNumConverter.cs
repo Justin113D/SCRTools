@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
-using Colors = SCR.Tools.WPF.Styling.Colors;
+using Colors = SCR.Tools.WPF.Theme.Colors;
 using WMColors = System.Windows.Media.Colors;
 
 namespace SCR.Tools.Dialog.Simulator.WPF

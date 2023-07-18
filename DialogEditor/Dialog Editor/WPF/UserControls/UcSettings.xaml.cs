@@ -2,21 +2,22 @@
 using SCR.Tools.WPF.Controls;
 using System.Windows;
 
-namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.UserControls
+namespace SCR.Tools.Dialog.Editor.WPF.UserControls
 {
     /// <summary>
     /// Interaction logic for UcSettings.xaml
     /// </summary>
     public partial class UcSettings : SettingsControl
     {
-        public override double WindowWidth => 500;
+        public override double WindowWidth => 400;
 
-        public override double WindowHeight => 280;
+        public override double WindowHeight => 250;
 
-        private UcSettings() : base()
+        public UcSettings() : base()
         {
             InitializeComponent();
-            DefaultPathTextBox.Text = Properties.Settings.Default.DefaultFormatPath;
+            DefaultPathTextBox.Text = Properties.Settings.Default.DefaultDialogOptionsPath;
+            JsonIndentingCheckbox.IsChecked = Properties.Settings.Default.JsonIndenting;
         }
 
         public static void OpenSettings()
@@ -28,7 +29,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.UserControls
         {
             OpenFileDialog ofd = new()
             {
-                Title = "Select format file",
+                Title = "Select dialog options file",
                 Filter = "JSON file (*.json)|*.json"
             };
 
@@ -40,7 +41,8 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.UserControls
 
         public override void OnSettingsClose()
         {
-            Properties.Settings.Default.DefaultFormatPath = DefaultPathTextBox.Text;
+            Properties.Settings.Default.DefaultDialogOptionsPath = DefaultPathTextBox.Text;
+            Properties.Settings.Default.JsonIndenting = JsonIndentingCheckbox.IsChecked ?? false;
         }
     }
 }

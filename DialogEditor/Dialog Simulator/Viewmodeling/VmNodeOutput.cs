@@ -1,7 +1,7 @@
 ﻿using SCR.Tools.Dialog.Data;
 using SCR.Tools.Dialog.Simulator.Viewmodeling.Condition;
 using SCR.Tools.DynamicDataExpression;
-using SCR.Tools.Viewmodeling;
+using SCR.Tools.WPF.Viewmodeling;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -77,7 +77,11 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
                     return null;
                 }
 
-                string portraitPath = Parent.Simulator.Main.Options.PortraitsPath;
+                string? portraitPath = Parent.Simulator.Main.Options.PortraitsPath;
+
+                if (portraitPath == null)
+                    return null;
+
                 portraitPath += $"\\{Data.Character}_{Data.Expression}.png";
                 return File.Exists(portraitPath) ? portraitPath : null;
             }

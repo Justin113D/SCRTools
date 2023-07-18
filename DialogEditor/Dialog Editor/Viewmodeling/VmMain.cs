@@ -1,6 +1,6 @@
 ﻿using SCR.Tools.Dialog.Data;
 using SCR.Tools.UndoRedo;
-using SCR.Tools.Viewmodeling;
+using SCR.Tools.WPF.Viewmodeling;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Editor.Viewmodeling

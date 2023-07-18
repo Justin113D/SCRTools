@@ -3,8 +3,8 @@ using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using SCR.Tools.Common;
-using SCR.Tools.Viewmodeling;
 using System.Linq;
+using SCR.Tools.WPF.Viewmodeling;
 
 namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
 {

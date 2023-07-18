@@ -1,6 +1,6 @@
 ﻿using SCR.Tools.Dialog.Data;
 using SCR.Tools.UndoRedo.Collections;
-using SCR.Tools.Viewmodeling;
+using SCR.Tools.WPF.Viewmodeling;
 using System;
 using System.Collections.ObjectModel;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;

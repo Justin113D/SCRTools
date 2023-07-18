@@ -1,16 +1,16 @@
 ﻿using Ookii.Dialogs.Wpf;
 using SCR.Tools.Dialog.Editor.Viewmodeling;
 using SCR.Tools.WPF.IO;
+using SCR.Tools.WPF.Theme;
 using System.Windows;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
-using Window = SCR.Tools.WPF.Styling.Window;
 
 namespace SCR.Tools.Dialog.Editor.WPF.Windows
 {
     /// <summary>
     /// Interaction logic for DialogOptionsWindow.xaml
     /// </summary>
-    public partial class WndDialogOptions : Window
+    public partial class WndDialogOptions : ThemeWindow
     {
 
         private readonly TextFileHandler _dialogOptionsFileHandler;

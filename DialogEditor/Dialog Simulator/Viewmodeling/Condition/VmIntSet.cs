@@ -1,5 +1,5 @@
 ﻿using SCR.Tools.UndoRedo.Collections;
-using SCR.Tools.Viewmodeling;
+using SCR.Tools.WPF.Viewmodeling;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

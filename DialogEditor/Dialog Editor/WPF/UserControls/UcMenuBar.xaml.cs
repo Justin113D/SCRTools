@@ -1,7 +1,7 @@
 ﻿using SCR.Tools.Dialog.Editor.Viewmodeling;
 using SCR.Tools.Dialog.Simulator.Viewmodeling;
-using SCR.Tools.Viewmodeling;
 using SCR.Tools.WPF.IO;
+using SCR.Tools.WPF.Viewmodeling;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -90,7 +90,7 @@ namespace SCR.Tools.Dialog.Editor.WPF.UserControls
 
         private void SettingsOpen(object sender, RoutedEventArgs e)
         {
-            new Windows.WndSettings().ShowDialog();
+            UcSettings.OpenSettings();
         }
 
         private void OpenDialogOptions(object sender, RoutedEventArgs e)

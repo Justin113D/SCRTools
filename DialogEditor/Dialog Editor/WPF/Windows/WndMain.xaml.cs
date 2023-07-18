@@ -1,15 +1,15 @@
 ﻿using SCR.Tools.Dialog.Editor.Viewmodeling;
+using SCR.Tools.WPF.Theme;
 using System;
 using System.IO;
 using System.Windows;
-using Window = SCR.Tools.WPF.Styling.Window;
 
 namespace SCR.Tools.Dialog.Editor.WPF.Windows
 {
     /// <summary>
     /// Interaction logic for WndMain.xaml
     /// </summary>
-    public partial class WndMain : Window
+    public partial class WndMain : ThemeWindow
     {
         public WndMain()
         {

@@ -1,9 +1,9 @@
 ﻿using SCR.Tools.UndoRedo.Collections;
-using SCR.Tools.Viewmodeling;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using SCR.Tools.WPF.Viewmodeling;
 
 namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
 {
