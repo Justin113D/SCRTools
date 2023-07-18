@@ -139,7 +139,7 @@ namespace SCR.Tools.TranslationEditor.ProjectEditor.WPF.UserControls
 
         private void SettingsOpen(object sender, RoutedEventArgs e)
         {
-            new Windows.WndSettings().ShowDialog();
+            UcSettings.OpenSettings();
         }
 
         private void OpenHelp(object sender, RoutedEventArgs e)

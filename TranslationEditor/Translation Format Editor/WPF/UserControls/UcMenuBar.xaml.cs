@@ -73,7 +73,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF.UserControls
 
         private void SettingsOpen(object sender, RoutedEventArgs e)
         {
-            new Windows.WndSettings().ShowDialog();
+            UcSettings.OpenSettings();
         }
 
         public void Export(object sender, RoutedEventArgs e)

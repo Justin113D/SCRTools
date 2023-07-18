@@ -1,13 +1,13 @@
 ﻿<theme:ThemeWindow
-    x:Class="SCR.Tools.TranslationEditor.FormatEditor.WPF.Windows.WndSettings"
+    x:Class="SCR.Tools.WPF.Controls.SettingsWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:theme="clr-namespace:SCR.Tools.WPF.Theme;assembly=SCR.Tools.WPF"
+    xmlns:theme="clr-namespace:SCR.Tools.WPF.Theme"
     ResizeMode="NoResize" Height="200" Width="400"
     MinimizeButton="Collapsed"
     MaximizeButton="Collapsed"
     Title="Settings">
-    
+
     <Border Background="{DynamicResource BG1}">
         <Grid Margin="20 5 20 20">
             <Grid.RowDefinitions>
@@ -51,11 +51,7 @@
                         TextAlignment="Right"/>
                 </StackPanel>
 
-                <!-- Json indenting -->
-                <StackPanel>
-                    <TextBlock Text="Json Indenting"/>
-                    <CheckBox x:Name="JsonIndentingCheckbox"/>
-                </StackPanel>
+                <UserControl x:Name="SettingsContent" Margin="0 5 0 0"/>
 
             </StackPanel>
 
