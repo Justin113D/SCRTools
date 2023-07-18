@@ -25,5 +25,14 @@ namespace SCR.Tools.WPF.Properties
                 this[nameof(Skin)] = value;
             }
         }
+
+        [UserScopedSetting()]
+        [DebuggerNonUserCode()]
+        [DefaultSettingValue("15")]
+        public double Fontsize
+        {
+            get => (double)this[nameof(Fontsize)];
+            set => this[nameof(Fontsize)] = value;
+        }
     }
 }

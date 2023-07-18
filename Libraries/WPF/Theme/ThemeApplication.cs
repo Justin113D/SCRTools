@@ -1,19 +1,15 @@
-﻿using System;
+﻿using SCR.Tools.WPF.Theme.Styles;
+using System;
 using System.Windows;
 
 namespace SCR.Tools.WPF.Theme
 {
     public class ThemeApplication : Application
     {
-        //private readonly static ResourceDictionary _themeResources;
-
         private Skin _skin;
-
-        /// <summary>
-        /// Active theme resource dictionary
-        /// </summary>
         private ResourceDictionary? _skinResources;
         private ResourceDictionary? _themeResources;
+        private readonly AppResources _appResources;
 
         public Skin Skin
         {
@@ -31,6 +27,22 @@ namespace SCR.Tools.WPF.Theme
 
                 ReloadSkin();
             }
+        }
+
+        public double AppFontSize
+        {
+            get => _appResources.AppFontSize;
+            set => _appResources.AppFontSize = value;
+        }
+
+        public ThemeApplication() : base()
+        {
+            _skin = WPF.Properties.Settings.Default.Skin;
+
+            ReloadSkin();
+
+            _appResources = new(this);
+            Resources.MergedDictionaries.Add(_appResources);
         }
 
         public void ReloadSkin()
@@ -58,10 +70,5 @@ namespace SCR.Tools.WPF.Theme
             Resources.MergedDictionaries.Insert(1, _themeResources);
         }
 
-        public ThemeApplication() : base()
-        {
-            _skin = WPF.Properties.Settings.Default.Skin;
-            ReloadSkin();
-        }
     }
 }

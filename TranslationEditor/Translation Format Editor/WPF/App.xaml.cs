@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SCR.Tools.WPF.Theme;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,7 +10,7 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : ThemeApplication
     {
         public double AppFontSize
         {
@@ -36,39 +37,5 @@ namespace SCR.Tools.TranslationEditor.FormatEditor.WPF
             AppFontSize = FormatEditor.Properties.Settings.Default.Fontsize;
         }
 
-        private void OnRedo(object sender, object e)
-            => UndoRedoCommand(Key.Y, ModifierKeys.Control);
-
-        private void OnUndo(object sender, object e)
-            => UndoRedoCommand(Key.Z, ModifierKeys.Control);
-
-        private void GotFocus(object sender, RoutedEventArgs e)
-            => _focused = (TextBox)sender;
-
-        private void UndoRedoCommand(Key key, ModifierKeys modifiers)
-        {
-            if (_focused == null)
-                return;
-
-            _focused.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-
-            Window? wnd = Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);
-
-            if (wnd == null)
-            {
-                throw new InvalidOperationException("No active window found!");
-            }
-
-            foreach (var i in wnd.InputBindings)
-            {
-                if (i is KeyBinding kb
-                    && kb.Key == key
-                    && kb.Modifiers == modifiers)
-                {
-                    kb.Command.Execute(null);
-                    break;
-                }
-            }
-        }
     }
 }

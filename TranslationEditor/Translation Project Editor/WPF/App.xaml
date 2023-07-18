@@ -3,42 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:theme="clr-namespace:SCR.Tools.WPF.Theme;assembly=SCR.Tools.WPF"
-    xmlns:vmBase="clr-namespace:SCR.Tools.WPF.Viewmodeling;assembly=SCR.Tools.WPF"
-    xmlns:scrWPF="clr-namespace:SCR.Tools.WPF.Utility;assembly=SCR.Tools.WPF"
-    xmlns:sys="clr-namespace:System;assembly=mscorlib"
-    StartupUri="Windows/WndMain.xaml"
-    Startup="Application_Startup">
+    StartupUri="Windows/WndMain.xaml">
 
-    <Application.Resources>
-
-        <sys:Double x:Key="AppFontSize">15</sys:Double>
-
-        <InputBindingCollection x:Key="TextboxInputs">
-            <KeyBinding Modifiers="Ctrl" Key="Z">
-                <KeyBinding.Command>
-                    <vmBase:EventCommand Executed="OnUndo" />
-                </KeyBinding.Command>
-            </KeyBinding>
-            <KeyBinding Modifiers="Ctrl" Key="Y">
-                <KeyBinding.Command>
-                    <vmBase:EventCommand Executed="OnRedo"/>
-                </KeyBinding.Command>
-            </KeyBinding>
-        </InputBindingCollection>
-
-        <Style x:Key="AppTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
-            <Setter Property="FontSize" Value="{DynamicResource AppFontSize}"/>
-        </Style>
-
-        <Style x:Key="AppTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
-            <Setter Property="FontSize" Value="{DynamicResource AppFontSize}"/>
-        </Style>
-
-        <Style x:Key="TextBoxUndo" TargetType="{x:Type TextBox}" BasedOn="{StaticResource AppTextBox}">
-            <EventSetter Event="GotFocus" Handler="GotFocus"/>
-            <Setter Property="scrWPF:InputBindingAttach.InputBindings" Value="{StaticResource TextboxInputs}"/>
-        </Style>
-    </Application.Resources>
-    
 </theme:ThemeApplication>
 
