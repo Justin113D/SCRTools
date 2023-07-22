@@ -1,0 +1,9 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:styles="clr-namespace:SCR.Tools.WPF.Theme.Styles">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/SCR.Tools.WPF;component/Theme/Skins/Dark.xaml"/>
+        <ResourceDictionary Source="/SCR.Tools.WPF;component/Theme/Style.xaml"/>
+        <styles:AppResources/>
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>
