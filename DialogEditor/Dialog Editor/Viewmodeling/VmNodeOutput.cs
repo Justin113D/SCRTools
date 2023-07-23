@@ -154,11 +154,11 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
 
         public bool FallBack
         {
-            get => Data.Fallback;
+            get => Data.IsFallback;
             set
             {
                 BeginChangeGroup();
-                Data.Fallback = value;
+                Data.IsFallback = value;
                 TrackNotifyProperty(nameof(FallBack));
                 EndChangeGroup();
             }

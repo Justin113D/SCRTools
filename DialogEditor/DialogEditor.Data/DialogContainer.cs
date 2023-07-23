@@ -30,7 +30,7 @@ namespace SCR.Tools.Dialog.Data
         /// <summary>
         /// Starter Node
         /// </summary>
-        public Node? StartNode => _nodes.FirstOrDefault(x => x.Inputs.Count == 0);
+        public Node? EntryNode => _nodes.FirstOrDefault(x => x.Inputs.Count == 0);
 
         /// <summary>
         /// Node Contents

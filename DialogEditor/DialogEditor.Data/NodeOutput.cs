@@ -93,7 +93,7 @@ namespace SCR.Tools.Dialog.Data
         /// <summary>
         /// Gets enabled when all other nodes are disabled
         /// </summary>
-        public bool Fallback
+        public bool IsFallback
         {
             get => _fallback;
             set

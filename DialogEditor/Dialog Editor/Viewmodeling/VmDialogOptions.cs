@@ -10,7 +10,7 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
     {
         public ChangeTracker DialogOptionsTracker { get; }
 
-        public DialogOptions Data { get; private set; }
+        public DialogSettings Data { get; private set; }
 
         public VmNodeOptions<Color> CharacterOptions { get; private set; }
 

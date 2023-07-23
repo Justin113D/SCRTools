@@ -5,9 +5,9 @@ using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 namespace SCR.Tools.Dialog.Data
 {
     /// <summary>
-    /// Dialog options
+    /// Dialog settings
     /// </summary>
-    public class DialogOptions
+    public class DialogSettings
     {
         private string? _portraitsPath;
 
@@ -36,7 +36,7 @@ namespace SCR.Tools.Dialog.Data
             }
         }
 
-        public DialogOptions()
+        public DialogSettings()
         {
             CharacterOptions = new();
             ExpressionOptions = new();

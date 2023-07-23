@@ -197,13 +197,13 @@ namespace SCR.Tools.Dialog.Editor.Viewmodeling
 
         private void OrganizeNodes()
         {
-            if (Nodes.Count == 0 || Data.StartNode == null)
+            if (Nodes.Count == 0 || Data.EntryNode == null)
                 return;
 
             BeginChangeGroup();
 
             // find the starter node
-            VmNode start = _nodeTable[Data.StartNode];
+            VmNode start = _nodeTable[Data.EntryNode];
             int offsetX = start.LocationX;
             int offsetY = start.LocationY;
 

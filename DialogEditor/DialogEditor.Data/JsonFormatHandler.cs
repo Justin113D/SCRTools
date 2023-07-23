@@ -107,9 +107,9 @@ namespace SCR.Tools.Dialog.Data
 
             jsonWriter.WriteString(nameof(NodeOutput.Text), output.Text);
 
-            if (output.Fallback)
+            if (output.IsFallback)
             {
-                jsonWriter.WriteBoolean(nameof(NodeOutput.Fallback), output.Fallback);
+                jsonWriter.WriteBoolean(nameof(NodeOutput.IsFallback), output.IsFallback);
             }
 
             if (output.DisableReuse)
@@ -241,7 +241,7 @@ namespace SCR.Tools.Dialog.Data
             output.Character = json[nameof(NodeOutput.Character)]?.GetValue<string>() ?? "";
             output.Icon = json[nameof(NodeOutput.Icon)]?.GetValue<string>() ?? "";
             output.Text = json[nameof(NodeOutput.Text)]?.GetValue<string>() ?? "";
-            output.Fallback = json[nameof(NodeOutput.Fallback)]?.GetValue<bool>() ?? false;
+            output.IsFallback = json[nameof(NodeOutput.IsFallback)]?.GetValue<bool>() ?? false;
             output.DisableReuse = json[nameof(NodeOutput.DisableReuse)]?.GetValue<bool>() ?? false;
             output.Condition = json[nameof(NodeOutput.Condition)]?.GetValue<string>() ?? "";
 
@@ -256,7 +256,7 @@ namespace SCR.Tools.Dialog.Data
 
         #region Dialog Options to Json
 
-        public static string WriteDialogOptions(this DialogOptions options, bool indenting, string? basePath = null)
+        public static string WriteDialogOptions(this DialogSettings options, bool indenting, string? basePath = null)
         {
             using MemoryStream stream = new();
             using Utf8JsonWriter jsonWriter = new(stream, new()
@@ -273,10 +273,10 @@ namespace SCR.Tools.Dialog.Data
                 portraitPath = Path.GetRelativePath(basePath, portraitPath);
             }
 
-            jsonWriter.WriteString(nameof(DialogOptions.PortraitsPath), portraitPath);
+            jsonWriter.WriteString(nameof(DialogSettings.PortraitsPath), portraitPath);
 
-            WriteDialogNodeOptions(jsonWriter, nameof(DialogOptions.CharacterOptions), options.CharacterOptions);
-            WriteDialogNodeOptions(jsonWriter, nameof(DialogOptions.ExpressionOptions), options.ExpressionOptions);
+            WriteDialogNodeOptions(jsonWriter, nameof(DialogSettings.CharacterOptions), options.CharacterOptions);
+            WriteDialogNodeOptions(jsonWriter, nameof(DialogSettings.ExpressionOptions), options.ExpressionOptions);
             WriteDialogIcons(jsonWriter, options.NodeIcons, basePath);
 
             jsonWriter.WriteEndObject();
@@ -301,7 +301,7 @@ namespace SCR.Tools.Dialog.Data
 
         private static void WriteDialogIcons(Utf8JsonWriter jsonWriter, IDictionary<string, string> iconPaths, string? basePath)
         {
-            jsonWriter.WriteStartObject(nameof(DialogOptions.NodeIcons));
+            jsonWriter.WriteStartObject(nameof(DialogSettings.NodeIcons));
 
             foreach (KeyValuePair<string, string> icon in iconPaths)
             {
@@ -322,14 +322,14 @@ namespace SCR.Tools.Dialog.Data
 
         #region Json to Dialog Options
 
-        public static DialogOptions ReadDialogOptions(string text, string? basePath = null)
+        public static DialogSettings ReadDialogOptions(string text, string? basePath = null)
         {
             ChangeTracker prev = GlobalChangeTracker;
 
             new ChangeTracker().Use();
             BeginChangeGroup();
 
-            DialogOptions result = new();
+            DialogSettings result = new();
 
             try
             {
@@ -339,7 +339,7 @@ namespace SCR.Tools.Dialog.Data
                     throw new ArgumentException("Format not a valid json object");
                 }
 
-                string? portraitsPath = json[nameof(DialogOptions.PortraitsPath)]?.GetValue<string?>();
+                string? portraitsPath = json[nameof(DialogSettings.PortraitsPath)]?.GetValue<string?>();
 
                 if (portraitsPath != null && basePath != null)
                 {
@@ -348,17 +348,17 @@ namespace SCR.Tools.Dialog.Data
 
                 result.PortraitsPath = portraitsPath;
 
-                if (json[nameof(DialogOptions.CharacterOptions)] is JsonNode options)
+                if (json[nameof(DialogSettings.CharacterOptions)] is JsonNode options)
                 {
                     ReadDialogNodeOptions(options, result.CharacterOptions);
                 }
 
-                if (json[nameof(DialogOptions.ExpressionOptions)] is JsonNode expressions)
+                if (json[nameof(DialogSettings.ExpressionOptions)] is JsonNode expressions)
                 {
                     ReadDialogNodeOptions(expressions, result.ExpressionOptions);
                 }
 
-                if (json[nameof(DialogOptions.NodeIcons)] is JsonNode icons)
+                if (json[nameof(DialogSettings.NodeIcons)] is JsonNode icons)
                 {
                     ReadDialogIcons(icons, result.NodeIcons, basePath);
                 }

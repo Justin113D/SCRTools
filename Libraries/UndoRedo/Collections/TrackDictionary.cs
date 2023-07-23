@@ -70,7 +70,7 @@ namespace SCR.Tools.UndoRedo.Collections
             KeyValuePair<TKey, TValue>[] contents = _dictionary.ToArray();
 
             TrackChange(
-                () => _dictionary.Clear(),
+                _dictionary.Clear,
                 () =>
                 {
                     foreach (KeyValuePair<TKey, TValue> item in contents)
