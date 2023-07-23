@@ -6,7 +6,7 @@ using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Data.Simulation
 {
-    public class Simulator
+    public class DialogSimulator
     {
         private readonly SimulatorNode _entryNode;
 
@@ -21,7 +21,7 @@ namespace SCR.Tools.Dialog.Data.Simulation
         public bool EndReached { get; private set; }
 
 
-        private Simulator(SimulatorNode[] nodes, SimulatorNode entryNode, ConditionData data)
+        private DialogSimulator(SimulatorNode[] nodes, SimulatorNode entryNode, ConditionData data)
         {
             Nodes = new(nodes);
             ConditionData = new(data);
@@ -30,7 +30,7 @@ namespace SCR.Tools.Dialog.Data.Simulation
             ActiveOutputs = ActiveNode.GetAvailableOutputs(ConditionData);
         }
 
-        public static Simulator FromDialog(DialogContainer dialog, DialogSettings settings, ConditionData? conditionData)
+        public static DialogSimulator FromDialog(DialogContainer dialog, DialogSettings settings, ConditionData? conditionData)
         {
             if(dialog.EntryNode == null)
             {
