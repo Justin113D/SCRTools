@@ -56,9 +56,10 @@ namespace SCR.Tools.Dialog.Data.Simulation
                 result.Add(Outputs[^1]);
             }
 
-
-
             return result.ToArray();
         }
+
+        public override string ToString()
+            => Outputs[0].Label;
     }
 }

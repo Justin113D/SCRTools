@@ -120,5 +120,7 @@ namespace SCR.Tools.Dialog.Data.Simulation
             }
         }
 
+        public override string ToString()
+            => Label;
     }
 }
