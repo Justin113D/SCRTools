@@ -43,7 +43,7 @@ namespace SCR.Tools.Dialog.Data.Simulation
             for(int i = 0; i < dialog.Nodes.Count; i++)
             {
                 Node node = dialog.Nodes[i];
-                SimulatorNode simNode = new(node.Outputs.Count);
+                SimulatorNode simNode = new(node.RightPortrait, node.Outputs.Count);
 
                 nodes[i] = simNode;
                 nodeLUT.Add(node, simNode);
@@ -51,7 +51,7 @@ namespace SCR.Tools.Dialog.Data.Simulation
 
             for (int i = 0; i < dialog.Nodes.Count; i++)
             {
-                nodes[i].FromNode(dialog.Nodes[i], nodeLUT, settings);
+                nodes[i].FromNodeOutputs(dialog.Nodes[i], nodeLUT, settings);
             }
 
             return new(nodes, nodeLUT[dialog.EntryNode], conditionData ?? new());

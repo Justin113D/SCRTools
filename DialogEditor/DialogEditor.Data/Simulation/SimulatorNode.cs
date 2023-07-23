@@ -9,13 +9,16 @@ namespace SCR.Tools.Dialog.Data.Simulation
 
         public ReadOnlyCollection<SimulatorNodeOutput> Outputs { get; }
 
-        internal SimulatorNode(int outputNum)
+        public bool RightPortrait { get; }
+
+        internal SimulatorNode(bool rightPortrait, int outputNum)
         {
             _outputs = new SimulatorNodeOutput[outputNum];
+            RightPortrait = rightPortrait;
             Outputs = new(_outputs);
         }
 
-        internal void FromNode(Node node, Dictionary<Node, SimulatorNode> nodes, DialogSettings settings)
+        internal void FromNodeOutputs(Node node, Dictionary<Node, SimulatorNode> nodes, DialogSettings settings)
         {
             for(int i = 0; i < _outputs.Length; i++)
             {
@@ -32,10 +35,6 @@ namespace SCR.Tools.Dialog.Data.Simulation
                 if (!output.Visited && !output.IsFallback && output.EvaluateCondition(data))
                 {
                     result.Add(output);
-                    if (result.Count == 4)
-                    {
-                        break;
-                    }
                 }
             }
 

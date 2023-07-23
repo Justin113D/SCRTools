@@ -55,7 +55,7 @@ namespace SCR.Tools.Dialog.Data.Simulation
                 && !string.IsNullOrWhiteSpace(output.Expression)
                 && !string.IsNullOrWhiteSpace(settings.PortraitsPath))
             {
-                portraitPath = Path.Combine(settings.PortraitsPath, $"{settings.PortraitsPath}_{output.Expression}.png");
+                portraitPath = Path.Combine(settings.PortraitsPath, $"{output.Character}_{output.Expression}.png");
                 if(!File.Exists(portraitPath))
                 {
                     portraitPath = null;
@@ -88,7 +88,7 @@ namespace SCR.Tools.Dialog.Data.Simulation
             {
                 try
                 {
-                    instructions[i] = DataInstruction.ParseInstruction(output.Condition, SimulatorConditionData.SetterKeys, SimulatorConditionData.AccessKeys);
+                    instructions[i] = DataInstruction.ParseInstruction(output.Instructions[i], SimulatorConditionData.SetterKeys, SimulatorConditionData.AccessKeys);
                 }
                 catch (DynamicDataExpressionException e)
                 {
