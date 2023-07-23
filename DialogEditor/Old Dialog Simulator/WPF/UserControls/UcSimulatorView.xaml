@@ -8,18 +8,12 @@
     xmlns:local="clr-namespace:SCR.Tools.Dialog.Simulator.WPF.UserControls"
     xmlns:vm="clr-namespace:SCR.Tools.Dialog.Simulator.Viewmodeling"
     xmlns:wpf="clr-namespace:SCR.Tools.Dialog.Simulator.WPF"
-    xmlns:converters="clr-namespace:SCR.Tools.WPF.Converters;assembly=SCR.Tools.WPF"
     mc:Ignorable="d" 
     d:DesignHeight="450" d:DesignWidth="800"
     d:DataContext="{x:Static wpf:DesignDataFactory.Simulator}">
 
     <UserControl.Resources>
         <wpf:OutputNumConverter x:Key="OutputNumToColor"/>
-        <converters:VisibilityConverter x:Key="VisibilityConverter"/>
-        <converters:VisibilityConverter x:Key="InvVisibilityConverter" Invert="True"/>
-        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
-        <converters:NumberSwitchConverter x:Key="LeftPortraitHighlighter" OnFalse="1" OnTrue="0.5"/>
-        <converters:NumberSwitchConverter x:Key="RightPortraitHighlighter" OnFalse="0.5" OnTrue="1"/>
     </UserControl.Resources>
 
     <Grid>
@@ -29,75 +23,100 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Margin="30 30 30 35">
+        <Grid Margin="30">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="0" HorizontalAlignment="Left" Margin="0 0 40 0">
-
+            <Grid HorizontalAlignment="Left" Margin="0 0 40 0">
+                
                 <TextBlock 
-                    Text="{Binding LeftPortraitLabel}"
+                    Text="{Binding LeftPortrait.Name}"
                     TextAlignment="Center"
                     HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Visibility="{Binding LeftPortraitPath, Converter={StaticResource InvVisibilityConverter}}"/>
-
+                    VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding LeftPortrait.PortraitPath}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            
                 <Image 
                     Stretch="Uniform"
-                    Source="{Binding LeftPortraitPath, TargetNullValue={x:Null}}"
-                    Opacity="{Binding HighlightRightPortrait, Converter={StaticResource LeftPortraitHighlighter}}"/>
+                    Source="{Binding LeftPortrait.PortraitPath, TargetNullValue={x:Null}}"/>
                 
             </Grid>
 
             <Grid Grid.Column="1" HorizontalAlignment="Right" Margin="40 0 0 0">
-
+                
                 <TextBlock 
-                    Text="{Binding RightPortraitLabel}"
+                    Text="{Binding RightPortrait.Name}"
                     TextAlignment="Center"
                     HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Visibility="{Binding RightPortraitPath, Converter={StaticResource InvVisibilityConverter}}"/>
+                    VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RightPortrait.PortraitPath}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
 
                 <Image 
                     Stretch="Uniform"
-                    Source="{Binding RightPortraitPath, TargetNullValue={x:Null}}"
-                    RenderTransformOrigin="0.5,0.5"
-                    Opacity="{Binding HighlightRightPortrait, Converter={StaticResource RightPortraitHighlighter}}">
+                    Source="{Binding RightPortrait.PortraitPath, TargetNullValue={x:Null}}"
+                    RenderTransformOrigin="0.5,0.5">
                     <Image.RenderTransform>
                         <ScaleTransform ScaleX="-1"/>
                     </Image.RenderTransform>
                 </Image>
-
+                
             </Grid>
+            
 
         </Grid>
 
-        <Grid Grid.Row="1">
+        <Grid 
+            Margin="0 5"
+            Grid.Row="1" 
+            DataContext="{Binding ActiveNode}">
             
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
             <ListBox
                 Grid.Column="0"
-                ItemsSource="{Binding PathChoices}"
-                SelectedValue="{Binding SelectedPathChoice, Mode=TwoWay}"
+                ItemsSource="{Binding ValidOutputs}"
+                SelectedValue="{Binding ActiveOutput, Mode=TwoWay}"
                 BorderThickness="0" 
-                Background="Transparent"
-                Visibility="{Binding HasMultipleChoices, Converter={StaticResource VisibilityConverter}}">
+                Background="Transparent">
                 
+                <ListBox.Style>
+                    <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource {x:Type ListBox}}">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding DisplayOutputs}" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.Style>
+
                 <ListBox.ItemTemplate>
-                    <DataTemplate DataType="{x:Type vm:VmPathChoice}">
+                    <DataTemplate DataType="{x:Type vm:VmNodeOutput}">
 
                         <Image
                             Margin="5"
@@ -116,7 +135,6 @@
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                         <Setter Property="BorderThickness" Value="0"/>
-                        <Setter Property="Visibility" Value="{Binding Active, Converter={StaticResource VisibilityConverter}}"/>
 
                         <Setter Property="Template">
                             <Setter.Value>
@@ -124,7 +142,7 @@
                                     <Border
                                         x:Name="bg"
                                         BorderThickness="3"
-                                        BorderBrush="{Binding Index, Converter={StaticResource OutputNumToColor}}"
+                                        BorderBrush="{Binding Connected.OutputNumber, Converter={StaticResource OutputNumToColor}}"
                                         Background="{DynamicResource BG1}">
                                         <ContentPresenter/>
                                     </Border>
@@ -155,20 +173,19 @@
 
             <Border
                 Grid.Column="1"
-                Grid.RowSpan="4"
                 Background="{DynamicResource BG1}"
                 MinHeight="176">
                 
                 <TextBlock 
                     Margin="15"
                     FontSize="15"
-                    Text="{Binding Text}"/>
+                    Text="{Binding ActiveOutput.Text}"/>
                 
             </Border>
             
         </Grid>
 
-        <Grid Grid.Row="2" Margin="0 5 0 0">
+        <Grid Grid.Row="2">
 
             <Grid.Resources>
                 <Style x:Key="IconButton" TargetType="{x:Type Button}" BasedOn="{StaticResource TransparentButton}">
@@ -188,7 +205,7 @@
                 Grid.Column="0"
                 Style="{StaticResource IconButton}"
                 ToolTip="Undo (Ctrl+Z)" 
-                Command="{Binding CmdUndo}">
+                Click="Button_Undo">
                 <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/Undo.png" Width="16"/>
             </Button>
 
@@ -196,7 +213,7 @@
                 Grid.Column="1"
                 Style="{StaticResource IconButton}"
                 ToolTip="Redo (Ctrl+Y)" 
-                Command="{Binding CmdRedo}">
+                Click="Button_Redo">
                 <Image Source="pack://application:,,,/SCR.Tools.WPF;component/Icons/Redo.png" Width="16"/>
             </Button>
 
@@ -215,22 +232,8 @@
                 Content="Next"
                 FontWeight="Bold"
                 Command="{Binding CmdNext}"
-                IsEnabled="{Binding EndReached, Converter={StaticResource InverseBooleanConverter}}"
+                IsEnabled="{Binding HasNextNode}"
                 Style="{DynamicResource GreenButton}"/>
         </Grid>
-
-        <Border 
-            Grid.RowSpan="2" 
-            Background="#8000"
-            BorderThickness="0"
-            Visibility="{Binding EndReached, Converter={StaticResource VisibilityConverter}}">
-            <TextBlock 
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Padding="3"
-                FontWeight="Bold"
-                Background="{DynamicResource BG4}"
-                Text="Reached the end of the dialog"/>
-        </Border>
     </Grid>
 </UserControl>

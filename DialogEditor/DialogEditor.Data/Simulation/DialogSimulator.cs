@@ -58,6 +58,9 @@ namespace SCR.Tools.Dialog.Data.Simulation
         }
 
 
+        private void SetEndReached(bool value)
+            => TrackValueChange((v) => EndReached = v, EndReached, value);
+
         private void SetActiveNode(SimulatorNode node)
         {
             BeginChangeGroup();
@@ -66,18 +69,10 @@ namespace SCR.Tools.Dialog.Data.Simulation
             EndChangeGroup();
         }
 
-        private void SetEndReached(bool value)
-            => TrackValueChange((v) => EndReached = v, EndReached, value);
-
-        /// <summary>
-        /// Moves to the next node. Returns whether end was reached (active node not updated)
-        /// </summary>
-        /// <param name="pathIndex"></param>
-        /// <returns></returns>
-        public bool Next(int pathIndex)
+        public void Next(int pathIndex)
         {
             if (EndReached)
-                return true;
+                return;
 
             SimulatorNodeOutput output = ActiveOutputs[pathIndex];
 
@@ -85,20 +80,16 @@ namespace SCR.Tools.Dialog.Data.Simulation
 
             output.ExecuteInstructions(ConditionData);
 
-            bool result;
             if(output.NextNode != null)
             {
                 SetActiveNode(output.NextNode);
-                result = false;
             }
             else
             {
                 SetEndReached(true);
-                result = true;
             }
 
             EndChangeGroup();
-            return result;
         }
 
         public void Reset()

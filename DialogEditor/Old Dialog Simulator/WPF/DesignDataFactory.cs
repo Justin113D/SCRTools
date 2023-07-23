@@ -1,5 +1,7 @@
 ﻿using SCR.Tools.Dialog.Data;
+using SCR.Tools.Dialog.Data.Condition;
 using SCR.Tools.Dialog.Simulator.Viewmodeling;
+using SCR.Tools.Dialog.Simulator.Viewmodeling.Condition;
 using JsonFormatHandler = SCR.Tools.Dialog.Data.JsonFormatHandler;
 
 namespace SCR.Tools.Dialog.Simulator.WPF
@@ -16,10 +18,29 @@ namespace SCR.Tools.Dialog.Simulator.WPF
 
             Main = new(dialog, options);
             Simulator = Main.Simulator;
+            ConditionData = Main.ConditionData;
+
+            Flags = ConditionData.Flags;
+            Items = ConditionData.Items;
+            TeamMembers = ConditionData.TeamMembers;
+            Cards = ConditionData.Cards;
+            PartyMembers = ConditionData.PartyMembers;
         }
 
         public static VmMain Main { get; }
 
         public static VmSimulator Simulator { get; }
+
+        public static VmConditionData ConditionData { get; }
+
+        public static VmValueDictionary<bool> Flags { get; }
+
+        public static VmValueDictionary<int> Items { get; }
+
+        public static VmSlotDictionary<TeamSlot, VmTeamSlot> TeamMembers { get; }
+
+        public static VmIntSet Cards { get; }
+
+        public static VmIntList PartyMembers { get; }
     }
 }

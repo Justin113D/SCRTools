@@ -1,26 +1,23 @@
 ﻿using SCR.Tools.Dialog.Data;
-using SCR.Tools.Dialog.Simulator.Viewmodeling.Condition;
-using SCR.Tools.UndoRedo;
 using SCR.Tools.WPF.Viewmodeling;
+using SCR.Tools.UndoRedo;
 
 namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 {
     internal class VmMain : BaseViewModel
     {
-        public ChangeTracker SimulatorTracker { get; }
-
-        public DialogOptions Options { get; }
+        public DialogContainer Dialog { get; }
+        public DialogSettings Options { get; }
+        public ChangeTracker Tracker { get; }
 
         public VmSimulator Simulator { get; }
 
-        public VmConditionData ConditionData { get; }
-
-        public VmMain(DialogContainer data, DialogOptions options)
+        public VmMain(DialogContainer dialog, DialogSettings options)
         {
-            SimulatorTracker = new();
+            Dialog = dialog;
             Options = options;
-            ConditionData = new(new());
-            Simulator = new(this, data);
+            Tracker = new();
+            Simulator = new(this);
         }
     }
 }

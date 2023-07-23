@@ -4,8 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:SCR.Tools.Dialog.Simulator.WPF"
     xmlns:theme="clr-namespace:SCR.Tools.WPF.Theme;assembly=SCR.Tools.WPF"
     xmlns:wpf="clr-namespace:SCR.Tools.Dialog.Simulator.WPF"
+    xmlns:vm="clr-namespace:SCR.Tools.Dialog.Simulator.Viewmodeling"
     xmlns:uc="clr-namespace:SCR.Tools.Dialog.Simulator.WPF.UserControls"
     xmlns:baseVM="clr-namespace:SCR.Tools.WPF.Viewmodeling;assembly=SCR.Tools.WPF"
     mc:Ignorable="d"
@@ -37,6 +39,22 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <TabControl Grid.Column="0">
+
+            <TabItem Header="Nodes">
+                <uc:UcSimulatorTable DataContext="{Binding Simulator}"/>
+            </TabItem>
+
+            <TabItem Header="Condition Data">
+                <uc:UcConditionDataEditor DataContext="{Binding ConditionData}"/>
+            </TabItem>
+
+            <TabItem Header="Executed Instructions">
+                <uc:UcInstructionList DataContext="{Binding Simulator}"/>
+            </TabItem>
+
+        </TabControl>
+        
         <uc:UcSimulatorView
             Margin="5 0 0 0"
             Grid.Column="1"

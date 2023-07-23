@@ -3,7 +3,7 @@ using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
 {
-    internal class VmTeamSlot : VmlotDictionaryItem<TeamSlot, VmTeamSlot>
+    internal class VmTeamSlot : VmSlotDictionaryItem<TeamSlot, VmTeamSlot>
     {
         public int Level
         {

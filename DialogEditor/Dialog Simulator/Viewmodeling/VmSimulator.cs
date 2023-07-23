@@ -1,249 +1,205 @@
-﻿using SCR.Tools.Dialog.Data;
-using SCR.Tools.DynamicDataExpression;
-using SCR.Tools.UndoRedo.Collections;
+﻿using SCR.Tools.Dialog.Data.Simulation;
 using SCR.Tools.WPF.Viewmodeling;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 {
-    internal struct ExecutedInstruction
-    {
-        public string Instruction { get; }
-
-        public object OldValue { get; }
-
-        public object NewValue { get; }
-
-        public ExecutedInstruction(string instruction, object oldValue, object newValue)
-        {
-            Instruction = instruction;
-            OldValue = oldValue;
-            NewValue = newValue;
-        }
-    }
-
     internal class VmSimulator : BaseViewModel
     {
-        private VmNode _activeNode;
-        private bool _rightPortraitActive;
+        private VmPathChoice _selectedPathChoice;
 
-        private readonly TrackList<ExecutedInstruction> _executedInstructions;
+        private readonly DialogSimulator _simulator;
 
         public VmMain Main { get; }
 
-        public DialogContainer Data { get; }
 
+        public VmPathChoice[] PathChoices { get; }
 
-        public VmNode EntryNode { get; }
-
-        public ReadOnlyObservableCollection<VmNode> Nodes { get; }
-
-        public ReadOnlyDictionary<Node, VmNode> NodeViewmodelLUT { get; }
-
-        /// <summary>
-        /// Used to color code the current outputs in the node table
-        /// </summary>
-        public Dictionary<VmNode, int> OutputNumbers { get; }
-
-        public ReadOnlyCollection<ExecutedInstruction> ExecutedInstructions { get; }
-
-
-        public VmNode ActiveNode
-            => _activeNode;
-
-        public VmNodeOutput? LeftPortrait { get; set; }
-
-        public VmNodeOutput? RightPortrait { get; set; }
-
-        public bool RightPortraitActive
+        public VmPathChoice SelectedPathChoice
         {
-            get => _rightPortraitActive;
+            get => _selectedPathChoice;
+            [MemberNotNull(nameof(_selectedPathChoice), nameof(Text))]
             set
             {
-                if (_rightPortraitActive == value)
-                {
-                    return;
-                }
-
-                BeginChangeGroup();
-
-                TrackValueChange(
-                    (v) => _rightPortraitActive = v, _rightPortraitActive, value);
-                TrackNotifyProperty(nameof(RightPortraitActive));
-
-                EndChangeGroup();
+                _selectedPathChoice = value;
+                SelectChoice(Array.IndexOf(PathChoices, value));
             }
         }
 
-        public bool HasNextNode
-            => ActiveNode.ActiveOutput.Connected != null;
+        public int SelectedPathChoiceIndex { get; private set; }
 
-        public RelayCommand CmdNext
-            => new(Next);
+        public bool HasMultipleChoices { get; private set; }
+
+        public bool EndReached { get; private set; }
+
+
+        public string Text { get; private set; }
+
+        public string? LeftPortraitPath { get; private set; }
+
+        public string LeftPortraitLabel { get; private set; }
+
+        public string? RightPortraitPath { get; private set; }
+
+        public string RightPortraitLabel { get; private set; }
+
+        public bool HighlightRightPortrait { get; private set; }
+
 
         public RelayCommand CmdReset
             => new(Reset);
 
+        public RelayCommand CmdNext
+            => new(Next);
 
-        public VmSimulator(VmMain main, DialogContainer data)
+        public RelayCommand CmdUndo
+            => new(Undo);
+
+        public RelayCommand CmdRedo
+            => new(Redo);
+
+
+        public VmSimulator(VmMain main)
         {
             Main = main;
-            Data = data;
+            _simulator = DialogSimulator.FromDialog(main.Dialog, main.Options, new());
+            HasMultipleChoices = _simulator.ActiveOutputs.Length > 1;
+            HighlightRightPortrait = _simulator.ActiveNode.RightPortrait;
+            LeftPortraitLabel = string.Empty;
+            RightPortraitLabel = string.Empty;
 
-            OutputNumbers = new();
+            List<VmPathChoice> choices = new();
 
-            Node? entryNode = data.StartNode;
-            if (entryNode == null)
+            for(int i = 0; i < 4; i++)
             {
-                throw new InvalidOperationException("Dialog has no valid entry point!");
-            }
+                VmPathChoice choice;
 
-            ObservableCollection<VmNode> nodes = new();
-            Dictionary<Node, VmNode> nodeViewmodelLUT = new();
-
-            foreach (Node node in data.Nodes)
-            {
-                VmNode vmNode = new(this, node);
-                nodes.Add(vmNode);
-                nodeViewmodelLUT.Add(node, vmNode);
-            }
-
-            Nodes = new(nodes);
-            NodeViewmodelLUT = new(nodeViewmodelLUT);
-            EntryNode = NodeViewmodelLUT[entryNode];
-            _activeNode = EntryNode;
-
-            foreach (VmNode vmNode in nodes)
-            {
-                foreach (VmNodeOutput vmOutput in vmNode.Outputs)
+                if(i >= _simulator.ActiveOutputs.Length)
                 {
-                    if (vmOutput.Data.Connected != null)
+                    choice = new(i + 1, false, null);
+                }
+                else
+                {
+                    choice = new(i + 1, true, _simulator.ActiveOutputs[i].IconPath);
+                }
+
+                choices.Add(choice);
+            }
+
+            PathChoices = choices.ToArray();
+            SelectedPathChoice = PathChoices[0];
+        }
+
+
+        private void UpdateView()
+        {
+            BeginChangeGroup();
+
+            if(_simulator.EndReached)
+            {
+                TrackValueChange((v) => EndReached = v, EndReached, true);
+            }
+            else
+            {
+                TrackValueChange((v) => _selectedPathChoice = v, _selectedPathChoice, PathChoices[0]);
+                TrackValueChange((v) => SelectedPathChoiceIndex = v, SelectedPathChoiceIndex, 0);
+                TrackNotifyProperty(nameof(SelectedPathChoice));
+
+                TrackValueChange((v) => HighlightRightPortrait = v, HighlightRightPortrait, _simulator.ActiveNode.RightPortrait);
+                TrackValueChange((v) => HasMultipleChoices = v, HasMultipleChoices, _simulator.ActiveOutputs.Length > 1);
+
+                SimulatorNodeOutput output = _simulator.ActiveOutputs[0];
+                TrackValueChange((v) => Text = v, Text, output.Text);
+
+                if (HighlightRightPortrait)
+                {
+                    TrackValueChange((v) => RightPortraitLabel = v, RightPortraitLabel, output.Label);
+                    TrackValueChange((v) => RightPortraitPath = v, RightPortraitPath, output.PortraitPath);
+                }
+                else
+                {
+                    TrackValueChange((v) => LeftPortraitLabel = v, LeftPortraitLabel, output.Label);
+                    TrackValueChange((v) => LeftPortraitPath = v, LeftPortraitPath, output.PortraitPath);
+                }
+
+                for (int i = 0; i < 4; i++)
+                {
+                    VmPathChoice choice = PathChoices[i];
+
+                    if (i >= _simulator.ActiveOutputs.Length)
                     {
-                        vmOutput.Connected = NodeViewmodelLUT[vmOutput.Data.Connected];
+                        choice.Update(false, null);
+                    }
+                    else
+                    {
+                        choice.Update(true, _simulator.ActiveOutputs[i].IconPath);
                     }
                 }
             }
 
-            EntryNode.InitActive();
-
-            ObservableCollection<ExecutedInstruction> internalEI = new();
-            _executedInstructions = new(internalEI);
-            ExecutedInstructions = new(internalEI);
-        }
-
-        private void SetActiveNode(VmNode node)
-        {
-
-            VmNodeOutput? previousLeft = LeftPortrait;
-            VmNodeOutput? previousRight = RightPortrait;
-            bool previousSide = ActiveNode.Data.RightPortrait;
-
-            BeginChangeGroup();
-
-            TrackValueChange(
-                (v) => _activeNode = v, _activeNode, node);
-            TrackNotifyProperty(nameof(ActiveNode));
-
-            PostChangeGroupAction(InitActiveNode);
-
-            TrackNotifyProperty(nameof(HasNextNode));
-            RightPortraitActive = node.Data.RightPortrait;
-
-            if (previousSide != ActiveNode.Data.RightPortrait)
-            {
-                if (ActiveNode.Data.RightPortrait)
-                {
-                    TrackChange(
-                        () => { },
-                        () => RightPortrait = previousRight);
-                }
-                else
-                {
-                    TrackChange(
-                        () => { },
-                        () => LeftPortrait = previousLeft);
-                }
-            }
-
             EndChangeGroup();
         }
 
-        public void RefreshHasNextNode()
-        {
-            OnPropertyChanged(nameof(HasNextNode));
-        }
-
-        private void InitActiveNode()
-        {
-            ActiveNode.InitActive();
-        }
-
-        public void Next()
-        {
-            VmNode? nextNode = ActiveNode.ActiveOutput.Connected;
-            if (nextNode == null)
-            {
-                return;
-            }
-
-            BeginChangeGroup();
-
-            VmNodeOutput output = ActiveNode.ActiveOutput;
-            if (output.Data.DisableReuse)
-            {
-                output.Enabled = false;
-            }
-
-            foreach(DataInstruction instruction in output.DDXInstructions)
-            {
-                object oldValue = instruction.GetValue(Main.ConditionData);
-                instruction.Execute(Main.ConditionData);
-                object newValue = instruction.GetValue(Main.ConditionData);
-                _executedInstructions.Add(new(instruction.ToString(), oldValue, newValue));
-            }
-
-            SetActiveNode(nextNode);
-
-            EndChangeGroup();
-        }
-
-        public void Jump(VmNode node)
-        {
-            if (ActiveNode == node)
-            {
-                return;
-            }
-
-            SetActiveNode(node);
-        }
-
-        public void Reset()
+        private void Reset()
         {
             BeginChangeGroup();
+            _simulator.Reset();
+            TrackValueChange((v) => EndReached = v, EndReached, false);
 
-            foreach (VmNode vmNode in Nodes)
+            if (!HighlightRightPortrait)
             {
-                foreach (VmNodeOutput vmOutput in vmNode.Outputs)
-                {
-                    vmOutput.Enabled = true;
-                }
-            }
-
-            SetActiveNode(EntryNode);
-
-            if (ActiveNode.Data.RightPortrait)
-            {
-                TrackValueChange((v) => LeftPortrait = v, LeftPortrait, null);
+                TrackValueChange((v) => RightPortraitLabel = v, RightPortraitLabel, string.Empty);
+                TrackValueChange((v) => RightPortraitPath = v, RightPortraitPath, null);
             }
             else
             {
-                TrackValueChange((v) => RightPortrait = v, RightPortrait, null);
+                TrackValueChange((v) => LeftPortraitLabel = v, LeftPortraitLabel, string.Empty);
+                TrackValueChange((v) => LeftPortraitPath = v, LeftPortraitPath, null);
             }
 
+            UpdateView();
             EndChangeGroup();
         }
+
+        [MemberNotNull(nameof(Text))]
+        private void SelectChoice(int index)
+        {
+            SelectedPathChoiceIndex = index;
+
+            SimulatorNodeOutput output = _simulator.ActiveOutputs[index];
+
+            Text = output.Text;
+
+            if (HighlightRightPortrait)
+            {
+                RightPortraitLabel = output.Label;
+                RightPortraitPath = output.PortraitPath;
+            }
+            else
+            {
+                LeftPortraitLabel = output.Label;
+                LeftPortraitPath = output.PortraitPath;
+            }
+        }
+
+        private void Next()
+        {
+            if (_simulator.EndReached)
+                return;
+
+            BeginChangeGroup();
+            _simulator.Next(SelectedPathChoiceIndex);
+            UpdateView();
+            EndChangeGroup();
+        }
+
+        private void Undo()
+            => UndoChange();
+
+        private void Redo()
+            => RedoChange();
     }
 }

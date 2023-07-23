@@ -106,7 +106,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
 
             foreach (VmNodeOutput output in Outputs)
             {
-                if (output.ConditionValid && output.Enabled && !output.Data.Fallback)
+                if (output.ConditionValid && output.Enabled && !output.Data.IsFallback)
                 {
                     result.Add(output);
                     if (result.Count == 4)
@@ -120,7 +120,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling
             {
                 foreach (VmNodeOutput output in Outputs)
                 {
-                    if (output.ConditionValid && output.Enabled && output.Data.Fallback)
+                    if (output.ConditionValid && output.Enabled && output.Data.IsFallback)
                     {
                         result.Add(output);
                         break;

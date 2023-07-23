@@ -3,7 +3,7 @@ using static SCR.Tools.UndoRedo.GlobalChangeTrackerC;
 
 namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
 {
-    internal class VmChaoSlot : VmlotDictionaryItem<ChaoSlot, VmChaoSlot>
+    internal class VmChaoSlot : VmSlotDictionaryItem<ChaoSlot, VmChaoSlot>
     {
         public int Count
         {

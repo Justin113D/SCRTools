@@ -8,6 +8,9 @@ using System.Windows;
 
 namespace SCR.Tools.Dialog.Simulator.WPF.Windows
 {
+    /// <summary>
+    /// Interaction logic for WndSimulator.xaml
+    /// </summary>
     public partial class WndSimulatorDialog : ThemeWindow
     {
         private WndSimulatorDialog(VmMain vm)
@@ -16,13 +19,13 @@ namespace SCR.Tools.Dialog.Simulator.WPF.Windows
             InitializeComponent();
         }
 
-        public static void RunSimulator(DialogContainer data, DialogSettings settings)
+        public static void RunSimulator(DialogContainer data, DialogSettings options)
         {
             VmMain? viewmodel;
 
             try
             {
-                viewmodel = new(data, settings);
+                viewmodel = new(data, options);
             }
             catch (SimulatorException sx)
             {
@@ -36,7 +39,7 @@ namespace SCR.Tools.Dialog.Simulator.WPF.Windows
             }
 
             ChangeTracker previous = GlobalChangeTracker;
-            viewmodel.Tracker.Use();
+            viewmodel.SimulatorTracker.Use();
 
             new WndSimulatorDialog(viewmodel).ShowDialog();
 

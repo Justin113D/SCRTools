@@ -9,7 +9,7 @@ using SCR.Tools.WPF.Viewmodeling;
 namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
 {
     internal class VmSlotDictionary<T, vmT> 
-        where vmT : VmlotDictionaryItem<T, vmT> 
+        where vmT : VmSlotDictionaryItem<T, vmT> 
         where T : ICloneable
     {
         private readonly TrackDictionary<int, T> _source;
@@ -96,8 +96,8 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
         }
     }
 
-    internal abstract class VmlotDictionaryItem<T, vmT> : BaseViewModel 
-        where vmT : VmlotDictionaryItem<T, vmT> 
+    internal abstract class VmSlotDictionaryItem<T, vmT> : BaseViewModel 
+        where vmT : VmSlotDictionaryItem<T, vmT> 
         where T : ICloneable
     {
         private readonly VmSlotDictionary<T, vmT> _parent;
@@ -132,7 +132,7 @@ namespace SCR.Tools.Dialog.Simulator.Viewmodeling.Condition
         public RelayCommand CmdRemove
             => new(Remove);
 
-        public VmlotDictionaryItem(VmSlotDictionary<T, vmT> parent, int id)
+        public VmSlotDictionaryItem(VmSlotDictionary<T, vmT> parent, int id)
         {
             _parent = parent;
             _id = id;

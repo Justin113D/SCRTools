@@ -1,5 +1,5 @@
-﻿using SCR.Tools.Dialog.Editor.Viewmodeling;
-using SCR.Tools.Dialog.Simulator.Viewmodeling;
+﻿using SCR.Tools.Dialog.Data;
+using SCR.Tools.Dialog.Editor.Viewmodeling;
 using SCR.Tools.WPF.IO;
 using SCR.Tools.WPF.Viewmodeling;
 using System.Windows;
